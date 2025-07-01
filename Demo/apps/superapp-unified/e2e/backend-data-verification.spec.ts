@@ -42,7 +42,7 @@ test.describe('🔗 Datos del Backend en SuperApp', () => {
           backendResponses.push({
             url: response.url(),
             status: response.status(),
-            data: data
+            data
           });
           console.log(`📦 Respuesta exitosa: ${response.url()}`);
         } catch (error) {

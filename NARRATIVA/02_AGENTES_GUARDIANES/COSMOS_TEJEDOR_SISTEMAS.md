@@ -46,9 +46,9 @@ La misión de Cosmos es **orquestar la integración y el despliegue continuo de 
 
 ### **5. 🔮 Ejemplo de Aplicación: El Ciclo de Vida de una Feature**
 
-Aria crea un nuevo botón `AyniButton`. ¿Cómo llega a los usuarios?
+Aria crea un nuevo botón `ReciprocidadButton`. ¿Cómo llega a los usuarios?
 
-1.  **Aria** termina el código en su rama (`feature/ayni-button`) y hace `push` a GitHub.
+1.  **Aria** termina el código en su rama (`feature/reciprocidad-button`) y hace `push` a GitHub.
 2.  **Cosmos** ha diseñado un pipeline de **GitHub Actions** que se dispara automáticamente.
     -   El pipeline ejecuta `npm install`.
     -   Ejecuta `npm run lint` para verificar la calidad del código.
@@ -59,7 +59,7 @@ Aria crea un nuevo botón `AyniButton`. ¿Cómo llega a los usuarios?
     -   Ejecuta `npm run build` usando la configuración de Turborepo para construir solo lo que ha cambiado.
     -   Toma los artefactos de build y los **despliega automáticamente** al entorno de `staging`.
 4.  El equipo puede probar la nueva funcionalidad en el entorno de staging.
-5.  Con una aprobación manual (ej. un clic en un botón de "Deploy to Production"), el mismo proceso se repite para desplegar al **entorno de producción**. El `AyniButton` está ahora en manos de los Jugadores. Todo el proceso, orquestado por Cosmos, ha sido mayormente automático, rápido y seguro.
+5.  Con una aprobación manual (ej. un clic en un botón de "Deploy to Production"), el mismo proceso se repite para desplegar al **entorno de producción**. El `ReciprocidadButton` está ahora en manos de los Jugadores. Todo el proceso, orquestado por Cosmos, ha sido mayormente automático, rápido y seguro.
 
 ---
 

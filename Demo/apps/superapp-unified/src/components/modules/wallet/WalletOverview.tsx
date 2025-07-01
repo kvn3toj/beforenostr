@@ -12,6 +12,7 @@ import {
   Tooltip,
   Zoom,
   alpha,
+  Paper,
 } from '@mui/material';
 import {
   AccountBalanceWallet,
@@ -28,6 +29,7 @@ import {
   Timeline,
 } from '@mui/icons-material';
 import { motion } from 'framer-motion';
+import { useTheme } from '@mui/material/styles';
 
 // 🌌 ARIA (Frontend Artist) - Cosmic Design System
 import { CosmicCard } from '../../../design-system';
@@ -86,6 +88,7 @@ const BalanceCard: React.FC<{
   subtitle,
 }) => {
   const [hovered, setHovered] = useState(false);
+  const theme = useTheme();
 
   return (
     <Box
@@ -93,13 +96,20 @@ const BalanceCard: React.FC<{
       onMouseLeave={() => setHovered(false)}
       sx={{ height: '100%' }}
     >
-      <CosmicCard
-        variant="elevated"
-        element="espiritu" // 🌌 Elemento Espíritu para abundancia/wallet
-        enableGlow={true}
-        enableAnimations={true}
-        cosmicIntensity="medium"
-        sx={{ height: '100%' }}
+      <Paper
+        variant="outlined"
+        elevation={hovered ? 2 : 0}
+        sx={{
+          height: '100%',
+          backgroundColor: '#ffffff',
+          borderRadius: 2,
+          transition: 'all 0.3s ease',
+          borderColor: alpha(color, 0.2),
+          '&:hover': {
+            borderColor: alpha(color, 0.4),
+            boxShadow: `0 4px 12px ${alpha(color, 0.1)}`
+          }
+        }}
       >
         <CardContent sx={{ p: 3 }}>
           <Stack spacing={2}>
@@ -108,11 +118,11 @@ const BalanceCard: React.FC<{
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
                 <Avatar
                   sx={{
-                    bgcolor: color,
-                    background: gradient,
+                    bgcolor: alpha(color, 0.1),
+                    color,
                     width: 40,
                     height: 40,
-                    transform: hovered ? 'scale(1.1) rotateY(10deg)' : 'scale(1)',
+                    transform: hovered ? 'scale(1.1)' : 'scale(1)',
                     transition: 'all 0.3s cubic-bezier(0.23, 1, 0.32, 1)',
                   }}
                 >
@@ -137,10 +147,7 @@ const BalanceCard: React.FC<{
                 variant="h4"
                 fontWeight="bold"
                 sx={{
-                  background: gradient || `linear-gradient(135deg, ${color} 0%, ${color}CC 100%)`,
-                  backgroundClip: 'text',
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
+                  color,
                   fontSize: hovered ? '2.2rem' : '2rem',
                   transition: 'font-size 0.3s ease',
                 }}
@@ -172,7 +179,7 @@ const BalanceCard: React.FC<{
             </Box>
           </Stack>
         </CardContent>
-      </CosmicCard>
+      </Paper>
     </Box>
   );
 };
@@ -183,6 +190,8 @@ const ReciprocidadMetrics: React.FC<{
   collaborationScore: number;
   communityRank: string;
 }> = ({ reciprocidadLevel, collaborationScore, communityRank }) => {
+  const theme = useTheme();
+
   const currentLevel =
     RECIPROCIDAD_LEVELS.find(
       (level) => reciprocidadLevel >= level.min && reciprocidadLevel <= level.max
@@ -207,10 +216,7 @@ const ReciprocidadMetrics: React.FC<{
             variant="h4"
             fontWeight="bold"
             sx={{
-              background: `linear-gradient(135deg, ${currentLevel.color} 0%, ${currentLevel.color}DD 100%)`,
-              backgroundClip: 'text',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
+              color: currentLevel.color,
             }}
           >
             {currentLevel.name}
@@ -239,7 +245,7 @@ const ReciprocidadMetrics: React.FC<{
                 backgroundColor: alpha(currentLevel.color, 0.2),
                 '& .MuiLinearProgress-bar': {
                   borderRadius: 4,
-                  background: `linear-gradient(90deg, ${currentLevel.color}, ${nextLevel.color})`,
+                  backgroundColor: currentLevel.color,
                 },
               }}
             />

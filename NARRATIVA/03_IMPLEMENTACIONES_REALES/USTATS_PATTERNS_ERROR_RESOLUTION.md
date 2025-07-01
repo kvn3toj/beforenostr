@@ -323,7 +323,7 @@ elementalPatterns.fuego = {
 - **ÜPlay Analytics**: Métricas de engagement con videos gamificados
 - **Marketplace Insights**: Estadísticas de intercambios y transacciones Ayni
 - **Social Impact**: Análisis de contribuciones a la comunidad
-- **Wallet Integration**: Visualización de flujos de Lükas y Öndas
+- **Wallet Integration**: Visualización de flujos de Ünits y Öndas
 
 ### **Roadmap Técnico:**
 

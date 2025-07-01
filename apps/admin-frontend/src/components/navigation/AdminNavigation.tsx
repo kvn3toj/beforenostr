@@ -27,6 +27,7 @@ import {
   Public as NostrIcon,
   Settings as SettingsIcon,
   Gamepad as ConsoleIcon,
+  AutoAwesome as CosmicKanbanIcon,
 } from '@mui/icons-material'
 import { useNavigate, useLocation } from 'react-router-dom'
 
@@ -87,6 +88,13 @@ const navigationSections = [
         label: 'Notificaciones',
         icon: <NotificationsIcon />,
         description: 'Sistema de notificaciones CoomÜnity',
+        isNew: true
+      },
+      {
+        path: '/cosmic-kanban',
+        label: 'Portal Kanban Cósmico',
+        icon: <CosmicKanbanIcon />,
+        description: 'Acceso al portal Kanban Cósmico',
         isNew: true
       }
     ]

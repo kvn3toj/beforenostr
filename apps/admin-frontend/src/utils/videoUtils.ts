@@ -177,4 +177,4 @@ export const getVideoThumbnail = (content: string, quality: 'default' | 'medium'
   }
   
   return null;
-}; 
+};

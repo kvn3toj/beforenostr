@@ -5,17 +5,16 @@ import { useTheme as useCoomunityTheme } from '../../contexts/ThemeContext';
 import { cn } from '../../utils/styles';
 
 export interface CoomunityButtonProps extends Omit<ButtonProps, 'variant' | 'size'> {
-  variant?: 
-    | 'primary' 
-    | 'secondary' 
-    | 'outline' 
-    | 'ghost' 
+  variant?:
+    | 'primary'
+    | 'secondary'
+    | 'outline'
+    | 'ghost'
     | 'destructive'
     | 'success'
     | 'warning'
-    | 'gradient'
-    | 'glassmorphism'
-    | 'neon';
+    | 'minimal'
+    | 'subtle';
   size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
   loading?: boolean;
   loadingText?: string;
@@ -26,7 +25,6 @@ export interface CoomunityButtonProps extends Omit<ButtonProps, 'variant' | 'siz
   elevated?: boolean;
   animated?: boolean;
   pulse?: boolean;
-  glow?: boolean;
   reciprocidadLevel?: 1 | 2 | 3 | 4 | 5; // Nivel de Reciprocidad para styling especial
 }
 
@@ -42,7 +40,6 @@ const CoomunityButton: React.FC<CoomunityButtonProps> = ({
   elevated = false,
   animated = true,
   pulse = false,
-  glow = false,
   reciprocidadLevel,
   children,
   disabled,
@@ -53,7 +50,7 @@ const CoomunityButton: React.FC<CoomunityButtonProps> = ({
   const theme = useTheme();
   const { isDark } = useCoomunityTheme();
 
-  // Variantes de color
+  // Variantes de color MINIMALISTAS
   const getVariantStyles = () => {
     const baseStyles = {
       transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
@@ -61,34 +58,32 @@ const CoomunityButton: React.FC<CoomunityButtonProps> = ({
       textTransform: 'none' as const,
       position: 'relative' as const,
       overflow: 'hidden' as const,
+      backgroundColor: theme.palette.background.paper, // SIEMPRE BLANCO BASE
     };
 
     switch (variant) {
       case 'primary':
         return {
           ...baseStyles,
-          background: isDark
-            ? 'linear-gradient(135deg, #bb86fc 0%, #7c3aed 100%)'
-            : 'linear-gradient(135deg, #7c3aed 0%, #6366f1 100%)',
-          color: 'white',
+          backgroundColor: theme.palette.primary.main,
+          color: theme.palette.primary.contrastText,
           border: 'none',
           '&:hover': {
-            background: isDark
-              ? 'linear-gradient(135deg, #d4b3ff 0%, #8b5cf6 100%)'
-              : 'linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%)',
+            backgroundColor: theme.palette.primary.dark,
             transform: elevated ? 'translateY(-2px)' : 'none',
-            boxShadow: elevated ? theme.shadows[8] : theme.shadows[4],
+            boxShadow: elevated ? theme.shadows[4] : theme.shadows[2],
           },
         };
 
       case 'secondary':
         return {
           ...baseStyles,
-          background: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.04)',
+          backgroundColor: theme.palette.background.paper,
           color: theme.palette.text.primary,
-          border: `1px solid ${isDark ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.1)'}`,
+          border: `1px solid ${theme.palette.divider}`,
           '&:hover': {
-            background: isDark ? 'rgba(255, 255, 255, 0.15)' : 'rgba(0, 0, 0, 0.08)',
+            backgroundColor: theme.palette.action.hover,
+            borderColor: theme.palette.primary.main,
             transform: elevated ? 'translateY(-1px)' : 'none',
           },
         };
@@ -96,11 +91,12 @@ const CoomunityButton: React.FC<CoomunityButtonProps> = ({
       case 'outline':
         return {
           ...baseStyles,
-          background: 'transparent',
-          color: isDark ? '#bb86fc' : '#7c3aed',
-          border: `2px solid ${isDark ? '#bb86fc' : '#7c3aed'}`,
+          backgroundColor: 'transparent',
+          color: theme.palette.primary.main,
+          border: `2px solid ${theme.palette.primary.main}`,
           '&:hover': {
-            background: isDark ? 'rgba(187, 134, 252, 0.1)' : 'rgba(124, 58, 237, 0.1)',
+            backgroundColor: theme.palette.primary.main,
+            color: theme.palette.primary.contrastText,
             transform: elevated ? 'translateY(-1px)' : 'none',
           },
         };
@@ -108,102 +104,67 @@ const CoomunityButton: React.FC<CoomunityButtonProps> = ({
       case 'ghost':
         return {
           ...baseStyles,
-          background: 'transparent',
+          backgroundColor: 'transparent',
           color: theme.palette.text.primary,
           border: 'none',
           '&:hover': {
-            background: isDark ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.04)',
+            backgroundColor: theme.palette.action.hover,
           },
         };
 
       case 'destructive':
         return {
           ...baseStyles,
-          background: isDark
-            ? 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)'
-            : 'linear-gradient(135deg, #dc2626 0%, #b91c1c 100%)',
-          color: 'white',
+          backgroundColor: theme.palette.error.main,
+          color: theme.palette.error.contrastText,
           border: 'none',
           '&:hover': {
-            background: isDark
-              ? 'linear-gradient(135deg, #f87171 0%, #ef4444 100%)'
-              : 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)',
+            backgroundColor: theme.palette.error.dark,
           },
         };
 
       case 'success':
         return {
           ...baseStyles,
-          background: isDark
-            ? 'linear-gradient(135deg, #10b981 0%, #059669 100%)'
-            : 'linear-gradient(135deg, #059669 0%, #047857 100%)',
-          color: 'white',
+          backgroundColor: theme.palette.success.main,
+          color: theme.palette.success.contrastText,
           border: 'none',
           '&:hover': {
-            background: isDark
-              ? 'linear-gradient(135deg, #34d399 0%, #10b981 100%)'
-              : 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+            backgroundColor: theme.palette.success.dark,
           },
         };
 
       case 'warning':
         return {
           ...baseStyles,
-          background: isDark
-            ? 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)'
-            : 'linear-gradient(135deg, #d97706 0%, #b45309 100%)',
-          color: 'white',
+          backgroundColor: theme.palette.warning.main,
+          color: theme.palette.warning.contrastText,
           border: 'none',
           '&:hover': {
-            background: isDark
-              ? 'linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%)'
-              : 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)',
+            backgroundColor: theme.palette.warning.dark,
           },
         };
 
-      case 'gradient':
+      case 'minimal':
         return {
           ...baseStyles,
-          background: isDark
-            ? 'linear-gradient(135deg, #bb86fc 0%, #03dac6 50%, #ffc107 100%)'
-            : 'linear-gradient(135deg, #7c3aed 0%, #0891b2 50%, #d97706 100%)',
-          color: 'white',
-          border: 'none',
-          backgroundSize: '200% 200%',
-          animation: animated ? 'gradientShift 3s ease infinite' : 'none',
+          backgroundColor: theme.palette.background.paper,
+          color: theme.palette.text.secondary,
+          border: `1px solid ${theme.palette.divider}`,
           '&:hover': {
-            backgroundPosition: 'right center',
+            backgroundColor: theme.palette.action.hover,
+            color: theme.palette.text.primary,
           },
         };
 
-      case 'glassmorphism':
+      case 'subtle':
         return {
           ...baseStyles,
-          background: isDark
-            ? 'rgba(255, 255, 255, 0.1)'
-            : 'rgba(255, 255, 255, 0.2)',
-          backdropFilter: 'blur(10px)',
-          border: `1px solid ${isDark ? 'rgba(255, 255, 255, 0.2)' : 'rgba(255, 255, 255, 0.3)'}`,
+          backgroundColor: theme.palette.action.selected,
           color: theme.palette.text.primary,
+          border: 'none',
           '&:hover': {
-            background: isDark
-              ? 'rgba(255, 255, 255, 0.15)'
-              : 'rgba(255, 255, 255, 0.3)',
-          },
-        };
-
-      case 'neon':
-        return {
-          ...baseStyles,
-          background: 'transparent',
-          color: isDark ? '#03dac6' : '#0891b2',
-          border: `2px solid ${isDark ? '#03dac6' : '#0891b2'}`,
-          boxShadow: glow
-            ? `0 0 20px ${isDark ? 'rgba(3, 218, 198, 0.5)' : 'rgba(8, 145, 178, 0.5)'}`
-            : 'none',
-          '&:hover': {
-            boxShadow: `0 0 30px ${isDark ? 'rgba(3, 218, 198, 0.8)' : 'rgba(8, 145, 178, 0.8)'}`,
-            textShadow: `0 0 10px ${isDark ? '#03dac6' : '#0891b2'}`,
+            backgroundColor: theme.palette.action.hover,
           },
         };
 
@@ -254,36 +215,25 @@ const CoomunityButton: React.FC<CoomunityButtonProps> = ({
     }
   };
 
-  // Estilos de Reciprocidad
+  // Estilos de Reciprocidad MINIMALISTAS
   const getReciprocidadStyles = () => {
     if (!reciprocidadLevel) return {};
 
     const reciprocidadColors = {
-      1: { color: '#ef4444', glow: 'rgba(239, 68, 68, 0.3)' },
-      2: { color: '#f59e0b', glow: 'rgba(245, 158, 11, 0.3)' },
-      3: { color: '#10b981', glow: 'rgba(16, 185, 129, 0.3)' },
-      4: { color: '#3b82f6', glow: 'rgba(59, 130, 246, 0.3)' },
-      5: { color: '#8b5cf6', glow: 'rgba(139, 92, 246, 0.3)' },
+      1: theme.palette.error.main,
+      2: theme.palette.warning.main,
+      3: theme.palette.success.main,
+      4: theme.palette.info.main,
+      5: theme.palette.secondary.main,
     };
 
     const reciprocidadColor = reciprocidadColors[reciprocidadLevel];
 
     return {
-      '&::before': {
-        content: '""',
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        background: `linear-gradient(45deg, transparent 30%, ${reciprocidadColor.color}20 50%, transparent 70%)`,
-        opacity: 0,
-        transition: 'opacity 0.3s ease',
+      borderLeft: `4px solid ${reciprocidadColor}`, // Indicador minimalista de reciprocidad
+      '&:hover': {
+        boxShadow: `0 0 0 2px ${reciprocidadColor}20`, // Glow sutil al hover
       },
-      '&:hover::before': {
-        opacity: 1,
-      },
-      boxShadow: glow ? `0 0 20px ${reciprocidadColor.glow}` : 'none',
     };
   };
 
@@ -291,7 +241,7 @@ const CoomunityButton: React.FC<CoomunityButtonProps> = ({
     ...getVariantStyles(),
     ...getSizeStyles(),
     ...getReciprocidadStyles(),
-    borderRadius: rounded ? '50px' : '8px',
+    borderRadius: rounded ? '50px' : theme.shape.borderRadius,
     width: fullWidth ? '100%' : 'auto',
     animation: pulse ? 'pulse 2s infinite' : 'none',
     ...sx,
@@ -335,4 +285,4 @@ const CoomunityButton: React.FC<CoomunityButtonProps> = ({
   );
 };
 
-export default CoomunityButton; 
+export default CoomunityButton;

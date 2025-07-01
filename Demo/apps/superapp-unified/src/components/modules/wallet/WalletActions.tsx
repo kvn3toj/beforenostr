@@ -297,7 +297,7 @@ const QuickActionCard: React.FC<QuickAction & { onClick: () => void }> = ({
                 top: 8,
                 right: 8,
                 bgcolor: 'rgba(255,255,255,0.9)',
-                color: color,
+                color,
                 fontWeight: 'bold',
                 fontSize: '0.7rem',
               }}

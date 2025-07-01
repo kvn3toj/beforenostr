@@ -31,6 +31,7 @@ import { ChallengesPage } from './pages/ChallengesPage'
 import { MarketplacePage } from './pages/MarketplacePage'
 import { TransactionsPage } from './pages/TransactionsPage'
 import { ExperienceConsolePage } from './pages/ExperienceConsolePage'
+import { CosmicKanbanPage } from './pages/CosmicKanbanPage'
 
 const queryClient = new QueryClient()
 const theme = createAppTheme('light');
@@ -84,6 +85,7 @@ function App() {
               {/* Otras rutas */}
               <Route path="/ai-test" element={<AITest />} />
               <Route path="/nostr-demo" element={<NostrDemoPage />} />
+              <Route path="/cosmic-kanban" element={<CosmicKanbanPage />} />
             </Route>
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>

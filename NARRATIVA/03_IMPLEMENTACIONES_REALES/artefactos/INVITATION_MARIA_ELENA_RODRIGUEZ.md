@@ -21,7 +21,7 @@ CoomÜnity es una **SuperApp gamificada** que conecta personas, cooperativas y e
 - 🌍 **Mundos temáticos** para explorar economía colaborativa
 - 🎬 **Contenido educativo** interactivo sobre cooperativismo
 - 🤝 **Marketplace ético** para intercambio entre cooperativas
-- 💰 **Economía interna** con Lükas (nuestra moneda) y Méritos por impacto
+- 💰 **Economía interna** con Ünits (nuestra moneda) y Méritos por impacto
 - 🌱 **Red global** de cooperativas y emprendedores confiables
 
 ## 🚀 Tu Experiencia Beta como Fundadora
@@ -30,7 +30,7 @@ Como **Beta Founder** tendrás:
 
 ### **Acceso Exclusivo:**
 - 🔓 Acceso completo a todas las funcionalidades
-- 🎁 **1,000 Lükas** y **500 Méritos** iniciales de bienvenida
+- 🎁 **1,000 Ünits** y **500 Méritos** iniciales de bienvenida
 - 🏆 Badge especial de **"Fundadora Beta México"**
 - 📱 **Línea directa** con el equipo CoomÜnity
 - 🌟 **Voz prioritaria** en decisiones de producto

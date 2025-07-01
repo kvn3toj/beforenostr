@@ -211,7 +211,7 @@ open http://localhost:3001/marketplace
 - [ ] Vocación alineada
 - [ ] Öndas visualizadas
 - [ ] Mëritos gamificados
-- [ ] Lükas como moneda
+- [ ] Ünits como moneda
 - [ ] Emprendedores Confiables destacados
 
 ---

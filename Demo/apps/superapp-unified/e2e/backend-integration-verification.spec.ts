@@ -264,7 +264,7 @@ test.describe('🔗 Integración Backend NestJS ↔ SuperApp', () => {
           const data = await response.json();
           backendResponses.push({
             url: response.url(),
-            data: data
+            data
           });
           console.log(`📦 Respuesta del backend capturada: ${response.url()}`);
         } catch (error) {

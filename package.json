@@ -75,6 +75,7 @@
     "@google/genai": "^0.14.1",
     "@google/generative-ai": "^0.24.1",
     "@hookform/resolvers": "^3.3.4",
+    "@modelcontextprotocol/sdk": "^1.13.2",
     "@mui/icons-material": "^7.0.1",
     "@mui/material": "^7.0.1",
     "@nestjs/cache-manager": "^3.0.1",

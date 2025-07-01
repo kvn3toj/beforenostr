@@ -265,7 +265,7 @@ lighthouse https://superapp-peach.vercel.app --output=json
 - Planificar siguiente semana
 
 ### **🎯 Principios de Iteración:**
-- **Ayni**: Equilibrio entre features nuevas y mejoras
+- **Reciprocidad**: Equilibrio entre features nuevas y mejoras
 - **Bien Común**: Priorizar beneficio de usuarios sobre métricas
 - **Sostenibilidad**: Mejoras graduales, no revoluciones
 - **Transparencia**: Métricas públicas y feedback abierto

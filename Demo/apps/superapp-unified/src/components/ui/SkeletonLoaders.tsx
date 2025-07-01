@@ -385,7 +385,7 @@ export const ContextualProgress: React.FC<{
           width="100%" 
           height={height} 
           sx={{ 
-            borderRadius: borderRadius,
+            borderRadius,
             animation: 'pulse 1.5s ease-in-out infinite'
           }} 
         />
@@ -406,7 +406,7 @@ const SkeletonLoaders = {
   ListItem: ListItemSkeleton,
   StatCard: StatCardSkeleton,
   SearchLoading: SearchLoadingSkeleton,
-  ContextualProgress: ContextualProgress,
+  ContextualProgress,
 };
 
 export default SkeletonLoaders; 

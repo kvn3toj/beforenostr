@@ -264,7 +264,7 @@ export const SmartTooltip: React.FC<SmartTooltipProps> = ({
 ```
 
 **Features:**
-- ✅ **10 CoomÜnity Concepts:** Ayni, Trust, Community, Balance, Mëritos, Öndas, Lükas, Bien Común, Interactions, Exchanges
+- ✅ **10 CoomÜnity Concepts:** Ayni, Trust, Community, Balance, Mëritos, Öndas, Ünits, Bien Común, Interactions, Exchanges
 - ✅ **4 User Levels:** Newcomer, Beginner, Intermediate, Advanced
 - ✅ **Rich Content:** Icons, descriptions, practical tips, color coding
 - ✅ **Adaptive Learning:** Content complexity matches user experience
@@ -292,7 +292,7 @@ export const SmartTooltip: React.FC<SmartTooltipProps> = ({
 | **Balance** | Personal equilibrium | Dynamic understanding | Systemic perspective | Mastery teaching |
 | **Mëritos** | Achievement recognition | Quality contributions | Community elevation | Validation guidance |
 | **Öndas** | Positive energy basics | Vibrational impact | Community amplification | Consciousness mastery |
-| **Lükas** | Internal currency intro | Local economy participation | Network strengthening | Economic architecture |
+| **Ünits** | Internal currency intro | Local economy participation | Network strengthening | Economic architecture |
 | **Bien Común** | Common good priority | Collective benefit | Initiative leadership | Sacred economy |
 | **Interactions** | Social engagement basics | Conscious communication | Dialogue facilitation | Communication mastery |
 | **Exchanges** | Reciprocity opportunities | Trust-based economy | Collaboration multiplication | Innovation architecture |
@@ -308,7 +308,7 @@ export const SmartTooltip: React.FC<SmartTooltipProps> = ({
 - ⚖️ **Balance:** `#9C27B0` - Purple (Harmony, spirituality)
 - 🏆 **Mëritos:** `#4CAF50` - Green (Growth, achievement)
 - 🌊 **Öndas:** `#00BCD4` - Cyan (Energy, vibration)
-- 💰 **Lükas:** `#FFC107` - Gold (Value, abundance)
+- 💰 **Ünits:** `#FFC107` - Gold (Value, abundance)
 - 🌱 **Bien Común:** `#2196F3` - Blue (Collective wisdom)
 - 💬 **Interactions:** `#607D8B` - Blue Grey (Communication)
 - 🔄 **Exchanges:** `#E91E63` - Pink (Dynamic flow)
@@ -384,7 +384,7 @@ const { state } = useLetsEducation();
 - ✅ Group participation → `community` concept
 - ✅ Collaborative projects → `exchanges` concept
 - ✅ Energy/Öndas displays → `ondas` concept
-- ✅ Lükas transactions → `lukas` concept
+- ✅ Ünits transactions → `unit` concept
 
 ---
 

@@ -45,7 +45,7 @@ El **Lanzamiento del Programa Beta** de CoomÜnity ha avanzado significativament
 #### 3. ✅ [COMPLETADO] Welcome Kit Digital
 - **Documento comprensivo:** 300+ líneas de contenido estructurado ✅
 - **Guía filosófica:** 4 pilares fundamentales explicados ✅
-- **Sistema de gamificación:** Méritos, Öndas, Lükas detallados ✅
+- **Sistema de gamificación:** Méritos, Öndas, Ünits detallados ✅
 - **Primeros pasos:** Checklist día por día ✅
 - **Recursos educativos:** Videos, lecturas, ejercicios ✅
 - **Canales de soporte:** Discord, email, sesiones programadas ✅

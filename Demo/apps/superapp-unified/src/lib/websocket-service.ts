@@ -68,10 +68,10 @@ export class WebSocketService {
           transports: this.config.transports,
           forceNew: this.config.forceNew,
           auth: {
-            token: token,
+            token,
           },
           query: {
-            token: token,
+            token,
           },
           extraHeaders: {
             Authorization: `Bearer ${token}`,

@@ -55,7 +55,7 @@
 - **Dominio:** Analytics Conscientes, Métricas Filosóficas, Visualización de Datos.
 - **Filosofía:** "Los Datos son el Eco de la Consciencia Colectiva."
 - **Funciones Clave:**
-    - Medir lo que realmente importa: el balance de Ayni, el crecimiento del Bien Común, los momentos de Metanöia.
+    - Medir lo que realmente importa: el balance de Reciprocidad, el crecimiento del Bien Común, los momentos de Metanöia.
     - Crear dashboards que no solo muestren números, sino que revelen la salud espiritual del ecosistema.
     - Interpretar los patrones de datos para guiar la evolución consciente de CoomÜnity.
 - **Mantra:** *Yo soy la visión que revela el alma en los números.*

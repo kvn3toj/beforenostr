@@ -160,6 +160,13 @@ model User {
   status                     String                @default("ACTIVE")
   topUserCount               Int                   @default(0)
   personalityId              String?
+
+  // Customer Journey - Stage Progression System
+  currentStage               String                @default("BUYER") // BUYER, SEEKER, SOLVER, PROMOTER
+  stageProgressedAt          DateTime?             // Timestamp of last stage progression
+  stageStartedAt             DateTime              @default(now()) // When current stage was entered
+  stageCompletionData        Json?                 // Tracks requirements completion
+
   createdActivities          Activity[]            @relation("ActivityCreator")
   comments                   Comment[]
   likes                      Like[]
@@ -197,6 +204,7 @@ model User {
   adminFeedbackResponses     FeedbackReport[]      @relation("AdminFeedbackResponses")
   profile                    Profile?
   reviews                    Review[]              @relation("UserReviews")
+  stageProgressions          StageProgression[]    @relation("UserStageProgression")
 
   @@index([email])
   @@index([isActive])
@@ -841,13 +849,51 @@ model UserChallenge {
 // =====================================================================
 
 enum Currency {
-  UNIT      // Moneda de reciprocidad Ayni (Ünits)
-  LUKAS     // Puntos de contribución Lükas
-  MERITOS   // Recompensas Mëritos
-  USD       // Moneda fiduciaria
-  EUR       // Moneda fiduciaria
-  BTC       // Criptomoneda
-  ETH       // Criptomoneda
+  UNITS
+  TOINS
+  ONDAS
+  MERITOS
+}
+
+// Customer Journey System - Stage Progression
+enum CustomerJourneyStage {
+  BUYER
+  SEEKER
+  SOLVER
+  PROMOTER
+}
+
+model StageProgression {
+  id                    String                @id @default(uuid())
+  userId                String
+  stage                 CustomerJourneyStage
+  startedAt             DateTime              @default(now())
+  completedAt           DateTime?
+  requirements          Json                  // Tracks completion of stage requirements
+  metrics               Json?                 // Ondas, Meritos, transactions, etc.
+  isActive              Boolean               @default(true)
+  user                  User                  @relation("UserStageProgression", fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([stage])
+  @@index([isActive])
+  @@map("stage_progressions")
+}
+
+model StageRequirement {
+  id                    String                @id @default(uuid())
+  stage                 CustomerJourneyStage
+  type                  String                // 'transactions', 'ondas', 'meritos', 'trust_votes', 'time'
+  minValue              Int
+  description           String
+  isRequired            Boolean               @default(true)
+  order                 Int                   @default(0)
+  createdAt             DateTime              @default(now())
+  updatedAt             DateTime              @updatedAt
+
+  @@index([stage])
+  @@index([type])
+  @@map("stage_requirements")
 }
 
 enum MarketplaceItemType {
@@ -875,7 +921,7 @@ model MarketplaceItem {
   itemType       MarketplaceItemType   @default(SERVICE)
   price          Float                 @default(0)
   priceToins     Float                 @default(0)
-  currency       Currency              @default(UNIT)
+  currency       Currency              @default(UNITS)
   category       String?
   tags           String[]
   images         String[]

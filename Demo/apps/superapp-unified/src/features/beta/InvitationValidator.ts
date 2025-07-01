@@ -64,7 +64,7 @@ const validateInvitationCodeMock = (code: string): InvitationValidationResult =>
       message: '¡Código de invitación válido!',
       invitationInfo: {
         id: `mock-${Date.now()}`,
-        code: code,
+        code,
         type: 'beta',
         benefits: [
           'Acceso anticipado a CoomÜnity',

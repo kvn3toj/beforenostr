@@ -24,7 +24,7 @@ export const safeToLocaleString = (
 /**
  * Formatea un precio de forma segura
  * @param price - El precio a formatear
- * @param currency - La moneda ('ü', 'LUKAS', 'COP', etc.)
+ * @param currency - La moneda ('ü', 'UNITS', 'COP', etc.)
  * @param defaultPrice - Precio por defecto si price es undefined/null
  * @returns String formateado del precio
  */
@@ -35,7 +35,7 @@ export const formatPrice = (
 ): string => {
   const safePrice = price ?? defaultPrice;
 
-  if (currency === 'ü' || currency === 'Lükas' || currency === 'LUKAS') {
+  if (currency === 'ü' || currency === 'Ünits' || currency === 'UNITS') {
     return `ü ${safeToLocaleString(safePrice)}`;
   }
 

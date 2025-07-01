@@ -113,7 +113,7 @@ import { ButtonProps } from '@mui/material/Button';
 
 interface AyniProps {
   ayniValue: number; // La cantidad del intercambio
-  ayniCurrency: 'lükas' | 'öndas' | 'mëritos'; // La "moneda" del intercambio
+  ayniCurrency: 'units' | 'öndas' | 'mëritos'; // La "moneda" del intercambio
   confirmationRequired?: boolean; // Si necesita un modal de confirmación
   confirmationText?: string; // Texto personalizado para el modal
 }

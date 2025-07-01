@@ -64,13 +64,13 @@ test.describe('🔐 Test Simple de Login con Constantes Canónicas', () => {
       const veryOldToken = localStorage.getItem('coomunity_token');
       
       return {
-        canonicalToken: canonicalToken,
+        canonicalToken,
         canonicalUser: canonicalUser ? JSON.parse(canonicalUser) : null,
         hasCanonicalToken: !!canonicalToken,
         hasCanonicalUser: !!canonicalUser,
-        oldToken: oldToken,
-        oldUser: oldUser,
-        veryOldToken: veryOldToken,
+        oldToken,
+        oldUser,
+        veryOldToken,
         allKeys: Object.keys(localStorage)
       };
     });

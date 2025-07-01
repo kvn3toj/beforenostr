@@ -61,6 +61,9 @@ import {
 } from '../../../../hooks/useLetsIntegration';
 import { useAuth } from '../../../../contexts/AuthContext';
 import { LETS_CATEGORIES, LetsSearchFilters, CreateLetsListingDto } from '../../../../types/lets';
+import { CosmicCard } from '../../../../design-system/components/cosmic/CosmicCard';
+import { useGuardianColors } from '../../../theme/GuardianColorProvider';
+import { alpha } from '@mui/material/styles';
 
 export const LetsListings: React.FC = () => {
   const { user } = useAuth();
@@ -280,10 +283,69 @@ const LetsListingCard: React.FC<LetsListingCardProps> = ({
   onInteract,
   currentUserId
 }) => {
+  const { palette, getElementColor } = useGuardianColors();
   const isOffer = listing.type === 'offer';
+
+  const cardActions = (
+    <CardActions sx={{
+      borderTop: `1px solid ${alpha(palette.divider, 0.3)}`,
+      backgroundColor: alpha(palette.background, 0.7),
+      backdropFilter: 'blur(8px)',
+    }}>
+      <Button
+        size="small"
+        onClick={onInteract}
+        startIcon={<Handshake />}
+        sx={{
+          background: `linear-gradient(135deg, ${alpha(getElementColor('tierra'), 0.2)}, ${alpha(getElementColor('tierra'), 0.1)})`,
+          color: getElementColor('tierra'),
+          border: `1px solid ${alpha(getElementColor('tierra'), 0.3)}`,
+          backdropFilter: 'blur(4px)',
+          '&:hover': {
+            background: `linear-gradient(135deg, ${alpha(getElementColor('tierra'), 0.3)}, ${alpha(getElementColor('tierra'), 0.2)})`,
+            transform: 'translateY(-1px)',
+            boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+          },
+          transition: 'all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+        }}
+      >
+        Ver Intercambio
+      </Button>
+    </CardActions>
+  );
+
   return (
-    <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-      <CardContent sx={{ flexGrow: 1 }}>
+    <CosmicCard
+      element="tierra"
+      variant="secondary"
+      enableAnimations={true}
+      enableGlow={false}
+      cosmicIntensity="subtle"
+      sx={{
+        height: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        position: 'relative',
+        '&::before': {
+          content: '""',
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          height: '3px',
+          background: isOffer
+            ? `linear-gradient(90deg, ${getElementColor('tierra')}, ${alpha(getElementColor('tierra'), 0.6)})`
+            : `linear-gradient(90deg, ${alpha(getElementColor('aire'), 0.8)}, ${alpha(getElementColor('aire'), 0.5)})`,
+          zIndex: 1,
+        },
+      }}
+      actions={cardActions}
+    >
+      <CardContent sx={{
+        flexGrow: 1,
+        background: `linear-gradient(135deg, ${alpha(palette.background, 0.9)}, ${alpha(palette.background, 0.7)})`,
+        backdropFilter: 'blur(8px)',
+      }}>
         <Stack
           direction="row"
           justifyContent="space-between"
@@ -293,11 +355,29 @@ const LetsListingCard: React.FC<LetsListingCardProps> = ({
           <Box>
             <Chip
               label={isOffer ? 'Oferta' : 'Demanda'}
-              color={isOffer ? 'success' : 'warning'}
               size="small"
-              sx={{ mb: 1.5, fontWeight: 600 }}
+              sx={{
+                mb: 1.5,
+                fontWeight: 600,
+                background: isOffer
+                  ? `linear-gradient(135deg, ${alpha(getElementColor('tierra'), 0.9)}, ${alpha(getElementColor('tierra'), 0.7)})`
+                  : `linear-gradient(135deg, ${alpha(getElementColor('aire'), 0.9)}, ${alpha(getElementColor('aire'), 0.7)})`,
+                color: palette.background,
+                backdropFilter: 'blur(4px)',
+                border: `1px solid ${alpha(palette.background, 0.3)}`,
+                boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
+              }}
             />
-            <Typography variant="h6" component="h3" sx={{ fontWeight: 600, mb: 1 }}>
+            <Typography
+              variant="h6"
+              component="h3"
+              sx={{
+                fontWeight: 600,
+                mb: 1,
+                color: palette.text.primary,
+                textShadow: '0 1px 3px rgba(0,0,0,0.1)',
+              }}
+            >
               {listing.title}
             </Typography>
           </Box>
@@ -305,30 +385,43 @@ const LetsListingCard: React.FC<LetsListingCardProps> = ({
             <Avatar
               alt={listing.user.name || 'Usuario'}
               src={listing.user.avatarUrl || undefined}
+              sx={{
+                border: `2px solid ${alpha(getElementColor('tierra'), 0.3)}`,
+                boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+              }}
             />
           </Tooltip>
         </Stack>
-        <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+        <Typography
+          variant="body2"
+          color="text.secondary"
+          sx={{
+            mb: 2,
+            lineHeight: 1.5,
+          }}
+        >
           {listing.description}
         </Typography>
         <Stack direction="row" spacing={0.5} alignItems="center">
-          <LocalOffer fontSize="small" color="action" />
-          <Typography variant="caption" color="text.secondary">
+          <LocalOffer
+            fontSize="small"
+            sx={{
+              color: getElementColor('tierra'),
+              filter: 'drop-shadow(0 1px 2px rgba(0,0,0,0.1))',
+            }}
+          />
+          <Typography
+            variant="caption"
+            sx={{
+              color: palette.text.secondary,
+              fontWeight: 500,
+            }}
+          >
             Categoría: {listing.category}
           </Typography>
         </Stack>
       </CardContent>
-      <Divider />
-      <CardActions>
-        <Button
-          size="small"
-          onClick={onInteract}
-          startIcon={<Handshake />}
-        >
-          Ver Intercambio
-        </Button>
-      </CardActions>
-    </Card>
+    </CosmicCard>
   );
 };
 

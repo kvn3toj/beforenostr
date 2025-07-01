@@ -476,8 +476,10 @@ export const useReciprocidadBalance = (userId: string) => {
 // ============================================================================
 
 /**
+
+/**
  * Alias para useReciprocidadBalance - Mantiene compatibilidad con componentes
- * que todavía usan la terminología "Reciprocidad" en lugar de "Reciprocidad"
+ * que todavía usan la terminología "Ayni" en lugar de "Reciprocidad"
  * @deprecated Use useReciprocidadBalance instead
  */
-export const useReciprocidadBalance = useReciprocidadBalance;
+export const useAyniBalance = useReciprocidadBalance;

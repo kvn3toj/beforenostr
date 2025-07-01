@@ -14,7 +14,7 @@ graph TD;
             Challenges["Challenges & Quests"]:::done;
             Marketplace["Marketplace (GMP)"]:::done;
             Social["Social Features (CoPs)"]:::done;
-            Wallet["Wallet (Lükas & Merits)"]:::done;
+            Wallet["Wallet (Ünits & Merits)"]:::done;
         end
 
         subgraph "Capa de Datos [100%]";

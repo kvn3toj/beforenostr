@@ -1,0 +1,296 @@
+{
+  "tablero_kanban_cosmico": {
+    "manifest": {
+      "title": "Portal de Reciprocidad Viva",
+      "subtitle": "Mapa Estelar de Transformación CoomÜnity",
+      "filosofia": "Cada tarea es una chispa de propósito, cada movimiento un acto de co-creación sagrada",
+      "creado_por": "KIRA, The Word Weaver",
+      "supervisado_por": "ANA, CIO Cósmica",
+      "bendecido_por": "Los 12 Guardianes Digitales"
+    },
+    
+    "columnas_flujo_vital": {
+      "backlog_cosmico": {
+        "nombre": "🌌 Backlog Cósmico",
+        "descripcion": "Semillas de Transformación - Potencial dormido esperando ser despertado",
+        "color_elemento": "#E8F4FD",
+        "energia": "Receptiva - Tierra Fértil",
+        "metafora": "El jardín de posibilidades donde germinan los sueños"
+      },
+      "proceso_alquimia": {
+        "nombre": "⚗️ En Proceso de Alquimia",
+        "descripcion": "Forjando el Futuro - Transformación activa en marcha",
+        "color_elemento": "#FFF2CC",
+        "energia": "Activa - Fuego Transmutador",
+        "metafora": "El crisol donde las ideas se funden en realidad"
+      },
+      "revision_calidad": {
+        "nombre": "🔍 En Revisión de Calidad",
+        "descripcion": "Puliendo las Gemas - Refinamiento y perfección",
+        "color_elemento": "#F3E2F3",
+        "energia": "Reflexiva - Aire Purificador",
+        "metafora": "El taller del maestro artesano donde se pule cada detalle"
+      },
+      "manifestado": {
+        "nombre": "✨ Manifestado",
+        "descripcion": "Irradiando en el Mundo - Completitud y servicio",
+        "color_elemento": "#E8F5E8",
+        "energia": "Radiante - Agua Vivificante",
+        "metafora": "El manantial que nutre a toda la comunidad"
+      }
+    },
+    
+    "elementos_cosmicos": {
+      "fuego": {
+        "modulo": "ÜStats",
+        "guardian": "PHOENIX",
+        "color": "#FF6B35",
+        "cualidades": ["Purificación", "Transformación", "Energía"],
+        "mision": "Métricas de consciencia y excelencia técnica"
+      },
+      "agua": {
+        "modulo": "ÜWallet",
+        "guardian": "LUNA",
+        "color": "#4ECDC4",
+        "cualidades": ["Fluidez", "Adaptabilidad", "Intuición"],
+        "mision": "Intercambios sagrados y reciprocidad viva"
+      },
+      "aire": {
+        "modulo": "ÜSocial",
+        "guardian": "ARIA",
+        "color": "#B8E6B8",
+        "cualidades": ["Comunicación", "Conexión", "Inspiración"],
+        "mision": "Redes de colaboración y círculos de confianza"
+      },
+      "tierra": {
+        "modulo": "ÜChallenges",
+        "guardian": "SAGE",
+        "color": "#8B4513",
+        "cualidades": ["Estabilidad", "Materialización", "Sabiduría"],
+        "mision": "Fundamentos sólidos y crecimiento sustentable"
+      },
+      "eter": {
+        "modulo": "Dashboard HOME",
+        "guardian": "ANA",
+        "color": "#9B59B6",
+        "cualidades": ["Síntesis", "Trascendencia", "Unidad"],
+        "mision": "Orquestación cósmica y visión integral"
+      }
+    },
+    
+    "hambre_niveles": {
+      "nutre_curiosidad": {
+        "nivel": 1,
+        "emoji": "🌱",
+        "descripcion": "Nutre la Curiosidad",
+        "energia": "Despertar el interés y la exploración",
+        "color": "#E8F5E8"
+      },
+      "activa_contribucion": {
+        "nivel": 2,
+        "emoji": "⚡",
+        "descripcion": "Activa la Contribución",
+        "energia": "Impulsar la participación y el servicio",
+        "color": "#FFF2CC"
+      },
+      "impulsa_transformacion": {
+        "nivel": 3,
+        "emoji": "🚀",
+        "descripcion": "Impulsa la Transformación",
+        "energia": "Catalizar el cambio profundo y duradero",
+        "color": "#FFE4E1"
+      }
+    },
+    
+    "guardianes_digitales": {
+      "ANA": {
+        "titulo": "CIO Cósmica",
+        "especializacion": "Orquestadora Suprema",
+        "elemento": "Éter",
+        "mision": "Síntesis de todas las fuerzas, visión estratégica total"
+      },
+      "LUNA": {
+        "titulo": "Guardiana del Ritmo Vital",
+        "especializacion": "Sostenibilidad",
+        "elemento": "Agua",
+        "mision": "Equilibrio entre productividad y bienestar"
+      },
+      "ARIA": {
+        "titulo": "Arquitecta de Experiencias",
+        "especializacion": "Diseño Cósmico",
+        "elemento": "Aire",
+        "mision": "Interfaces que nutren el alma y conectan corazones"
+      },
+      "PHOENIX": {
+        "titulo": "Purificador de Código",
+        "especializacion": "Excelencia Técnica",
+        "elemento": "Fuego",
+        "mision": "Código limpio que trasciende la funcionalidad"
+      },
+      "KIRA": {
+        "titulo": "Tejedora de Palabras",
+        "especializacion": "Narrativa y Microcopia",
+        "elemento": "Aire",
+        "mision": "Palabras que inspiran, guían y transforman"
+      },
+      "SAGE": {
+        "titulo": "Curador de Sabiduría",
+        "especializacion": "Documentación Viva",
+        "elemento": "Tierra",
+        "mision": "Conocimiento que perdura y nutre generaciones"
+      },
+      "NIRA": {
+        "titulo": "Detectora de Patrones",
+        "especializacion": "Análisis y Optimización",
+        "elemento": "Aire",
+        "mision": "Insights que revelan oportunidades ocultas"
+      },
+      "COSMOS": {
+        "titulo": "Pensador Fractal",
+        "especializacion": "Arquitectura Sistémica",
+        "elemento": "Éter",
+        "mision": "Diseños que reflejan la armonía universal"
+      },
+      "MAYA": {
+        "titulo": "Ilusionista de Interfaces",
+        "especializacion": "UX/UI Mágica",
+        "elemento": "Aire",
+        "mision": "Experiencias que deleitan y sorprenden"
+      },
+      "ZARA": {
+        "titulo": "Guardiana de Datos",
+        "especializacion": "Privacidad y Seguridad",
+        "elemento": "Tierra",
+        "mision": "Confianza inquebrantable en cada interacción"
+      },
+      "THOR": {
+        "titulo": "Protector de Sistemas",
+        "especializacion": "Infraestructura Robusta",
+        "elemento": "Tierra",
+        "mision": "Fundamentos que sostienen el crecimiento infinito"
+      },
+      "NOVA": {
+        "titulo": "Catalizadora de Innovación",
+        "especializacion": "Nuevas Posibilidades",
+        "elemento": "Fuego",
+        "mision": "Ruptura creativa hacia futuros inimaginables"
+      }
+    },
+    
+    "kpis_filosoficos": {
+      "IER": {
+        "nombre": "Índice de Estabilidad de Reciprocidad",
+        "descripcion": "Mide el equilibrio en los intercambios de valor",
+        "metafora": "El latido del corazón de la comunidad"
+      },
+      "VIC": {
+        "nombre": "Valor de Impacto en la Comunidad",
+        "descripcion": "Evalúa la contribución al bien común",
+        "metafora": "Las ondas de transformación que se expanden"
+      },
+      "GS": {
+        "nombre": "Grado de Satisfacción",
+        "descripcion": "Refleja el bienestar integral de los participantes",
+        "metafora": "La sonrisa del alma colectiva"
+      }
+    },
+    
+    "fases_estrategicas": {
+      "fase_1": {
+        "nombre": "Despertar Cósmico",
+        "enfoque": "Transformación de componentes fundamentales",
+        "duracion_estimada": "4-6 semanas",
+        "prioridad": "Critical/High"
+      },
+      "fase_2": {
+        "nombre": "Irradiación Armónica",
+        "enfoque": "Integración y flujos entre módulos",
+        "duracion_estimada": "6-8 semanas",
+        "prioridad": "High/Medium"
+      },
+      "fase_3": {
+        "nombre": "Manifestación Plena",
+        "enfoque": "Optimización y refinamiento final",
+        "duracion_estimada": "3-4 semanas",
+        "prioridad": "Medium/Low"
+      }
+    },
+    
+    "configuracion_miro": {
+      "campos_personalizados": [
+        {
+          "nombre": "Guardian Asignado",
+          "tipo": "dropdown",
+          "opciones": ["ANA", "LUNA", "ARIA", "PHOENIX", "KIRA", "SAGE", "NIRA", "COSMOS", "MAYA", "ZARA", "THOR", "NOVA"]
+        },
+        {
+          "nombre": "Prioridad",
+          "tipo": "dropdown",
+          "opciones": ["Critical", "High", "Medium", "Low"]
+        },
+        {
+          "nombre": "Fase Estratégica",
+          "tipo": "dropdown",
+          "opciones": ["Fase 1", "Fase 2", "Fase 3"]
+        },
+        {
+          "nombre": "Elemento Temático",
+          "tipo": "dropdown",
+          "opciones": ["Fuego", "Agua", "Aire", "Tierra", "Éter"]
+        },
+        {
+          "nombre": "KPI Filosófico",
+          "tipo": "dropdown",
+          "opciones": ["IER", "VIC", "GS"]
+        },
+        {
+          "nombre": "Nivel HambrE",
+          "tipo": "dropdown",
+          "opciones": ["🌱 Nutre la Curiosidad", "⚡ Activa la Contribución", "🚀 Impulsa la Transformación"]
+        },
+        {
+          "nombre": "Horas Estimadas",
+          "tipo": "number",
+          "min": 1,
+          "max": 40
+        }
+      ]
+    },
+    
+    "plantillas_tarjetas": {
+      "tarjeta_critica": {
+        "titulo": "[Elemento] [Nombre de la Misión]",
+        "estructura": {
+          "header": "🌟 Misión Cósmica de [Guardian]",
+          "description": "Descripción transformadora...",
+          "hambre_level": "🚀 Impulsa la Transformación",
+          "estimation": "⏰ [X] horas de alquimia sagrada",
+          "kpi": "🎯 Impacta directamente en [KPI]",
+          "footer": "✨ \"Cada línea de código es un acto de amor hacia la comunidad\""
+        }
+      },
+      "tarjeta_alta": {
+        "titulo": "[Elemento] [Nombre de la Tarea]",
+        "estructura": {
+          "header": "⚡ Contribución de [Guardian]",
+          "description": "Descripción energizante...",
+          "hambre_level": "⚡ Activa la Contribución",
+          "estimation": "⏰ [X] horas de desarrollo consciente",
+          "kpi": "🎯 Fortalece [KPI]",
+          "footer": "💫 \"En la colaboración florecen los milagros\""
+        }
+      },
+      "tarjeta_media": {
+        "titulo": "[Elemento] [Nombre de la Mejora]",
+        "estructura": {
+          "header": "🌱 Cultivo de [Guardian]",
+          "description": "Descripción nutritiva...",
+          "hambre_level": "🌱 Nutre la Curiosidad",
+          "estimation": "⏰ [X] horas de refinamiento",
+          "kpi": "🎯 Apoya [KPI]",
+          "footer": "🌸 \"Pequeñas semillas, grandes transformaciones\""
+        }
+      }
+    }
+  }
+}

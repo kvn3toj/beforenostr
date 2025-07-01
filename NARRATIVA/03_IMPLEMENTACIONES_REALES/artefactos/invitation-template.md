@@ -20,7 +20,7 @@ CoomÜnity es una **SuperApp gamificada** que conecta personas, cooperativas y e
 - 🌍 **Mundos temáticos** para explorar y aprender
 - 🎬 **Contenido educativo** interactivo sobre economía colaborativa
 - 🤝 **Marketplace ético** para intercambio de productos y servicios
-- 💰 **Economía interna** con Lükas (nuestra moneda) y Méritos
+- 💰 **Economía interna** con Ünits (nuestra moneda) y Méritos
 - 🌱 **Red global** de cooperativas y emprendedores confiables
 
 ## 🚀 Tu Experiencia Beta
@@ -29,7 +29,7 @@ Como beta tester tendrás:
 
 ### **Acceso Exclusivo:**
 - 🔓 Acceso completo a todas las funcionalidades
-- 🎁 Lükas y Méritos iniciales de bienvenida
+- 🎁 Ünits y Méritos iniciales de bienvenida
 - 🏆 Badge especial de "Fundador Beta"
 - 📱 Soporte directo del equipo CoomÜnity
 

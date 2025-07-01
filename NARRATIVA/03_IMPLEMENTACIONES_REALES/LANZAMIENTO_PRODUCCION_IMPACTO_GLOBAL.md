@@ -40,7 +40,7 @@
 - 📺 **ÜPlay**: Video player gamificado
 - 👥 **Sistema Social**: Perfiles, comunidades
 - 📊 **UStats**: Analytics y métricas
-- 💰 **Wallet**: Gestión de Lükas
+- 💰 **Wallet**: Gestión de Ünits
 - 🌍 **Multi-idioma**: Soporte para 10+ idiomas
 
 ---
@@ -133,14 +133,14 @@ interface LETSTransaction {
   from: string;
   to: string;
   amount: number;
-  currency: 'lukas' | 'local';
+  currency: 'unit' | 'local';
   ayniScore: number;
   bienComunContribution: number;
 }
 ```
 
 **Funcionalidades:**
-- [ ] Sistema LETS integrado con Lükas
+- [ ] Sistema LETS integrado con Ünits
 - [ ] AI para recomendaciones personalizadas
 - [ ] Matching inteligente en Marketplace
 - [ ] Predicción de alineación vocacional

@@ -46,7 +46,7 @@
 🏆 GAMIFICACIÓN
 ├── #logros-y-celebraciones
 ├── #ranking-beta-testers
-├── #economia-lukas-meritos
+├── #economia-units-meritos
 └── #colaboraciones
 
 🔧 ADMIN (Privados)

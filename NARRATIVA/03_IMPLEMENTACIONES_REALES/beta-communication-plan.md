@@ -84,7 +84,7 @@
 1. **Comunicación inmediata** en Discord
 2. **Transparencia total** sobre el problema
 3. **Timeline claro** para solución
-4. **Compensación** si aplica (Lükas extra, etc.)
+4. **Compensación** si aplica (Ünits extra, etc.)
 
 ### Si hay feedback muy negativo:
 1. **Escuchar sin defensiveness**

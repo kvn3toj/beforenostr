@@ -64,15 +64,15 @@ interface IMarketplaceFilters {
 
 const PRICE_RANGES = [
   { label: 'Cualquier precio', value: [0, 10000] },
-  { label: 'Hasta 50 Lükas', value: [0, 50] },
-  { label: '50 - 200 Lükas', value: [50, 200] },
-  { label: '200 - 500 Lükas', value: [200, 500] },
-  { label: '500+ Lükas', value: [500, 10000] },
+  { label: 'Hasta 50 Ünits', value: [0, 50] },
+  { label: '50 - 200 Ünits', value: [50, 200] },
+  { label: '200 - 500 Ünits', value: [200, 500] },
+  { label: '500+ Ünits', value: [500, 10000] },
 ];
 
 const CURRENCY_OPTIONS = [
   { value: 'all', label: 'Todas las monedas', icon: '💰' },
-  { value: 'lukas', label: 'Lükas (ü)', icon: 'ü' },
+  { value: 'units', label: 'Ünits (ü)', icon: 'ü' },
   { value: 'usd', label: 'Dólares USD', icon: '$' },
   { value: 'eur', label: 'Euros EUR', icon: '€' },
 ];

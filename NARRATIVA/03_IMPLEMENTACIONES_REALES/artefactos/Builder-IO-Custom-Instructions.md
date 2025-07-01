@@ -253,7 +253,7 @@ interface MarketplaceItem {
   type: 'product' | 'service'; // Productos Y servicios
   title: string;
   description: string;
-  lukas: number;               // Lükas (moneda interna)
+  units: number;               // Ünits (moneda interna)
   emprendedor: string;         // Emprendedor Confiable
   ayniScore: number;           // Puntuación Ayni
 }
@@ -310,7 +310,7 @@ const data = await apiService.get('/users');
 points, credits, money, likes
 
 // ✅ Terminología CoomÜnity
-meritos, ondas, lukas, ayni, bienComun
+meritos, ondas, units, ayni, bienComun
 ```
 
 ---

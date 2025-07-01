@@ -26,11 +26,18 @@ import { GplContentController } from './gpl-content/gpl-content.controller';
 import { GplContentService } from './gpl-content/gpl-content.service';
 import { OctalysisController } from './octalysis/octalysis.controller';
 import { OctalysisService } from './octalysis/octalysis.service';
+import { CosmicKanbanController } from './cosmic-kanban/cosmic-kanban.controller';
+import { CosmicKanbanService } from './cosmic-kanban/cosmic-kanban.service';
 import { PrismaModule } from '../prisma/prisma.module';
 import { CacheModule } from '../cache/cache.module';
+import { CosmicKanbanModule } from './cosmic-kanban/cosmic-kanban.module';
 
 @Module({
-  imports: [PrismaModule, CacheModule],
+  imports: [
+    PrismaModule,
+    CacheModule,
+    CosmicKanbanModule,
+  ],
   controllers: [
     ConsoleController,
     StagesController,
@@ -38,6 +45,7 @@ import { CacheModule } from '../cache/cache.module';
     TrustVotingController,
     GplContentController,
     OctalysisController,
+    CosmicKanbanController,
   ],
   providers: [
     ConsoleService,
@@ -46,6 +54,7 @@ import { CacheModule } from '../cache/cache.module';
     TrustVotingService,
     GplContentService,
     OctalysisService,
+    CosmicKanbanService,
   ],
   exports: [
     ConsoleService,
@@ -54,6 +63,7 @@ import { CacheModule } from '../cache/cache.module';
     TrustVotingService,
     GplContentService,
     OctalysisService,
+    CosmicKanbanService,
   ],
 })
 export class ConsoleModule {}

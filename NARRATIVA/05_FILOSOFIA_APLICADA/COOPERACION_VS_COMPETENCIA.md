@@ -45,7 +45,7 @@ La cooperación **construye puentes y fortalece el flujo de Ayni**. Si te veo co
 ### **4. 🔮 Ejemplo Práctico: El Leaderboard vs. El Círculo de Contribución**
 
 **Diseño Competitivo (Rechazado):**
--   Una lista vertical de usuarios ordenados por la cantidad de "Lükas" (moneda interna) que han ganado.
+-   Una lista vertical de usuarios ordenados por la cantidad de "Ünits" (moneda interna) que han ganado.
 -   El usuario #1 está en la cima. El usuario #500 está al fondo.
 -   **Mensaje implícito:** "Eres mejor o peor que los demás según esta única métrica".
 

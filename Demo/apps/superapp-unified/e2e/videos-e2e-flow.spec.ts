@@ -191,7 +191,7 @@ test.describe('🎬 Videos Gamificados - Flujo E2E Completo', () => {
     console.log('🎯 Verificando persistencia de interacciones...');
     
     let apiCallsDetected = false;
-    let responseData: any[] = [];
+    const responseData: any[] = [];
     
     // Interceptar llamadas a la API relacionadas con interacciones
     page.on('response', async response => {
@@ -207,10 +207,10 @@ test.describe('🎬 Videos Gamificados - Flujo E2E Completo', () => {
         try {
           const data = await response.json();
           responseData.push({
-            url: url,
+            url,
             status: response.status(),
             method: response.request().method(),
-            data: data
+            data
           });
           
           console.log(`✅ API Call intercepted: ${response.request().method()} ${url} - Status: ${response.status()}`);

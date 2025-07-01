@@ -1,35 +1,25 @@
-import React, { useState, useMemo, useRef, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import {
   Box,
   Typography,
-  Avatar,
-  Tooltip,
   Chip,
-  Grid,
   Stack,
   IconButton,
   Collapse,
   useTheme,
   alpha,
   CircularProgress,
+  Paper,
+  Grid,
 } from '@mui/material';
 import {
   Whatshot,
   Waves,
   Terrain,
   Air,
-  AutoAwesome,
   ExpandMore,
   ExpandLess,
-  Psychology,
-  AllInclusive,
-  Timeline,
 } from '@mui/icons-material';
-import { motion, AnimatePresence } from 'framer-motion';
-
-// 🌌 ARIA & PHOENIX (Frontend Artist & Transformer) - Cosmic Design System
-import { CosmicCard } from '../../../../design-system';
-import { UNIFIED_COLORS } from '../../../../theme/colors';
 
 interface ElementalData {
   fuego: number;
@@ -48,22 +38,15 @@ interface PhilosophicalMetricsGalaxyProps {
     philosophy: string;
   }>;
   isExpanded?: boolean;
-  cosmicEffects?: {
-    enableGlow?: boolean;
-    enableParticles?: boolean;
-    enableAnimations?: boolean;
-  };
 }
 
-// 🎨 Configuración Elemental Cósmica
+// Configuración Elemental Simplificada
 const ELEMENTAL_CONFIG = {
   fuego: {
     name: 'Fuego',
     symbol: '🔥',
     description: 'Pasión y Acción',
     philosophy: 'Energía creativa y manifestación',
-    color: '#FF6B35',
-    gradient: 'linear-gradient(135deg, #FF6B35 0%, #FFB84D 100%)',
     icon: Whatshot,
     keywords: ['creatividad', 'acción', 'pasión', 'liderazgo'],
     balance: 'equilibra con Agua para evitar el agotamiento'
@@ -73,8 +56,6 @@ const ELEMENTAL_CONFIG = {
     symbol: '🌊',
     description: 'Fluidez y Adaptabilidad',
     philosophy: 'Colaboración y inteligencia emocional',
-    color: '#3B82F6',
-    gradient: 'linear-gradient(135deg, #3B82F6 0%, #06B6D4 100%)',
     icon: Waves,
     keywords: ['colaboración', 'empatía', 'fluidez', 'sanación'],
     balance: 'equilibra con Fuego para mantener la dirección'
@@ -84,8 +65,6 @@ const ELEMENTAL_CONFIG = {
     symbol: '🌍',
     description: 'Estabilidad y Materialización',
     philosophy: 'Fundamentos sólidos y crecimiento sostenible',
-    color: '#10B981',
-    gradient: 'linear-gradient(135deg, #10B981 0%, #34D399 100%)',
     icon: Terrain,
     keywords: ['estabilidad', 'práctica', 'abundancia', 'crecimiento'],
     balance: 'equilibra con Aire para evitar el estancamiento'
@@ -95,8 +74,6 @@ const ELEMENTAL_CONFIG = {
     symbol: '💨',
     description: 'Comunicación y Visión',
     philosophy: 'Ideas claras y perspectiva elevada',
-    color: '#8B5CF6',
-    gradient: 'linear-gradient(135deg, #8B5CF6 0%, #A78BFA 100%)',
     icon: Air,
     keywords: ['comunicación', 'visión', 'innovación', 'libertad'],
     balance: 'equilibra con Tierra para materializar las ideas'
@@ -104,10 +81,10 @@ const ELEMENTAL_CONFIG = {
 };
 
 /**
- * 🌌 PHILOSOPHICAL METRICS GALAXY - ARIA & PHOENIX
- * ===============================================
+ * 🌟 PHILOSOPHICAL METRICS GALAXY - Minimalist Version
+ * ===================================================
  *
- * Visualización cósmica del equilibrio elemental en formato galaxia
+ * Visualización simplificada del equilibrio elemental
  *
  * Filosofía CoomÜnity:
  * - **4 Elementos**: Fuego, Agua, Tierra, Aire como dimensiones del ser
@@ -120,15 +97,12 @@ const PhilosophicalMetricsGalaxy: React.FC<PhilosophicalMetricsGalaxyProps> = Re
   dominantElement,
   balanceScore,
   recommendations = [],
-  isExpanded = false,
-  cosmicEffects = {}
 }) => {
   const theme = useTheme();
   const [selectedElement, setSelectedElement] = useState<keyof ElementalData | null>(null);
   const [showRecommendations, setShowRecommendations] = useState(false);
-  const galaxyRef = useRef<HTMLDivElement>(null);
 
-  // 🌟 Análisis del Balance Elemental
+  // Análisis del Balance Elemental
   const elementalAnalysis = useMemo(() => {
     const total = elementos.fuego + elementos.agua + elementos.tierra + elementos.aire;
     const percentages = {
@@ -145,69 +119,38 @@ const PhilosophicalMetricsGalaxy: React.FC<PhilosophicalMetricsGalaxyProps> = Re
     return { percentages, balanceStatus, variance };
   }, [elementos]);
 
-  // 🎯 Posicionamiento Cósmico de Elementos
-  const getElementPosition = (element: keyof ElementalData, index: number) => {
-    const angle = (index * 90) * (Math.PI / 180); // 90 grados entre elementos
-    const radius = 80; // Radio de la galaxia
-    const centerX = 50;
-    const centerY = 50;
-
-    return {
-      x: centerX + radius * Math.cos(angle),
-      y: centerY + radius * Math.sin(angle),
-    };
+  // Determinar colores basados en el tema
+  const getElementColor = (element: keyof ElementalData) => {
+    switch (element) {
+      case 'fuego':
+        return theme.palette.error.main;
+      case 'agua':
+        return theme.palette.primary.main;
+      case 'tierra':
+        return theme.palette.success.main;
+      case 'aire':
+        return theme.palette.secondary.main;
+      default:
+        return theme.palette.grey[500];
+    }
   };
 
-  // 🌊 Efectos de Partículas Elementales
-  useEffect(() => {
-    if (!cosmicEffects.enableParticles || !galaxyRef.current) return;
-
-    const createElementalParticle = (element: keyof ElementalData) => {
-      const config = ELEMENTAL_CONFIG[element];
-      const particle = document.createElement('div');
-
-      particle.style.cssText = `
-        position: absolute;
-        width: 4px;
-        height: 4px;
-        background: ${config.color};
-        border-radius: 50%;
-        pointer-events: none;
-        opacity: 0.6;
-        animation: elementalDrift 8s linear infinite;
-        top: ${Math.random() * 100}%;
-        left: ${Math.random() * 100}%;
-      `;
-
-      galaxyRef.current?.appendChild(particle);
-
-      setTimeout(() => {
-        particle.remove();
-      }, 8000);
-    };
-
-    const interval = setInterval(() => {
-      Object.keys(elementos).forEach((element) => {
-        if (Math.random() < 0.3) {
-          createElementalParticle(element as keyof ElementalData);
-        }
-      });
-    }, 2000);
-
-    return () => clearInterval(interval);
-  }, [cosmicEffects.enableParticles, elementos]);
-
   return (
-    <CosmicCard
-      variant="elevated"
-      element="fuego"
-      enableGlow={cosmicEffects.enableGlow}
-      enableAnimations={cosmicEffects.enableAnimations}
-      enableParticles={cosmicEffects.enableParticles}
-      cosmicIntensity="medium"
-      sx={{ height: '100%', position: 'relative' }}
+    <Paper
+      elevation={0}
+      sx={{
+        height: '100%',
+        position: 'relative',
+        p: 3,
+        border: `1px solid ${theme.palette.divider}`,
+        borderRadius: 2,
+        '&:hover': {
+          borderColor: theme.palette.primary.main,
+          boxShadow: `0 2px 8px ${alpha(theme.palette.primary.main, 0.1)}`,
+        }
+      }}
     >
-      {/* 🌟 Header con Balance Score */}
+      {/* Header con Balance Score */}
       <Box sx={{ mb: 3, textAlign: 'center' }}>
         <Typography variant="h6" sx={{ mb: 1, fontWeight: 600 }}>
           🌌 Galaxia Elemental de tu Ser
@@ -220,7 +163,9 @@ const PhilosophicalMetricsGalaxy: React.FC<PhilosophicalMetricsGalaxyProps> = Re
             size={60}
             thickness={4}
             sx={{
-              color: balanceScore >= 80 ? '#10B981' : balanceScore >= 60 ? '#3B82F6' : '#F59E0B',
+              color: balanceScore >= 80 ? theme.palette.success.main :
+                     balanceScore >= 60 ? theme.palette.primary.main :
+                     theme.palette.warning.main,
               '& .MuiCircularProgress-circle': {
                 strokeLinecap: 'round',
               }
@@ -238,336 +183,184 @@ const PhilosophicalMetricsGalaxy: React.FC<PhilosophicalMetricsGalaxyProps> = Re
 
         <Chip
           label={elementalAnalysis.balanceStatus}
+          variant="outlined"
           sx={{
-            background: alpha(ELEMENTAL_CONFIG[dominantElement].color, 0.15),
-            color: ELEMENTAL_CONFIG[dominantElement].color,
+            borderColor: getElementColor(dominantElement),
+            color: getElementColor(dominantElement),
             fontWeight: 600
           }}
         />
       </Box>
 
-      {/* 🌌 Galaxia Central con Elementos */}
-      <Box
-        ref={galaxyRef}
-        sx={{
-          position: 'relative',
-          height: 250,
-          borderRadius: 3,
-          background: `
-            radial-gradient(circle at center,
-              rgba(15, 23, 42, 0.05) 0%,
-              rgba(30, 41, 59, 0.02) 70%,
-              transparent 100%
-            )
-          `,
-          border: `1px solid ${alpha(theme.palette.primary.main, 0.1)}`,
-          overflow: 'hidden',
-          mb: 3
-        }}
-      >
-        {/* 🌟 Centro Cósmico */}
-        <Box
-          sx={{
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            width: 40,
-            height: 40,
-            borderRadius: '50%',
-            background: `radial-gradient(circle, ${alpha('#FFD700', 0.3)}, transparent)`,
-            border: `2px solid ${alpha('#FFD700', 0.5)}`,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            animation: cosmicEffects.enableAnimations ? 'cosmicPulse 3s ease-in-out infinite' : 'none'
-          }}
-        >
-          <AllInclusive sx={{ color: '#FFD700', fontSize: 20 }} />
-        </Box>
+      {/* Elementos en Grid */}
+      <Grid container spacing={2} sx={{ mb: 3 }}>
+        {(Object.keys(elementos) as Array<keyof ElementalData>).map((element) => {
+          if (!element || !ELEMENTAL_CONFIG[element]) {
+            return null;
+          }
 
-        {/* 🔥💧🌍💨 Elementos Orbitales */}
-        {(Object.keys(elementos) as Array<keyof ElementalData>).map((element, index) => {
           const config = ELEMENTAL_CONFIG[element];
-          const position = getElementPosition(element, index);
           const percentage = elementalAnalysis.percentages[element];
           const ElementIcon = config.icon;
           const isDominant = element === dominantElement;
+          const color = getElementColor(element);
 
           return (
-            <motion.div
-              key={element}
-              initial={{ scale: 0, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ delay: index * 0.2, duration: 0.5 }}
-              style={{
-                position: 'absolute',
-                top: `${position.y}%`,
-                left: `${position.x}%`,
-                transform: 'translate(-50%, -50%)',
-              }}
-            >
-              <Tooltip
-                title={
-                  <Box>
-                    <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>
-                      {config.symbol} {config.name}
-                    </Typography>
-                    <Typography variant="body2" sx={{ mb: 1 }}>
-                      {config.description}
-                    </Typography>
-                    <Typography variant="caption">
-                      {percentage.toFixed(1)}% de tu energía elemental
-                    </Typography>
-                  </Box>
-                }
-                arrow
-              >
-                <Box
-                  onClick={() => setSelectedElement(selectedElement === element ? null : element)}
-                  sx={{
-                    width: isDominant ? 80 : 60,
-                    height: isDominant ? 80 : 60,
-                    borderRadius: '50%',
-                    background: config.gradient,
-                    border: `3px solid ${alpha(config.color, isDominant ? 0.8 : 0.5)}`,
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    cursor: 'pointer',
-                    transition: 'all 0.3s ease',
-                    position: 'relative',
-                    boxShadow: isDominant
-                      ? `0 0 20px ${alpha(config.color, 0.4)}`
-                      : `0 0 10px ${alpha(config.color, 0.2)}`,
-                    animation: cosmicEffects.enableAnimations && isDominant
-                      ? `elementalPulse-${element} 2s ease-in-out infinite`
-                      : 'none',
-                    '&:hover': {
-                      transform: 'translate(-50%, -50%) scale(1.1)',
-                      boxShadow: `0 0 25px ${alpha(config.color, 0.6)}`,
-                    }
-                  }}
-                >
-                  <ElementIcon sx={{
-                    fontSize: isDominant ? 32 : 24,
-                    color: 'white',
-                    filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.3))'
-                  }} />
-
-                  {/* 📊 Indicador de Porcentaje */}
-                  <Box
-                    sx={{
-                      position: 'absolute',
-                      bottom: -8,
-                      left: '50%',
-                      transform: 'translateX(-50%)',
-                      background: config.color,
-                      color: 'white',
-                      borderRadius: 1,
-                      px: 1,
-                      py: 0.25,
-                      fontSize: '0.75rem',
-                      fontWeight: 600,
-                      minWidth: 32,
-                      textAlign: 'center'
-                    }}
-                  >
-                    {Math.round(percentage)}%
-                  </Box>
-                </Box>
-              </Tooltip>
-            </motion.div>
-          );
-        })}
-
-        {/* 🌟 Líneas de Conexión Energética */}
-        <svg
-          style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            width: '100%',
-            height: '100%',
-            pointerEvents: 'none',
-            opacity: 0.3
-          }}
-        >
-          {(Object.keys(elementos) as Array<keyof ElementalData>).map((element, index) => {
-            const pos1 = getElementPosition(element, index);
-            const pos2 = { x: 50, y: 50 }; // Centro
-
-            return (
-              <line
-                key={`line-${element}`}
-                x1={`${pos1.x}%`}
-                y1={`${pos1.y}%`}
-                x2={`${pos2.x}%`}
-                y2={`${pos2.y}%`}
-                stroke={ELEMENTAL_CONFIG[element].color}
-                strokeWidth="2"
-                strokeDasharray={element === dominantElement ? "none" : "4,4"}
-                style={{
-                  animation: cosmicEffects.enableAnimations
-                    ? `energyFlow 3s ease-in-out infinite ${index * 0.5}s`
-                    : 'none'
-                }}
-              />
-            );
-          })}
-        </svg>
-      </Box>
-
-      {/* 🔮 Información del Elemento Seleccionado */}
-      <Collapse in={selectedElement !== null}>
-        {selectedElement && (
-          <Box sx={{
-            p: 3,
-            borderRadius: 2,
-            background: `linear-gradient(135deg, ${alpha(ELEMENTAL_CONFIG[selectedElement].color, 0.05)}, transparent)`,
-            border: `1px solid ${alpha(ELEMENTAL_CONFIG[selectedElement].color, 0.2)}`,
-            mb: 2
-          }}>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-              <Box
+            <Grid item xs={6} key={element}>
+              <Paper
+                variant="outlined"
                 sx={{
-                  width: 40,
-                  height: 40,
-                  borderRadius: '50%',
-                  background: ELEMENTAL_CONFIG[selectedElement].gradient,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center'
+                  p: 2,
+                  textAlign: 'center',
+                  cursor: 'pointer',
+                  borderColor: selectedElement === element ? color : theme.palette.divider,
+                  backgroundColor: selectedElement === element
+                    ? alpha(color, 0.05)
+                    : 'transparent',
+                  transition: 'all 0.2s ease',
+                  '&:hover': {
+                    borderColor: color,
+                    backgroundColor: alpha(color, 0.05),
+                    transform: 'translateY(-2px)',
+                  },
+                  ...(isDominant && {
+                    boxShadow: `0 0 0 2px ${alpha(color, 0.3)}`,
+                  })
                 }}
+                onClick={() => setSelectedElement(selectedElement === element ? null : element)}
               >
-                <Typography variant="h6">
-                  {ELEMENTAL_CONFIG[selectedElement].symbol}
-                </Typography>
-              </Box>
-              <Box>
-                <Typography variant="h6" sx={{ fontWeight: 600, color: ELEMENTAL_CONFIG[selectedElement].color }}>
-                  Elemento {ELEMENTAL_CONFIG[selectedElement].name}
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  {ELEMENTAL_CONFIG[selectedElement].description}
-                </Typography>
-              </Box>
-            </Box>
+                <Box sx={{ mb: 1 }}>
+                  <ElementIcon sx={{ fontSize: 32, color }} />
+                </Box>
 
-            <Typography variant="body2" sx={{ mb: 2, lineHeight: 1.6 }}>
-              {ELEMENTAL_CONFIG[selectedElement].philosophy}
-            </Typography>
+                <Typography variant="h6" sx={{ fontWeight: 600, color }}>
+                  {percentage.toFixed(0)}%
+                </Typography>
 
-            <Box sx={{ mb: 2 }}>
-              <Typography variant="caption" sx={{ fontWeight: 600, mb: 1, display: 'block' }}>
-                Palabras Clave:
-              </Typography>
-              <Stack direction="row" spacing={1} flexWrap="wrap">
-                {ELEMENTAL_CONFIG[selectedElement].keywords.map((keyword) => (
+                <Typography variant="body2" sx={{ fontWeight: 500, mb: 1 }}>
+                  {config.name}
+                </Typography>
+
+                <Typography variant="caption" color="text.secondary">
+                  {config.description}
+                </Typography>
+
+                {isDominant && (
                   <Chip
-                    key={keyword}
-                    label={keyword}
+                    label="Dominante"
                     size="small"
                     sx={{
-                      background: alpha(ELEMENTAL_CONFIG[selectedElement].color, 0.1),
-                      color: ELEMENTAL_CONFIG[selectedElement].color,
-                      fontSize: '0.75rem'
+                      mt: 1,
+                      backgroundColor: alpha(color, 0.1),
+                      color,
+                      fontWeight: 600,
+                      fontSize: '0.7rem'
                     }}
                   />
-                ))}
-              </Stack>
-            </Box>
+                )}
+              </Paper>
+            </Grid>
+          );
+        })}
+      </Grid>
 
-            <Box sx={{
-              p: 2,
-              borderRadius: 1,
-              background: alpha(ELEMENTAL_CONFIG[selectedElement].color, 0.05),
-              borderLeft: `3px solid ${ELEMENTAL_CONFIG[selectedElement].color}`
-            }}>
-              <Typography variant="body2" sx={{ fontSize: '0.875rem', fontStyle: 'italic' }}>
-                💡 Para equilibrar: {ELEMENTAL_CONFIG[selectedElement].balance}
-              </Typography>
-            </Box>
+      {/* Detalles del Elemento Seleccionado */}
+      {selectedElement && ELEMENTAL_CONFIG[selectedElement] && (
+        <Paper
+          variant="outlined"
+          sx={{
+            p: 2,
+            mb: 3,
+            backgroundColor: alpha(getElementColor(selectedElement), 0.05),
+            borderColor: getElementColor(selectedElement),
+          }}
+        >
+          <Typography variant="subtitle1" sx={{
+            fontWeight: 600,
+            color: getElementColor(selectedElement),
+            mb: 1
+          }}>
+            {ELEMENTAL_CONFIG[selectedElement].symbol} {ELEMENTAL_CONFIG[selectedElement].name}
+          </Typography>
+
+          <Typography variant="body2" sx={{ mb: 2, color: theme.palette.text.secondary }}>
+            {ELEMENTAL_CONFIG[selectedElement].philosophy}
+          </Typography>
+
+          <Box sx={{ mb: 2 }}>
+            <Typography variant="caption" sx={{ fontWeight: 600, color: theme.palette.text.primary }}>
+              Palabras clave:
+            </Typography>
+            <Stack direction="row" spacing={1} sx={{ mt: 1 }}>
+              {ELEMENTAL_CONFIG[selectedElement].keywords.map((keyword) => (
+                <Chip
+                  key={keyword}
+                  label={keyword}
+                  size="small"
+                  variant="outlined"
+                  sx={{
+                    borderColor: getElementColor(selectedElement),
+                    color: getElementColor(selectedElement),
+                    fontSize: '0.7rem'
+                  }}
+                />
+              ))}
+            </Stack>
           </Box>
-        )}
-      </Collapse>
 
-      {/* 🎯 Recomendaciones de Balance */}
+          <Typography variant="caption" sx={{
+            fontStyle: 'italic',
+            color: theme.palette.text.secondary,
+          }}>
+            💡 {ELEMENTAL_CONFIG[selectedElement].balance}
+          </Typography>
+        </Paper>
+      )}
+
+      {/* Recomendaciones */}
       {recommendations.length > 0 && (
         <Box>
           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
             <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>
-              🌟 Recomendaciones de Equilibrio
+              💡 Recomendaciones de Equilibrio
             </Typography>
             <IconButton
               size="small"
               onClick={() => setShowRecommendations(!showRecommendations)}
-              sx={{ color: 'text.secondary' }}
+              sx={{ color: theme.palette.text.secondary }}
             >
               {showRecommendations ? <ExpandLess /> : <ExpandMore />}
             </IconButton>
           </Box>
 
           <Collapse in={showRecommendations}>
-            <Stack spacing={1}>
+            <Stack spacing={2}>
               {recommendations.slice(0, 3).map((rec, index) => (
-                <Box
+                <Paper
                   key={index}
+                  variant="outlined"
                   sx={{
                     p: 2,
-                    borderRadius: 2,
-                    background: alpha(ELEMENTAL_CONFIG[rec.element].color, 0.05),
-                    border: `1px solid ${alpha(ELEMENTAL_CONFIG[rec.element].color, 0.15)}`
+                    backgroundColor: alpha(getElementColor(rec.element), 0.05),
+                    borderColor: getElementColor(rec.element),
                   }}
                 >
-                  <Typography variant="body2" sx={{ fontWeight: 500, mb: 0.5 }}>
-                    {ELEMENTAL_CONFIG[rec.element].symbol} {rec.action}
+                  <Typography variant="body2" sx={{ fontWeight: 500, mb: 1 }}>
+                    🌟 {rec.action}
                   </Typography>
-                  <Typography variant="caption" sx={{ color: 'text.secondary', fontStyle: 'italic' }}>
+                  <Typography variant="caption" sx={{
+                    color: theme.palette.text.secondary,
+                    fontStyle: 'italic'
+                  }}>
                     {rec.philosophy}
                   </Typography>
-                </Box>
+                </Paper>
               ))}
             </Stack>
           </Collapse>
         </Box>
       )}
-
-      {/* 🎨 Keyframes para Animaciones */}
-      <style>
-        {`
-          @keyframes cosmicPulse {
-            0%, 100% { opacity: 0.6; transform: translate(-50%, -50%) scale(1); }
-            50% { opacity: 1; transform: translate(-50%, -50%) scale(1.1); }
-          }
-          @keyframes elementalPulse-fuego {
-            0%, 100% { box-shadow: 0 0 20px rgba(255, 107, 53, 0.4); }
-            50% { box-shadow: 0 0 30px rgba(255, 107, 53, 0.8); }
-          }
-          @keyframes elementalPulse-agua {
-            0%, 100% { box-shadow: 0 0 20px rgba(59, 130, 246, 0.4); }
-            50% { box-shadow: 0 0 30px rgba(59, 130, 246, 0.8); }
-          }
-          @keyframes elementalPulse-tierra {
-            0%, 100% { box-shadow: 0 0 20px rgba(16, 185, 129, 0.4); }
-            50% { box-shadow: 0 0 30px rgba(16, 185, 129, 0.8); }
-          }
-          @keyframes elementalPulse-aire {
-            0%, 100% { box-shadow: 0 0 20px rgba(139, 92, 246, 0.4); }
-            50% { box-shadow: 0 0 30px rgba(139, 92, 246, 0.8); }
-          }
-          @keyframes energyFlow {
-            0%, 100% { opacity: 0.3; }
-            50% { opacity: 0.8; }
-          }
-          @keyframes elementalDrift {
-            0% { transform: translateY(0px) rotate(0deg); opacity: 0.6; }
-            50% { transform: translateY(-20px) rotate(180deg); opacity: 0.8; }
-            100% { transform: translateY(-40px) rotate(360deg); opacity: 0; }
-          }
-        `}
-      </style>
-    </CosmicCard>
+    </Paper>
   );
 });
 

@@ -155,7 +155,7 @@ export class MarketplaceService {
           itemType: dto.type as PrismaMarketplaceItemType,
           price: dto.priceUnits,
           priceToins: dto.priceToins || 0,
-          currency: 'LUKAS',
+          currency: 'UNITS',
           tags: dto.tags || [],
           images: dto.imageUrl ? [dto.imageUrl] : [],
           location: dto.location,

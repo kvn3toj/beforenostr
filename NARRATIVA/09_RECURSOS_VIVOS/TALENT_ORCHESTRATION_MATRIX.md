@@ -35,7 +35,7 @@ La MOT no es una hoja de cálculo estática, sino una visualización interactiva
 -   La MOT instantáneamente sugiere una lista de los miembros de la comunidad mejor cualificados para cada rol.
 -   Va más allá de la simple habilidad técnica, pudiendo filtrar por:
     -   **Historial de Colaboración:** "¿Quiénes han trabajado bien juntos en el pasado?" (extraído del grafo social).
-    -   **Índice de Ayni:** "¿Quiénes son contribuidores equilibrados?".
+    -   **Índice de Reciprocidad:** "¿Quiénes son contribuidores equilibrados?".
     -   **Intereses Declarados:** "¿A quién le apasiona este tema?".
 -   Esto permite formar equipos que no solo son técnicamente competentes, sino también humanamente compatibles.
 

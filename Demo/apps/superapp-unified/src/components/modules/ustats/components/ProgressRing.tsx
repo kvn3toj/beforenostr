@@ -1,6 +1,5 @@
 import React from 'react';
-import { Box, Typography, Paper } from '@mui/material';
-import { motion } from 'framer-motion';
+import { Box, Typography, Paper, useTheme, alpha } from '@mui/material';
 
 interface ProgressRingProps {
   title: string;
@@ -17,226 +16,146 @@ const ProgressRing: React.FC<ProgressRingProps> = ({
   color,
   size = 120,
 }) => {
-  const percentage = (value / maxValue) * 100;
-  const strokeWidth = 8;
-  const radius = (size - strokeWidth) / 2;
-  const circumference = radius * 2 * Math.PI;
-  const strokeDasharray = circumference;
+  const theme = useTheme();
+  const percentage = Math.min((value / maxValue) * 100, 100);
+
+  // Ring calculations
+  const radius = (size - 20) / 2;
+  const circumference = 2 * Math.PI * radius;
+  const strokeDasharray = `${circumference} ${circumference}`;
   const strokeDashoffset = circumference - (percentage / 100) * circumference;
+  const strokeWidth = 8;
 
   const getStatusColor = () => {
-    if (percentage >= 80) return '#ff4444'; // Critical
-    if (percentage >= 60) return '#ffaa00'; // Warning
-    return color; // Normal
+    if (percentage >= 80) return theme.palette.success.main;
+    if (percentage >= 60) return theme.palette.warning.main;
+    return theme.palette.error.main;
   };
 
   const getStatusText = () => {
-    if (percentage >= 80) return 'CRITICAL';
-    if (percentage >= 60) return 'WARNING';
-    return 'OPTIMAL';
+    if (percentage >= 80) return 'Excelente';
+    if (percentage >= 60) return 'Bueno';
+    if (percentage >= 40) return 'Regular';
+    return 'Mejorando';
   };
 
   return (
-    <motion.div
-      whileHover={{ scale: 1.05 }}
-      transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+    <Paper
+      elevation={0}
+      className="guardian-progress-ring"
+      sx={{
+        p: 3,
+        border: `1px solid ${theme.palette.divider}`,
+        borderRadius: 2,
+        textAlign: 'center',
+        position: 'relative',
+        '&:hover': {
+          borderColor: getStatusColor(),
+          boxShadow: `0 2px 8px ${alpha(getStatusColor(), 0.1)}`,
+        }
+      }}
     >
-      <Paper
-        className="guardian-progress-ring"
+      <Typography
+        variant="subtitle1"
+        component="h3"
+        gutterBottom
         sx={{
-          p: 3,
-          borderRadius: 2,
-          textAlign: 'center',
-          position: 'relative',
-          overflow: 'hidden',
+          color: theme.palette.text.primary,
+          fontWeight: 600,
+          mb: 2,
         }}
       >
-        {/* Background Glow */}
+        {title}
+      </Typography>
+
+      <Box position="relative" display="inline-block">
+        {/* SVG Progress Ring */}
+        <svg
+          width={size}
+          height={size}
+          style={{ transform: 'rotate(-90deg)' }}
+        >
+          {/* Background Circle */}
+          <circle
+            cx={size / 2}
+            cy={size / 2}
+            r={radius}
+            stroke={theme.palette.divider}
+            strokeWidth={strokeWidth}
+            fill="transparent"
+          />
+
+          {/* Progress Circle */}
+          <circle
+            cx={size / 2}
+            cy={size / 2}
+            r={radius}
+            stroke={getStatusColor()}
+            strokeWidth={strokeWidth}
+            fill="transparent"
+            strokeDasharray={strokeDasharray}
+            strokeDashoffset={strokeDashoffset}
+            strokeLinecap="round"
+          />
+        </svg>
+
+        {/* Center Content */}
         <Box
           position="absolute"
-          top={0}
-          left={0}
-          right={0}
-          bottom={0}
+          top="50%"
+          left="50%"
           sx={{
-            background: `radial-gradient(circle, ${color}10 0%, transparent 70%)`,
-            zIndex: 1,
+            transform: 'translate(-50%, -50%)',
           }}
-        />
-
-        <Box position="relative" zIndex={2}>
+        >
           <Typography
-            variant="subtitle1"
-            component="h3"
-            gutterBottom
+            variant="h4"
+            component="div"
             sx={{
-              color,
-              fontWeight: 'bold',
-              textShadow: `0 0 10px ${color}60`,
-              textTransform: 'uppercase',
-              mb: 2,
+              color: getStatusColor(),
+              fontWeight: 700,
+              mb: 0.5,
             }}
           >
-            {title}
+            {value}
           </Typography>
-
-          <Box position="relative" display="inline-block">
-            {/* SVG Progress Ring */}
-            <svg
-              width={size}
-              height={size}
-              style={{ transform: 'rotate(-90deg)' }}
-            >
-              {/* Background Circle */}
-              <circle
-                cx={size / 2}
-                cy={size / 2}
-                r={radius}
-                stroke="rgba(255,255,255,0.1)"
-                strokeWidth={strokeWidth}
-                fill="transparent"
-              />
-
-              {/* Progress Circle */}
-              <motion.circle
-                cx={size / 2}
-                cy={size / 2}
-                r={radius}
-                stroke={getStatusColor()}
-                strokeWidth={strokeWidth}
-                fill="transparent"
-                strokeDasharray={strokeDasharray}
-                strokeDashoffset={strokeDashoffset}
-                strokeLinecap="round"
-                initial={{ strokeDashoffset: circumference }}
-                animate={{ strokeDashoffset }}
-                transition={{ duration: 2, ease: 'easeOut' }}
-                style={{
-                  filter: `drop-shadow(0 0 10px ${getStatusColor()}60)`,
-                }}
-              />
-
-              {/* Pulsing center dot */}
-              <motion.circle
-                cx={size / 2}
-                cy={size / 2}
-                r={3}
-                fill={getStatusColor()}
-                animate={{
-                  r: [3, 6, 3],
-                  opacity: [1, 0.5, 1],
-                }}
-                transition={{
-                  duration: 2,
-                  repeat: Infinity,
-                  ease: 'easeInOut',
-                }}
-                style={{
-                  filter: `drop-shadow(0 0 5px ${getStatusColor()}80)`,
-                }}
-              />
-            </svg>
-
-            {/* Center Content */}
-            <Box
-              position="absolute"
-              top="50%"
-              left="50%"
-              sx={{
-                transform: 'translate(-50%, -50%)',
-              }}
-            >
-              <motion.div
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                transition={{ delay: 0.5, type: 'spring', stiffness: 200 }}
-              >
-                <Typography
-                  variant="h4"
-                  component="div"
-                  sx={{
-                    color: getStatusColor(),
-                    fontWeight: 'bold',
-                    textShadow: `0 0 10px ${getStatusColor()}80`,
-                    mb: 0.5,
-                  }}
-                >
-                  {value}
-                </Typography>
-                <Typography
-                  variant="caption"
-                  sx={{
-                    color: '#fff',
-                    fontSize: '0.7rem',
-                    textTransform: 'uppercase',
-                    fontWeight: 'bold',
-                  }}
-                >
-                  %
-                </Typography>
-              </motion.div>
-            </Box>
-          </Box>
-
-          {/* Status Badge */}
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 1, duration: 0.5 }}
+          <Typography
+            variant="caption"
+            sx={{
+              color: theme.palette.text.secondary,
+              fontSize: '0.7rem',
+              fontWeight: 600,
+            }}
           >
-            <Box
-              mt={2}
-              px={2}
-              py={0.5}
-              sx={{
-                background: `linear-gradient(45deg, ${getStatusColor()}20 0%, transparent 100%)`,
-                border: `1px solid ${getStatusColor()}60`,
-                borderRadius: 1,
-                display: 'inline-block',
-              }}
-            >
-              <Typography
-                variant="caption"
-                sx={{
-                  color: getStatusColor(),
-                  fontWeight: 'bold',
-                  textShadow: `0 0 5px ${getStatusColor()}40`,
-                  fontSize: '0.7rem',
-                }}
-              >
-                {getStatusText()}
-              </Typography>
-            </Box>
-          </motion.div>
-
-          {/* Gaming corner accents */}
-          <Box
-            position="absolute"
-            top={0}
-            left={0}
-            width={16}
-            height={16}
-            sx={{
-              background: `linear-gradient(45deg, ${color} 0%, transparent 100%)`,
-              clipPath: 'polygon(0 0, 100% 0, 0 100%)',
-              opacity: 0.6,
-            }}
-          />
-          <Box
-            position="absolute"
-            bottom={0}
-            right={0}
-            width={16}
-            height={16}
-            sx={{
-              background: `linear-gradient(225deg, ${color} 0%, transparent 100%)`,
-              clipPath: 'polygon(100% 0, 100% 100%, 0 100%)',
-              opacity: 0.6,
-            }}
-          />
+            / {maxValue}
+          </Typography>
         </Box>
-      </Paper>
-    </motion.div>
+      </Box>
+
+      {/* Status Badge */}
+      <Box
+        mt={2}
+        px={2}
+        py={0.5}
+        sx={{
+          backgroundColor: alpha(getStatusColor(), 0.1),
+          border: `1px solid ${alpha(getStatusColor(), 0.3)}`,
+          borderRadius: 1,
+          display: 'inline-block',
+        }}
+      >
+        <Typography
+          variant="caption"
+          sx={{
+            color: getStatusColor(),
+            fontWeight: 600,
+            fontSize: '0.7rem',
+          }}
+        >
+          {getStatusText()} ({percentage.toFixed(0)}%)
+        </Typography>
+      </Box>
+    </Paper>
   );
 };
 

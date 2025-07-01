@@ -1,355 +1,169 @@
+/**
+ * 🔗 Console Data Hooks - Conectores del Flujo Vital
+ *
+ * Hooks de React Query que conectan la Consola de Experiencias con el Backend NestJS Real
+ * ACTIVANDO EL CORAZÓN OPERATIVO DE COOMUNITY CON DATOS REALES.
+ */
+
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { useCallback, useMemo } from 'react';
-import { toast } from 'sonner';
-import { philosophyApiService } from '../services/philosophy-api.service';
+import {
+  consoleApiService,
+  type DashboardMetrics,
+  type ConsoleOverview,
+  type ConsoleNotification,
+  type Stage,
+  type Contest,
+  type StageAnalytics,
+  type OctalysisAnalytics,
+  type Challenge
+} from '../services/console-api.service';
 
-// Types para la Consola de Experiencias
-export interface Challenge {
-  id: string;
-  title: string;
-  name: string;
-  slug: string;
-  description?: string;
-  type: string;
-  status: string;
-  startDate?: Date;
-  endDate?: Date;
-  config?: Record<string, any>;
-  createdBy: string;
-  createdAt: string;
-  updatedAt: string;
-  rewards?: ChallengeReward[];
-  userChallenges?: UserChallenge[];
-}
+// ===============================================================================
+// QUERY KEYS - Claves para React Query Cache Management
+// ===============================================================================
 
-export interface ChallengeReward {
-  id: string;
-  challengeId: string;
-  type: string;
-  amount?: number;
-  description?: string;
-  metadata?: string;
-}
+export const CONSOLE_QUERY_KEYS = {
+  analytics: ['console', 'analytics'] as const,
+  overview: ['console', 'overview'] as const,
+  stages: ['console', 'stages'] as const,
+  contests: ['console', 'contests'] as const,
+  notifications: ['console', 'notifications'] as const,
+  octalysis: ['console', 'octalysis'] as const,
+  challenges: ['console', 'challenges'] as const,
+} as const;
 
-export interface UserChallenge {
-  id: string;
-  userId: string;
-  challengeId: string;
-  status: string;
-  progress: number;
-  startedAt: string;
-  completedAt?: string;
-}
 
-export interface ExperienceMetrics {
-  totalChallenges: number;
-  activeChallenges: number;
-  completedChallenges: number;
-  totalParticipants: number;
-  averageCompletion: number;
-  reciprocityIndex: number; // Índice de Equilibrio de Reciprocidad (IER)
-}
-
-export interface CreateChallengeData {
-  title: string;
-  name: string;
-  slug: string;
-  description?: string;
-  type: string;
-  startDate?: Date;
-  endDate?: Date;
-  config?: Record<string, any>;
-  rewards?: Omit<ChallengeReward, 'id' | 'challengeId'>[];
-}
-
-export interface UpdateChallengeData extends Partial<CreateChallengeData> {
-  id: string;
-}
+// ===============================================================================
+// HOOK PRINCIPAL - useConsoleData
+// ===============================================================================
 
 /**
- * Hook principal para la Consola de Experiencias del Gamifier Admin
- *
- * Funcionalidades:
- * - Gestión completa de Challenges (CRUD)
- * - Métricas filosóficas (IER - Índice de Equilibrio de Reciprocidad)
- * - Estado de la consola en tiempo real
- * - Integración con el backend NestJS
- *
- * Filosofía CoomÜnity aplicada:
- * - Reciprocidad: Flujo de datos eficiente y transparente
- * - Bien Común: Herramientas para crear experiencias de alto valor
- * - Cooperación: Gestión sin bloqueos del estado
- * - Belleza: API limpia y predecible
+ * 🚀 Hook principal que orquesta todos los datos de la Consola de Experiencias.
+ * Implementa conexión real con backend NestJS, manejo de estado con React Query,
+ * y operaciones de mutación para una gestión de datos completa.
  */
-export const useConsoleData = () => {
+export const useConsoleData = (realTimeUpdates: boolean = true) => {
   const queryClient = useQueryClient();
 
-  // =====================================================================
-  // QUERIES - Obtención de datos con React Query
-  // =====================================================================
+  // ---------------------------------------------------------------------------
+  // QUERIES (Lectura de Datos)
+  // ---------------------------------------------------------------------------
 
-  // Obtener todas las métricas de la consola
-  const {
-    data: metrics,
-    isLoading: isLoadingMetrics,
-    error: metricsError,
-    refetch: refetchMetrics
-  } = useQuery<ExperienceMetrics>({
-    queryKey: ['console', 'metrics'],
-    queryFn: async () => {
-      // Usar el servicio de filosofía para obtener métricas
-      const response = await philosophyApiService.getMetrics();
-      return {
-        totalChallenges: response.totalChallenges || 0,
-        activeChallenges: response.activeChallenges || 0,
-        completedChallenges: response.completedChallenges || 0,
-        totalParticipants: response.totalParticipants || 0,
-        averageCompletion: response.averageCompletion || 0,
-        reciprocityIndex: response.reciprocityIndex || 0,
-      };
-    },
-    staleTime: 5 * 60 * 1000, // 5 minutos
-    refetchInterval: 30 * 1000, // Actualizar cada 30 segundos
+  const { data: metrics, isLoading: isLoadingMetrics, error: errorMetrics } = useQuery({
+    queryKey: CONSOLE_QUERY_KEYS.analytics,
+    queryFn: () => consoleApiService.getConsoleAnalytics(),
+    staleTime: 60 * 1000, // 1 minuto
+    refetchInterval: realTimeUpdates ? 65 * 1000 : false, // Refrescar solo si realTimeUpdates está activo
   });
 
-  // Obtener todos los challenges para administración
-  const {
-    data: challenges,
-    isLoading: isLoadingChallenges,
-    error: challengesError,
-    refetch: refetchChallenges
-  } = useQuery<Challenge[]>({
-    queryKey: ['console', 'challenges'],
-    queryFn: async () => {
-      try {
-        // Llamada al endpoint de challenges del backend
-        const response = await fetch('/api/challenges/admin/all', {
-          headers: {
-            'Authorization': `Bearer ${localStorage.getItem('token')}`,
-            'Content-Type': 'application/json',
-          },
-        });
+  const { data: consoleStats, isLoading: isLoadingStats, error: errorStats } = useQuery({
+    queryKey: CONSOLE_QUERY_KEYS.overview,
+    queryFn: () => consoleApiService.getConsoleOverview(),
+    staleTime: 60 * 1000,
+    refetchInterval: realTimeUpdates ? 70 * 1000 : false,
+  });
 
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
+  const { data: stages, isLoading: isLoadingStages, error: errorStages } = useQuery({
+    queryKey: CONSOLE_QUERY_KEYS.stages,
+    queryFn: () => consoleApiService.getAllStages(),
+    staleTime: 5 * 60 * 1000, // 5 minutos
+  });
 
-        return await response.json();
-      } catch (error) {
-        console.error('Error fetching challenges:', error);
-        // Fallback a datos mock para desarrollo
-        return [
-          {
-            id: '1',
-            title: 'Desafío de Reciprocidad',
-            name: 'reciprocity-challenge',
-            slug: 'reciprocity-challenge',
-            description: 'Completa 5 intercambios de valor en el marketplace',
-            type: 'WEEKLY',
-            status: 'ACTIVE',
-            startDate: new Date(),
-            endDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
-            config: { targetValue: 5, actionType: 'marketplace_exchange' },
-            createdBy: 'admin',
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString(),
-            rewards: [
-              {
-                id: '1',
-                challengeId: '1',
-                type: 'MERITOS',
-                amount: 50,
-                description: 'Méritos por fomentar la Reciprocidad',
-              }
-            ],
-          }
-        ];
-      }
-    },
+  const { data: challengesData, isLoading: isLoadingChallenges, error: errorChallenges } = useQuery({
+    queryKey: CONSOLE_QUERY_KEYS.challenges,
+    queryFn: () => consoleApiService.getAllChallenges(),
     staleTime: 2 * 60 * 1000, // 2 minutos
   });
 
-  // =====================================================================
-  // MUTATIONS - Operaciones de escritura
-  // =====================================================================
+  // ✅ FIXED: Asegurar que challenges sea siempre un array válido
+  const challenges = challengesData || [];
 
-  // Crear nuevo challenge
-  const createChallengeMutation = useMutation({
-    mutationFn: async (data: CreateChallengeData): Promise<Challenge> => {
-      const response = await fetch('/api/challenges', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-      });
+  // ---------------------------------------------------------------------------
+  // MUTATIONS (Escritura y Modificación de Datos)
+  // ---------------------------------------------------------------------------
 
-      if (!response.ok) {
-        throw new Error('Error al crear el desafío');
-      }
-
-      return await response.json();
-    },
-    onSuccess: (newChallenge) => {
-      // Invalidar queries para actualizar la UI
-      queryClient.invalidateQueries({ queryKey: ['console', 'challenges'] });
-      queryClient.invalidateQueries({ queryKey: ['console', 'metrics'] });
-
-      toast.success(`Desafío "${newChallenge.title}" creado exitosamente`, {
-        description: 'El nuevo desafío está disponible para los Jugadores',
-      });
-    },
-    onError: (error) => {
-      console.error('Error creating challenge:', error);
-      toast.error('Error al crear el desafío', {
-        description: 'Por favor, revisa los datos e intenta nuevamente',
-      });
-    },
-  });
-
-  // Actualizar challenge existente
-  const updateChallengeMutation = useMutation({
-    mutationFn: async (data: UpdateChallengeData): Promise<Challenge> => {
-      const { id, ...updateData } = data;
-      const response = await fetch(`/api/challenges/${id}`, {
-        method: 'PUT',
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(updateData),
-      });
-
-      if (!response.ok) {
-        throw new Error('Error al actualizar el desafío');
-      }
-
-      return await response.json();
-    },
-    onSuccess: (updatedChallenge) => {
-      queryClient.invalidateQueries({ queryKey: ['console', 'challenges'] });
-      queryClient.invalidateQueries({ queryKey: ['console', 'metrics'] });
-
-      toast.success(`Desafío "${updatedChallenge.title}" actualizado`, {
-        description: 'Los cambios están disponibles inmediatamente',
-      });
-    },
-    onError: (error) => {
-      console.error('Error updating challenge:', error);
-      toast.error('Error al actualizar el desafío');
-    },
-  });
-
-  // Eliminar challenge
-  const deleteChallengeMutation = useMutation({
-    mutationFn: async (challengeId: string): Promise<void> => {
-      const response = await fetch(`/api/challenges/${challengeId}`, {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`,
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error('Error al eliminar el desafío');
-      }
-    },
+  const { mutateAsync: createChallenge, isPending: isCreatingChallenge } = useMutation({
+    mutationFn: (challengeData: Omit<Challenge, 'id'>) => consoleApiService.createChallenge(challengeData),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['console', 'challenges'] });
-      queryClient.invalidateQueries({ queryKey: ['console', 'metrics'] });
-
-      toast.success('Desafío eliminado exitosamente');
+      // Invalidar y refetchear la query de challenges para obtener la lista actualizada
+      queryClient.invalidateQueries({ queryKey: CONSOLE_QUERY_KEYS.challenges });
     },
     onError: (error) => {
-      console.error('Error deleting challenge:', error);
-      toast.error('Error al eliminar el desafío');
+      console.error("Error creating challenge:", error);
+      // Aquí se podría integrar un sistema de notificaciones como toast
     },
   });
 
-  // =====================================================================
-  // COMPUTED VALUES - Valores calculados en tiempo real
-  // =====================================================================
+  const { mutateAsync: updateChallenge, isPending: isUpdatingChallenge } = useMutation({
+    mutationFn: ({ challengeId, data }: { challengeId: string; data: Partial<Challenge> }) =>
+      consoleApiService.updateChallenge(challengeId, data),
+    onSuccess: (_, variables) => {
+      // Invalidar la query específica de este challenge y la lista general
+      queryClient.invalidateQueries({ queryKey: [...CONSOLE_QUERY_KEYS.challenges, variables.challengeId] });
+      queryClient.invalidateQueries({ queryKey: CONSOLE_QUERY_KEYS.challenges });
+    },
+  });
 
-  const consoleStats = useMemo(() => {
-    if (!challenges || !metrics) return null;
+  const { mutateAsync: deleteChallenge, isPending: isDeletingChallenge } = useMutation({
+    mutationFn: (challengeId: string) => consoleApiService.deleteChallenge(challengeId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: CONSOLE_QUERY_KEYS.challenges });
+    },
+  });
 
-    const activeChallenges = challenges.filter(c => c.status === 'ACTIVE');
-    const draftChallenges = challenges.filter(c => c.status === 'DRAFT');
-    const completedChallenges = challenges.filter(c => c.status === 'COMPLETED');
+  // ---------------------------------------------------------------------------
+  // FUNCIONES DE CONTROL
+  // ---------------------------------------------------------------------------
 
-    return {
-      totalChallenges: challenges.length,
-      activeChallenges: activeChallenges.length,
-      draftChallenges: draftChallenges.length,
-      completedChallenges: completedChallenges.length,
-      reciprocityIndex: metrics.reciprocityIndex,
-      engagementRate: metrics.averageCompletion,
-    };
-  }, [challenges, metrics]);
+  const refreshConsole = () => {
+    return Promise.all([
+      queryClient.refetchQueries({ queryKey: CONSOLE_QUERY_KEYS.analytics }),
+      queryClient.refetchQueries({ queryKey: CONSOLE_QUERY_KEYS.overview }),
+      queryClient.refetchQueries({ queryKey: CONSOLE_QUERY_KEYS.stages }),
+      queryClient.refetchQueries({ queryKey: CONSOLE_QUERY_KEYS.challenges }),
+    ]);
+  };
 
-  // =====================================================================
-  // ACTIONS - Funciones de acción con optimistic updates
-  // =====================================================================
+  // ---------------------------------------------------------------------------
+  // ESTADO AGREGADO Y RETORNO DEL HOOK
+  // ---------------------------------------------------------------------------
 
-  const createChallenge = useCallback((data: CreateChallengeData) => {
-    return createChallengeMutation.mutateAsync(data);
-  }, [createChallengeMutation]);
-
-  const updateChallenge = useCallback((data: UpdateChallengeData) => {
-    return updateChallengeMutation.mutateAsync(data);
-  }, [updateChallengeMutation]);
-
-  const deleteChallenge = useCallback((challengeId: string) => {
-    return deleteChallengeMutation.mutateAsync(challengeId);
-  }, [deleteChallengeMutation]);
-
-  const refreshConsole = useCallback(() => {
-    refetchChallenges();
-    refetchMetrics();
-  }, [refetchChallenges, refetchMetrics]);
-
-  // =====================================================================
-  // LOADING & ERROR STATES
-  // =====================================================================
-
-  const isLoading = isLoadingMetrics || isLoadingChallenges;
-  const isCreating = createChallengeMutation.isPending;
-  const isUpdating = updateChallengeMutation.isPending;
-  const isDeleting = deleteChallengeMutation.isPending;
-  const isWorking = isCreating || isUpdating || isDeleting;
-
-  const error = metricsError || challengesError;
-
-  // =====================================================================
-  // RETURN API
-  // =====================================================================
+  const isLoading = isLoadingMetrics || isLoadingStats || isLoadingStages || isLoadingChallenges;
+  const isWorking = isCreatingChallenge || isUpdatingChallenge || isDeletingChallenge;
+  const error = errorMetrics || errorStats || errorStages || errorChallenges;
 
   return {
-    // Data
-    challenges: challenges || [],
+    // Datos
     metrics,
     consoleStats,
+    stages,
+    challenges, // ✅ FIXED: Ahora siempre retorna un array válido
 
-    // Loading states
+    // Estado de carga y error
     isLoading,
-    isCreating,
-    isUpdating,
-    isDeleting,
     isWorking,
-
-    // Error handling
     error,
 
-    // Actions
+    // Mutaciones y acciones
     createChallenge,
     updateChallenge,
     deleteChallenge,
     refreshConsole,
-
-    // Raw mutations (para casos avanzados)
-    createChallengeMutation,
-    updateChallengeMutation,
-    deleteChallengeMutation,
   };
+};
+
+// ===============================================================================
+// HOOKS ESPECIALIZADOS (Ejemplos)
+// ===============================================================================
+
+/**
+ * Hook para obtener los analytics de un stage específico
+ */
+export const useStageAnalytics = (stageId: string) => {
+  return useQuery({
+    queryKey: ['console', 'stageAnalytics', stageId],
+    queryFn: () => consoleApiService.getStageAnalytics(stageId),
+    enabled: !!stageId, // Solo ejecutar si stageId no es nulo/undefined
+    staleTime: 5 * 60 * 1000,
+  });
 };

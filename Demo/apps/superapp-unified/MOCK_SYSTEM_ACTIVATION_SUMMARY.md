@@ -38,10 +38,10 @@ Se ha activado exitosamente el **sistema mock completo** para la CoomÜnity Supe
 - **5 Items Completos** con datos realistas
 - Tipos: Servicios, Productos, Experiencias, Intercambios
 - Vendedores con perfiles detallados (Reciprocidad scores, Méritos, badges)
-- Precios en múltiples monedas (LUKAS, ONDAS, MÉRITOS)
+- Precios en múltiples monedas (UNITS, ONDAS, MÉRITOS)
 
 #### 💰 Wallet CoomÜnity
-- **3 Monedas**: LUKAS (1,250), ONDAS (2,800), MÉRITOS (450)
+- **3 Monedas**: UNITS (1,250), ONDAS (2,800), MÉRITOS (450)
 - Historial de transacciones realista
 - Integración con marketplace
 
@@ -52,7 +52,7 @@ Se ha activado exitosamente el **sistema mock completo** para la CoomÜnity Supe
 
 #### 🏆 Challenges Activos
 - **2 Desafíos**: "Reciprocidad Semanal" y "Mes del Bien Común"
-- Recompensas múltiples (MÉRITOS, ÖNDAS, LÜKAS, badges)
+- Recompensas múltiples (MÉRITOS, ÖNDAS, ÜNITS, badges)
 - Tracking de participantes
 
 #### 👥 Social Feed

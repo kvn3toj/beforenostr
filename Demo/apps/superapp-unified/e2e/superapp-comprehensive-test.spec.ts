@@ -401,8 +401,8 @@ test.describe('SuperApp Comprehensive Verification', () => {
       
       navigationResults[route.name] = {
         loads: true,
-        hasContent: hasContent,
-        hasErrors: hasErrors,
+        hasContent,
+        hasErrors,
         url: page.url()
       };
       

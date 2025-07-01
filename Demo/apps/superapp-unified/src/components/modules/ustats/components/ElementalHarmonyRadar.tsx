@@ -8,6 +8,7 @@ import {
   useTheme,
   alpha,
   Stack,
+  Divider,
 } from '@mui/material';
 import {
   Psychology,
@@ -19,21 +20,25 @@ import {
   TrendingUp,
 } from '@mui/icons-material';
 
-// 🌌 COSMIC DESIGN SYSTEM
-import { UNIFIED_COLORS } from '../../../../theme/colors';
+// 🌪️ REDEFINICIÓN DE INTERFACES PARA DISEÑO MINIMALISTA
+interface ElementalData {
+  fuego: number;
+  agua: number;
+  tierra: number;
+  aire: number;
+}
 
 interface ElementalHarmonyRadarProps {
-  metricas: {
-    reciprocidad: number;
-    bienComun: number;
-    creatividad: number;
-    colaboracion: number;
-    estabilidad: number;
-    comunicacion: number;
-  };
-  recommendations?: string[];
-  compact?: boolean;
-  showLabels?: boolean;
+  elementos?: ElementalData;
+  dominantElement?: keyof ElementalData;
+  balanceScore?: number;
+  recommendations?: Array<{
+    element: keyof ElementalData;
+    action: string;
+    philosophy: string;
+  }>;
+  isExpanded?: boolean;
+  size?: number;
   'data-testid'?: string;
 }
 
@@ -43,302 +48,338 @@ interface RadarPoint {
   color: string;
   icon: React.ReactElement;
   description: string;
+  angle: number;
+  x: number;
+  y: number;
 }
 
 /**
- * 🌟 ELEMENTAL HARMONY RADAR - ZENO (Experience Architect)
- * =======================================================
+ * 🌟 ELEMENTAL HARMONY RADAR - MINIMALIST VERSION
+ * ===============================================
  *
- * Radar multidimensional que visualiza el ecosistema personal consciente
- * Representa 6 dimensiones fundamentales del desarrollo integral
+ * Visualización minimalista del balance elemental del usuario
+ * Representa las 4 dimensiones fundamentales en diseño limpio
  *
- * Filosofía Cósmica:
- * - No busca perfección, sino armonía dinámica
- * - Cada dimensión nutre a las otras en un ciclo virtuoso
- * - El crecimiento consciente es holístico, no fragmentado
+ * Filosofía Minimalista:
+ * - Claridad visual sobre complejidad cósmica
+ * - Datos esenciales sin distracciones
+ * - Armonía a través de la simplicidad
  */
-export const ElementalHarmonyRadar: React.FC<ElementalHarmonyRadarProps> = ({
-  metricas,
+const ElementalHarmonyRadar: React.FC<ElementalHarmonyRadarProps> = ({
+  elementos = { fuego: 50, agua: 50, tierra: 50, aire: 50 },
+  dominantElement = 'fuego',
+  balanceScore = 75,
   recommendations = [],
-  compact = false,
-  showLabels = true,
+  isExpanded = false,
+  size = 280,
   'data-testid': testId = 'elemental-harmony-radar'
 }) => {
   const theme = useTheme();
-  const [hoveredDimension, setHoveredDimension] = useState<string | null>(null);
+  const [hoveredElement, setHoveredElement] = useState<string | null>(null);
 
-  // 🧠 NIRA - Configuración de dimensiones conscientes
-  const radarDimensions: RadarPoint[] = useMemo(() => [
-    {
-      label: 'Reciprocidad',
-      value: metricas.reciprocidad,
-      color: UNIFIED_COLORS.primary.main,
-      icon: <Balance />,
-      description: 'Equilibrio entre dar y recibir'
-    },
-    {
-      label: 'Bien Común',
-      value: metricas.bienComun,
-      color: UNIFIED_COLORS.success.main,
-      icon: <Groups />,
-      description: 'Contribución al bienestar colectivo'
-    },
-    {
-      label: 'Creatividad',
-      value: metricas.creatividad,
-      color: '#FF6B35',
-      icon: <AutoAwesome />,
-      description: 'Capacidad de innovación y expresión'
-    },
-    {
-      label: 'Colaboración',
-      value: metricas.colaboracion,
-      color: UNIFIED_COLORS.info.main,
-      icon: <Favorite />,
-      description: 'Habilidad para trabajar en equipo'
-    },
-    {
-      label: 'Estabilidad',
-      value: metricas.estabilidad,
-      color: '#8B4513',
-      icon: <Spa />,
-      description: 'Consistencia y confiabilidad'
-    },
-    {
-      label: 'Comunicación',
-      value: metricas.comunicacion,
-      color: '#87CEEB',
-      icon: <Psychology />,
-      description: 'Claridad en la expresión de ideas'
-    }
-  ], [metricas]);
+  // 🎨 CONFIGURACIÓN DE ELEMENTOS MINIMALISTA
+  const radarDimensions: RadarPoint[] = useMemo(() => {
+    const centerX = size / 2;
+    const centerY = size / 2;
+    const radius = (size * 0.35);
 
-  // 🎨 ARIA - Cálculo de puntos del polígono radar
-  const radarPoints = useMemo(() => {
-    const centerX = compact ? 80 : 120;
-    const centerY = compact ? 80 : 120;
-    const maxRadius = compact ? 60 : 90;
+    const elements = [
+      {
+        label: 'Fuego',
+        value: elementos.fuego,
+        color: theme.palette.error.main,
+        icon: <AutoAwesome />,
+        description: 'Creatividad y Acción',
+        angle: 0 // Top
+      },
+      {
+        label: 'Aire',
+        value: elementos.aire,
+        color: theme.palette.info.main,
+        icon: <Psychology />,
+        description: 'Comunicación y Claridad',
+        angle: 90 // Right
+      },
+      {
+        label: 'Agua',
+        value: elementos.agua,
+        color: theme.palette.primary.main,
+        icon: <Favorite />,
+        description: 'Colaboración y Fluidez',
+        angle: 180 // Bottom
+      },
+      {
+        label: 'Tierra',
+        value: elementos.tierra,
+        color: theme.palette.success.main,
+        icon: <Spa />,
+        description: 'Estabilidad y Solidez',
+        angle: 270 // Left
+      }
+    ];
 
-    return radarDimensions.map((dimension, index) => {
-      const angle = (index * 60 - 90) * (Math.PI / 180); // Hexágono: 60° por punto
-      const radius = (dimension.value / 100) * maxRadius;
+    return elements.map(element => {
+      const angleRad = (element.angle - 90) * (Math.PI / 180);
+      const valueRadius = (element.value / 100) * radius;
 
       return {
-        x: centerX + Math.cos(angle) * radius,
-        y: centerY + Math.sin(angle) * radius,
-        labelX: centerX + Math.cos(angle) * (maxRadius + 25),
-        labelY: centerY + Math.sin(angle) * (maxRadius + 25),
-        gridX: centerX + Math.cos(angle) * maxRadius,
-        gridY: centerY + Math.sin(angle) * maxRadius,
-        ...dimension
+        ...element,
+        x: centerX + Math.cos(angleRad) * valueRadius,
+        y: centerY + Math.sin(angleRad) * valueRadius,
       };
     });
-  }, [radarDimensions, compact]);
+  }, [elementos, size, theme]);
 
-  // 🌟 ZENO - Análisis de armonía general
-  const harmonyAnalysis = useMemo(() => {
-    const values = Object.values(metricas);
+  // 🎯 ANÁLISIS DE BALANCE SIMPLIFICADO
+  const balanceAnalysis = useMemo(() => {
+    const values = Object.values(elementos);
     const average = values.reduce((sum, val) => sum + val, 0) / values.length;
     const variance = values.reduce((sum, val) => sum + Math.pow(val - average, 2), 0) / values.length;
     const standardDeviation = Math.sqrt(variance);
 
     const harmonyScore = Math.max(0, 100 - (standardDeviation * 2));
 
-    let harmonyLevel = 'Semilla';
-    let harmonyColor = theme.palette.warning.main;
+    let level = 'En Desarrollo';
+    let color = theme.palette.warning.main;
 
-    if (harmonyScore >= 85) {
-      harmonyLevel = 'Cósmica';
-      harmonyColor = '#9C27B0';
-    } else if (harmonyScore >= 70) {
-      harmonyLevel = 'Elevada';
-      harmonyColor = UNIFIED_COLORS.success.main;
-    } else if (harmonyScore >= 55) {
-      harmonyLevel = 'Equilibrada';
-      harmonyColor = UNIFIED_COLORS.info.main;
+    if (harmonyScore >= 80) {
+      level = 'Excelente Armonía';
+      color = theme.palette.success.main;
+    } else if (harmonyScore >= 60) {
+      level = 'Buen Balance';
+      color = theme.palette.primary.main;
     } else if (harmonyScore >= 40) {
-      harmonyLevel = 'Creciente';
-      harmonyColor = UNIFIED_COLORS.warning.main;
+      level = 'Balance Moderado';
+      color = theme.palette.info.main;
     }
 
     return {
       score: Math.round(harmonyScore),
-      level: harmonyLevel,
-      color: harmonyColor,
-      average: Math.round(average),
-      deviation: Math.round(standardDeviation)
+      level,
+      color,
+      average: Math.round(average)
     };
-  }, [metricas, theme]);
+  }, [elementos, theme]);
 
-  // 🎨 ARIA - Renderizar grid hexagonal
-  const renderRadarGrid = () => {
-    const centerX = compact ? 80 : 120;
-    const centerY = compact ? 80 : 120;
-    const maxRadius = compact ? 60 : 90;
+  // 🎨 RENDERIZADO DEL RADAR MINIMALISTA
+  const renderRadarChart = () => {
+    const centerX = size / 2;
+    const centerY = size / 2;
+    const maxRadius = size * 0.35;
 
-    const gridLevels = [0.2, 0.4, 0.6, 0.8, 1.0];
+    // Grid concéntrico minimalista
+    const gridLevels = [0.25, 0.5, 0.75, 1.0];
 
     return (
-      <>
-        {/* Círculos de grid concéntricos */}
+      <svg width={size} height={size} style={{ background: 'transparent' }}>
+        {/* Grid Background */}
         {gridLevels.map((level, index) => (
-          <polygon
+          <circle
             key={`grid-${index}`}
-            points={radarPoints.map((_, pointIndex) => {
-              const angle = (pointIndex * 60 - 90) * (Math.PI / 180);
-              const radius = maxRadius * level;
-              const x = centerX + Math.cos(angle) * radius;
-              const y = centerY + Math.sin(angle) * radius;
-              return `${x},${y}`;
-            }).join(' ')}
+            cx={centerX}
+            cy={centerY}
+            r={maxRadius * level}
             fill="none"
             stroke={alpha(theme.palette.divider, 0.3)}
             strokeWidth={1}
           />
         ))}
 
-        {/* Líneas radiales */}
-        {radarPoints.map((point, index) => (
-          <line
-            key={`line-${index}`}
-            x1={centerX}
-            y1={centerY}
-            x2={point.gridX}
-            y2={point.gridY}
-            stroke={alpha(theme.palette.divider, 0.3)}
-            strokeWidth={1}
+        {/* Ejes principales */}
+        {[0, 90, 180, 270].map((angle, index) => {
+          const angleRad = (angle - 90) * (Math.PI / 180);
+          const endX = centerX + Math.cos(angleRad) * maxRadius;
+          const endY = centerY + Math.sin(angleRad) * maxRadius;
+
+          return (
+            <line
+              key={`axis-${index}`}
+              x1={centerX}
+              y1={centerY}
+              x2={endX}
+              y2={endY}
+              stroke={alpha(theme.palette.divider, 0.2)}
+              strokeWidth={1}
+            />
+          );
+        })}
+
+        {/* Polígono de valores */}
+        <polygon
+          points={radarDimensions.map(point => `${point.x},${point.y}`).join(' ')}
+          fill={alpha(theme.palette.primary.main, 0.1)}
+          stroke={theme.palette.primary.main}
+          strokeWidth={2}
+          strokeLinejoin="round"
+        />
+
+        {/* Puntos de datos */}
+        {radarDimensions.map((point, index) => (
+          <circle
+            key={`point-${index}`}
+            cx={point.x}
+            cy={point.y}
+            r={6}
+            fill={point.color}
+            stroke={theme.palette.background.paper}
+            strokeWidth={2}
+            style={{ cursor: 'pointer' }}
+            onMouseEnter={() => setHoveredElement(point.label)}
+            onMouseLeave={() => setHoveredElement(null)}
           />
         ))}
-      </>
+
+        {/* Etiquetas de elementos */}
+        {radarDimensions.map((point, index) => {
+          const angleRad = (point.angle - 90) * (Math.PI / 180);
+          const labelRadius = maxRadius + 25;
+          const labelX = centerX + Math.cos(angleRad) * labelRadius;
+          const labelY = centerY + Math.sin(angleRad) * labelRadius;
+
+          return (
+            <g key={`label-${index}`}>
+              <text
+                x={labelX}
+                y={labelY}
+                textAnchor="middle"
+                dominantBaseline="middle"
+                fill={point.color}
+                fontSize="12"
+                fontWeight="600"
+              >
+                {point.label}
+              </text>
+              <text
+                x={labelX}
+                y={labelY + 14}
+                textAnchor="middle"
+                dominantBaseline="middle"
+                fill={theme.palette.text.secondary}
+                fontSize="10"
+              >
+                {point.value}%
+              </text>
+            </g>
+          );
+        })}
+      </svg>
     );
   };
 
   return (
-    <Box
-      data-testid={testId}
+    <Paper
+      elevation={0}
       sx={{
-        position: 'relative',
-        width: '100%',
-        height: compact ? 200 : 300,
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        gap: 2,
+        p: 3,
+        borderRadius: 2,
+        border: `1px solid ${theme.palette.divider}`,
+        backgroundColor: theme.palette.background.paper,
+        transition: 'all 0.3s ease',
+        '&:hover': {
+          borderColor: theme.palette.primary.main,
+          boxShadow: `0 2px 8px ${alpha(theme.palette.primary.main, 0.1)}`,
+        }
       }}
+      data-testid={testId}
     >
-      {/* 📊 SVG Radar Chart */}
-      <Box sx={{ position: 'relative', flex: 1 }}>
-        <svg
-          width={compact ? 160 : 240}
-          height={compact ? 160 : 240}
-          style={{ maxWidth: '100%', height: 'auto' }}
-        >
-          {/* Grid hexagonal */}
-          {renderRadarGrid()}
-
-          {/* Área del polígono de datos */}
-          <polygon
-            points={radarPoints.map(point => `${point.x},${point.y}`).join(' ')}
-            fill={alpha(UNIFIED_COLORS.primary.main, 0.2)}
-            stroke={UNIFIED_COLORS.primary.main}
-            strokeWidth={2}
-            style={{
-              filter: 'drop-shadow(0 4px 12px rgba(99, 102, 241, 0.3))',
-            }}
-          />
-
-          {/* Puntos de datos */}
-          {radarPoints.map((point, index) => (
-            <g key={`point-${index}`}>
-              <circle
-                cx={point.x}
-                cy={point.y}
-                r={compact ? 4 : 6}
-                fill={point.color}
-                stroke="white"
-                strokeWidth={2}
-                style={{
-                  cursor: 'pointer',
-                  filter: hoveredDimension === point.label
-                    ? 'drop-shadow(0 0 8px rgba(255,255,255,0.8))'
-                    : 'none',
-                  transform: hoveredDimension === point.label
-                    ? 'scale(1.2)'
-                    : 'scale(1)',
-                  transition: 'all 0.3s ease'
-                }}
-                onMouseEnter={() => setHoveredDimension(point.label)}
-                onMouseLeave={() => setHoveredDimension(null)}
-              />
-
-              {/* Labels externos (si no es compacto) */}
-              {!compact && showLabels && (
-                <text
-                  x={point.labelX}
-                  y={point.labelY}
-                  textAnchor="middle"
-                  dominantBaseline="middle"
-                  fill={theme.palette.text.primary}
-                  fontSize="11"
-                  fontWeight="500"
-                >
-                  {point.label}
-                </text>
-              )}
-            </g>
-          ))}
-        </svg>
-      </Box>
-
-      {/* 📊 Análisis de Armonía */}
-      <Box sx={{ textAlign: 'center', minHeight: compact ? 40 : 60 }}>
+      {/* Header */}
+      <Box sx={{ mb: 3, textAlign: 'center' }}>
+        <Typography variant="h6" sx={{ fontWeight: 600, color: theme.palette.text.primary, mb: 1 }}>
+          Balance Elemental
+        </Typography>
         <Chip
-          icon={<TrendingUp />}
-          label={`Armonía ${harmonyAnalysis.level}: ${harmonyAnalysis.score}%`}
+          label={balanceAnalysis.level}
           sx={{
-            backgroundColor: alpha(harmonyAnalysis.color, 0.1),
-            color: harmonyAnalysis.color,
-            border: `1px solid ${alpha(harmonyAnalysis.color, 0.3)}`,
-            mb: 1,
+            backgroundColor: alpha(balanceAnalysis.color, 0.1),
+            color: balanceAnalysis.color,
+            fontWeight: 500,
           }}
         />
-
-        {!compact && (
-          <Typography variant="caption" color="text.secondary" display="block">
-            Promedio: {harmonyAnalysis.average}% | Variación: {harmonyAnalysis.deviation}%
-          </Typography>
-        )}
       </Box>
 
-      {/* 💡 Recomendaciones */}
-      {!compact && recommendations.length > 0 && (
-        <Stack direction="row" spacing={1} flexWrap="wrap" justifyContent="center">
-          {recommendations.slice(0, 2).map((rec, index) => (
-            <Tooltip key={index} title={rec}>
-              <Chip
-                size="small"
-                label={`Tip ${index + 1}`}
-                sx={{
-                  fontSize: '0.7rem',
-                  backgroundColor: alpha(UNIFIED_COLORS.info.main, 0.1),
-                  color: UNIFIED_COLORS.info.main,
-                }}
-              />
-            </Tooltip>
-          ))}
-        </Stack>
-      )}
+      {/* Radar Chart */}
+      <Box sx={{ display: 'flex', justifyContent: 'center', mb: 3 }}>
+        {renderRadarChart()}
+      </Box>
 
-      {/* 🎨 CSS para animaciones */}
-      <style>
-        {`
-          @keyframes radar-pulse {
-            0%, 100% { transform: scale(1); opacity: 0.7; }
-            50% { transform: scale(1.1); opacity: 1; }
-          }
-        `}
-      </style>
-    </Box>
+      {/* Element Summary */}
+      <Stack spacing={2}>
+        <Typography variant="subtitle2" sx={{ fontWeight: 600, textAlign: 'center' }}>
+          Puntuación de Armonía: {balanceAnalysis.score}%
+        </Typography>
+
+        {/* Element Details */}
+        {isExpanded && (
+          <>
+            <Divider />
+            <Stack spacing={1}>
+              {radarDimensions.map((element) => (
+                <Paper
+                  key={element.label}
+                  variant="outlined"
+                  sx={{
+                    p: 2,
+                    backgroundColor: hoveredElement === element.label
+                      ? alpha(element.color, 0.05)
+                      : theme.palette.background.default,
+                    border: hoveredElement === element.label
+                      ? `1px solid ${element.color}`
+                      : `1px solid ${theme.palette.divider}`,
+                    transition: 'all 0.2s ease',
+                    cursor: 'pointer'
+                  }}
+                  onMouseEnter={() => setHoveredElement(element.label)}
+                  onMouseLeave={() => setHoveredElement(null)}
+                >
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                    <Box sx={{ color: element.color }}>
+                      {element.icon}
+                    </Box>
+                    <Box sx={{ flex: 1 }}>
+                      <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                        {element.label}: {element.value}%
+                      </Typography>
+                      <Typography variant="caption" color="text.secondary">
+                        {element.description}
+                      </Typography>
+                    </Box>
+                  </Box>
+                </Paper>
+              ))}
+            </Stack>
+          </>
+        )}
+
+        {/* Recommendations */}
+        {recommendations.length > 0 && isExpanded && (
+          <>
+            <Divider />
+            <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>
+              💡 Recomendaciones de Balance
+            </Typography>
+            <Stack spacing={1}>
+              {recommendations.slice(0, 2).map((rec, index) => (
+                <Paper
+                  key={index}
+                  variant="outlined"
+                  sx={{
+                    p: 2,
+                    backgroundColor: theme.palette.background.default,
+                  }}
+                >
+                  <Typography variant="body2" sx={{ fontWeight: 500, mb: 0.5 }}>
+                    {rec.element.charAt(0).toUpperCase() + rec.element.slice(1)}: {rec.action}
+                  </Typography>
+                  <Typography variant="caption" color="text.secondary" sx={{ fontStyle: 'italic' }}>
+                    {rec.philosophy}
+                  </Typography>
+                </Paper>
+              ))}
+            </Stack>
+          </>
+        )}
+      </Stack>
+    </Paper>
   );
 };
 

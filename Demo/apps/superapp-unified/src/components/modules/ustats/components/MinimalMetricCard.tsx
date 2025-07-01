@@ -1,9 +1,6 @@
 import React from 'react';
-import { Typography, Box, Chip } from '@mui/material';
+import { Typography, Box, Chip, Paper } from '@mui/material';
 import { useTheme, alpha } from '@mui/material/styles';
-
-// 🌌 IMPORTS DEL DESIGN SYSTEM REVOLUCIONARIO
-import { CosmicCard } from '../../../../design-system';
 
 interface MinimalMetricCardProps {
   title: string;
@@ -36,16 +33,20 @@ const MinimalMetricCard: React.FC<MinimalMetricCardProps> = ({
   };
 
   return (
-    <CosmicCard
-      variant="primary"
-      element="fuego"
-      enableGlow={true}
-      enableAnimations={true}
-      cosmicIntensity="medium"
-      enableParticles={false}
+    <Paper
+      elevation={0}
       sx={{
         height: '100%',
         cursor: 'default',
+        backgroundColor: theme.palette.background.paper,
+        border: `1px solid ${theme.palette.divider}`,
+        borderRadius: 2,
+        p: 3,
+        transition: 'all 0.2s ease-in-out',
+        '&:hover': {
+          borderColor: alpha(theme.palette.primary.main, 0.3),
+          boxShadow: `0 2px 8px ${alpha(theme.palette.common.black, 0.05)}`,
+        },
       }}
     >
       <Box
@@ -67,13 +68,14 @@ const MinimalMetricCard: React.FC<MinimalMetricCardProps> = ({
         </Typography>
         <Chip
           size="small"
+          variant="outlined"
           label={`${change > 0 ? '+' : ''}${change}%`}
           sx={{
-            backgroundColor: alpha(getTrendColor(), 0.1),
+            backgroundColor: alpha(getTrendColor(), 0.05),
             color: getTrendColor(),
             fontWeight: 600,
             fontSize: '0.75rem',
-            border: `1px solid ${alpha(getTrendColor(), 0.2)}`,
+            borderColor: alpha(getTrendColor(), 0.3),
           }}
         />
       </Box>
@@ -113,7 +115,7 @@ const MinimalMetricCard: React.FC<MinimalMetricCardProps> = ({
       >
         {description}
       </Typography>
-    </CosmicCard>
+    </Paper>
   );
 };
 

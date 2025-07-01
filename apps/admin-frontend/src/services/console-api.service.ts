@@ -5,7 +5,7 @@
  * Implementa todos los endpoints definidos en el backend Console Module
  */
 
-import { ApiService } from './api.service';
+import { apiService } from './api.service';
 
 // Types matching backend DTOs
 export interface DashboardMetrics {
@@ -149,17 +149,44 @@ export interface OctalysisAnalytics {
   userEngagement: number;
 }
 
-class ConsoleApiService {
-  private apiService: ApiService;
+// ✅ FIXED: Agregando la interfaz Challenge faltante
+export interface Challenge {
+  id: string;
+  title: string;
+  description: string;
+  type: string; // e.g., 'DAILY', 'WEEKLY', 'MONTHLY', 'SPECIAL', 'COSMIC_TASK'
+  status: 'ACTIVE' | 'INACTIVE' | 'DRAFT';
+  startDate?: string;
+  endDate?: string;
+  maxParticipants?: number;
+  currentParticipants?: number;
+  requirements?: any; // JSON object with challenge requirements
+  config?: any; // JSON configuration object
+  createdBy?: string;
+  createdAt: string;
+  updatedAt: string;
+  rewards?: ChallengeReward[];
+  isActive?: boolean; // For compatibility
+}
 
+export interface ChallengeReward {
+  id: string;
+  challengeId: string;
+  meritId: string;
+  amount: number;
+  createdAt: string;
+  merit?: any; // Merit details
+}
+
+class ConsoleApiService {
   constructor() {
-    this.apiService = ApiService.getInstance();
+    // Using the singleton instance directly
   }
 
   // Console Analytics & Overview
   async getConsoleAnalytics(): Promise<DashboardMetrics> {
     try {
-      const response = await this.apiService.get<DashboardMetrics>('/console/analytics');
+      const response = await apiService.get<DashboardMetrics>('/console/analytics');
       return response;
     } catch (error) {
       console.error('Error fetching console analytics:', error);
@@ -169,7 +196,7 @@ class ConsoleApiService {
 
   async getConsoleOverview(): Promise<ConsoleOverview> {
     try {
-      const response = await this.apiService.get<ConsoleOverview>('/console/overview');
+      const response = await apiService.get<ConsoleOverview>('/console/overview');
       return response;
     } catch (error) {
       console.error('Error fetching console overview:', error);
@@ -179,7 +206,7 @@ class ConsoleApiService {
 
   async getConsoleNotifications(): Promise<ConsoleNotification[]> {
     try {
-      const response = await this.apiService.get<ConsoleNotification[]>('/console/notifications');
+      const response = await apiService.get<ConsoleNotification[]>('/console/notifications');
       return response;
     } catch (error) {
       console.error('Error fetching console notifications:', error);
@@ -190,7 +217,7 @@ class ConsoleApiService {
   // Stages Management
   async getAllStages(): Promise<Stage[]> {
     try {
-      const response = await this.apiService.get<Stage[]>('/console/stages');
+      const response = await apiService.get<Stage[]>('/console/stages');
       return response;
     } catch (error) {
       console.error('Error fetching stages:', error);
@@ -200,7 +227,7 @@ class ConsoleApiService {
 
   async getStageById(stageId: string): Promise<Stage> {
     try {
-      const response = await this.apiService.get<Stage>(`/console/stages/${stageId}`);
+      const response = await apiService.get<Stage>(`/console/stages/${stageId}`);
       return response;
     } catch (error) {
       console.error(`Error fetching stage ${stageId}:`, error);
@@ -210,7 +237,7 @@ class ConsoleApiService {
 
   async updateStage(stageId: string, data: Partial<Stage>): Promise<Stage> {
     try {
-      const response = await this.apiService.put<Stage>(`/console/stages/${stageId}`, data);
+      const response = await apiService.put<Stage>(`/console/stages/${stageId}`, data);
       return response;
     } catch (error) {
       console.error(`Error updating stage ${stageId}:`, error);
@@ -220,10 +247,10 @@ class ConsoleApiService {
 
   async getStageAnalytics(stageId: string): Promise<StageAnalytics> {
     try {
-      const response = await this.apiService.get<StageAnalytics>(`/console/stages/${stageId}/analytics`);
+      const response = await apiService.get<StageAnalytics>(`/console/stages/${stageId}/analytics`);
       return response;
     } catch (error) {
-      console.error(`Error fetching stage ${stageId} analytics:`, error);
+      console.error(`Error fetching stage analytics for ${stageId}:`, error);
       throw error;
     }
   }
@@ -231,7 +258,7 @@ class ConsoleApiService {
   // Contests Management
   async getAllContests(): Promise<Contest[]> {
     try {
-      const response = await this.apiService.get<Contest[]>('/console/contests');
+      const response = await apiService.get<Contest[]>('/console/contests');
       return response;
     } catch (error) {
       console.error('Error fetching contests:', error);
@@ -241,7 +268,7 @@ class ConsoleApiService {
 
   async getContestById(contestId: string): Promise<Contest> {
     try {
-      const response = await this.apiService.get<Contest>(`/console/contests/${contestId}`);
+      const response = await apiService.get<Contest>(`/console/contests/${contestId}`);
       return response;
     } catch (error) {
       console.error(`Error fetching contest ${contestId}:`, error);
@@ -251,7 +278,7 @@ class ConsoleApiService {
 
   async createContest(data: Partial<Contest>): Promise<Contest> {
     try {
-      const response = await this.apiService.post<Contest>('/console/contests', data);
+      const response = await apiService.post<Contest>('/console/contests', data);
       return response;
     } catch (error) {
       console.error('Error creating contest:', error);
@@ -261,7 +288,7 @@ class ConsoleApiService {
 
   async updateContest(contestId: string, data: Partial<Contest>): Promise<Contest> {
     try {
-      const response = await this.apiService.put<Contest>(`/console/contests/${contestId}`, data);
+      const response = await apiService.put<Contest>(`/console/contests/${contestId}`, data);
       return response;
     } catch (error) {
       console.error(`Error updating contest ${contestId}:`, error);
@@ -271,20 +298,20 @@ class ConsoleApiService {
 
   async getContestLeaderboard(contestId: string): Promise<LeaderboardEntry[]> {
     try {
-      const response = await this.apiService.get<LeaderboardEntry[]>(`/console/contests/${contestId}/leaderboard`);
+      const response = await apiService.get<LeaderboardEntry[]>(`/console/contests/${contestId}/leaderboard`);
       return response;
     } catch (error) {
-      console.error(`Error fetching contest ${contestId} leaderboard:`, error);
+      console.error(`Error fetching contest leaderboard for ${contestId}:`, error);
       throw error;
     }
   }
 
   async getContestAnalytics(contestId: string): Promise<ContestAnalytics> {
     try {
-      const response = await this.apiService.get<ContestAnalytics>(`/console/contests/${contestId}/analytics`);
+      const response = await apiService.get<ContestAnalytics>(`/console/contests/${contestId}/analytics`);
       return response;
     } catch (error) {
-      console.error(`Error fetching contest ${contestId} analytics:`, error);
+      console.error(`Error fetching contest analytics for ${contestId}:`, error);
       throw error;
     }
   }
@@ -292,7 +319,7 @@ class ConsoleApiService {
   // Trust Voting System
   async getTrustVotingSystem(): Promise<TrustVotingSystem> {
     try {
-      const response = await this.apiService.get<TrustVotingSystem>('/console/trust-voting');
+      const response = await apiService.get<TrustVotingSystem>('/console/trust-voting');
       return response;
     } catch (error) {
       console.error('Error fetching trust voting system:', error);
@@ -302,7 +329,7 @@ class ConsoleApiService {
 
   async updateTrustVotingSystem(data: Partial<TrustVotingSystem>): Promise<TrustVotingSystem> {
     try {
-      const response = await this.apiService.put<TrustVotingSystem>('/console/trust-voting', data);
+      const response = await apiService.put<TrustVotingSystem>('/console/trust-voting', data);
       return response;
     } catch (error) {
       console.error('Error updating trust voting system:', error);
@@ -312,7 +339,7 @@ class ConsoleApiService {
 
   async getTrustVotingAnalytics(): Promise<TrustVotingAnalytics> {
     try {
-      const response = await this.apiService.get<TrustVotingAnalytics>('/console/trust-voting/analytics');
+      const response = await apiService.get<TrustVotingAnalytics>('/console/trust-voting/analytics');
       return response;
     } catch (error) {
       console.error('Error fetching trust voting analytics:', error);
@@ -323,7 +350,7 @@ class ConsoleApiService {
   // GPL Content Management
   async getAllGPLContent(): Promise<GPLContent[]> {
     try {
-      const response = await this.apiService.get<GPLContent[]>('/console/gpl-content');
+      const response = await apiService.get<GPLContent[]>('/console/gpl-content');
       return response;
     } catch (error) {
       console.error('Error fetching GPL content:', error);
@@ -333,7 +360,7 @@ class ConsoleApiService {
 
   async getGPLContentById(contentId: string): Promise<GPLContent> {
     try {
-      const response = await this.apiService.get<GPLContent>(`/console/gpl-content/${contentId}`);
+      const response = await apiService.get<GPLContent>(`/console/gpl-content/${contentId}`);
       return response;
     } catch (error) {
       console.error(`Error fetching GPL content ${contentId}:`, error);
@@ -343,7 +370,7 @@ class ConsoleApiService {
 
   async updateGPLContent(contentId: string, data: Partial<GPLContent>): Promise<GPLContent> {
     try {
-      const response = await this.apiService.put<GPLContent>(`/console/gpl-content/${contentId}`, data);
+      const response = await apiService.put<GPLContent>(`/console/gpl-content/${contentId}`, data);
       return response;
     } catch (error) {
       console.error(`Error updating GPL content ${contentId}:`, error);
@@ -353,18 +380,18 @@ class ConsoleApiService {
 
   async getGPLContentAnalytics(contentId: string): Promise<GPLContentAnalytics> {
     try {
-      const response = await this.apiService.get<GPLContentAnalytics>(`/console/gpl-content/${contentId}/analytics`);
+      const response = await apiService.get<GPLContentAnalytics>(`/console/gpl-content/${contentId}/analytics`);
       return response;
     } catch (error) {
-      console.error(`Error fetching GPL content ${contentId} analytics:`, error);
+      console.error(`Error fetching GPL content analytics for ${contentId}:`, error);
       throw error;
     }
   }
 
-  // Octalysis Framework
+  // Octalysis Configuration
   async getOctalysisConfig(): Promise<OctalysisConfig> {
     try {
-      const response = await this.apiService.get<OctalysisConfig>('/console/octalysis');
+      const response = await apiService.get<OctalysisConfig>('/console/octalysis');
       return response;
     } catch (error) {
       console.error('Error fetching Octalysis config:', error);
@@ -374,7 +401,7 @@ class ConsoleApiService {
 
   async updateOctalysisElement(elementId: string, element: Partial<OctalysisElement>): Promise<OctalysisElement> {
     try {
-      const response = await this.apiService.put<OctalysisElement>(`/console/octalysis/elements/${elementId}`, element);
+      const response = await apiService.put<OctalysisElement>(`/console/octalysis/elements/${elementId}`, element);
       return response;
     } catch (error) {
       console.error(`Error updating Octalysis element ${elementId}:`, error);
@@ -384,10 +411,66 @@ class ConsoleApiService {
 
   async getOctalysisAnalytics(): Promise<OctalysisAnalytics> {
     try {
-      const response = await this.apiService.get<OctalysisAnalytics>('/console/octalysis/analytics');
+      const response = await apiService.get<OctalysisAnalytics>('/console/octalysis/analytics');
       return response;
     } catch (error) {
       console.error('Error fetching Octalysis analytics:', error);
+      throw error;
+    }
+  }
+
+  // Challenges Management - Fixed to use correct backend endpoints
+  async getAllChallenges(): Promise<any[]> {
+    try {
+      // ✅ Fixed: Use the correct backend endpoint for admin challenges
+      const response = await apiService.get<any[]>('/challenges/admin/all');
+      return response;
+    } catch (error) {
+      console.error('Error fetching challenges:', error);
+      throw error;
+    }
+  }
+
+  async getChallengeById(challengeId: string): Promise<any> {
+    try {
+      // ✅ Fixed: Use the correct backend endpoint
+      const response = await apiService.get<any>(`/challenges/${challengeId}`);
+      return response;
+    } catch (error) {
+      console.error(`Error fetching challenge ${challengeId}:`, error);
+      throw error;
+    }
+  }
+
+  async createChallenge(data: any): Promise<any> {
+    try {
+      // ✅ Fixed: Use the correct backend endpoint
+      const response = await apiService.post<any>('/challenges', data);
+      return response;
+    } catch (error) {
+      console.error('Error creating challenge:', error);
+      throw error;
+    }
+  }
+
+  async updateChallenge(challengeId: string, data: any): Promise<any> {
+    try {
+      // ✅ Fixed: Use the correct backend endpoint
+      const response = await apiService.put<any>(`/challenges/${challengeId}`, data);
+      return response;
+    } catch (error) {
+      console.error(`Error updating challenge ${challengeId}:`, error);
+      throw error;
+    }
+  }
+
+  async deleteChallenge(challengeId: string): Promise<{ success: boolean; id: string }> {
+    try {
+      // ✅ Fixed: Use the correct backend endpoint
+      const response = await apiService.delete<{ success: boolean; id: string }>(`/challenges/${challengeId}`);
+      return response;
+    } catch (error) {
+      console.error(`Error deleting challenge ${challengeId}:`, error);
       throw error;
     }
   }

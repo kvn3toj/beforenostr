@@ -122,16 +122,16 @@ Has sido oficialmente reconocido como **"Fundador Beta CoomÜnity"** - un títul
 - 🌟 Contenido viral: +50-200 Öndas
 - 🌟 Transacciones exitosas: +10-100 Öndas
 
-### 💰 **Lükas** - Moneda de Valor Real
+### 💰 **Ünit** - Moneda de Valor Real
 - **¿Qué son?** Moneda interna para intercambios de productos y servicios
 - **¿Cómo se ganan?** Vendiendo productos/servicios, completando trabajos
 - **¿Para qué sirven?** Comprar en Marketplace, pagar por servicios
 
-**Formas de ganar Lükas:**
+**Formas de ganar Ünits:**
 - 💼 Vender productos: Variable según precio
 - 💼 Ofrecer servicios: Variable según trabajo
 - 💼 Completar proyectos: Según acuerdo
-- 💼 Conversión de Méritos: 100 Méritos = 10 Lükas
+- 💼 Conversión de Méritos: 100 Méritos = 10 Ünits
 
 ---
 

@@ -1,393 +1,301 @@
-import React, { useMemo, useState, useEffect } from 'react';
+import React, { useMemo } from 'react';
 import {
   Box,
   Typography,
-  LinearProgress,
+  CircularProgress,
+  Paper,
+  Grid,
   Chip,
-  Stack,
-  Tooltip,
-  useTheme,
-  alpha,
-  keyframes,
+  Stack
 } from '@mui/material';
-import {
-  Public,
-  Groups,
-  Favorite,
-  TrendingUp,
-  Eco,
-  AutoAwesome,
-  Diamond,
-  Waves,
-} from '@mui/icons-material';
-import { motion, AnimatePresence } from 'framer-motion';
-
-// 🌌 COSMIC DESIGN SYSTEM
-import { UNIFIED_COLORS } from '../../../../theme/colors';
-
-// 🌍 Animaciones del Bien Común
-const bienComunPulse = keyframes`
-  0%, 100% {
-    box-shadow: 0 0 20px rgba(76, 175, 80, 0.4);
-    transform: scale(1);
-  }
-  50% {
-    box-shadow: 0 0 40px rgba(76, 175, 80, 0.8);
-    transform: scale(1.05);
-  }
-`;
-
-const impactWave = keyframes`
-  0% { transform: translateX(-100%) scaleX(0); opacity: 0; }
-  50% { transform: translateX(-50%) scaleX(1); opacity: 1; }
-  100% { transform: translateX(0%) scaleX(0); opacity: 0; }
-`;
-
-const resonanceGlow = keyframes`
-  0%, 100% { opacity: 0.6; filter: brightness(1); }
-  50% { opacity: 1; filter: brightness(1.3); }
-`;
+import { useTheme, alpha } from '@mui/material/styles';
 
 interface BienComunImpactVisualizationProps {
-  impact: number; // 0-100 puntos de impacto
-  communityResonance: number; // 0-100 nivel de resonancia
-  contributions: number; // número de contribuciones
-  compact?: boolean;
-  showMetrics?: boolean;
-  className?: string;
-  'data-testid'?: string;
-}
-
-interface ImpactLevel {
-  name: string;
-  threshold: number;
-  color: string;
-  icon: React.ReactElement;
-  description: string;
-  benefits: string[];
+  currentImpact: number; // 0-100 puntos de impacto
+  contributionHistory: number[]; // Historial de contribuciones
+  communityResonance: number; // 0-100 resonancia con la comunidad
+  trends: {
+    semanal: number;
+    mensual: number;
+    anual: number;
+  };
+  isExpanded?: boolean;
 }
 
 /**
- * 🌍 BIEN COMÚN IMPACT VISUALIZATION - NIRA (Pattern Visionary)
- * =============================================================
+ * 🌍 BIEN COMÚN IMPACT VISUALIZATION - MINIMALIST
+ * =================================================
  *
- * Visualización del impacto consciente al Bien Común
- * Mide y celebra las contribuciones al bienestar colectivo
+ * Visualización simplificada del impacto al Bien Común que muestra:
+ * - Puntuación de impacto en un diseño limpio
+ * - Resonancia con la comunidad
+ * - Historial de contribuciones
+ * - Tendencias de crecimiento
  *
- * Filosofía CoomÜnity:
- * - Bien Común > bien particular
- * - Cada acción genera ondas de transformación
- * - El impacto se mide no solo en cantidad, sino en calidad
- * - La resonancia comunitaria amplifica el efecto positivo
+ * Filosofía: "Cada acción consciente genera ondas que trascienden
+ * al individuo y nutren el Bien Común de toda la comunidad"
  */
-export const BienComunImpactVisualization: React.FC<BienComunImpactVisualizationProps> = ({
-  impact,
+const BienComunImpactVisualization: React.FC<BienComunImpactVisualizationProps> = ({
+  currentImpact,
+  contributionHistory,
   communityResonance,
-  contributions,
-  compact = false,
-  showMetrics = true,
-  className = '',
-  'data-testid': testId = 'bien-comun-impact-visualization'
+  trends,
+  isExpanded = false
 }) => {
   const theme = useTheme();
-  const [isAnimating, setIsAnimating] = useState(false);
-  const [showRipples, setShowRipples] = useState(false);
 
-  // 🧠 NIRA - Niveles de impacto al Bien Común
-  const impactLevels: ImpactLevel[] = useMemo(() => [
-    {
-      name: 'Semilla Consciente',
-      threshold: 0,
-      color: '#FFC107',
-      icon: <Eco />,
-      description: 'Iniciando el viaje de contribución',
-      benefits: ['Consciencia del impacto', 'Primeros pasos']
-    },
-    {
-      name: 'Colaborador Activo',
-      threshold: 25,
-      color: '#2196F3',
-      icon: <Groups />,
-      description: 'Participando activamente en la comunidad',
-      benefits: ['Reconocimiento comunitario', 'Redes de colaboración']
-    },
-    {
-      name: 'Impulsor del Cambio',
-      threshold: 50,
-      color: '#FF9800',
-      icon: <TrendingUp />,
-      description: 'Generando transformaciones medibles',
-      benefits: ['Liderazgo comunitario', 'Impacto amplificado']
-    },
-    {
-      name: 'Guardián del Bien',
-      threshold: 75,
-      color: '#4CAF50',
-      icon: <Favorite />,
-      description: 'Dedicado al bienestar colectivo',
-      benefits: ['Mentoría de otros', 'Impacto sistémico']
-    },
-    {
-      name: 'Agente Cósmico',
-      threshold: 90,
-      color: '#9C27B0',
-      icon: <Diamond />,
-      description: 'Transformador global consciente',
-      benefits: ['Impacto planetario', 'Inspiración universal']
-    }
-  ], []);
+  // 📊 DETERMINAR NIVEL DE IMPACTO
+  const impactLevel = useMemo(() => {
+    if (currentImpact >= 90) return { level: 'Transformador', color: theme.palette.success.main };
+    if (currentImpact >= 70) return { level: 'Significativo', color: theme.palette.primary.main };
+    if (currentImpact >= 50) return { level: 'Positivo', color: theme.palette.info.main };
+    if (currentImpact >= 30) return { level: 'Emergente', color: theme.palette.warning.main };
+    return { level: 'Inicial', color: theme.palette.error.main };
+  }, [currentImpact, theme]);
 
-  // 🎯 ZENO - Determinar nivel actual
-  const currentLevel = useMemo(() => {
-    const level = impactLevels
-      .slice()
-      .reverse()
-      .find(level => impact >= level.threshold);
-    return level || impactLevels[0];
-  }, [impact, impactLevels]);
-
-  // 🌊 NIRA - Cálculo de métricas conscientes
-  const impactMetrics = useMemo(() => {
-    const resonanceMultiplier = communityResonance / 100;
-    const amplifiedImpact = impact * (1 + resonanceMultiplier * 0.5);
-
-    // Calcular ondas de transformación (basado en contribuciones y resonancia)
-    const transformationWaves = Math.min(10, Math.floor(contributions / 5) + Math.floor(communityResonance / 20));
-
-    // Índice de sostenibilidad (qué tan duradero es el impacto)
-    const sustainabilityIndex = Math.min(100, (impact * 0.7) + (communityResonance * 0.3));
-
-    return {
-      amplifiedImpact: Math.round(amplifiedImpact),
-      transformationWaves,
-      sustainabilityIndex: Math.round(sustainabilityIndex),
-      nextLevelProgress: impact >= 90 ? 100 : ((impact % 25) / 25) * 100,
-      resonanceClass: communityResonance >= 80 ? 'cósmica' :
-                     communityResonance >= 60 ? 'elevada' :
-                     communityResonance >= 40 ? 'media' : 'emergente'
-    };
-  }, [impact, communityResonance, contributions]);
-
-  // 🎨 ARIA - Efectos visuales dinámicos
-  useEffect(() => {
-    const animationInterval = setInterval(() => {
-      setIsAnimating(true);
-      setTimeout(() => setIsAnimating(false), 2000);
-    }, 5000);
-
-    return () => clearInterval(animationInterval);
-  }, []);
-
-  useEffect(() => {
-    if (impactMetrics.transformationWaves > 3) {
-      setShowRipples(true);
-      const rippleTimeout = setTimeout(() => setShowRipples(false), 3000);
-      return () => clearTimeout(rippleTimeout);
-    }
-  }, [impactMetrics.transformationWaves]);
+  // 📈 DETERMINAR TENDENCIA PRINCIPAL
+  const mainTrend = useMemo(() => {
+    const weeklyTrend = trends.semanal;
+    if (weeklyTrend > 5) return { text: 'Creciendo', color: theme.palette.success.main };
+    if (weeklyTrend > 0) return { text: 'Estable+', color: theme.palette.primary.main };
+    if (weeklyTrend > -5) return { text: 'Estable', color: theme.palette.grey[600] };
+    return { text: 'Declinando', color: theme.palette.warning.main };
+  }, [trends.semanal, theme]);
 
   return (
-    <Box
-      data-testid={testId}
-      className={`bien-comun-impact ${className}`}
-      sx={{
-        position: 'relative',
-        width: '100%',
-        minHeight: compact ? 140 : 180,
+    <Box sx={{ width: '100%', height: 'auto' }}>
+      {/* 🎯 MÉTRICA PRINCIPAL */}
+      <Box sx={{
         display: 'flex',
-        flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        gap: compact ? 1 : 2,
-        overflow: 'hidden',
-      }}
-    >
-      {/* 🌍 Núcleo Central del Impacto */}
-      <Box
-        sx={{
-          position: 'relative',
-          width: compact ? 80 : 120,
-          height: compact ? 80 : 120,
-          borderRadius: '50%',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          background: `
-            radial-gradient(
-              circle at center,
-              ${alpha(currentLevel.color, 0.8)} 0%,
-              ${alpha(currentLevel.color, 0.4)} 50%,
-              transparent 100%
-            )
-          `,
-          border: `3px solid ${currentLevel.color}`,
-          animation: isAnimating ? `${bienComunPulse} 2s ease-in-out` : 'none',
-          cursor: 'pointer',
-          transition: 'all 0.3s ease',
-          '&:hover': {
-            transform: 'scale(1.1)',
-            boxShadow: `0 0 30px ${alpha(currentLevel.color, 0.6)}`,
-          }
-        }}
-        onClick={() => setIsAnimating(true)}
-      >
-        {/* 🌟 Ícono Central */}
-        <motion.div
-          animate={{
-            rotate: [0, 360],
-            scale: [1, 1.1, 1],
-          }}
-          transition={{
-            duration: 8,
-            repeat: Infinity,
-            ease: "easeInOut"
-          }}
-        >
+        gap: 3,
+        mb: 3
+      }}>
+        {/* Círculo de progreso principal */}
+        <Box sx={{ position: 'relative', display: 'inline-flex' }}>
+          <CircularProgress
+            variant="determinate"
+            value={100}
+            size={80}
+            thickness={4}
+            sx={{
+              color: alpha(theme.palette.divider, 0.3),
+              position: 'absolute',
+            }}
+          />
+          <CircularProgress
+            variant="determinate"
+            value={currentImpact}
+            size={80}
+            thickness={4}
+            sx={{
+              color: impactLevel.color,
+              '& .MuiCircularProgress-circle': {
+                strokeLinecap: 'round',
+              },
+            }}
+          />
           <Box
             sx={{
-              color: currentLevel.color,
-              fontSize: compact ? 28 : 40,
-              filter: `drop-shadow(0 0 8px ${alpha(currentLevel.color, 0.8)})`,
-              animation: `${resonanceGlow} 3s ease-in-out infinite`,
+              top: 0,
+              left: 0,
+              bottom: 0,
+              right: 0,
+              position: 'absolute',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
             }}
           >
-            {currentLevel.icon}
-          </Box>
-        </motion.div>
-
-        {/* 💫 Ondas de Transformación */}
-        <AnimatePresence>
-          {showRipples && (
-            <>
-              {[...Array(impactMetrics.transformationWaves)].map((_, i) => (
-                <motion.div
-                  key={i}
-                  initial={{ scale: 0, opacity: 0.8 }}
-                  animate={{ scale: 3, opacity: 0 }}
-                  exit={{ scale: 0, opacity: 0 }}
-                  transition={{
-                    duration: 2,
-                    delay: i * 0.3,
-                    ease: "easeOut"
-                  }}
-                  style={{
-                    position: 'absolute',
-                    inset: 0,
-                    border: `2px solid ${currentLevel.color}`,
-                    borderRadius: '50%',
-                    pointerEvents: 'none',
-                  }}
-                />
-              ))}
-            </>
-          )}
-        </AnimatePresence>
-
-        {/* 🌊 Indicador de Impacto */}
-        <Box
-          sx={{
-            position: 'absolute',
-            bottom: -5,
-            left: '50%',
-            transform: 'translateX(-50%)',
-            minWidth: 60,
-            textAlign: 'center',
-          }}
-        >
-          <Typography
-            variant={compact ? "caption" : "body2"}
-            sx={{
-              color: currentLevel.color,
-              fontWeight: 700,
-              fontSize: compact ? '0.9rem' : '1.1rem',
-              textShadow: `0 0 8px ${alpha(currentLevel.color, 0.6)}`,
-            }}
-          >
-            {impact}
-          </Typography>
-        </Box>
-      </Box>
-
-      {/* 📊 Información del Nivel */}
-      {showMetrics && (
-        <Box sx={{ textAlign: 'center', minHeight: compact ? 40 : 60 }}>
-          <Tooltip title={currentLevel.description}>
             <Typography
-              variant={compact ? "caption" : "subtitle2"}
+              variant="h6"
+              component="div"
               sx={{
-                color: currentLevel.color,
-                fontWeight: 600,
-                mb: 0.5,
-                cursor: 'help',
+                color: theme.palette.text.primary,
+                fontWeight: 700,
+                fontSize: '1rem'
               }}
             >
-              {currentLevel.name}
+              {currentImpact}
             </Typography>
-          </Tooltip>
-
-          {!compact && (
-            <Stack direction="row" spacing={1} justifyContent="center" flexWrap="wrap">
-              <Chip
-                icon={<Waves />}
-                label={`${impactMetrics.transformationWaves} Ondas`}
-                size="small"
-                sx={{
-                  backgroundColor: alpha(currentLevel.color, 0.1),
-                  color: currentLevel.color,
-                  border: `1px solid ${alpha(currentLevel.color, 0.3)}`,
-                }}
-              />
-
-              <Chip
-                icon={<Public />}
-                label={`${communityResonance}% Resonancia`}
-                size="small"
-                sx={{
-                  backgroundColor: alpha(UNIFIED_COLORS.info.main, 0.1),
-                  color: UNIFIED_COLORS.info.main,
-                  border: `1px solid ${alpha(UNIFIED_COLORS.info.main, 0.3)}`,
-                }}
-              />
-            </Stack>
-          )}
+          </Box>
         </Box>
-      )}
 
-      {/* 📈 Barra de Progreso hacia el Siguiente Nivel */}
-      {!compact && impact < 90 && (
-        <Box sx={{ width: '80%', mt: 1 }}>
-          <Typography variant="caption" color="text.secondary" display="block" mb={0.5}>
-            Progreso hacia el siguiente nivel
+        {/* Información del impacto */}
+        <Box>
+          <Typography variant="h6" sx={{
+            color: impactLevel.color,
+            fontWeight: 600,
+            mb: 0.5
+          }}>
+            Impacto {impactLevel.level}
           </Typography>
-          <LinearProgress
-            variant="determinate"
-            value={impactMetrics.nextLevelProgress}
+          <Chip
+            label={mainTrend.text}
+            size="small"
             sx={{
-              height: 4,
-              borderRadius: 2,
-              backgroundColor: alpha(currentLevel.color, 0.2),
-              '& .MuiLinearProgress-bar': {
-                backgroundColor: currentLevel.color,
-                animation: `${impactWave} 3s ease-in-out infinite`,
-              }
+              backgroundColor: alpha(mainTrend.color, 0.1),
+              color: mainTrend.color,
+              border: `1px solid ${mainTrend.color}`,
+              fontWeight: 600
             }}
           />
         </Box>
+      </Box>
+
+      {/* 📈 MÉTRICAS SECUNDARIAS */}
+      <Grid container spacing={2} sx={{ mb: 2 }}>
+        <Grid item xs={4}>
+          <Paper
+            variant="outlined"
+            sx={{
+              p: 1.5,
+              textAlign: 'center',
+              backgroundColor: alpha(theme.palette.success.main, 0.05),
+              borderColor: alpha(theme.palette.success.main, 0.3)
+            }}
+          >
+            <Typography variant="h6" sx={{
+              color: theme.palette.success.main,
+              fontWeight: 700,
+              mb: 0.5
+            }}>
+              {communityResonance}%
+            </Typography>
+            <Typography variant="caption" sx={{ color: theme.palette.text.secondary }}>
+              Resonancia Comunitaria
+            </Typography>
+          </Paper>
+        </Grid>
+
+        <Grid item xs={4}>
+          <Paper
+            variant="outlined"
+            sx={{
+              p: 1.5,
+              textAlign: 'center',
+              backgroundColor: alpha(theme.palette.primary.main, 0.05),
+              borderColor: alpha(theme.palette.primary.main, 0.3)
+            }}
+          >
+            <Typography variant="h6" sx={{
+              color: theme.palette.primary.main,
+              fontWeight: 700,
+              mb: 0.5
+            }}>
+              {contributionHistory.length}
+            </Typography>
+            <Typography variant="caption" sx={{ color: theme.palette.text.secondary }}>
+              Contribuciones Totales
+            </Typography>
+          </Paper>
+        </Grid>
+
+        <Grid item xs={4}>
+          <Paper
+            variant="outlined"
+            sx={{
+              p: 1.5,
+              textAlign: 'center',
+              backgroundColor: alpha(mainTrend.color, 0.05),
+              borderColor: alpha(mainTrend.color, 0.3)
+            }}
+          >
+            <Typography variant="h6" sx={{
+              color: mainTrend.color,
+              fontWeight: 700,
+              mb: 0.5
+            }}>
+              {trends.semanal > 0 ? '+' : ''}{trends.semanal.toFixed(1)}%
+            </Typography>
+            <Typography variant="caption" sx={{ color: theme.palette.text.secondary }}>
+              Crecimiento Semanal
+            </Typography>
+          </Paper>
+        </Grid>
+      </Grid>
+
+      {/* 📊 MINI HISTORIAL DE CONTRIBUCIONES */}
+      {contributionHistory.length > 0 && (
+        <Box sx={{ mt: 2 }}>
+          <Typography variant="subtitle2" sx={{
+            mb: 1,
+            fontWeight: 600,
+            color: theme.palette.text.primary
+          }}>
+            📈 Evolución del Impacto
+          </Typography>
+          <Box sx={{
+            display: 'flex',
+            gap: 1,
+            alignItems: 'end',
+            height: 40,
+            p: 1,
+            backgroundColor: theme.palette.background.default,
+            borderRadius: 1,
+            border: `1px solid ${theme.palette.divider}`
+          }}>
+            {contributionHistory.slice(-12).map((contribution, index) => {
+              const maxContribution = Math.max(...contributionHistory);
+              const height = maxContribution > 0 ? (contribution / maxContribution) * 30 : 5;
+
+              return (
+                <Box
+                  key={index}
+                  sx={{
+                    flex: 1,
+                    height: `${Math.max(height, 3)}px`,
+                    backgroundColor: impactLevel.color,
+                    borderRadius: '2px 2px 0 0',
+                    opacity: 0.6 + (index / contributionHistory.slice(-12).length) * 0.4,
+                    minHeight: 3
+                  }}
+                />
+              );
+            })}
+          </Box>
+        </Box>
       )}
 
-      {/* 🎨 CSS Adicional para efectos especiales */}
-      <style>
-        {`
-          @keyframes cosmic-orbit {
-            0% { transform: rotate(0deg) translateX(40px) rotate(0deg); }
-            100% { transform: rotate(360deg) translateX(40px) rotate(-360deg); }
-          }
-
-          .bien-comun-impact:hover .cosmic-orbit {
-            animation: cosmic-orbit 4s linear infinite;
-          }
-        `}
-      </style>
+      {/* 🌟 TENDENCIAS DETALLADAS */}
+      {isExpanded && (
+        <Box sx={{ mt: 3 }}>
+          <Typography variant="subtitle2" sx={{
+            mb: 2,
+            fontWeight: 600,
+            color: theme.palette.text.primary
+          }}>
+            🌊 Análisis de Tendencias
+          </Typography>
+          <Stack direction="row" spacing={2}>
+            <Chip
+              label={`Semanal: ${trends.semanal > 0 ? '+' : ''}${trends.semanal.toFixed(1)}%`}
+              variant="outlined"
+              sx={{
+                color: trends.semanal >= 0 ? theme.palette.success.main : theme.palette.error.main,
+                borderColor: trends.semanal >= 0 ? theme.palette.success.main : theme.palette.error.main
+              }}
+            />
+            <Chip
+              label={`Mensual: ${trends.mensual > 0 ? '+' : ''}${trends.mensual.toFixed(1)}%`}
+              variant="outlined"
+              sx={{
+                color: trends.mensual >= 0 ? theme.palette.success.main : theme.palette.error.main,
+                borderColor: trends.mensual >= 0 ? theme.palette.success.main : theme.palette.error.main
+              }}
+            />
+            <Chip
+              label={`Anual: ${trends.anual > 0 ? '+' : ''}${trends.anual.toFixed(1)}%`}
+              variant="outlined"
+              sx={{
+                color: trends.anual >= 0 ? theme.palette.success.main : theme.palette.error.main,
+                borderColor: trends.anual >= 0 ? theme.palette.success.main : theme.palette.error.main
+              }}
+            />
+          </Stack>
+        </Box>
+      )}
     </Box>
   );
 };

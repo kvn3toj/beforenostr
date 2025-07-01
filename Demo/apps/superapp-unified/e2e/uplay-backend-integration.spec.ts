@@ -15,7 +15,7 @@ test.describe('ÜPlay Backend Integration', () => {
       await route.fulfill({
         status: response.status(),
         headers: response.headers(),
-        body: body
+        body
       });
     });
 

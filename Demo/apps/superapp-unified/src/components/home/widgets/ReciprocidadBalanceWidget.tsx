@@ -6,7 +6,8 @@ import {
   Alert,
   Grid,
   alpha,
-  useTheme
+  useTheme,
+  Paper,
 } from '@mui/material';
 import {
   Balance,
@@ -17,35 +18,72 @@ import {
   Star,
 } from '@mui/icons-material';
 
-import { useReciprocidadMetrics } from '@/hooks/home';
+import { useReciprocidadMetrics } from '../../../hooks/home';
 
-// Un componente de tarjeta de métrica reutilizable
-const MetricItem: React.FC<{ icon: React.ReactNode; label: string; value: string | number; color: string }> = ({ icon, label, value, color }) => {
+// 🎨 MINIMALIST METRIC ITEM - ARIA Design
+const MinimalistMetricItem: React.FC<{
+  icon: React.ReactNode;
+  label: string;
+  value: string | number;
+  accentColor: string;
+}> = ({ icon, label, value, accentColor }) => {
+  const theme = useTheme();
+
   return (
-    <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+    <Paper
+      variant="outlined"
+      sx={{
+        p: 2,
+        backgroundColor: theme.palette.background.paper, // SIEMPRE BLANCO
+        borderColor: theme.palette.divider,
+        borderRadius: theme.shape.borderRadius,
+        display: 'flex',
+        alignItems: 'center',
+        gap: 2,
+        transition: 'box-shadow 0.2s ease-in-out',
+        '&:hover': {
+          boxShadow: `0 2px 8px ${alpha(accentColor, 0.08)}`, // Hover sutil
+        },
+      }}
+    >
       <Box
         sx={{
-          width: 48,
-          height: 48,
+          width: 40,
+          height: 40,
           borderRadius: '50%',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          backgroundColor: alpha(color, 0.1),
-          color,
+          backgroundColor: theme.palette.background.paper, // Fondo blanco
+          border: `2px solid ${alpha(accentColor, 0.2)}`, // Solo borde con color
+          color: accentColor, // Solo el ícono con color
         }}
       >
         {icon}
       </Box>
-      <Box>
-        <Typography variant="h6" sx={{ fontWeight: 600 }}>
+      <Box sx={{ flex: 1 }}>
+        <Typography
+          variant="h6"
+          sx={{
+            fontWeight: 700,
+            color: accentColor, // Solo el valor con color
+            mb: 0.5,
+          }}
+        >
           {value}
         </Typography>
-        <Typography variant="body2" color="text.secondary">
+        <Typography
+          variant="body2"
+          sx={{
+            color: theme.palette.text.secondary, // Texto neutro
+            fontSize: '0.85rem',
+            fontWeight: 500,
+          }}
+        >
           {label}
         </Typography>
       </Box>
-    </Box>
+    </Paper>
   );
 };
 
@@ -55,15 +93,35 @@ export const ReciprocidadBalanceWidget: React.FC = () => {
 
   if (isLoading) {
     return (
-      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', p: 4 }}>
-        <CircularProgress />
+      <Box sx={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        p: 4,
+        backgroundColor: theme.palette.background.paper, // Fondo blanco
+      }}>
+        <CircularProgress
+          sx={{
+            color: theme.palette.primary.main, // Color del tema minimalista
+          }}
+        />
       </Box>
     );
   }
 
   if (error || !metrics) {
     return (
-      <Alert severity="warning">
+      <Alert
+        severity="warning"
+        sx={{
+          backgroundColor: theme.palette.background.paper, // Fondo blanco
+          color: theme.palette.text.primary,
+          border: `1px solid ${alpha(theme.palette.warning.main, 0.3)}`,
+          '& .MuiAlert-icon': {
+            color: theme.palette.warning.main // Solo el ícono con color
+          }
+        }}
+      >
         No se pudieron cargar las métricas de Reciprocidad.
       </Alert>
     );
@@ -71,52 +129,69 @@ export const ReciprocidadBalanceWidget: React.FC = () => {
 
   const reciprocidadMetrics = [
     {
-      icon: <Balance sx={{ fontSize: 24 }} />,
+      icon: <Balance sx={{ fontSize: 20 }} />,
       label: 'Balance de Reciprocidad',
       value: `${(metrics.metricas.balance * 100).toFixed(0)}%`,
-      color: theme.palette.primary.main,
+      accentColor: theme.palette.info.main,
     },
     {
-      icon: <Favorite sx={{ fontSize: 24 }} />,
+      icon: <Favorite sx={{ fontSize: 20 }} />,
       label: 'Puntaje Reciprocidad',
       value: metrics.metricas.puntuacion.toFixed(1),
-      color: theme.palette.success.main,
+      accentColor: theme.palette.error.main,
     },
     {
-      icon: <VolunteerActivism sx={{ fontSize: 24 }} />,
+      icon: <VolunteerActivism sx={{ fontSize: 20 }} />,
       label: 'Aportes al Bien Común',
       value: metrics.metricas.contribucionesBienComun,
-      color: theme.palette.error.main,
+      accentColor: theme.palette.success.main,
     },
     {
-      icon: <TrendingUp sx={{ fontSize: 24 }} />,
+      icon: <TrendingUp sx={{ fontSize: 20 }} />,
       label: 'Crecimiento Semanal',
       value: `${metrics.metricas.crecimientoSemanal}%`,
-      color: theme.palette.info.main,
+      accentColor: theme.palette.warning.main,
     },
     {
-      icon: <SwapHoriz sx={{ fontSize: 24 }} />,
+      icon: <SwapHoriz sx={{ fontSize: 20 }} />,
       label: 'Transacciones',
       value: metrics.metricas.transaccionesTotales,
-      color: theme.palette.warning.main,
+      accentColor: theme.palette.primary.main,
     },
      {
-      icon: <Star sx={{ fontSize: 24 }} />,
+      icon: <Star sx={{ fontSize: 20 }} />,
       label: 'Méritos Obtenidos',
       value: metrics.metricas.meritos,
-      color: theme.palette.secondary.main,
+      accentColor: theme.palette.secondary.main,
     },
   ];
 
   return (
     <Box>
-       <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
-        Balance de Reciprocidad
-      </Typography>
-      <Grid container spacing={{ xs: 2, md: 3 }} >
-        {reciprocidadMetrics.map((item) => (
-          <Grid item xs={12} sm={6} md={4} key={item.label}>
-            <MetricItem {...item} />
+       <Typography
+         variant="h6"
+         sx={{
+           mb: 3,
+           fontWeight: 700,
+           color: theme.palette.text.primary, // Texto neutro
+           display: 'flex',
+           alignItems: 'center',
+           gap: 1,
+         }}
+       >
+         <Balance sx={{ color: theme.palette.primary.main, fontSize: 20 }} />
+         Balance de Reciprocidad Cósmico
+       </Typography>
+
+      <Grid container spacing={2}>
+        {reciprocidadMetrics.map((metric, index) => (
+          <Grid item xs={12} sm={6} md={4} key={index}>
+            <MinimalistMetricItem
+              icon={metric.icon}
+              label={metric.label}
+              value={metric.value}
+              accentColor={metric.accentColor}
+            />
           </Grid>
         ))}
       </Grid>

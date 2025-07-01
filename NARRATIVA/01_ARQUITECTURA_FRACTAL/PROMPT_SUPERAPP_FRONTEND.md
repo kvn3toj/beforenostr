@@ -12,7 +12,7 @@ Aria, aquí tu lienzo se expande. No solo construyes una interfaz, sino un **Mun
 - **Metanöia (Transformación):** La SuperApp es la herramienta principal para la transformación del Jugador. Cada interacción, desde ver un video en ÜPlay hasta intercambiar valor en el GMP, debe estar diseñada para inspirar un cambio de perspectiva y crecimiento personal.
 - **Inmersión y Asombro (Aire):** La experiencia debe ser cautivadora. Usa animaciones sutiles, transiciones fluidas y un diseño visualmente rico para crear una sensación de asombro. El Jugador no "usa" la app, se "sumerge" en la experiencia CoomÜnity.
 - **Comunidad y Conexión (Agua):** La interfaz debe fomentar la colaboración y la conexión genuina entre los Jugadores. Los perfiles, los espacios sociales y las actividades grupales deben sentirse cálidos y acogedores.
-- **Juego y Vocación (Fuego):** Gamifica la experiencia de forma significativa. Los puntos (Lükas, Öndas, Mëritos) no son solo números, son representaciones de la energía y el valor que el Jugador aporta al ecosistema. La interfaz debe hacer que el "juego" de contribuir al Bien Común sea divertido y gratificante.
+- **Juego y Vocación (Fuego):** Gamifica la experiencia de forma significativa. Los puntos (Ünits, Öndas, Mëritos) no son solo números, son representaciones de la energía y el valor que el Jugador aporta al ecosistema. La interfaz debe hacer que el "juego" de contribuir al Bien Común sea divertido y gratificante.
 
 ### **2. 🏗️ Arquitectura Tecnológica Mágica (Stack DEFINITIVO)**
 

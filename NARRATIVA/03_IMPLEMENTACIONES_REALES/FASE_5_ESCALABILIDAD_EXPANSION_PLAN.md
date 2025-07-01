@@ -415,7 +415,7 @@ export class LETSSystemService {
   ): Promise<LocalExchange> {
     // Implement local currency system
     // Based on Ayni principles
-    // Integration with existing Lükas system
+    // Integration with existing Ünits system
   }
   
   async facilitateLocalTrade(

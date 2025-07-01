@@ -96,7 +96,7 @@ import {
 } from '../hooks/useEnhancedGroupsData';
 
 // Componentes mejorados CoomÜnity
-import { GroupsReciprocidadMetrics } from '../components/modules/social/components/enhanced/GroupsReciprocidadMetrics';
+import { GroupsReciprocidadMetrics } from '../components/modules/social/components/enhanced/GroupsAyniMetrics';
 import { GroupsCollaborationTools } from '../components/modules/social/components/enhanced/GroupsCollaborationTools';
 
 // Interfaces mejoradas para grupos CoomÜnity

@@ -10,6 +10,6 @@ export const useQuestionsQuery = (findAllDto: FindAllQuestionsDto) => {
   return useQuery<Question[], Error>({
     queryKey: ['questions', findAllDto],
     queryFn: () => questionService.findAll(findAllDto),
-    enabled: enabled,
+    enabled,
   });
 }; 

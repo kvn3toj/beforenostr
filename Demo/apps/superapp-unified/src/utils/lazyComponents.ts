@@ -74,6 +74,9 @@ export const UPlayWithStartTransition = React.lazy(() => import('../components/m
 // Páginas adicionales
 const DiscoveryTutorialsPage = createLazyPage('DiscoveryTutorialsPage');
 
+// Customer Journey - Sistema de Gestión de Stages
+const CustomerJourney = createLazyPage('CustomerJourney');
+
 // --- Mapa de Componentes para el Enrutador ---
 
 export const LazyPages = {
@@ -151,6 +154,9 @@ export const LazyPages = {
 
   // Páginas adicionales
   DiscoveryTutorialsPage,
+
+  // Customer Journey - Sistema de Gestión de Stages
+  CustomerJourney,
 };
 
 // --- Funciones de Precarga ---
@@ -205,6 +211,9 @@ export const preloadRouteComponents = (pathname: string) => {
         break;
       case '/consciousness':
         import('../pages/Consciousness.tsx');
+        break;
+      case '/customer-journey':
+        import('../pages/CustomerJourney.tsx');
         break;
       default:
         if (pathname.startsWith('/uplay/')) {

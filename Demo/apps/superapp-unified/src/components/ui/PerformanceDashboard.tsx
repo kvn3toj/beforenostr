@@ -399,10 +399,7 @@ const PerformanceDashboard: React.FC = () => {
       {/* Header */}
       <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
         <Typography variant="h4" component="h1" sx={{
-          background: 'linear-gradient(45deg, #9C27B0, #E1BEE7)',
-          backgroundClip: 'text',
-          WebkitBackgroundClip: 'text',
-          color: 'transparent',
+          color: '#9C27B0',
           fontWeight: 700
         }}>
           🌌 Performance Dashboard
@@ -446,9 +443,9 @@ const PerformanceDashboard: React.FC = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            <Card sx={{
-              background: 'linear-gradient(135deg, rgba(156, 39, 176, 0.1), rgba(225, 190, 231, 0.1))',
-              border: '1px solid rgba(156, 39, 176, 0.2)'
+            <Card variant="outlined" sx={{
+              backgroundColor: 'rgba(156, 39, 176, 0.05)',
+              borderColor: 'rgba(156, 39, 176, 0.2)'
             }}>
               <CardContent sx={{ textAlign: 'center' }}>
                 <DashboardIcon sx={{ fontSize: 40, color: '#9C27B0', mb: 1 }} />

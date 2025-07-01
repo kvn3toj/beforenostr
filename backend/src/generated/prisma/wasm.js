@@ -224,7 +224,11 @@ exports.Prisma.UserScalarFieldEnum = {
   address: 'address',
   status: 'status',
   topUserCount: 'topUserCount',
-  personalityId: 'personalityId'
+  personalityId: 'personalityId',
+  currentStage: 'currentStage',
+  stageProgressedAt: 'stageProgressedAt',
+  stageStartedAt: 'stageStartedAt',
+  stageCompletionData: 'stageCompletionData'
 };
 
 exports.Prisma.RoleScalarFieldEnum = {
@@ -618,6 +622,29 @@ exports.Prisma.UserChallengeScalarFieldEnum = {
   metadata: 'metadata'
 };
 
+exports.Prisma.StageProgressionScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  stage: 'stage',
+  startedAt: 'startedAt',
+  completedAt: 'completedAt',
+  requirements: 'requirements',
+  metrics: 'metrics',
+  isActive: 'isActive'
+};
+
+exports.Prisma.StageRequirementScalarFieldEnum = {
+  id: 'id',
+  stage: 'stage',
+  type: 'type',
+  minValue: 'minValue',
+  description: 'description',
+  isRequired: 'isRequired',
+  order: 'order',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.MarketplaceItemScalarFieldEnum = {
   id: 'id',
   name: 'name',
@@ -758,12 +785,12 @@ exports.Prisma.SortOrder = {
   desc: 'desc'
 };
 
-exports.Prisma.JsonNullValueInput = {
+exports.Prisma.NullableJsonNullValueInput = {
+  DbNull: Prisma.DbNull,
   JsonNull: Prisma.JsonNull
 };
 
-exports.Prisma.NullableJsonNullValueInput = {
-  DbNull: Prisma.DbNull,
+exports.Prisma.JsonNullValueInput = {
   JsonNull: Prisma.JsonNull
 };
 
@@ -782,6 +809,13 @@ exports.Prisma.JsonNullValueFilter = {
   JsonNull: Prisma.JsonNull,
   AnyNull: Prisma.AnyNull
 };
+exports.CustomerJourneyStage = exports.$Enums.CustomerJourneyStage = {
+  BUYER: 'BUYER',
+  SEEKER: 'SEEKER',
+  SOLVER: 'SOLVER',
+  PROMOTER: 'PROMOTER'
+};
+
 exports.MarketplaceItemType = exports.$Enums.MarketplaceItemType = {
   PRODUCT: 'PRODUCT',
   SERVICE: 'SERVICE',
@@ -791,13 +825,10 @@ exports.MarketplaceItemType = exports.$Enums.MarketplaceItemType = {
 };
 
 exports.Currency = exports.$Enums.Currency = {
-  UNIT: 'UNIT',
-  LUKAS: 'LUKAS',
-  MERITOS: 'MERITOS',
-  USD: 'USD',
-  EUR: 'EUR',
-  BTC: 'BTC',
-  ETH: 'ETH'
+  UNITS: 'UNITS',
+  TOINS: 'TOINS',
+  ONDAS: 'ONDAS',
+  MERITOS: 'MERITOS'
 };
 
 exports.MarketplaceItemStatus = exports.$Enums.MarketplaceItemStatus = {
@@ -892,6 +923,8 @@ exports.Prisma.ModelName = {
   Challenge: 'Challenge',
   ChallengeReward: 'ChallengeReward',
   UserChallenge: 'UserChallenge',
+  StageProgression: 'StageProgression',
+  StageRequirement: 'StageRequirement',
   MarketplaceItem: 'MarketplaceItem',
   StudyRoom: 'StudyRoom',
   StudyRoomParticipant: 'StudyRoomParticipant',

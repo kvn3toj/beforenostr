@@ -199,7 +199,7 @@ export const NostrProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         getExperienciaIdentifier: getExperienciaDTag,
         loadEvents,
         getProfileName,
-        getLud16: getLud16,
+        getLud16,
         parseProfileContent,
         parseMundoContent,
         parsePlaylistContent,

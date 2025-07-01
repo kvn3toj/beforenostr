@@ -12,7 +12,8 @@ import Grid from '@mui/material/Grid';
 import { useTheme, alpha } from '@mui/material';
 
 // 🌌 COSMIC DESIGN SYSTEM IMPORTS - ARIA (Frontend Artist)
-import { RevolutionaryWidget } from '../../design-system';
+import { CosmicCard } from '../../design-system';
+import { UNIFIED_COLORS } from '../../theme/colors';
 
 // 🎯 REGLA #1: IMPORTS ESPECÍFICOS DE ICONOS
 import WbSunnyIcon from '@mui/icons-material/WbSunny';
@@ -289,41 +290,52 @@ export const EnergyWeatherWidget: React.FC<EnergyWeatherWidgetProps> = ({
   );
 
   return (
-    <RevolutionaryWidget
-      title="🌤️ Clima Energético"
-      subtitle={currentWeather.description}
+    <CosmicCard
       variant="elevated"
       element="aire"
       cosmicIntensity="medium"
-      cosmicEffects={{
-        enableGlow: true,
-        enableAnimations: true,
-        enableParticles: true,
-        glowIntensity: 1.1,
-        particleConfig: {
-          count: 6,
-          size: 4,
-          color: currentWeather.color,
-          speed: 1.2,
-          opacity: 0.7,
-          blur: true
-        }
-      }}
-      interactionMode="hover"
+      enableGlow
+      enableAnimations
+      sx={{ minHeight: '320px' }}
       className={`energy-weather-widget ${className}`}
-      style={{ minHeight: '320px' }}
-      onRefresh={() => console.log('🔄 Refreshing weather...')}
-      onExpand={() => setExpanded(!expanded)}
     >
       {/* Partículas flotantes */}
       {renderParticles()}
 
-      <Box sx={{ p: 3, position: 'relative', zIndex: 1 }}>
+      <Box sx={{ padding: 3, position: 'relative', zIndex: 1 }}>
+        {/* Header del Widget */}
+        <Box sx={{ marginBottom: 3 }}>
+          <Typography
+            variant="h6"
+            sx={{
+              fontWeight: 700,
+              background: `linear-gradient(135deg, ${UNIFIED_COLORS.elements.aire.primary} 0%, ${UNIFIED_COLORS.elements.fuego.primary} 100%)`,
+              backgroundClip: 'text',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              fontSize: '1.3rem',
+              marginBottom: 0.5
+            }}
+          >
+            🌤️ Clima Energético
+          </Typography>
+          <Typography
+            variant="caption"
+            sx={{
+              color: alpha('#000', 0.7),
+              fontSize: '0.85rem',
+              display: 'block'
+            }}
+          >
+            {currentWeather.description}
+          </Typography>
+        </Box>
+
         {/* Estado actual con chip dinámico */}
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3 }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, marginBottom: 3 }}>
           <Box
             sx={{
-              p: 1.5,
+              padding: 1.5,
               borderRadius: 2,
               background: currentWeather.gradient,
               color: 'white',
@@ -332,7 +344,7 @@ export const EnergyWeatherWidget: React.FC<EnergyWeatherWidgetProps> = ({
               justifyContent: 'center',
               boxShadow: `0 4px 16px ${alpha(currentWeather.color, 0.4)}`,
               animation: 'pulse 2s ease-in-out infinite',
-              mr: 1
+              marginRight: 1
             }}
           >
             {currentWeather.icon}
@@ -347,12 +359,13 @@ export const EnergyWeatherWidget: React.FC<EnergyWeatherWidgetProps> = ({
               fontSize: '1rem',
               height: 36,
               '& .MuiChip-label': {
-                px: 2,
+                paddingLeft: 2,
+                paddingRight: 2,
               },
             }}
           />
 
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, ml: 'auto' }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, marginLeft: 'auto' }}>
             <IconButton
               onClick={handleExpandToggle}
               sx={{
@@ -366,22 +379,20 @@ export const EnergyWeatherWidget: React.FC<EnergyWeatherWidgetProps> = ({
           </Box>
         </Box>
 
-
-
         {/* Métricas atmosféricas compactas */}
-        <Grid container spacing={2} sx={{ mb: 3 }}>
+        <Grid container spacing={2} sx={{ marginBottom: 3 }}>
           <Grid item xs={4}>
             <Box sx={{ textAlign: 'center' }}>
-              <ThermostatIcon sx={{ color: '#FF6B35', mb: 0.5 }} />
+              <ThermostatIcon sx={{ color: UNIFIED_COLORS.elements.fuego.primary, marginBottom: 0.5 }} />
               <Typography
                 variant="caption"
-                sx={{ color: alpha('#fff', 0.8), display: 'block' }}
+                sx={{ color: alpha('#000', 0.7), display: 'block' }}
               >
                 Temperatura
               </Typography>
               <Typography
                 variant="h6"
-                sx={{ color: 'white', fontWeight: 'bold' }}
+                sx={{ color: alpha('#000', 0.9), fontWeight: 'bold' }}
               >
                 {Math.round(weatherData.temperature)}°
               </Typography>
@@ -390,16 +401,16 @@ export const EnergyWeatherWidget: React.FC<EnergyWeatherWidgetProps> = ({
 
           <Grid item xs={4}>
             <Box sx={{ textAlign: 'center' }}>
-              <AutoAwesomeIcon sx={{ color: '#4FC3F7', mb: 0.5 }} />
+              <AutoAwesomeIcon sx={{ color: UNIFIED_COLORS.elements.agua.primary, marginBottom: 0.5 }} />
               <Typography
                 variant="caption"
-                sx={{ color: alpha('#fff', 0.8), display: 'block' }}
+                sx={{ color: alpha('#000', 0.7), display: 'block' }}
               >
                 Elementos
               </Typography>
               <Typography
                 variant="h6"
-                sx={{ color: 'white', fontWeight: 'bold' }}
+                sx={{ color: alpha('#000', 0.9), fontWeight: 'bold' }}
               >
                 {Math.round(weatherData.humidity)}%
               </Typography>
@@ -408,16 +419,16 @@ export const EnergyWeatherWidget: React.FC<EnergyWeatherWidgetProps> = ({
 
           <Grid item xs={4}>
             <Box sx={{ textAlign: 'center' }}>
-              <GroupsIcon sx={{ color: '#8BC34A', mb: 0.5 }} />
+              <GroupsIcon sx={{ color: UNIFIED_COLORS.elements.tierra.primary, marginBottom: 0.5 }} />
               <Typography
                 variant="caption"
-                sx={{ color: alpha('#fff', 0.8), display: 'block' }}
+                sx={{ color: alpha('#000', 0.7), display: 'block' }}
               >
                 Social
               </Typography>
               <Typography
                 variant="h6"
-                sx={{ color: 'white', fontWeight: 'bold' }}
+                sx={{ color: alpha('#000', 0.9), fontWeight: 'bold' }}
               >
                 {Math.round(weatherData.socialActivity)}%
               </Typography>
@@ -427,36 +438,37 @@ export const EnergyWeatherWidget: React.FC<EnergyWeatherWidgetProps> = ({
 
         {/* Panel expandible con tendencias y recomendaciones */}
         <Collapse in={expanded}>
-          <Box sx={{ pt: 2, borderTop: `1px solid ${alpha('#fff', 0.1)}` }}>
+          <Box sx={{ paddingTop: 2, borderTop: `1px solid ${alpha('#000', 0.1)}` }}>
             {/* Tendencias */}
             <Typography
               variant="subtitle2"
               sx={{
-                color: 'white',
-                mb: 2,
+                color: alpha('#000', 0.8),
+                marginBottom: 2,
                 display: 'flex',
                 alignItems: 'center',
                 gap: 1,
+                fontWeight: 600,
               }}
             >
               <TrendingUpIcon sx={{ fontSize: '1.2rem' }} />
               Tendencias Energéticas
             </Typography>
 
-            <Box sx={{ mb: 3 }}>
+            <Box sx={{ marginBottom: 3 }}>
               {weatherData.trends.map((trend, index) => (
-                <Box key={trend.label} sx={{ mb: 2 }}>
+                <Box key={trend.label} sx={{ marginBottom: 2 }}>
                   <Box
                     sx={{
                       display: 'flex',
                       justifyContent: 'space-between',
                       alignItems: 'center',
-                      mb: 0.5,
+                      marginBottom: 0.5,
                     }}
                   >
                     <Typography
                       variant="caption"
-                      sx={{ color: alpha('#fff', 0.8) }}
+                      sx={{ color: alpha('#000', 0.7) }}
                     >
                       {trend.label}
                     </Typography>
@@ -465,7 +477,7 @@ export const EnergyWeatherWidget: React.FC<EnergyWeatherWidgetProps> = ({
                     >
                       <Typography
                         variant="caption"
-                        sx={{ color: 'white', fontWeight: 'bold' }}
+                        sx={{ color: alpha('#000', 0.9), fontWeight: 'bold' }}
                       >
                         {Math.round(trend.value)}%
                       </Typography>
@@ -474,8 +486,8 @@ export const EnergyWeatherWidget: React.FC<EnergyWeatherWidgetProps> = ({
                         sx={{
                           color:
                             trend.change > 0
-                              ? theme.palette.success.main
-                              : theme.palette.error.main,
+                              ? UNIFIED_COLORS.elements.tierra.primary
+                              : UNIFIED_COLORS.elements.fuego.primary,
                           fontSize: '0.7rem',
                         }}
                       >
@@ -490,7 +502,7 @@ export const EnergyWeatherWidget: React.FC<EnergyWeatherWidgetProps> = ({
                     sx={{
                       height: 6,
                       borderRadius: 3,
-                      bgcolor: alpha('#fff', 0.1),
+                      bgcolor: alpha('#000', 0.1),
                       '& .MuiLinearProgress-bar': {
                         borderRadius: 3,
                         background: `linear-gradient(90deg, ${currentWeather.color} 0%, ${alpha(currentWeather.color, 0.6)} 100%)`,
@@ -502,7 +514,14 @@ export const EnergyWeatherWidget: React.FC<EnergyWeatherWidgetProps> = ({
             </Box>
 
             {/* Recomendaciones personalizadas */}
-            <Typography variant="subtitle2" sx={{ color: 'white', mb: 2 }}>
+            <Typography
+              variant="subtitle2"
+              sx={{
+                color: alpha('#000', 0.8),
+                marginBottom: 2,
+                fontWeight: 600,
+              }}
+            >
               💡 Recomendaciones Personalizadas
             </Typography>
 
@@ -512,10 +531,10 @@ export const EnergyWeatherWidget: React.FC<EnergyWeatherWidgetProps> = ({
                   key={index}
                   variant="caption"
                   sx={{
-                    color: alpha('#fff', 0.9),
+                    color: alpha('#000', 0.8),
                     display: 'block',
-                    mb: 1,
-                    p: 1.5,
+                    marginBottom: 1,
+                    padding: 1.5,
                     borderRadius: 2,
                     background: alpha(currentWeather.color, 0.1),
                     border: `1px solid ${alpha(currentWeather.color, 0.2)}`,
@@ -529,7 +548,7 @@ export const EnergyWeatherWidget: React.FC<EnergyWeatherWidgetProps> = ({
           </Box>
         </Collapse>
       </Box>
-    </RevolutionaryWidget>
+    </CosmicCard>
   );
 };
 

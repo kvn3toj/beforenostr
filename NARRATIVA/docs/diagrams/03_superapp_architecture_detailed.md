@@ -20,7 +20,7 @@ graph TD;
             GPL["GPL: ÜPlay<br/>(Player Gamificado, Interacciones)<br/>[95%]"]:::progress95;
             Social["Módulo Social<br/>(Perfiles, CoPs Inicial)<br/>[85%]"]:::progress85;
             UStats["UStats<br/>(Dashboard de Jugador)<br/>[85%]"]:::progress85;
-            Wallet["Billetera<br/>(UI de Lükas & Méritos)<br/>[95%]"]:::progress95;
+            Wallet["Billetera<br/>(UI de Ünits & Méritos)<br/>[95%]"]:::progress95;
         end
 
         subgraph "Sinfonías Futuras [Planificado 0%]";

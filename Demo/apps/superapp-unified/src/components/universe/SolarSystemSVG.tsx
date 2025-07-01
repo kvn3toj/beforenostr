@@ -65,7 +65,7 @@ const SolarSystemSVG: React.FC = () => {
     [40, 60],   // amarillo
     [190, 240], // azul
   ];
-  let hueRange = randomItemInArray(starHueRanges);
+  const hueRange = randomItemInArray(starHueRanges);
   let starHue = randomInt(hueRange[0], hueRange[1]);
   if (starHue > 360) starHue -= 360;
   const starColor = `hsl(${starHue}, ${randomInt(90, 100)}%, ${randomInt(60, 80)}%)`;

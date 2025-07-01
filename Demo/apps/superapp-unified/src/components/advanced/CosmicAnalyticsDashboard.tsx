@@ -16,12 +16,11 @@ import {
   ToggleButtonGroup,
   LinearProgress,
   CircularProgress,
-
+  Paper,
 } from '@mui/material';
 import {
   Timeline,
   TrendingUp,
-
   Refresh,
   Download,
   FullscreenExit,
@@ -29,6 +28,7 @@ import {
   ShowChart,
   Radar,
   Psychology,
+  Star,
 } from '@mui/icons-material';
 
 import { COSMIC_ELEMENTS, CosmicElement } from '../ui/CosmicThemeSwitcher';
@@ -361,298 +361,390 @@ export const CosmicAnalyticsDashboard: React.FC<CosmicAnalyticsDashboardProps> =
     });
   };
 
+  const handleFullscreenToggle = () => {
+    setIsFullscreen(!isFullscreen);
+  };
+
   return (
-    <Box sx={{ p: 3, maxWidth: 1400, mx: 'auto' }}>
-      {/* Header */}
-      <Box mb={4}>
-        <Stack direction="row" justifyContent="space-between" alignItems="flex-start" flexWrap="wrap" gap={2}>
-          <Box>
-            <Typography variant="h4" fontWeight="bold" gutterBottom>
-              📊 Analytics Cósmicos
-            </Typography>
-            <Typography variant="subtitle1" color="text.secondary">
-              Visualiza tu evolución multidimensional en tiempo real
-            </Typography>
-          </Box>
-
-          <Stack direction="row" spacing={1} alignItems="center">
-            {/* Selector de rango temporal */}
-            <ToggleButtonGroup
-              size="small"
-              value={selectedTimeRange}
-              exclusive
-              onChange={(_, value) => value && setSelectedTimeRange(value)}
-            >
-              <ToggleButton value="7d">7D</ToggleButton>
-              <ToggleButton value="30d">30D</ToggleButton>
-              <ToggleButton value="90d">90D</ToggleButton>
-              <ToggleButton value="1y">1A</ToggleButton>
-            </ToggleButtonGroup>
-
-            {/* Controles */}
-            <Tooltip title="Actualizar datos">
-              <IconButton
-                onClick={handleRefresh}
-                disabled={refreshing}
-                sx={{
-                  background: alpha(theme.palette.primary.main, 0.1),
-                  '&:hover': { background: alpha(theme.palette.primary.main, 0.2) }
-                }}
-              >
-                {refreshing ? <CircularProgress size={20} /> : <Refresh />}
-              </IconButton>
-            </Tooltip>
-
-            <Tooltip title={isFullscreen ? "Salir pantalla completa" : "Pantalla completa"}>
-              <IconButton
-                onClick={() => setIsFullscreen(!isFullscreen)}
-                sx={{
-                  background: alpha(theme.palette.secondary.main, 0.1),
-                  '&:hover': { background: alpha(theme.palette.secondary.main, 0.2) }
-                }}
-              >
-                {isFullscreen ? <FullscreenExit /> : <Fullscreen />}
-              </IconButton>
-            </Tooltip>
-          </Stack>
-        </Stack>
+    <Box sx={{ mb: 4 }}>
+      {/* Header con título y controles */}
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+        <Box>
+          <Typography variant="h5" component="h2" sx={{
+            color: theme.palette.primary.main,
+            fontWeight: 700
+          }}>
+            Tu Cosmos de Transformación Consciente
+          </Typography>
+          <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
+            Métricas que nutren el alma: Balance Reciprocidad, Impacto al Bien Común, y la danza armónica de tus elementos internos
+          </Typography>
+        </Box>
+        <Box>
+          <IconButton
+            onClick={handleFullscreenToggle}
+            size="small"
+            sx={{ mr: 1 }}
+          >
+            {isFullscreen ? <FullscreenExit /> : <Fullscreen />}
+          </IconButton>
+          <IconButton
+            onClick={handleRefresh}
+            size="small"
+            disabled={refreshing}
+            sx={{ mr: 1 }}
+          >
+            {refreshing ? <CircularProgress size={24} /> : <Refresh />}
+          </IconButton>
+          <IconButton size="small">
+            <Download />
+          </IconButton>
+        </Box>
       </Box>
 
-      <Grid container spacing={3}>
-        {/* Métricas principales */}
-        <Grid item xs={12}>
-          <Card sx={{ p: 3, background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', color: 'white' }}>
-            <Typography variant="h6" gutterBottom>
-              🌌 Métricas Cósmicas Principales
-            </Typography>
-            <Grid container spacing={3}>
-              {cosmicMetrics.map((metric) => {
-                const elementConfig = COSMIC_ELEMENTS[metric.element];
-                const IconComponent = elementConfig.icon;
-
-                return (
-                  <Grid item xs={12} sm={6} md={4} lg={2.4} key={metric.id}>
-                    <Box textAlign="center">
-                      <Box
-                        sx={{
-                          width: 56,
-                          height: 56,
-                          borderRadius: '50%',
-                          background: elementConfig.gradient,
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          mx: 'auto',
-                          mb: 1
-                        }}
-                      >
-                        <IconComponent />
-                      </Box>
-                      <Typography variant="h4" fontWeight="bold">
-                        {metric.value}
-                        <Typography component="span" variant="caption" ml={0.5}>
-                          {metric.unit}
-                        </Typography>
-                      </Typography>
-                      <Typography variant="body2" sx={{ opacity: 0.9 }}>
-                        {metric.name}
-                      </Typography>
-                      <Stack direction="row" justifyContent="center" alignItems="center" spacing={0.5} mt={0.5}>
-                        <TrendingUp
-                          sx={{
-                            fontSize: 16,
-                            color: metric.trend === 'ascending' ? '#4CAF50' :
-                                   metric.trend === 'stable' ? '#FF9800' : '#F44336'
-                          }}
-                        />
-                        <Chip
-                          label={metric.impact}
-                          size="small"
-                          sx={{
-                            fontSize: '0.6rem',
-                            height: 20,
-                            background: alpha('white', 0.2),
-                            color: 'white'
-                          }}
-                        />
-                      </Stack>
-                    </Box>
-                  </Grid>
-                );
-              })}
-            </Grid>
-          </Card>
-        </Grid>
-
-        {/* Gráfico de radar - Balance elemental */}
+      {/* Tarjetas métricas principales */}
+      <Grid container spacing={3} sx={{ mb: 4 }}>
+        {/* Índice de Equilibrio Reciprocidad */}
         <Grid item xs={12} md={6}>
-          <Card sx={{ p: 3, height: 400 }}>
-            <Typography variant="h6" gutterBottom display="flex" alignItems="center" gap={1}>
-              <Radar color="primary" />
-              Balance Elemental Actual
-            </Typography>
-            <Box display="flex" justifyContent="center" alignItems="center" height={300}>
-              <svg ref={radarChartRef} />
-            </Box>
-          </Card>
-        </Grid>
-
-        {/* Insights cósmicos */}
-        <Grid item xs={12} md={6}>
-          <Card sx={{ p: 3, height: 400 }}>
-            <Typography variant="h6" gutterBottom display="flex" alignItems="center" gap={1}>
-              <Psychology color="primary" />
-              Insights Cósmicos Recientes
-            </Typography>
-            <Box sx={{ maxHeight: 320, overflowY: 'auto', pr: 1 }}>
-              <Stack spacing={2}>
-                {cosmicInsights.map((insight) => {
-                  const priorityColor = insight.priority === 'cosmic' ? '#E1BEE7' :
-                                       insight.priority === 'high' ? '#F44336' :
-                                       insight.priority === 'medium' ? '#FF9800' : '#4CAF50';
-                  const typeIcon = insight.type === 'achievement' ? '🏆' :
-                                  insight.type === 'opportunity' ? '💫' :
-                                  insight.type === 'warning' ? '⚠️' : '🔮';
-
-                  return (
-                    <Fade key={insight.id} in={true}>
-                      <Card
-                        sx={{
-                          p: 2,
-                          background: alpha(priorityColor, 0.05),
-                          border: `1px solid ${alpha(priorityColor, 0.2)}`,
-                          position: 'relative'
-                        }}
-                      >
-                        <Stack direction="row" spacing={2} alignItems="flex-start">
-                          <Box
-                            sx={{
-                              width: 40,
-                              height: 40,
-                              borderRadius: '50%',
-                              background: alpha(priorityColor, 0.1),
-                              display: 'flex',
-                              alignItems: 'center',
-                              justifyContent: 'center',
-                              fontSize: '1.2rem'
-                            }}
-                          >
-                            {typeIcon}
-                          </Box>
-                          <Box flex={1}>
-                            <Typography variant="subtitle2" fontWeight="bold" gutterBottom>
-                              {insight.title}
-                            </Typography>
-                            <Typography variant="body2" color="text.secondary" gutterBottom>
-                              {insight.description}
-                            </Typography>
-                            <Stack direction="row" spacing={1} alignItems="center" mt={1}>
-                              {insight.elements.map(element => (
-                                <Chip
-                                  key={element}
-                                  label={COSMIC_ELEMENTS[element].name}
-                                  size="small"
-                                  sx={{
-                                    background: alpha(COSMIC_ELEMENTS[element].color, 0.1),
-                                    color: COSMIC_ELEMENTS[element].color,
-                                    fontSize: '0.7rem'
-                                  }}
-                                />
-                              ))}
-                              <Typography variant="caption" color="text.secondary">
-                                {insight.timestamp.toLocaleTimeString()}
-                              </Typography>
-                            </Stack>
-                            {insight.actionable && (
-                              <Button
-                                size="small"
-                                variant="outlined"
-                                onClick={() => handleInsightAction(insight, 'explore')}
-                                sx={{ mt: 1, borderColor: priorityColor, color: priorityColor }}
-                              >
-                                🚀 Explorar
-                              </Button>
-                            )}
-                          </Box>
-                        </Stack>
-                      </Card>
-                    </Fade>
-                  );
-                })}
-              </Stack>
-            </Box>
-          </Card>
-        </Grid>
-
-        {/* Flujo de energía entre elementos */}
-        <Grid item xs={12}>
-          <Card sx={{ p: 3 }}>
-            <Typography variant="h6" gutterBottom display="flex" alignItems="center" gap={1}>
-              <ShowChart color="primary" />
-              Flujo de Energía Interdimensional
-            </Typography>
-            <Box sx={{ height: 300, background: alpha(theme.palette.primary.main, 0.02), borderRadius: 2, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <svg ref={flowChartRef} width="100%" height="280" />
-              <Typography variant="body2" color="text.secondary" textAlign="center">
-                Visualización D3.js del flujo energético entre elementos cósmicos
-                <br />
-                <em>Implementación avanzada en desarrollo...</em>
-              </Typography>
-            </Box>
-          </Card>
-        </Grid>
-
-        {/* Timeline de evolución */}
-        <Grid item xs={12}>
-          <Card sx={{ p: 3 }}>
-            <Typography variant="h6" gutterBottom display="flex" alignItems="center" gap={1}>
-              <Timeline color="primary" />
-              Evolución Temporal de Balance Reciprocidad
-            </Typography>
-            <Box sx={{ height: 200 }}>
-              {timeSeriesData.length > 0 && (
-                <Box sx={{ mt: 2 }}>
-                  <Typography variant="body2" color="text.secondary" gutterBottom>
-                    Últimos {selectedTimeRange} - Tendencia general:
-                    <Chip
-                      label="Crecimiento Exponencial"
-                      size="small"
-                      color="success"
-                      sx={{ ml: 1 }}
-                    />
+          <Paper
+            variant="outlined"
+            sx={{
+              p: 3,
+              borderRadius: 2,
+              backgroundColor: '#ffffff',
+              borderColor: alpha(theme.palette.primary.main, 0.2),
+              position: 'relative',
+              overflow: 'hidden'
+            }}
+          >
+            <Box sx={{ position: 'relative', zIndex: 1 }}>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                  <Box
+                    component="span"
+                    sx={{
+                      display: 'inline-flex',
+                      p: 1,
+                      borderRadius: '50%',
+                      backgroundColor: alpha(theme.palette.primary.main, 0.1),
+                      color: theme.palette.primary.main,
+                      mr: 2
+                    }}
+                  >
+                    <Psychology />
+                  </Box>
+                  <Typography variant="h6" component="h3" fontWeight="bold">
+                    🔵 Índice de Equilibrio Reciprocidad (IER)
                   </Typography>
-                  {Object.entries(COSMIC_ELEMENTS).map(([key, element]) => {
-                    const elementKey = key as CosmicElement;
-                    const latestValue = timeSeriesData[timeSeriesData.length - 1]?.values[elementKey] || 0;
-
-                    return (
-                      <Box key={elementKey} mb={1}>
-                        <Stack direction="row" justifyContent="space-between" alignItems="center" mb={0.5}>
-                          <Typography variant="caption" color="text.secondary">
-                            {element.name}
-                          </Typography>
-                          <Typography variant="caption" fontWeight="bold" sx={{ color: element.color }}>
-                            {Math.round(latestValue)}%
-                          </Typography>
-                        </Stack>
-                        <LinearProgress
-                          variant="determinate"
-                          value={latestValue}
-                          sx={{
-                            height: 6,
-                            borderRadius: 3,
-                            '& .MuiLinearProgress-bar': {
-                              background: element.gradient
-                            }
-                          }}
-                        />
-                      </Box>
-                    );
-                  })}
                 </Box>
-              )}
+                <Chip
+                  label="100% - Reciprocidad en armonía perfecta"
+                  size="small"
+                  sx={{
+                    backgroundColor: alpha(theme.palette.success.main, 0.1),
+                    color: theme.palette.success.main,
+                    fontWeight: 'bold'
+                  }}
+                />
+              </Box>
+
+              <Box sx={{ mt: 3, mb: 2 }}>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
+                  <Typography variant="body2" color="text.secondary">
+                    Índice Equilibrio Reciprocidad
+                  </Typography>
+                  <Typography variant="body2" fontWeight="bold" color="primary.main">
+                    100%
+                  </Typography>
+                </Box>
+                <LinearProgress
+                  variant="determinate"
+                  value={100}
+                  sx={{
+                    height: 10,
+                    borderRadius: 5,
+                    backgroundColor: alpha(theme.palette.primary.main, 0.1),
+                    '& .MuiLinearProgress-bar': {
+                      backgroundColor: theme.palette.primary.main
+                    }
+                  }}
+                />
+              </Box>
+
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 3 }}>
+                <Box>
+                  <Typography variant="body2" color="text.secondary">
+                    Armonía Cósmica
+                  </Typography>
+                  <Chip
+                    label="Activada"
+                    size="small"
+                    sx={{
+                      mt: 0.5,
+                      backgroundColor: alpha(theme.palette.success.main, 0.1),
+                      color: theme.palette.success.main
+                    }}
+                  />
+                </Box>
+
+                <Box>
+                  <Typography variant="body2" color="error.main" fontWeight="bold">
+                    11.2184249628528%
+                  </Typography>
+                  <Typography variant="caption" color="text.secondary" display="block">
+                    Eficiencia Energética
+                  </Typography>
+                </Box>
+
+                <Box>
+                  <Typography variant="body2" color="success.main" fontWeight="bold">
+                    +5.08%
+                  </Typography>
+                  <Typography variant="caption" color="text.secondary" display="block">
+                    Crecimiento Semanal
+                  </Typography>
+                </Box>
+              </Box>
             </Box>
-          </Card>
+          </Paper>
+        </Grid>
+
+        {/* Nivel de Consciencia */}
+        <Grid item xs={12} md={6}>
+          <Paper
+            variant="outlined"
+            sx={{
+              p: 3,
+              borderRadius: 2,
+              backgroundColor: '#ffffff',
+              borderColor: alpha(theme.palette.warning.main, 0.2),
+              position: 'relative',
+              overflow: 'hidden'
+            }}
+          >
+            <Box sx={{ position: 'relative', zIndex: 1 }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+                <Box
+                  component="span"
+                  sx={{
+                    display: 'inline-flex',
+                    p: 1,
+                    borderRadius: '50%',
+                    backgroundColor: alpha(theme.palette.warning.main, 0.1),
+                    color: theme.palette.warning.main,
+                    mr: 2
+                  }}
+                >
+                  <Psychology />
+                </Box>
+                <Typography variant="h6" component="h3" fontWeight="bold">
+                  🔶 Nivel de Consciencia
+                </Typography>
+              </Box>
+              <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                Evolución del Bien Común
+              </Typography>
+
+              {/* Aquí iría el componente visual de nivel de consciencia */}
+              <Box sx={{ height: 120, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <Typography variant="h4" fontWeight="bold" color={theme.palette.warning.main}>
+                  Nivel 7
+                </Typography>
+              </Box>
+            </Box>
+          </Paper>
+        </Grid>
+
+        {/* Vector Bien Común */}
+        <Grid item xs={12} md={6}>
+          <Paper
+            variant="outlined"
+            sx={{
+              p: 3,
+              borderRadius: 2,
+              backgroundColor: '#ffffff',
+              borderColor: alpha(theme.palette.secondary.main, 0.2),
+              position: 'relative',
+              overflow: 'hidden'
+            }}
+          >
+            <Box sx={{ position: 'relative', zIndex: 1 }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+                <Box
+                  component="span"
+                  sx={{
+                    display: 'inline-flex',
+                    p: 1,
+                    borderRadius: '50%',
+                    backgroundColor: alpha(theme.palette.secondary.main, 0.1),
+                    color: theme.palette.secondary.main,
+                    mr: 2
+                  }}
+                >
+                  <TrendingUp />
+                </Box>
+                <Typography variant="h6" component="h3" fontWeight="bold">
+                  🔮 Vector Bien Común (VBC)
+                </Typography>
+              </Box>
+              <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                112 Puntos de Impacto
+              </Typography>
+
+              {/* Aquí iría el componente visual del vector */}
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 3 }}>
+                <Box>
+                  <Typography variant="body2" color="text.secondary">
+                    302 Méritos
+                  </Typography>
+                </Box>
+                <Box>
+                  <Typography variant="body2" color="secondary.main" fontWeight="bold">
+                    99.7% Resonancia
+                  </Typography>
+                </Box>
+              </Box>
+            </Box>
+          </Paper>
+        </Grid>
+
+        {/* Galaxia Elemental */}
+        <Grid item xs={12} md={6}>
+          <Paper
+            variant="outlined"
+            sx={{
+              p: 3,
+              borderRadius: 2,
+              backgroundColor: '#ffffff',
+              borderColor: alpha(theme.palette.info.main, 0.2),
+              position: 'relative',
+              overflow: 'hidden'
+            }}
+          >
+            <Box sx={{ position: 'relative', zIndex: 1 }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+                <Box
+                  component="span"
+                  sx={{
+                    display: 'inline-flex',
+                    p: 1,
+                    borderRadius: '50%',
+                    backgroundColor: alpha(theme.palette.info.main, 0.1),
+                    color: theme.palette.info.main,
+                    mr: 2
+                  }}
+                >
+                  <Radar />
+                </Box>
+                <Typography variant="h6" component="h3" fontWeight="bold">
+                  ⬛ Galaxia Elemental de tu Ser
+                </Typography>
+              </Box>
+              <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                Equilibrio entre Fuego, Agua, Tierra y Aire
+              </Typography>
+
+              {/* Aquí iría el componente visual de la galaxia elemental */}
+              <Box sx={{ height: 120, display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column' }}>
+                <Typography variant="h6" fontWeight="bold" color={theme.palette.info.main}>
+                  ⬛ Galaxia Elemental de tu Ser
+                </Typography>
+                <Typography variant="body1" color="text.primary" sx={{ mt: 1 }}>
+                  13.10083291369724%
+                </Typography>
+                <Typography variant="caption" color="text.secondary">
+                  Balance Cósmico
+                </Typography>
+                <Typography variant="body2" color="info.main" sx={{ mt: 1 }}>
+                  Armonía
+                </Typography>
+              </Box>
+            </Box>
+          </Paper>
+        </Grid>
+
+        {/* Recomendaciones de Equilibrio */}
+        <Grid item xs={12}>
+          <Paper
+            variant="outlined"
+            sx={{
+              p: 3,
+              borderRadius: 2,
+              backgroundColor: '#ffffff',
+              borderColor: theme.palette.divider,
+              position: 'relative',
+              overflow: 'hidden'
+            }}
+          >
+            <Box sx={{ position: 'relative', zIndex: 1 }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+                <Box
+                  component="span"
+                  sx={{
+                    display: 'inline-flex',
+                    p: 1,
+                    borderRadius: '50%',
+                    backgroundColor: alpha(theme.palette.warning.light, 0.2),
+                    color: theme.palette.warning.main,
+                    mr: 2
+                  }}
+                >
+                  <Star />
+                </Box>
+                <Typography variant="h6" component="h3" fontWeight="bold">
+                  ⭐ Recomendaciones de Equilibrio
+                </Typography>
+              </Box>
+
+              {/* Lista de recomendaciones */}
+              <Box sx={{ mt: 2 }}>
+                {/* Aquí irían las recomendaciones */}
+              </Box>
+            </Box>
+          </Paper>
+        </Grid>
+
+        {/* Radar de Armonía */}
+        <Grid item xs={12}>
+          <Paper
+            variant="outlined"
+            sx={{
+              p: 3,
+              borderRadius: 2,
+              backgroundColor: '#ffffff',
+              borderColor: theme.palette.divider,
+              position: 'relative',
+              overflow: 'hidden'
+            }}
+          >
+            <Box sx={{ position: 'relative', zIndex: 1 }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+                <Box
+                  component="span"
+                  sx={{
+                    display: 'inline-flex',
+                    p: 1,
+                    borderRadius: '50%',
+                    backgroundColor: alpha(theme.palette.primary.light, 0.2),
+                    color: theme.palette.primary.main,
+                    mr: 2
+                  }}
+                >
+                  <Radar />
+                </Box>
+                <Typography variant="h6" component="h3" fontWeight="bold">
+                  🔷 Radar de Armonía Consciente
+                </Typography>
+              </Box>
+
+              {/* Aquí iría el radar */}
+              <Box sx={{ height: 300, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <Typography variant="body1" color="text.secondary">
+                  Visualización del radar de armonía
+                </Typography>
+              </Box>
+            </Box>
+          </Paper>
         </Grid>
       </Grid>
     </Box>

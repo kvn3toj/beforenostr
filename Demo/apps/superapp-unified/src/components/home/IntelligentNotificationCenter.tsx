@@ -19,7 +19,8 @@ import Badge from '@mui/material/Badge';
 import { useTheme, alpha } from '@mui/material';
 
 // 🌌 COSMIC DESIGN SYSTEM IMPORTS - ARIA (Frontend Artist)
-import { RevolutionaryWidget } from '../../design-system';
+import { CosmicCard } from '../../design-system';
+import { UNIFIED_COLORS } from '../../theme/colors';
 
 // 🎯 REGLA #1: IMPORTS ESPECÍFICOS DE ICONOS
 import NotificationsIcon from '@mui/icons-material/Notifications';
@@ -446,52 +447,63 @@ export const IntelligentNotificationCenter: React.FC<
 
   return (
     <Box className={className}>
-      <RevolutionaryWidget
-        title="🔔 Centro de Notificaciones Inteligente"
-        subtitle={`${filteredNotifications.length} de ${notifications.length} notificaciones`}
+      <CosmicCard
         variant="elevated"
         element="aire"
         cosmicIntensity="medium"
-        cosmicEffects={{
-          enableGlow: true,
-          enableAnimations: true,
-          enableParticles: true,
-          glowIntensity: 1.0,
-          particleConfig: {
-            count: 4,
-            size: 3,
-            color: '#64B5F6',
-            speed: 1.5,
-            opacity: 0.6,
-            blur: true
-          }
-        }}
-        interactionMode="hover"
-        style={{
+        enableGlow
+        enableAnimations
+        sx={{
           maxWidth: 600,
           maxHeight: 600,
           overflow: 'hidden'
         }}
-        onRefresh={() => console.log('🔄 Refreshing notifications...')}
-        onExpand={() => console.log('🔍 Expanding notifications...')}
       >
+        {/* Header del Widget */}
+        <Box sx={{ padding: 3, paddingBottom: 2 }}>
+          <Typography
+            variant="h6"
+            sx={{
+              fontWeight: 700,
+              background: `linear-gradient(135deg, ${UNIFIED_COLORS.elements.aire.primary} 0%, ${UNIFIED_COLORS.elements.fuego.primary} 100%)`,
+              backgroundClip: 'text',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              fontSize: '1.3rem',
+              marginBottom: 0.5
+            }}
+          >
+            🔔 Centro de Notificaciones Inteligente
+          </Typography>
+          <Typography
+            variant="caption"
+            sx={{
+              color: alpha('#000', 0.7),
+              fontSize: '0.85rem',
+              display: 'block'
+            }}
+          >
+            {filteredNotifications.length} de {notifications.length} notificaciones
+          </Typography>
+        </Box>
+
         {/* Header con controles avanzados */}
-        <Box sx={{ mb: 2 }}>
+        <Box sx={{ marginBottom: 2, paddingLeft: 3, paddingRight: 3 }}>
           <Stack
             direction="row"
             alignItems="center"
             justifyContent="space-between"
-            sx={{ mb: 2 }}
+            sx={{ marginBottom: 2 }}
           >
             <Stack direction="row" alignItems="center" spacing={2}>
               <Badge
                 badgeContent={notificationStats?.unread || 0}
                 color="error"
               >
-                <NotificationsActiveIcon sx={{ color: '#64B5F6', fontSize: 28 }} />
+                <NotificationsActiveIcon sx={{ color: UNIFIED_COLORS.elements.aire.primary, fontSize: 28 }} />
               </Badge>
               <Box>
-                <Typography variant="caption" sx={{ color: alpha('#fff', 0.8) }}>
+                <Typography variant="caption" sx={{ color: alpha('#000', 0.7) }}>
                   Sistema de notificaciones con IA
                 </Typography>
               </Box>
@@ -504,11 +516,11 @@ export const IntelligentNotificationCenter: React.FC<
                   onClick={() => setShowAiInsights(!showAiInsights)}
                   sx={{
                     bgcolor: showAiInsights
-                      ? alpha('#64B5F6', 0.2)
+                      ? alpha(UNIFIED_COLORS.elements.aire.primary, 0.2)
                       : 'transparent',
-                    color: showAiInsights ? '#64B5F6' : alpha('#fff', 0.7),
+                    color: showAiInsights ? UNIFIED_COLORS.elements.aire.primary : alpha('#000', 0.7),
                     '&:hover': {
-                      bgcolor: alpha('#64B5F6', 0.1)
+                      bgcolor: alpha(UNIFIED_COLORS.elements.aire.primary, 0.1)
                     }
                   }}
                 >
@@ -522,8 +534,8 @@ export const IntelligentNotificationCenter: React.FC<
                     size="small"
                     onClick={onMarkAllAsRead}
                     sx={{
-                      color: alpha('#fff', 0.7),
-                      '&:hover': { color: '#4CAF50' }
+                      color: alpha('#000', 0.7),
+                      '&:hover': { color: UNIFIED_COLORS.elements.fuego.dark }
                     }}
                   >
                     <MarkEmailReadIcon />
@@ -537,8 +549,8 @@ export const IntelligentNotificationCenter: React.FC<
                     size="small"
                     onClick={onClearAll}
                     sx={{
-                      color: alpha('#fff', 0.7),
-                      '&:hover': { color: '#F44336' }
+                      color: alpha('#000', 0.7),
+                      '&:hover': { color: UNIFIED_COLORS.elements.fuego.dark }
                     }}
                   >
                     <DeleteSweepIcon />
@@ -551,8 +563,8 @@ export const IntelligentNotificationCenter: React.FC<
                   size="small"
                   onClick={onClose}
                   sx={{
-                    color: alpha('#fff', 0.7),
-                    '&:hover': { color: '#FF9800' }
+                    color: alpha('#000', 0.7),
+                    '&:hover': { color: UNIFIED_COLORS.elements.fuego.dark }
                   }}
                 >
                   <CloseIcon />
@@ -570,19 +582,21 @@ export const IntelligentNotificationCenter: React.FC<
               size="small"
               sx={{
                 '& .MuiToggleButton-root': {
-                  px: 2,
-                  py: 0.5,
-                  color: alpha('#fff', 0.7),
-                  border: `1px solid ${alpha('#64B5F6', 0.3)}`,
+                  paddingLeft: 2,
+                  paddingRight: 2,
+                  paddingTop: 0.5,
+                  paddingBottom: 0.5,
+                  color: alpha('#000', 0.7),
+                  border: `1px solid ${alpha(UNIFIED_COLORS.elements.aire.primary, 0.3)}`,
                   '&.Mui-selected': {
-                    backgroundColor: alpha('#64B5F6', 0.2),
-                    color: '#64B5F6',
+                    backgroundColor: alpha(UNIFIED_COLORS.elements.aire.primary, 0.2),
+                    color: UNIFIED_COLORS.elements.aire.primary,
                     '&:hover': {
-                      backgroundColor: alpha('#64B5F6', 0.3),
+                      backgroundColor: alpha(UNIFIED_COLORS.elements.aire.primary, 0.3),
                     }
                   },
                   '&:hover': {
-                    backgroundColor: alpha('#64B5F6', 0.1),
+                    backgroundColor: alpha(UNIFIED_COLORS.elements.aire.primary, 0.1),
                   }
                 }
               }}
@@ -606,31 +620,33 @@ export const IntelligentNotificationCenter: React.FC<
           sx={{
             maxHeight: 400,
             overflow: 'auto',
+            paddingLeft: 3,
+            paddingRight: 3,
             '&::-webkit-scrollbar': {
               width: 8,
             },
             '&::-webkit-scrollbar-track': {
-              bgcolor: alpha('#fff', 0.1),
+              bgcolor: alpha('#000', 0.1),
               borderRadius: 4,
             },
             '&::-webkit-scrollbar-thumb': {
-              bgcolor: alpha('#64B5F6', 0.5),
+              bgcolor: alpha(UNIFIED_COLORS.elements.aire.primary, 0.5),
               borderRadius: 4,
               '&:hover': {
-                bgcolor: alpha('#64B5F6', 0.7),
+                bgcolor: alpha(UNIFIED_COLORS.elements.aire.primary, 0.7),
               }
             },
           }}
         >
           {filteredNotifications.length === 0 ? (
-            <Box sx={{ textAlign: 'center', py: 4 }}>
+            <Box sx={{ textAlign: 'center', paddingTop: 4, paddingBottom: 4 }}>
               <NotificationsIcon
-                sx={{ fontSize: 48, color: alpha('#fff', 0.3), mb: 2 }}
+                sx={{ fontSize: 48, color: alpha('#000', 0.3), marginBottom: 2 }}
               />
-              <Typography variant="body1" sx={{ color: alpha('#fff', 0.7) }}>
+              <Typography variant="body1" sx={{ color: alpha('#000', 0.7) }}>
                 No hay notificaciones para mostrar
               </Typography>
-              <Typography variant="caption" sx={{ color: alpha('#fff', 0.5) }}>
+              <Typography variant="caption" sx={{ color: alpha('#000', 0.5) }}>
                 Cambia el filtro para ver más notificaciones
               </Typography>
             </Box>
@@ -653,9 +669,11 @@ export const IntelligentNotificationCenter: React.FC<
         {notificationStats && (
           <Box
             sx={{
-              mt: 2,
-              pt: 2,
-              borderTop: `1px solid ${alpha('#fff', 0.1)}`,
+              marginTop: 2,
+              paddingTop: 2,
+              paddingLeft: 3,
+              paddingRight: 3,
+              borderTop: `1px solid ${alpha('#000', 0.1)}`,
             }}
           >
             <Stack direction="row" spacing={2} justifyContent="center">
@@ -664,9 +682,9 @@ export const IntelligentNotificationCenter: React.FC<
                 label={`Engagement: ${Math.round(notificationStats.avgEngagement || 0)}%`}
                 size="small"
                 sx={{
-                  bgcolor: alpha('#FFD54F', 0.2),
-                  color: '#FFD54F',
-                  border: `1px solid ${alpha('#FFD54F', 0.3)}`,
+                  bgcolor: alpha(UNIFIED_COLORS.elements.fuego.primary, 0.2),
+                  color: UNIFIED_COLORS.elements.fuego.primary,
+                  border: `1px solid ${alpha(UNIFIED_COLORS.elements.fuego.primary, 0.3)}`,
                 }}
               />
               <Chip
@@ -674,15 +692,15 @@ export const IntelligentNotificationCenter: React.FC<
                 label={`${notificationStats.high} alta prioridad`}
                 size="small"
                 sx={{
-                  bgcolor: alpha('#FF9800', 0.2),
-                  color: '#FF9800',
-                  border: `1px solid ${alpha('#FF9800', 0.3)}`,
+                  bgcolor: alpha(UNIFIED_COLORS.elements.agua.primary, 0.2),
+                  color: UNIFIED_COLORS.elements.agua.primary,
+                  border: `1px solid ${alpha(UNIFIED_COLORS.elements.agua.primary, 0.3)}`,
                 }}
               />
             </Stack>
           </Box>
         )}
-      </RevolutionaryWidget>
+      </CosmicCard>
     </Box>
   );
 };

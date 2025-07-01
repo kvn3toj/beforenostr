@@ -68,10 +68,10 @@ import {
   Download as DownloadIcon,
   Notifications as NotificationsIcon,
   Psychology as PsychologyIcon,
-  Gamepad2 as GamepadIcon,
+  Gamepad as GamepadIcon,
   Rocket as RocketIcon,
   Diamond as DiamondIcon,
-  Energy as EnergyIcon,
+  Bolt as EnergyIcon,
   Security as SecurityIcon,
   Speed as SpeedIcon,
   Celebration as CelebrationIcon,
@@ -113,11 +113,15 @@ import {
 // Import types
 import { Stage, Contest } from '../../../services/console-api.service';
 
-interface StageVisualization extends Stage {
+interface StageVisualization {
+  id: string;
+  name: string;
+  description: string;
   icon: React.ReactElement;
   color: string;
   users: number;
-  philosophyAlignment: 'ayni' | 'bien_comun' | 'metanoia';
+  completionRate: number;
+  philosophyAlignment: 'reciprocidad' | 'bien_comun' | 'metanoia';
   keyActions: string[];
 }
 
@@ -144,11 +148,15 @@ const ExperienceConsoleConnected: React.FC = () => {
   const createContestMutation = useCreateContest();
 
   // Transform stages data to include visualization properties
-  const stageData: StageVisualization[] = stages.data?.map((stage, index) => ({
-    ...stage,
+  const stageData: StageVisualization[] = stages.data?.map((stage: any, index: number) => ({
+    id: stage.id,
+    name: stage.name,
+    description: stage.description,
     icon: [<HomeIcon />, <SearchIcon />, <BusinessIcon />, <RocketIcon />][index] || <HomeIcon />,
     color: ['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4'][index] || '#FF6B6B',
     users: Math.floor(Math.random() * 500) + 100, // Mock users count
+    completionRate: Math.floor(Math.random() * 100), // Mock completion rate
+    philosophyAlignment: (['reciprocidad', 'bien_comun', 'metanoia', 'reciprocidad'] as const)[index] || 'reciprocidad',
     keyActions: [
       ['Activar Gift Card', 'Primera compra', 'Calificar servicio'],
       ['Explorar marketplace', 'Solicitar votos', 'Crear perfil'],

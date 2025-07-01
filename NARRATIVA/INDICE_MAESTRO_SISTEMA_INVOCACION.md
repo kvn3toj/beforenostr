@@ -236,7 +236,7 @@ cat NARRATIVA/02_AGENTES_GUARDIANES/LOS_12_GUARDIANES_DIGITALES.md
 
 1. **🎯 Especialización Consciente:** Cada Guardián posee sabiduría única. Aprovéchala.
 
-2. **🌿 Contexto Filosófico:** Conecta tu tarea con principios CoomÜnity (Ayni, Bien Común, etc.).
+2. **🌿 Contexto Filosófico:** Conecta tu tarea con principios CoomÜnity (Reciprocidad, Bien Común, etc.).
 
 3. **🔮 Claridad de Intención:** Sé específico sobre lo que necesitas.
 

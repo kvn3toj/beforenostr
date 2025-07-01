@@ -187,7 +187,7 @@ export const analyzeBundlePerformance = () => {
 
       return {
         totalLoadTime: loadTime,
-        domReadyTime: domReadyTime,
+        domReadyTime,
         resourceLoadTime: loadTime - domReadyTime,
       };
     };

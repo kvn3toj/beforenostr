@@ -85,7 +85,7 @@ const BarChart: React.FC<BarChartProps> = ({
                   rx="4"
                   animate={{
                     height: barHeight,
-                    y: y,
+                    y,
                   }}
                   transition={{
                     duration: 0.8,

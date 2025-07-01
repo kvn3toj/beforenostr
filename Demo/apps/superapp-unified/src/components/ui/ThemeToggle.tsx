@@ -44,13 +44,13 @@ const toggleVariants = {
 };
 
 const iconVariants = {
-  hidden: { 
-    opacity: 0, 
+  hidden: {
+    opacity: 0,
     scale: 0.5,
-    rotate: -180 
+    rotate: -180
   },
-  visible: { 
-    opacity: 1, 
+  visible: {
+    opacity: 1,
     scale: 1,
     rotate: 0,
     transition: {
@@ -71,14 +71,14 @@ const iconVariants = {
 
 const backgroundVariants = {
   light: {
-    background: 'linear-gradient(135deg, #fef3c7 0%, #fde68a 100%)',
+    backgroundColor: '#fef3c7',
     transition: {
       duration: 0.5,
       ease: 'easeInOut',
     }
   },
   dark: {
-    background: 'linear-gradient(135deg, #1e1b4b 0%, #312e81 100%)',
+    backgroundColor: '#312e81',
     transition: {
       duration: 0.5,
       ease: 'easeInOut',
@@ -91,7 +91,7 @@ export const ThemeToggle: React.FC = () => {
   const { mode, isDark, toggleTheme } = useTheme();
 
   return (
-    <Tooltip 
+    <Tooltip
       title={`Cambiar a modo ${isDark ? 'claro' : 'oscuro'}`}
       placement="bottom"
     >
@@ -188,7 +188,7 @@ export const ThemeControlPanel: React.FC = () => {
           >
             <Palette className="text-coomunity-500" />
           </motion.div>
-          
+
           <Box>
             <Typography variant="h6" className="font-semibold">
               Configuración de Tema
@@ -249,7 +249,7 @@ export const ThemeControlPanel: React.FC = () => {
           <Typography variant="subtitle2" className="font-medium mb-3">
             Opciones de Tema
           </Typography>
-          
+
           {themeOptions.map((option) => (
             <motion.div
               key={option.value}
@@ -277,13 +277,13 @@ export const ThemeControlPanel: React.FC = () => {
                   >
                     {option.icon}
                   </motion.div>
-                  
+
                   <Box className="flex-1">
                     <Box className="flex items-center gap-2 mb-1">
                       <Typography variant="subtitle2" className="font-medium">
                         {option.label}
                       </Typography>
-                      
+
                       {mode === option.value && (
                         <motion.div
                           initial={{ scale: 0 }}
@@ -299,9 +299,9 @@ export const ThemeControlPanel: React.FC = () => {
                         </motion.div>
                       )}
                     </Box>
-                    
-                    <Typography 
-                      variant="caption" 
+
+                    <Typography
+                      variant="caption"
                       className="text-gray-600 dark:text-gray-400"
                     >
                       {option.description}
@@ -318,7 +318,7 @@ export const ThemeControlPanel: React.FC = () => {
           <Typography variant="subtitle2" className="font-medium mb-3">
             Vista Previa
           </Typography>
-          
+
           <motion.div
             variants={backgroundVariants}
             animate={isDark ? 'dark' : 'light'}
@@ -326,7 +326,7 @@ export const ThemeControlPanel: React.FC = () => {
           >
             <Box className="flex items-center gap-3 mb-3">
               <motion.div
-                animate={{ 
+                animate={{
                   backgroundColor: isDark ? '#7c3aed' : '#f59e0b',
                 }}
                 transition={{ duration: 0.5 }}
@@ -336,10 +336,10 @@ export const ThemeControlPanel: React.FC = () => {
                   C
                 </Typography>
               </motion.div>
-              
+
               <Box>
-                <Typography 
-                  variant="subtitle2" 
+                <Typography
+                  variant="subtitle2"
                   className={cn(
                     'font-semibold',
                     isDark ? 'text-white' : 'text-gray-900'
@@ -347,8 +347,8 @@ export const ThemeControlPanel: React.FC = () => {
                 >
                   CoomÜnity SuperApp
                 </Typography>
-                <Typography 
-                  variant="caption" 
+                <Typography
+                  variant="caption"
                   className={cn(
                     isDark ? 'text-gray-300' : 'text-gray-600'
                   )}
@@ -357,14 +357,14 @@ export const ThemeControlPanel: React.FC = () => {
                 </Typography>
               </Box>
             </Box>
-            
+
             <Box className="flex gap-2">
               <Chip
                 label="Mëritos"
                 size="small"
                 className={cn(
-                  isDark 
-                    ? 'bg-warning-900 text-warning-100' 
+                  isDark
+                    ? 'bg-warning-900 text-warning-100'
                     : 'bg-warning-100 text-warning-800'
                 )}
               />
@@ -372,8 +372,8 @@ export const ThemeControlPanel: React.FC = () => {
                 label="Öndas"
                 size="small"
                 className={cn(
-                  isDark 
-                    ? 'bg-info-900 text-info-100' 
+                  isDark
+                    ? 'bg-info-900 text-info-100'
                     : 'bg-info-100 text-info-800'
                 )}
               />
@@ -381,8 +381,8 @@ export const ThemeControlPanel: React.FC = () => {
                 label="Reciprocidad"
                 size="small"
                 className={cn(
-                  isDark 
-                    ? 'bg-success-900 text-success-100' 
+                  isDark
+                    ? 'bg-success-900 text-success-100'
                     : 'bg-success-100 text-success-800'
                 )}
               />
@@ -392,8 +392,8 @@ export const ThemeControlPanel: React.FC = () => {
 
         {/* Footer */}
         <Box className="mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">
-          <Typography 
-            variant="caption" 
+          <Typography
+            variant="caption"
             className="text-gray-500 dark:text-gray-400 text-center block"
           >
             Los cambios se aplican inmediatamente y se guardan automáticamente
@@ -404,4 +404,4 @@ export const ThemeControlPanel: React.FC = () => {
   );
 };
 
-export default ThemeToggle; 
+export default ThemeToggle;

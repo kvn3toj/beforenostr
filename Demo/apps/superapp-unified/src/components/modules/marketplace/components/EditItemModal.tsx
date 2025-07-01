@@ -60,7 +60,7 @@ const ITEM_TYPES = [
 ];
 
 const CURRENCIES = [
-  { value: 'LUKAS', label: 'Lükas (ü)', symbol: 'ü' },
+  { value: 'UNITS', label: 'Ünits (ü)', symbol: 'ü' },
   { value: 'USD', label: 'Dólares', symbol: '$' },
   { value: 'EUR', label: 'Euros', symbol: '€' },
 ];
@@ -172,7 +172,7 @@ const EditItemModal: React.FC<EditItemModalProps> = ({
 
     try {
       setError(null);
-      
+
       const updateData = {
         title: formData.title.trim(),
         description: formData.description.trim(),
@@ -395,7 +395,7 @@ const EditItemModal: React.FC<EditItemModalProps> = ({
             <Typography variant="subtitle2" gutterBottom>
               Etiquetas
             </Typography>
-            
+
             {/* Tags actuales */}
             {formData.tags.length > 0 && (
               <Box sx={{ mb: 2 }}>
@@ -508,4 +508,4 @@ const EditItemModal: React.FC<EditItemModalProps> = ({
   );
 };
 
-export { EditItemModal }; 
+export { EditItemModal };

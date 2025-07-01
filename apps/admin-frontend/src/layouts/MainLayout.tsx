@@ -50,7 +50,7 @@ const drawerWidth = 280;
 // Componente del Logo minimalista
 const MinimalLogo: React.FC<{ collapsed?: boolean }> = ({ collapsed = false }) => {
   const navigate = useNavigate();
-  
+
   return (
     <Box
       component="button"
@@ -201,6 +201,12 @@ export const MainLayout = () => {
       divider: true,
       children: [
         {
+          id: 'console',
+          label: 'Consola de Experiencias',
+          icon: <PlayCircleOutlineIcon />,
+          path: '/console',
+        },
+        {
           id: 'users',
           label: t('nav_users'),
           icon: <PeopleIcon />,
@@ -244,6 +250,47 @@ export const MainLayout = () => {
         },
       ],
     }] : []),
+    // Sección de Gestión CoomÜnity - Solo para admins
+    ...(isAdmin ? [{
+      id: 'coomunity-management',
+      label: 'Gestión CoomÜnity',
+      icon: <StarIcon />,
+      category: 'Gestión CoomÜnity',
+      divider: true,
+      children: [
+        {
+          id: 'experience-console',
+          label: 'Consola de Experiencias',
+          icon: <PlayCircleOutlineIcon />,
+          path: '/console',
+        },
+        {
+          id: 'challenges',
+          label: 'Desafíos',
+          icon: <StarIcon />,
+          path: '/challenges',
+        },
+        {
+          id: 'marketplace',
+          label: 'Marketplace (GMP)',
+          icon: <CategoryIcon />,
+          path: '/marketplace',
+        },
+        {
+          id: 'transactions',
+          label: 'Transacciones',
+          icon: <HistoryIcon />,
+          path: '/transactions',
+        },
+        {
+          id: 'cosmic-kanban',
+          label: 'Portal Kanban Cósmico',
+          icon: <StarIcon />,
+          path: '/cosmic-kanban',
+          badge: 'NEW',
+        },
+      ],
+    }] : []),
     {
       id: 'ai-test',
       label: t('nav_ai_test'),
@@ -264,7 +311,7 @@ export const MainLayout = () => {
     <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
       {/* Logo en el drawer */}
       <MinimalLogo collapsed={false} />
-      
+
       {/* Navegación */}
       <Box sx={{ flex: 1, overflow: 'auto' }}>
         <NavigationMenu
@@ -278,7 +325,7 @@ export const MainLayout = () => {
   return (
     <Box sx={{ display: 'flex', minHeight: '100vh' }}>
       <CssBaseline />
-      
+
       {/* Header minimalista */}
       <AppBar
         position="fixed"
@@ -374,8 +421,8 @@ export const MainLayout = () => {
           keepMounted: true,
         }}
         sx={{
-          '& .MuiDrawer-paper': { 
-            boxSizing: 'border-box', 
+          '& .MuiDrawer-paper': {
+            boxSizing: 'border-box',
             width: drawerWidth,
             backgroundColor: '#2C3E50',
             color: '#FFFFFF',
@@ -400,10 +447,10 @@ export const MainLayout = () => {
       >
         {/* Spacer for fixed header */}
         <Box sx={{ height: 64 }} />
-        
+
         {/* Page Content */}
         <Outlet />
       </Box>
     </Box>
   );
-}; 
+};

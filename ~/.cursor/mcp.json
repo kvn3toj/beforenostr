@@ -1,32 +1,33 @@
 {
   "mcpServers": {
-    "notion": {
+    "coomunity_filesystem": {
+      "name": "CoomÜnity Project Files - Core",
+      "description": "Intelligent file navigation and context for the CoomÜnity monorepo - optimized for <40 tools limit",
       "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-notion"],
-      "env": {
-        "NOTION_API_KEY": "notion_api_key_placeholder",
-        "NOTION_DATABASE_ID": "database_id_placeholder"
-      }
+      "args": ["@modelcontextprotocol/server-filesystem", "/Users/kevinp/Movies/GAMIFIER-copy"],
+      "enabled": true
     },
-    "sentry": {
+    "coomunity_github": {
+      "name": "CoomÜnity Repository Manager - Core",
+      "description": "GitHub integration for repository management and collaboration - optimized for performance",
       "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-sentry"],
+      "args": ["@modelcontextprotocol/server-github"],
       "env": {
-        "SENTRY_AUTH_TOKEN": "sentry_token_placeholder",
-        "SENTRY_ORG": "coomunity",
-        "SENTRY_PROJECT": "superapp"
-      }
-    },
-    "linear": {
-      "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-linear"],
-      "env": {
-        "LINEAR_API_KEY": "linear_api_key_placeholder"
-      }
-    },
-    "web-search": {
-      "command": "npx",
-      "args": ["-y", "duckduckgo-mcp-server"]
+        "GITHUB_PERSONAL_ACCESS_TOKEN": ""
+      },
+      "enabled": true
     }
+  },
+  "_metadata": {
+    "optimized_for": "CoomÜnity Philosophy",
+    "optimization_date": "2025-01-23",
+    "total_expected_tools": "~37 (11 filesystem + 26 github)",
+    "philosophy": "Neguentropía aplicada - eficiencia y reciprocidad con el sistema",
+    "notes": [
+      "Configuración optimizada para rendimiento máximo",
+      "Solo servidores esenciales y funcionales",
+      "Nombres con underscores (compatibilidad Cursor)",
+      "Orden prioritario: filesystem primero (ANA - Curadora Cósmica), github segundo (Cosmos - Integración)"
+    ]
   }
-} 
+}

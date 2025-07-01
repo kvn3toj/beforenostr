@@ -189,7 +189,7 @@ test.describe('🔍 Análisis de Errores de Consola - SuperApp', () => {
             url: response.url(),
             status: response.status(),
             statusText: response.statusText(),
-            body: body
+            body
           });
         } catch (error) {
           console.log('Error reading response body:', error);

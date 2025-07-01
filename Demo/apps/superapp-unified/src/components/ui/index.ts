@@ -5,6 +5,7 @@
 export * from './Button/Button';
 export * from './Card/Card';
 export * from './LoadingSpinner';
+export { CoomunityCard } from './CoomunityCard';
 
 // Design System Tools
 export * from './DesignSystemValidator';

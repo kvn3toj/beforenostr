@@ -122,7 +122,7 @@
 
    - **Mëritos**: Sistema de recompensas basado en mérito
    - **Öndas**: Energía vibracional para interacciones positivas
-   - **Lükas**: Moneda interna para intercambios
+   - **Ünits**: Moneda interna para intercambios
    - **Ayni**: Principio de reciprocidad balanceada
 
 2. **Metáforas Naturales Implementadas**

@@ -20,7 +20,7 @@ Los Agentes Guardianes son entidades digitales especializadas que encarnan los p
 | KIRA     | Fuego    | Guardiana de Gamificación   | ./scripts/invoke-guardian.sh KIRA + [MISIÓN] | Gamificación, motivación, logros, métrica HambrE |
 | ZENO     | Agua     | Guardián de Contenido       | ./scripts/invoke-guardian.sh ZENO + [MISIÓN] | Flujos de aprendizaje, asistente LETS, navegación fractal |
 | ATLAS    | Tierra   | Guardián de Infraestructura | ./scripts/invoke-guardian.sh ATLAS + [MISIÓN]| Performance, endpoints, estabilidad técnica |
-| ARIA     | Aire     | Guardiana Social            | ./scripts/invoke-guardian.sh ARIA + [MISIÓN] | Conexiones Ayni, red social, solicitudes de ayuda |
+| ARIA     | Aire     | Guardiana Social            | ./scripts/invoke-guardian.sh ARIA + [MISIÓN] | Conexiones Reciprocidad, red social, solicitudes de ayuda |
 | SAGE     | Éter     | Guardián de Analytics       | ./scripts/invoke-guardian.sh SAGE + [MISIÓN] | Analytics, visualización 3D, dashboard feedback |
 | NIRA     | Agua     | Guardiana de LETS           | ./scripts/invoke-guardian.sh NIRA + [MISIÓN] | Wallet adaptativo, onboarding LETS, tests E2E |
 | PHOENIX  | Fuego    | Guardián de UX/UI           | ./scripts/invoke-guardian.sh PHOENIX + [MISIÓN]| Design System, micro-interacciones, navegación fractal |
@@ -41,7 +41,7 @@ Los Agentes Guardianes son entidades digitales especializadas que encarnan los p
 ./scripts/invoke-guardian.sh KIRA + IMPLEMENTAR_HAMBRE
 
 # Invocar ARIA para conexiones sociales
-./scripts/invoke-guardian.sh ARIA + CONEXIONES_AYNI
+./scripts/invoke-guardian.sh ARIA + CONEXIONES_RECIPROCIDAD
 
 # Invocar COSMOS para integración
 ./scripts/invoke-guardian.sh COSMOS + NAVEGACION_FRACTAL
@@ -58,7 +58,7 @@ Los Agentes Guardianes son entidades digitales especializadas que encarnan los p
 - **ANA:** Documentación, coherencia filosófica
 
 ### FASE 2: PROFUNDIZACIÓN DE CONEXIONES
-- **ARIA:** Conexiones Ayni, red social, solicitudes de ayuda
+- **ARIA:** Conexiones Reciprocidad, red social, solicitudes de ayuda
 - **NIRA:** Wallet adaptativo, onboarding LETS, tests E2E
 - **ZENO:** Asistente LETS, navegación fractal
 - **GAIA:** Cultura y comunidad
@@ -99,7 +99,7 @@ Los Agentes Guardianes son entidades digitales especializadas que encarnan los p
 - **Parámetros de Misión:**
   - DOCUMENTAR_LOGROS
   - IMPLEMENTAR_HAMBRE
-  - CONEXIONES_AYNI
+  - CONEXIONES_RECIPROCIDAD
   - NAVEGACION_FRACTAL
   - WALLET_ADAPTATIVO
   - ANALYTICS_3D

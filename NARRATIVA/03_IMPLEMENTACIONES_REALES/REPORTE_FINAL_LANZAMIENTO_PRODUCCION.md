@@ -43,7 +43,7 @@ Hemos completado exitosamente la migración de una infraestructura de desarrollo
 - 📺 **ÜPlay**: Video player gamificado (funcional)
 - 👥 **Sistema Social**: Perfiles, comunidades (activo)
 - 📊 **UStats**: Analytics y métricas (implementado)
-- 💰 **Wallet**: Gestión de Lükas (operativo)
+- 💰 **Wallet**: Gestión de Ünits (operativo)
 - 🌍 **Multi-idioma**: Soporte para 10+ idiomas (configurado)
 
 ---
@@ -116,7 +116,7 @@ Hemos completado exitosamente la migración de una infraestructura de desarrollo
 
 ### **🗺️ Roadmap de Expansión Activado**
 #### **Q1 2025: LETS System & AI Personalización**
-- [ ] Sistema LETS integrado con Lükas
+- [ ] Sistema LETS integrado con Ünits
 - [ ] AI para recomendaciones personalizadas
 - [ ] Matching inteligente en Marketplace
 - [ ] Predicción de alineación vocacional

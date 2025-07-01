@@ -20,7 +20,7 @@ El FBC es el corazón financiero de la acción colectiva.
 
 -   **Mecanismo de Recaudación (El "Impuesto Ayni"):**
     -   Un pequeño porcentaje (ej. 1-5%) de **cada transacción** que ocurre en el Marketplace (GMP) se desvía automáticamente al Fondo del Bien Común.
-    -   Este "impuesto" no se presenta como una carga, sino como una **celebración**: "¡Felicidades por tu intercambio! Has contribuido con 5 Lükas al fondo para proyectos comunitarios. ¡Gracias!".
+    -   Este "impuesto" no se presenta como una carga, sino como una **celebración**: "¡Felicidades por tu intercambio! Has contribuido con 5 Ünits al fondo para proyectos comunitarios. ¡Gracias!".
     -   El sistema es transparente: el balance del FBC es siempre visible para toda la comunidad.
 
 -   **Mecanismo de Asignación:**

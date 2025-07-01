@@ -335,7 +335,7 @@ test.describe('🎨 Verificación de Micro-Interacciones y Animaciones', () => {
     // Check that keyframe animations are properly defined
     const hasAnimations = await page.evaluate(() => {
       const styles = Array.from(document.styleSheets);
-      let foundAnimations = [];
+      const foundAnimations = [];
       
       for (const sheet of styles) {
         try {
@@ -365,7 +365,7 @@ test.describe('🎨 Verificación de Micro-Interacciones y Animaciones', () => {
 
   test('🔄 Sync Indicator - Animación de Carga', async ({ page }) => {
     // Wait for sync indicator to appear (it appears randomly)
-    let syncIndicator = page.locator('.sync-indicator');
+    const syncIndicator = page.locator('.sync-indicator');
     let attempts = 0;
     const maxAttempts = 10;
     

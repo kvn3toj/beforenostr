@@ -32,7 +32,8 @@ import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import FlashOnIcon from '@mui/icons-material/FlashOn';
 
 // 🌌 COSMIC DESIGN SYSTEM IMPORTS - ARIA (Frontend Artist)
-import { RevolutionaryWidget, REVOLUTIONARY_PRESETS } from '../../design-system';
+import { CosmicCard } from '../../design-system';
+import { UNIFIED_COLORS } from '../../theme/colors';
 
 interface SmartAction {
   id: string;
@@ -216,34 +217,43 @@ const ActionCard: React.FC<{
   const getUrgencyColor = (urgency: typeof action.urgency) => {
     switch (urgency) {
       case 'high':
-        return theme.palette.error.main;
+        return UNIFIED_COLORS.elements.fuego.primary;
       case 'medium':
-        return theme.palette.warning.main;
+        return UNIFIED_COLORS.elements.aire.primary;
       default:
-        return theme.palette.success.main;
+        return UNIFIED_COLORS.elements.tierra.primary;
+    }
+  };
+
+  // Mapeo de categorías a elementos cósmicos
+  const getCategoryElement = (category: typeof action.category) => {
+    switch (category) {
+      case 'reciprocidad':
+        return 'fuego' as const;
+      case 'modules':
+        return 'agua' as const;
+      case 'create':
+        return 'aire' as const;
+      case 'discover':
+        return 'tierra' as const;
+      default:
+        return 'espiritu' as const;
     }
   };
 
   return (
-    <Card
-      elevation={0}
+    <CosmicCard
+      variant="elevated"
+      element={getCategoryElement(action.category)}
+      cosmicIntensity="subtle"
+      enableGlow={action.isRecommended}
       onClick={() => onClick(action)}
       sx={{
         cursor: 'pointer',
-        bgcolor: alpha(getColorValue(action.color), 0.08),
-        border: `1px solid ${alpha(getColorValue(action.color), 0.2)}`,
-        transition: 'all 0.3s ease-in-out',
+        height: isCompact ? 'auto' : 140,
         position: 'relative',
         overflow: 'visible',
-        height: isCompact ? 'auto' : 140,
-        '&:hover': {
-          bgcolor: alpha(getColorValue(action.color), 0.12),
-          transform: 'translateY(-2px)',
-          boxShadow: `0 8px 20px ${alpha(getColorValue(action.color), 0.2)}`,
-        },
-        '&:active': {
-          transform: 'translateY(-1px)',
-        },
+        transition: 'all 0.3s ease-in-out',
       }}
     >
       {/* Badges */}
@@ -252,12 +262,13 @@ const ActionCard: React.FC<{
           icon={<RecommendIcon />}
           label="Recomendado"
           size="small"
-          color="success"
           sx={{
             position: 'absolute',
             top: -8,
             right: 8,
             zIndex: 1,
+            background: `linear-gradient(135deg, ${UNIFIED_COLORS.elements.tierra.primary} 0%, ${UNIFIED_COLORS.elements.tierra.dark} 100%)`,
+            color: 'white',
             fontWeight: 'bold',
             fontSize: '0.7rem',
           }}
@@ -268,19 +279,20 @@ const ActionCard: React.FC<{
           icon={<FlashOnIcon />}
           label="Nuevo"
           size="small"
-          color="warning"
           sx={{
             position: 'absolute',
             top: -8,
             left: 8,
             zIndex: 1,
+            background: `linear-gradient(135deg, ${UNIFIED_COLORS.elements.aire.primary} 0%, ${UNIFIED_COLORS.elements.aire.dark} 100%)`,
+            color: 'white',
             fontWeight: 'bold',
             fontSize: '0.7rem',
           }}
         />
       )}
 
-      <CardContent sx={{ p: isCompact ? 1.5 : 2, height: '100%' }}>
+      <CardContent sx={{ padding: isCompact ? 1.5 : 2, height: '100%' }}>
         <Stack
           direction={isCompact ? 'row' : 'column'}
           spacing={isCompact ? 2 : 1}
@@ -308,7 +320,10 @@ const ActionCard: React.FC<{
             <Typography
               variant={isCompact ? 'body2' : 'subtitle1'}
               fontWeight="bold"
-              sx={{ color: getColorValue(action.color), mb: 0.5 }}
+              sx={{
+                color: getColorValue(action.color),
+                marginBottom: 0.5
+              }}
             >
               {action.label}
             </Typography>
@@ -317,8 +332,12 @@ const ActionCard: React.FC<{
             {!isCompact && (
               <Typography
                 variant="caption"
-                color="text.secondary"
-                sx={{ mb: 1, display: 'block', lineHeight: 1.4 }}
+                sx={{
+                  marginBottom: 1,
+                  display: 'block',
+                  lineHeight: 1.4,
+                  color: alpha('#000', 0.7)
+                }}
               >
                 {action.description}
               </Typography>
@@ -329,7 +348,7 @@ const ActionCard: React.FC<{
               direction="row"
               spacing={1}
               alignItems="center"
-              sx={{ mt: 'auto' }}
+              sx={{ marginTop: 'auto' }}
             >
               <Chip
                 label={action.timeEstimate}
@@ -341,9 +360,12 @@ const ActionCard: React.FC<{
                 <Tooltip title={`${action.completionRate}% tasa de éxito`}>
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                     <TrendingUpIcon
-                      sx={{ fontSize: 12, color: 'success.main' }}
+                      sx={{ fontSize: 12, color: UNIFIED_COLORS.elements.tierra.primary }}
                     />
-                    <Typography variant="caption" color="success.main">
+                    <Typography
+                      variant="caption"
+                      sx={{ color: UNIFIED_COLORS.elements.tierra.primary }}
+                    >
                       {action.completionRate}%
                     </Typography>
                   </Box>
@@ -353,7 +375,7 @@ const ActionCard: React.FC<{
           </Box>
         </Stack>
       </CardContent>
-    </Card>
+    </CosmicCard>
   );
 };
 
@@ -416,104 +438,129 @@ export const SmartQuickActions: React.FC<SmartQuickActionsProps> = ({
   }, [onToggleExpanded]);
 
   return (
-    <RevolutionaryWidget
-      title="💡 Acciones Inteligentes"
-      subtitle={`Personalizadas para tu nivel: ${userLevel}`}
-      variant="primary"
-      element="agua"
-      cosmicIntensity="medium"
-      cosmicEffects={{
-        enableGlow: true,
-        enableAnimations: true,
-        enableParticles: false,
-        glowIntensity: 1.0,
+    <CosmicCard
+      variant="elevated"
+      element="aire"
+      cosmicIntensity="subtle"
+      enableGlow
+      enableAnimations
+      sx={{
+        minHeight: '320px',
+        padding: 3,
       }}
-      interactionMode="hover"
       className={`smart-quick-actions ${className}`}
-      style={{ minHeight: '320px' }}
-      onRefresh={() => console.log('🔄 Refreshing actions...')}
-      onExpand={filteredActions.length > 4 ? toggleExpanded : undefined}
     >
-          {/* Header */}
-          <Stack
-            direction="row"
-            alignItems="center"
-            justifyContent="space-between"
-            sx={{ mb: 2 }}
+      {/* Header */}
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 3 }}>
+        <Box>
+          <Typography
+            variant="h6"
+            sx={{
+              fontWeight: 700,
+              background: `linear-gradient(135deg, ${UNIFIED_COLORS.elements.agua.primary} 0%, ${UNIFIED_COLORS.elements.fuego.primary} 100%)`,
+              backgroundClip: 'text',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              fontSize: '1.3rem',
+              marginBottom: 0.5
+            }}
           >
-            <Box>
-              <Typography variant="h6" fontWeight="bold">
-                Acciones Inteligentes
-              </Typography>
-              <Typography variant="caption" color="text.secondary">
-                Personalizadas para tu nivel: {userLevel}
-              </Typography>
-            </Box>
+            💡 Acciones Inteligentes
+          </Typography>
+          <Typography
+            variant="caption"
+            sx={{
+              color: alpha('#000', 0.7),
+              fontSize: '0.85rem'
+            }}
+          >
+            Personalizadas para tu nivel: {userLevel}
+          </Typography>
+        </Box>
 
-            {filteredActions.length > 4 && (
-              <IconButton onClick={toggleExpanded}>
-                {isExpanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}
-              </IconButton>
-            )}
-          </Stack>
+        {filteredActions.length > 4 && (
+          <IconButton
+            onClick={toggleExpanded}
+            sx={{
+              color: UNIFIED_COLORS.elements.agua.primary,
+              transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)',
+              transition: 'transform 0.3s ease',
+            }}
+          >
+            <ExpandMoreIcon />
+          </IconButton>
+        )}
+      </Box>
 
-          {/* Actions Grid */}
-          <Grid container spacing={2}>
-            {displayActions.map((action) => (
-              <Grid
-                item
-                xs={12}
-                sm={6}
-                md={isExpanded ? 4 : 6}
-                key={action.id}
-              >
-                <ActionCard
-                  action={action}
-                  onClick={handleActionClick}
-                  isCompact={performanceMode === 'optimized'}
-                />
-              </Grid>
-            ))}
+      {/* Actions Grid */}
+      <Grid container spacing={2}>
+        {displayActions.map((action) => (
+          <Grid
+            item
+            xs={12}
+            sm={6}
+            md={isExpanded ? 4 : 6}
+            key={action.id}
+          >
+            <ActionCard
+              action={action}
+              onClick={handleActionClick}
+              isCompact={performanceMode === 'optimized'}
+            />
           </Grid>
+        ))}
+      </Grid>
 
-          {/* Summary stats cuando está expandido */}
-          {isExpanded && (
-            <Box
-              sx={{
-                mt: 2,
-                p: 2,
-                bgcolor: alpha(theme.palette.info.main, 0.08),
-                borderRadius: 2,
-              }}
+      {/* Summary stats cuando está expandido */}
+      {isExpanded && (
+        <CosmicCard
+          variant="elevated"
+          element="aire"
+          cosmicIntensity="subtle"
+          sx={{
+            marginTop: 2,
+            padding: 2,
+          }}
+        >
+          <Stack direction="row" spacing={2} alignItems="center">
+            <Typography
+              variant="caption"
+              fontWeight="bold"
+              sx={{ color: alpha('#000', 0.8) }}
             >
-              <Stack direction="row" spacing={2} alignItems="center">
-                <Typography variant="caption" fontWeight="bold">
-                  📊 Estadísticas:
-                </Typography>
-                <Chip
-                  label={`${filteredActions.filter((a) => a.isRecommended).length} recomendadas`}
-                  size="small"
-                  color="success"
-                  variant="outlined"
-                />
-                <Chip
-                  label={`${filteredActions.filter((a) => a.urgency === 'high').length} alta prioridad`}
-                  size="small"
-                  color="error"
-                  variant="outlined"
-                />
-                <Chip
-                  label={`${filteredActions.filter((a) => a.isNew).length} nuevas`}
-                  size="small"
-                  color="warning"
-                  variant="outlined"
-                />
-              </Stack>
-            </Box>
-          )}
-        </CardContent>
-      </Card>
-    </Box>
+              📊 Estadísticas:
+            </Typography>
+            <Chip
+              label={`${filteredActions.filter((a) => a.isRecommended).length} recomendadas`}
+              size="small"
+              sx={{
+                background: `linear-gradient(135deg, ${UNIFIED_COLORS.elements.tierra.primary} 0%, ${UNIFIED_COLORS.elements.tierra.dark} 100%)`,
+                color: 'white',
+                fontWeight: 600,
+              }}
+            />
+            <Chip
+              label={`${filteredActions.filter((a) => a.urgency === 'high').length} alta prioridad`}
+              size="small"
+              sx={{
+                background: `linear-gradient(135deg, ${UNIFIED_COLORS.elements.fuego.primary} 0%, ${UNIFIED_COLORS.elements.fuego.dark} 100%)`,
+                color: 'white',
+                fontWeight: 600,
+              }}
+            />
+            <Chip
+              label={`${filteredActions.filter((a) => a.isNew).length} nuevas`}
+              size="small"
+              sx={{
+                background: `linear-gradient(135deg, ${UNIFIED_COLORS.elements.aire.primary} 0%, ${UNIFIED_COLORS.elements.aire.dark} 100%)`,
+                color: 'white',
+                fontWeight: 600,
+              }}
+            />
+          </Stack>
+        </CosmicCard>
+      )}
+    </CosmicCard>
   );
 };
 

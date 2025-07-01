@@ -424,7 +424,7 @@ class GameFeelSystem {
   // Screen shake effect
   triggerScreenShake(intensity: number = 5, duration: number = 500) {
     const root = document.documentElement
-    let startTime = Date.now()
+    const startTime = Date.now()
     
     const shake = () => {
       const elapsed = Date.now() - startTime

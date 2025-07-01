@@ -36,4 +36,4 @@ i18n
     nonExplicitSupportedLngs: true,
   });
 
-export default i18n; 
+export default i18n;

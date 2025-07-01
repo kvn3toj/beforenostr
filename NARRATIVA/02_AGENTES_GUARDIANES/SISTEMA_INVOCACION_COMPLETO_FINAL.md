@@ -98,7 +98,7 @@ Agente ZENO + ARIA: Crear interfaz para el dashboard de consciencia
 **🏗️ Desarrollo Backend:**
 
 ```
-Agente ATLAS: Implementar API para métricas de Ayni y Bien Común
+Agente ATLAS: Implementar API para métricas de Reciprocidad y Bien Común
 ```
 
 **🧪 Testing E2E:**
@@ -250,7 +250,7 @@ Cada Guardián incluye un mantra único que activa su energía específica:
 ### **3. 🌌 Filosofía Integrada:**
 
 - **Principios CoomÜnity** en cada comando
-- **Ayni, Bien Común, Metanöia** como contexto automático
+- **Reciprocidad, Bien Común, Metanöia** como contexto automático
 - **Cooperación sobre competencia** en todas las soluciones
 
 ### **4. ⚡ Flexibilidad Total:**

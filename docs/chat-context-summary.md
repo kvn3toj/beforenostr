@@ -127,7 +127,7 @@ npx playwright test --headed     # Modo visual
 - **Ayni:** Principio de reciprocidad - intercambio equilibrado de valor
 - **Mëritos:** Sistema de recompensas basado en méritos por contribuir al Bien Común
 - **Bien Común:** Priorizar beneficio colectivo sobre ganancia individual
-- **Lükas:** Moneda interna de CoomÜnity para intercambio de valor
+- **Ünits:** Moneda interna de CoomÜnity para intercambio de valor
 - **Öndas:** Unidades de energía vibracional que representan contribuciones positivas
 - **Emprendedores Confiables:** Emprendedores de confianza que han ganado credibilidad
 

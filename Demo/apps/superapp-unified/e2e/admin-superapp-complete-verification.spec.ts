@@ -43,8 +43,8 @@ const MAIN_MODULES = [
 
 test.describe('🚀 SuperApp CoomÜnity - Verificación Completa con Admin', () => {
   let page: Page;
-  let consoleErrors: string[] = [];
-  let networkErrors: string[] = [];
+  const consoleErrors: string[] = [];
+  const networkErrors: string[] = [];
 
   test.beforeAll(async ({ browser }) => {
     page = await browser.newPage();

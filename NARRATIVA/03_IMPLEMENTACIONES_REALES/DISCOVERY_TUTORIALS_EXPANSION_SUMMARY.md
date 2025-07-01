@@ -105,7 +105,7 @@ Se ha completado exitosamente la **expansión profunda de los tutoriales discove
 - **Pasos:** 6 pasos financieros
 - **Recompensas:** 15 Öndas, 3 Mëritos
 - **Contenido clave:**
-  - Conceptos de Lükas y economía colaborativa
+  - Conceptos de Ünits y economía colaborativa
   - Gestión de balance y transacciones
   - Intercambios P2P seguros
   - Inversión en el Bien Común

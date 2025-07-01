@@ -1,18 +1,12 @@
 import React from 'react';
-import { Box, Typography, Paper, IconButton, Rating } from '@mui/material';
-import { MoreHoriz } from '@mui/icons-material';
-
-// 🌌 IMPORT DEL SISTEMA DE COLORES CÓSMICO
-import { UNIFIED_COLORS } from '../../../../theme/colors';
+import { Box, Typography, Paper, useTheme, alpha } from '@mui/material';
 
 interface ElegantStatCardProps {
   title: string;
-  value: string;
+  value: string | number;
   subtitle?: string;
-  icon: React.ReactNode;
-  rating?: number;
+  icon?: React.ReactNode;
   bgColor?: string;
-  iconColor?: string;
 }
 
 const ElegantStatCard: React.FC<ElegantStatCardProps> = ({
@@ -20,60 +14,64 @@ const ElegantStatCard: React.FC<ElegantStatCardProps> = ({
   value,
   subtitle,
   icon,
-  rating,
-  bgColor = UNIFIED_COLORS.themes.minimalist.surface,
-  iconColor = 'action'
+  bgColor,
 }) => {
-  const clonedIcon = React.cloneElement(icon as React.ReactElement, { color: iconColor });
+  const theme = useTheme();
 
   return (
     <Paper
-      variant="outlined"
+      elevation={0}
       sx={{
-        p: 2,
-        borderRadius: '16px',
-        background: bgColor,
-        borderColor: UNIFIED_COLORS.themes.minimalist.divider,
+        p: 3,
         height: '100%',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        transition: 'box-shadow 0.3s, border-color 0.3s',
+        backgroundColor: bgColor || theme.palette.background.paper,
+        border: `1px solid ${theme.palette.divider}`,
+        borderRadius: 2,
+        position: 'relative',
+        transition: 'all 0.3s ease',
         '&:hover': {
-          boxShadow: '0 4px 12px 0 rgba(0,0,0,0.05)',
-          borderColor: UNIFIED_COLORS.brand.gray300,
+          borderColor: theme.palette.primary.main,
+          boxShadow: `0 2px 8px ${alpha(theme.palette.primary.main, 0.1)}`,
         },
       }}
     >
-      <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-        {clonedIcon}
-        <Typography sx={{
-          ml: 1,
-          fontWeight: 600,
-          color: UNIFIED_COLORS.themes.minimalist.text.secondary
-        }}>
-          {title}
-        </Typography>
-      </Box>
+      {/* Icon */}
+      {icon && (
+        <Box sx={{ mb: 2, color: theme.palette.primary.main }}>
+          {icon}
+        </Box>
+      )}
 
-      <Typography variant="h4" sx={{
-        fontWeight: 700,
-        color: UNIFIED_COLORS.themes.minimalist.text.primary,
-        my: 0.5
-      }}>
+      {/* Title */}
+      <Typography
+        variant="subtitle2"
+        sx={{
+          color: theme.palette.text.secondary,
+          mb: 1,
+          textTransform: 'uppercase',
+          letterSpacing: '0.05em',
+        }}
+      >
+        {title}
+      </Typography>
+
+      {/* Value */}
+      <Typography
+        variant="h4"
+        sx={{
+          color: theme.palette.text.primary,
+          fontWeight: 800,
+          mb: subtitle ? 0.5 : 0,
+        }}
+      >
         {value}
       </Typography>
 
+      {/* Subtitle */}
       {subtitle && (
-        <Typography variant="body2" sx={{
-          color: UNIFIED_COLORS.themes.minimalist.text.secondary
-        }}>
+        <Typography variant="body2" sx={{ color: theme.palette.text.secondary }}>
           {subtitle}
         </Typography>
-      )}
-
-      {rating && (
-        <Rating name="read-only" value={rating} readOnly precision={0.5} sx={{ mt: 1 }} />
       )}
     </Paper>
   );

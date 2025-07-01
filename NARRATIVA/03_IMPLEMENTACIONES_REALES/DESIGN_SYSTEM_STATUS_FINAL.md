@@ -52,7 +52,7 @@ El sistema de diseño de la CoomÜnity SuperApp ha sido implementado exitosament
 
 ### **2. Componentes Filosóficamente Alineados**
 - **Ayni Levels**: Componentes con 5 niveles de reciprocidad
-- **Terminología CoomÜnity**: Mëritos, Öndas, Lükas integrados
+- **Terminología CoomÜnity**: Mëritos, Öndas, Ünits integrados
 - **Elementos Naturales**: Tierra, Agua, Fuego, Aire en colores
 
 ### **3. Performance Optimizado**

@@ -192,13 +192,14 @@ const MetricCard: React.FC<{
   );
 };
 
-const ReciprocidadSocialMetrics: React.FC<ReciprocidadSocialMetricsProps> = ({
+// Componente principal
+export const ReciprocidadSocialMetrics: React.FC<ReciprocidadSocialMetricsProps> = ({
   userStats,
   communityMetrics,
   notifications,
   isLoading = false,
   isConnected = true,
-  showDetailedView = true
+  detailed = false
 }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
@@ -249,12 +250,6 @@ const ReciprocidadSocialMetrics: React.FC<ReciprocidadSocialMetricsProps> = ({
     if (value > 0.75) return theme.palette.success.main;
     if (value > 0.4) return theme.palette.warning.main;
     return theme.palette.error.main;
-  };
-
-  const getElementoColor = (value: number) => {
-    if (value > 75) return theme.palette.info.main;
-    if (value > 50) return theme.palette.secondary.main;
-    return theme.palette.warning.main;
   };
 
   const UserAvatar = () => (
@@ -315,153 +310,298 @@ const ReciprocidadSocialMetrics: React.FC<ReciprocidadSocialMetricsProps> = ({
   }
 
   return (
-    <Card sx={{
-      p: 2,
-      background: `linear-gradient(to top, ${theme.palette.background.paper}, ${alpha(theme.palette.background.default, 0.5)})`
-    }}>
-      <CardContent>
-        {/* CABECERA */}
-        <Box display="flex" alignItems="center" mb={3} flexDirection={isMobile ? 'column' : 'row'}>
-          <Box flexGrow={1} textAlign={isMobile ? 'center' : 'left'} mb={isMobile ? 2 : 0}>
-            <Typography variant={isMobile ? "h5" : "h4"} fontWeight="bold" gutterBottom>
-              Pulso Social de la Comunidad
+    <Stack spacing={3}>
+      {/* 🧩 TARJETA DE PERFIL SOCIAL */}
+      <Paper
+        variant="outlined"
+        sx={{
+          p: 3,
+          borderRadius: 2,
+          backgroundColor: '#ffffff',
+          borderColor: alpha(theme.palette.primary.main, 0.1),
+          position: 'relative',
+          overflow: 'hidden'
+        }}
+      >
+        <Stack direction="row" spacing={2} alignItems="center">
+          <UserAvatar />
+          <Box sx={{ flexGrow: 1 }}>
+            <Typography variant="subtitle1" fontWeight="bold">
+              {safeUserStats.socialLevel}
             </Typography>
-            <Chip
-              icon={<TrendingUp />}
-              label={`Crecimiento semanal: ${safeCommunityMetrics.weeklyGrowth}%`}
-              color="primary"
-              variant="outlined"
-              size="small"
-            />
-          </Box>
-          <Box textAlign="right">
-            <Chip
-              icon={isConnected ? <Group /> : <Notifications />}
-              label={isConnected ? `${safeCommunityMetrics.onlineMembers} en línea` : 'Desconectado'}
-              color={isConnected ? 'success' : 'error'}
-            />
-          </Box>
-        </Box>
-
-        <Divider sx={{ my: 2 }} />
-
-        {/* MÉTRICAS DE USUARIO */}
-        <Grid container spacing={3} alignItems="stretch">
-          <Grid item xs={12} md={4}>
-            <Paper elevation={3} sx={{ p: 2, textAlign: 'center', height: '100%' }}>
-              <UserAvatar />
-              <Typography variant="h6" fontWeight="bold" mt={2}>
-                {safeUserStats.socialLevel}
-              </Typography>
-              <Typography variant="body2" color="text.secondary" mb={1}>
-                Siguiente nivel: {safeUserStats.nextLevel}
-              </Typography>
+            <Box sx={{ display: 'flex', alignItems: 'center', mt: 0.5 }}>
               <LinearProgress
                 variant="determinate"
                 value={safeUserStats.socialProgress}
-                sx={{ height: 8, borderRadius: 4 }}
+                sx={{
+                  flexGrow: 1,
+                  height: 8,
+                  borderRadius: 4,
+                  backgroundColor: alpha(theme.palette.primary.main, 0.1),
+                  '& .MuiLinearProgress-bar': {
+                    backgroundColor: theme.palette.primary.main
+                  }
+                }}
               />
-            </Paper>
-          </Grid>
+              <Typography variant="caption" color="text.secondary" sx={{ ml: 1 }}>
+                {safeUserStats.socialProgress}%
+              </Typography>
+            </Box>
+            <Typography variant="caption" color="text.secondary">
+              Próximo nivel: {safeUserStats.nextLevel}
+            </Typography>
+          </Box>
+        </Stack>
 
-          <Grid item xs={12} md={8}>
-            <Grid container spacing={2}>
-              <Grid item xs={12}>
-                <Tooltip title="Balance de Reciprocidad: Mide el equilibrio entre dar y recibir en la comunidad. Un valor cercano a 1 indica un balance saludable.">
-                  <Paper elevation={2} sx={{ p: 2, bgcolor: alpha(getReciprocidadColor(safeUserStats.reciprocidadBalance), 0.1), height: '100%' }}>
-                    <Stack direction="row" spacing={2} alignItems="center">
-                      <BalanceIcon sx={{ fontSize: 40, color: getReciprocidadColor(safeUserStats.reciprocidadBalance) }} />
-                      <Box flexGrow={1}>
-                        <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
-                          Balance de Reciprocidad
-                        </Typography>
-                        <Typography variant="body2" color="text.secondary">
-                          Equilibrio entre dar y recibir
-                        </Typography>
-                      </Box>
-                      <Typography variant="h4" sx={{ fontWeight: 'bold', color: getReciprocidadColor(safeUserStats.reciprocidadBalance) }}>
-                        {safeUserStats.reciprocidadBalance.toFixed(2)}
-                      </Typography>
-                    </Stack>
-                  </Paper>
-                </Tooltip>
-              </Grid>
-              <Grid item xs={6} sm={3}>
-                <MetricCard icon={<GroupIcon />} label="Conexiones" value={safeUserStats.connectionsCount} />
-              </Grid>
-              <Grid item xs={6} sm={3}>
-                <MetricCard icon={<Handshake />} label="Colaboraciones" value={safeUserStats.collaborationsCount} />
-              </Grid>
-              <Grid item xs={6} sm={3}>
-                <MetricCard icon={<Favorite />} label="Al Bien Común" value={safeUserStats.bienComunContributions} />
-              </Grid>
-              <Grid item xs={6} sm={3}>
-                <MetricCard icon={<EmojiEvents />} label="Méritos Sociales" value={safeUserStats.socialMeritos} />
-              </Grid>
-            </Grid>
+        {/* 🧩 MÉTRICAS CLAVE */}
+        <Grid container spacing={2} sx={{ mt: 2 }}>
+          <Grid item xs={6} sm={3}>
+            <Box sx={{ textAlign: 'center' }}>
+              <Typography variant="h5" fontWeight="bold" color="primary.main">
+                {safeUserStats.connectionsCount}
+              </Typography>
+              <Typography variant="caption" color="text.secondary">
+                Conexiones
+              </Typography>
+            </Box>
+          </Grid>
+          <Grid item xs={6} sm={3}>
+            <Box sx={{ textAlign: 'center' }}>
+              <Typography variant="h5" fontWeight="bold" color="secondary.main">
+                {safeUserStats.collaborationsCount}
+              </Typography>
+              <Typography variant="caption" color="text.secondary">
+                Colaboraciones
+              </Typography>
+            </Box>
+          </Grid>
+          <Grid item xs={6} sm={3}>
+            <Box sx={{ textAlign: 'center' }}>
+              <Typography variant="h5" fontWeight="bold" color="success.main">
+                {safeUserStats.bienComunContributions}
+              </Typography>
+              <Typography variant="caption" color="text.secondary">
+                Contribuciones
+              </Typography>
+            </Box>
+          </Grid>
+          <Grid item xs={6} sm={3}>
+            <Box sx={{ textAlign: 'center' }}>
+              <Typography variant="h5" fontWeight="bold" color="warning.main">
+                {safeUserStats.socialMeritos}
+              </Typography>
+              <Typography variant="caption" color="text.secondary">
+                Méritos
+              </Typography>
+            </Box>
           </Grid>
         </Grid>
 
-        {/* ELEMENTOS SOCIALES */}
-        {showDetailedView && (
-          <Box mt={4}>
-            <Typography variant="h6" fontWeight="bold" mb={2}>
-              Equilibrio Elemental
+        {/* 🧩 ELEMENTOS SOCIALES */}
+        <Box sx={{ mt: 3 }}>
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              mb: 2
+            }}
+          >
+            <Typography variant="subtitle2" fontWeight="bold">
+              Balance de Elementos Sociales
             </Typography>
-            <Grid container spacing={isMobile ? 2 : 3} justifyContent="center">
+            <IconButton
+              size="small"
+              onClick={() => handleToggleSection('elementos')}
+            >
+              {expandedSection === 'elementos' ? (
+                <ExpandLessIcon fontSize="small" />
+              ) : (
+                <ExpandMoreIcon fontSize="small" />
+              )}
+            </IconButton>
+          </Box>
+
+          <Collapse in={expandedSection === 'elementos' || !isMobile}>
+            <Grid container spacing={2} justifyContent="center">
               {Object.entries(safeUserStats.elementos).map(([key, value]) => (
-                <Grid item key={key}>
+                <Grid item key={key} xs={6} sm={3}>
                   <SocialElementIcon
                     element={key}
                     value={value}
-                    color={getElementoColor(value)}
+                    color={
+                      key === 'comunicacion'
+                        ? theme.palette.info.main
+                        : key === 'empatia'
+                        ? theme.palette.primary.main
+                        : key === 'confianza'
+                        ? theme.palette.success.main
+                        : theme.palette.warning.main
+                    }
                   />
                 </Grid>
               ))}
             </Grid>
-          </Box>
-        )}
-
-        {/* MÉTRICAS DE LA COMUNIDAD */}
-        <Box mt={4}>
-            <Typography variant="h6" fontWeight="bold" mb={2}>Métricas de la Comunidad</Typography>
-            <Grid container spacing={2}>
-              <Grid item xs={12} sm={6} md={3}>
-                <MetricCard
-                  icon={<GroupIcon color="primary" />}
-                  label="Conexiones Activas"
-                  value={safeCommunityMetrics.activeConnections}
-                  isLoading={isLoading}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6} md={3}>
-                <MetricCard
-                  icon={<Handshake color="secondary" />}
-                  label="Intercambios de Reciprocidad"
-                  value={safeCommunityMetrics.reciprocidadExchanges}
-                  isLoading={isLoading}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6} md={3}>
-                <MetricCard
-                  icon={<People color="info" />}
-                  label="Interacciones Diarias"
-                  value={safeCommunityMetrics.dailyInteractions}
-                  isLoading={isLoading}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6} md={3}>
-                <MetricCard
-                  icon={<TrendingUp sx={{ color: 'success.main' }} />}
-                  label="Círculos Activos"
-                  value={safeCommunityMetrics.activeCircles}
-                  isLoading={isLoading}
-                />
-              </Grid>
-            </Grid>
+          </Collapse>
         </Box>
-      </CardContent>
-    </Card>
+      </Paper>
+
+      {/* 🧩 MÉTRICAS DE LA COMUNIDAD */}
+      <Paper
+        variant="outlined"
+        sx={{
+          p: 3,
+          borderRadius: 2,
+          backgroundColor: '#ffffff',
+          borderColor: alpha(theme.palette.secondary.main, 0.1),
+          position: 'relative',
+          overflow: 'hidden'
+        }}
+      >
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            mb: 2
+          }}
+        >
+          <Typography variant="subtitle2" fontWeight="bold">
+            Métricas de la Comunidad
+          </Typography>
+          <IconButton
+            size="small"
+            onClick={() => handleToggleSection('community')}
+          >
+            {expandedSection === 'community' ? (
+              <ExpandLessIcon fontSize="small" />
+            ) : (
+              <ExpandMoreIcon fontSize="small" />
+            )}
+          </IconButton>
+        </Box>
+
+        <Collapse in={expandedSection === 'community' || !isMobile}>
+          <Grid container spacing={2}>
+            <Grid item xs={12} sm={6}>
+              <MetricCard
+                icon={<People />}
+                label="Conexiones Activas"
+                value={safeCommunityMetrics.activeConnections}
+                isLoading={isLoading}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <MetricCard
+                icon={<Group />}
+                label="Miembros Online"
+                value={safeCommunityMetrics.onlineMembers}
+                isLoading={isLoading}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <MetricCard
+                icon={<Handshake />}
+                label="Intercambios Reciprocidad"
+                value={safeCommunityMetrics.reciprocidadExchanges}
+                isLoading={isLoading}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <MetricCard
+                icon={<TrendingUp />}
+                label="Crecimiento Semanal"
+                value={`+${safeCommunityMetrics.weeklyGrowth}%`}
+                isLoading={isLoading}
+              />
+            </Grid>
+          </Grid>
+        </Collapse>
+      </Paper>
+
+      {/* 🧩 SECCIÓN DETALLADA (SOLO SI SE SOLICITA) */}
+      {detailed && (
+        <Paper
+          variant="outlined"
+          sx={{
+            p: 3,
+            borderRadius: 2,
+            backgroundColor: '#ffffff',
+            borderColor: alpha(theme.palette.info.main, 0.1),
+            position: 'relative',
+            overflow: 'hidden'
+          }}
+        >
+          <Typography variant="subtitle2" fontWeight="bold" gutterBottom>
+            Análisis Detallado de Reciprocidad
+          </Typography>
+          <Typography variant="body2" color="text.secondary" paragraph>
+            Tu índice de Reciprocidad Social muestra un balance entre dar y recibir que
+            contribuye positivamente al ecosistema CoomÜnity.
+          </Typography>
+
+          <Grid container spacing={2} sx={{ mt: 1 }}>
+            <Grid item xs={12} sm={6}>
+              <Box sx={{ mb: 2 }}>
+                <Typography variant="body2" fontWeight="medium" gutterBottom>
+                  Índice de Confianza
+                </Typography>
+                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                  <Box sx={{ flexGrow: 1, mr: 1 }}>
+                    <LinearProgress
+                      variant="determinate"
+                      value={safeUserStats.trustScore * 20}
+                      sx={{
+                        height: 8,
+                        borderRadius: 4,
+                        backgroundColor: alpha(theme.palette.success.main, 0.1),
+                        '& .MuiLinearProgress-bar': {
+                          backgroundColor: theme.palette.success.main
+                        }
+                      }}
+                    />
+                  </Box>
+                  <Typography variant="body2" fontWeight="bold">
+                    {safeUserStats.trustScore}/5
+                  </Typography>
+                </Box>
+              </Box>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <Box sx={{ mb: 2 }}>
+                <Typography variant="body2" fontWeight="medium" gutterBottom>
+                  Balance Reciprocidad
+                </Typography>
+                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                  <Box sx={{ flexGrow: 1, mr: 1 }}>
+                    <LinearProgress
+                      variant="determinate"
+                      value={safeUserStats.reciprocidadBalance * 100}
+                      sx={{
+                        height: 8,
+                        borderRadius: 4,
+                        backgroundColor: alpha(
+                          getReciprocidadColor(safeUserStats.reciprocidadBalance),
+                          0.1
+                        ),
+                        '& .MuiLinearProgress-bar': {
+                          backgroundColor: getReciprocidadColor(
+                            safeUserStats.reciprocidadBalance
+                          )
+                        }
+                      }}
+                    />
+                  </Box>
+                  <Typography variant="body2" fontWeight="bold">
+                    {Math.round(safeUserStats.reciprocidadBalance * 100)}%
+                  </Typography>
+                </Box>
+              </Box>
+            </Grid>
+          </Grid>
+        </Paper>
+      )}
+    </Stack>
   );
 };
 

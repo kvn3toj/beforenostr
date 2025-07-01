@@ -1,0 +1,174 @@
+{
+  "philosophy_version": "2.0",
+  "last_updated": "2025-01-25",
+  "core_principles": {
+    "reciprocidad": {
+      "name": "Reciprocidad",
+      "description": "Intercambio equilibrado de valor que beneficia a todas las partes involucradas",
+      "weight": 25,
+      "implementation_guidelines": [
+        "Cada transacción debe generar valor para ambas partes",
+        "Sistemas de feedback bidireccional",
+        "Resolución colaborativa de desequilibrios",
+        "Transparencia en todos los intercambios"
+      ]
+    },
+    "bien_comun": {
+      "name": "Bien Común",
+      "description": "Priorizar el beneficio colectivo sobre el individual",
+      "weight": 30,
+      "implementation_guidelines": [
+        "Decisiones que beneficien a la mayoría de la comunidad",
+        "Recursos compartidos cuando sea posible",
+        "Inclusión en lugar de exclusión",
+        "Sostenibilidad a largo plazo"
+      ]
+    },
+    "economia_sagrada": {
+      "name": "Economía Sagrada",
+      "description": "Sistema económico basado en abundancia, colaboración y regeneración",
+      "weight": 20,
+      "implementation_guidelines": [
+        "Mentalidad de abundancia sobre escasez",
+        "Colaboración sobre competencia",
+        "Regeneración sobre extracción",
+        "Valor intrínseco sobre valor monetario"
+      ]
+    },
+    "meritos": {
+      "name": "Mëritos",
+      "description": "Sistema de recompensas basado en contribuciones genuinas al Bien Común",
+      "weight": 15,
+      "implementation_guidelines": [
+        "Recompensar contribuciones genuinas",
+        "Evitar gamificación manipulativa",
+        "Reconocimiento peer-to-peer",
+        "Diversidad en tipos de contribución"
+      ]
+    },
+    "ondas": {
+      "name": "Öndas",
+      "description": "Unidades de energía vibracional generadas por acciones conscientes",
+      "weight": 10,
+      "implementation_guidelines": [
+        "Fomentar interacciones positivas",
+        "Reducir toxicidad y conflictos",
+        "Promover mindfulness y consciencia",
+        "Celebrar momentos de conexión auténtica"
+      ]
+    }
+  },
+  "module_specific_guidelines": {
+    "marketplace": {
+      "primary_principles": ["reciprocidad", "bien_comun"],
+      "specific_rules": [
+        "Sistemas de reputación basados en intercambios equilibrados",
+        "Productos y servicios que generen valor comunitario",
+        "Resolución de disputas colaborativa",
+        "Transparencia en precios y términos"
+      ],
+      "anti_patterns": [
+        "Explotación de vendedores o compradores",
+        "Competencia destructiva",
+        "Información asimétrica",
+        "Extracción de valor sin reciprocidad"
+      ]
+    },
+    "uplay": {
+      "primary_principles": ["meritos", "bien_comun", "ondas"],
+      "specific_rules": [
+        "Contenido educativo que beneficie la comunidad",
+        "Gamificación consciente, no adictiva",
+        "Recompensas por compartir conocimiento",
+        "Pausas para reflexión y mindfulness"
+      ],
+      "anti_patterns": [
+        "Contenido manipulativo o adictivo",
+        "Competencia tóxica entre usuarios",
+        "Gamificación superficial sin valor real",
+        "Consumo pasivo sin participación"
+      ]
+    },
+    "social": {
+      "primary_principles": ["bien_comun", "ondas", "reciprocidad"],
+      "specific_rules": [
+        "Conexiones basadas en valores compartidos",
+        "Sistemas de mediación para conflictos",
+        "Fomento de colaboración sobre competencia",
+        "Espacios seguros para expresión auténtica"
+      ],
+      "anti_patterns": [
+        "Comparación social destructiva",
+        "Echo chambers y polarización",
+        "Acoso o comportamiento tóxico",
+        "Superficialidad en las conexiones"
+      ]
+    },
+    "ustats": {
+      "primary_principles": ["meritos", "reciprocidad", "bien_comun"],
+      "specific_rules": [
+        "Métricas que reflejen contribución al Bien Común",
+        "Balance de Reciprocidad visible y accionable",
+        "Progreso personal alineado con crecimiento comunitario",
+        "Transparencia en algoritmos de puntuación"
+      ],
+      "anti_patterns": [
+        "Métricas vanidosas o manipulativas",
+        "Comparaciones que generen inseguridad",
+        "Gamificación adictiva",
+        "Optimización de métricas sobre impacto real"
+      ]
+    }
+  },
+  "validation_criteria": {
+    "minimum_score": 70,
+    "critical_principles": ["reciprocidad", "bien_comun"],
+    "red_flags": [
+      "Sistemas que beneficien solo a una parte",
+      "Gamificación adictiva o manipulativa",
+      "Fomento de competencia destructiva",
+      "Extracción de valor sin reciprocidad",
+      "Diseños que generen ansiedad o FOMO"
+    ]
+  },
+  "implementation_patterns": {
+    "ui_patterns": {
+      "colors": {
+        "primary": "#2E8B57",
+        "secondary": "#40E0D0",
+        "accent": "#FFD700",
+        "meaning": "Colores que evocan naturaleza, armonía y abundancia"
+      },
+      "typography": {
+        "style": "Legible, cálida, inclusiva",
+        "tone": "Colaborativa, no competitiva"
+      },
+      "interactions": {
+        "feedback": "Inmediato y constructivo",
+        "progress": "Visible pero no obsesivo",
+        "social": "Fomenta conexión auténtica"
+      }
+    },
+    "code_patterns": {
+      "naming": "Variables y funciones que reflejen intención filosófica",
+      "comments": "Explicación de cómo el código sirve al Bien Común",
+      "architecture": "Sistemas abiertos y extensibles",
+      "performance": "Eficiencia que respete recursos comunitarios"
+    }
+  },
+  "measurement_framework": {
+    "quantitative_metrics": [
+      "Porcentaje de transacciones equilibradas (Reciprocidad)",
+      "Número de iniciativas comunitarias activas (Bien Común)",
+      "Tiempo promedio en resolución colaborativa (Economia Sagrada)",
+      "Diversidad en tipos de contribuciones (Mëritos)",
+      "Niveles de satisfacción y bienestar (Öndas)"
+    ],
+    "qualitative_indicators": [
+      "Testimonios de impacto positivo",
+      "Casos de resolución colaborativa exitosa",
+      "Ejemplos de innovación regenerativa",
+      "Historias de transformación personal y comunitaria"
+    ]
+  }
+}

@@ -55,10 +55,10 @@ interface ContestConfig {
   duration: number;
   participants: number;
   rewards: {
-    first: number;    // Lükas
-    second: number;   // Lükas
-    third: number;    // Lükas
-    participation: number; // Lükas
+    first: number;    // Ünits
+    second: number;   // Ünits
+    third: number;    // Ünits
+    participation: number; // Ünits
   };
   rules: string[];
   isActive: boolean;

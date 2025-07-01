@@ -44,4 +44,4 @@ export function extractErrorMessage(
 
   // Fallback al mensaje genérico
   return defaultErrorMessage;
-} 
+}

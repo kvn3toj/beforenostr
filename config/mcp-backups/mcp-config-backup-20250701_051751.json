@@ -1,0 +1,21 @@
+{
+  "mcpServers": {
+    "coomunity_filesystem": {
+      "name": "CoomÜnity Project Files",
+      "description": "Intelligent file navigation and context for the CoomÜnity monorepo",
+      "command": "npx", 
+      "args": ["@modelcontextprotocol/server-filesystem", "/Users/kevinp/Movies/GAMIFIER-copy"],
+      "enabled": true
+    },
+    "coomunity_github": {
+      "name": "CoomÜnity Repository Manager",
+      "description": "GitHub integration for repository management and collaboration",
+      "command": "npx",
+      "args": ["@modelcontextprotocol/server-github"],
+      "env": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": ""
+      },
+      "enabled": true
+    }
+  }
+}

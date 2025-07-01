@@ -57,7 +57,7 @@ Endpoints implementados (pendientes en backend):
 - ✅ **Visualización de progreso** con métricas de completación
 - ✅ **Configuración de acciones** por stage (onboarding, scaffolding, endgame, discovery)
 - ✅ **Sistema de requirements** (mëritos, öndas, trust_votes, purchases, time)
-- ✅ **Configuración de rewards** (lukas, meritos, ondas, access, perks)
+- ✅ **Configuración de rewards** (units, meritos, ondas, access, perks)
 - ✅ **Elementos Octalysis** integrados por acción
 - ✅ **Mental Triggers** configurables (reciprocity, scarcity, authority, etc.)
 
@@ -65,7 +65,7 @@ Endpoints implementados (pendientes en backend):
 - ✅ **Creación de concursos** semanales, mensuales y especiales
 - ✅ **Sistema de reglas** con multiplicadores de méritos
 - ✅ **Leaderboard en tiempo real** con TOP performers
-- ✅ **Gestión de premios** en Lükas
+- ✅ **Gestión de premios** en Ünits
 - ✅ **Control de estado** (activar, pausar, finalizar)
 - ✅ **Analytics de participación** y engagement
 

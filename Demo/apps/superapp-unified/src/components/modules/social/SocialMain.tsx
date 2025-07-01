@@ -130,7 +130,7 @@ const SocialMain: React.FC = () => {
 
   return (
     <Box sx={{
-      backgroundColor: UNIFIED_COLORS.brand.white,
+      backgroundColor: '#ffffff',
       minHeight: '100vh',
       py: 4
     }}>
@@ -156,10 +156,9 @@ const SocialMain: React.FC = () => {
             zIndex: 1100,
                 mb: 4,
             borderRadius: '16px',
-            background: 'rgba(255, 255, 255, 0.95)',
-            backdropFilter: 'blur(12px)',
-            borderColor: UNIFIED_COLORS.themes.minimalist.divider,
-            boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
+            background: '#ffffff',
+            borderColor: theme.palette.divider,
+            boxShadow: '0 4px 20px rgba(0, 0, 0, 0.05)',
           }}
         >
           <Tabs

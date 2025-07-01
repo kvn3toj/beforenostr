@@ -22,6 +22,7 @@ import { WalletWidget } from '../components/home/widgets/WalletWidget';
 import { QuickActionsWidget } from '../components/home/widgets/QuickActionsWidget';
 import { NotificationsWidget } from '../components/home/widgets/NotificationsWidget';
 import { MainModulesWidget } from '../components/home/widgets/MainModulesWidget';
+import { CustomerJourneyWidget } from '../components/modules/stages/CustomerJourneyWidget';
 
 // Error Boundary
 class HomePageErrorBoundary extends React.Component<
@@ -145,6 +146,9 @@ export function HomePage() {
                   }}>
                     <WalletWidget />
                   </Paper>
+                </Grid>
+                <Grid item xs={12}>
+                  <CustomerJourneyWidget />
                 </Grid>
                 <Grid item xs={12}>
                   <Paper variant="outlined" sx={{

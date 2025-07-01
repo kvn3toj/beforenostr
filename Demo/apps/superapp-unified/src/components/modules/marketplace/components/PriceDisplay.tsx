@@ -18,7 +18,7 @@ const PriceDisplay: React.FC<PriceDisplayProps> = ({
 }) => {
   const formatPrice = (price: number, currency: string) => {
     const safePrice = price || 0;
-    if (currency === 'ü' || currency === 'Lükas' || currency === 'LUKAS') {
+    if (currency === 'ü' || currency === 'Ünits' || currency === 'UNITS') {
       return `ü ${safePrice.toLocaleString()}`;
     }
     return `$${safePrice.toLocaleString()}`;

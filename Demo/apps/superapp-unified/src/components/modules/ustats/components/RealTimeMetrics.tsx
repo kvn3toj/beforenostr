@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Typography, Paper, Grid, Chip } from '@mui/material';
+import { Box, Typography, Paper, Grid, Chip, useTheme, alpha } from '@mui/material';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Speed as SpeedIcon,
@@ -32,18 +32,9 @@ interface MetricCard {
 }
 
 const RealTimeMetrics: React.FC<RealTimeMetricsProps> = ({ data }) => {
+  const theme = useTheme();
   const [previousData, setPreviousData] = useState(data);
   const [changes, setChanges] = useState<Record<string, number>>({});
-
-  const GAMING_COLORS = {
-    primary: '#00ff88',
-    secondary: '#ff0088',
-    accent: '#ffaa00',
-    neon: '#00ffff',
-    success: '#00ff88',
-    warning: '#ffaa00',
-    error: '#ff4444',
-  };
 
   // Track changes in data
   useEffect(() => {
@@ -67,62 +58,62 @@ const RealTimeMetrics: React.FC<RealTimeMetricsProps> = ({ data }) => {
       key: 'activeUsers',
       title: 'Active Users',
       icon: <PeopleIcon />,
-      color: GAMING_COLORS.primary,
+      color: theme.palette.primary.main,
       unit: '',
       formatter: (value) => value.toLocaleString(),
       getStatus: (value) => {
         if (value > 1500)
-          return { status: 'PEAK', color: GAMING_COLORS.success };
+          return { status: 'PEAK', color: theme.palette.success.main };
         if (value > 1000)
-          return { status: 'HIGH', color: GAMING_COLORS.accent };
-        if (value > 500) return { status: 'NORMAL', color: GAMING_COLORS.neon };
-        return { status: 'LOW', color: GAMING_COLORS.error };
+          return { status: 'HIGH', color: theme.palette.warning.main };
+        if (value > 500) return { status: 'NORMAL', color: theme.palette.info.main };
+        return { status: 'LOW', color: theme.palette.error.main };
       },
     },
     {
       key: 'searchesPerMinute',
       title: 'Searches/Min',
       icon: <SpeedIcon />,
-      color: GAMING_COLORS.secondary,
+      color: theme.palette.secondary.main,
       unit: '/min',
       formatter: (value) => value.toString(),
       getStatus: (value) => {
         if (value > 30)
-          return { status: 'BLAZING', color: GAMING_COLORS.success };
-        if (value > 20) return { status: 'FAST', color: GAMING_COLORS.accent };
-        if (value > 10) return { status: 'STEADY', color: GAMING_COLORS.neon };
-        return { status: 'SLOW', color: GAMING_COLORS.error };
+          return { status: 'BLAZING', color: theme.palette.success.main };
+        if (value > 20) return { status: 'FAST', color: theme.palette.warning.main };
+        if (value > 10) return { status: 'STEADY', color: theme.palette.info.main };
+        return { status: 'SLOW', color: theme.palette.error.main };
       },
     },
     {
       key: 'conversionRate',
       title: 'Conversion Rate',
       icon: <TrendingUpIcon />,
-      color: GAMING_COLORS.accent,
+      color: theme.palette.info.main,
       unit: '%',
       formatter: (value) => value.toFixed(1),
       getStatus: (value) => {
         if (value > 25)
-          return { status: 'EXCELLENT', color: GAMING_COLORS.success };
-        if (value > 20) return { status: 'GREAT', color: GAMING_COLORS.accent };
-        if (value > 15) return { status: 'GOOD', color: GAMING_COLORS.neon };
-        return { status: 'NEEDS WORK', color: GAMING_COLORS.error };
+          return { status: 'EXCELLENT', color: theme.palette.success.main };
+        if (value > 20) return { status: 'GREAT', color: theme.palette.warning.main };
+        if (value > 15) return { status: 'GOOD', color: theme.palette.info.main };
+        return { status: 'NEEDS WORK', color: theme.palette.error.main };
       },
     },
     {
       key: 'serverLoad',
       title: 'Server Load',
       icon: <MemoryIcon />,
-      color: GAMING_COLORS.neon,
+      color: theme.palette.warning.main,
       unit: '%',
       formatter: (value) => value.toString(),
       getStatus: (value) => {
         if (value > 80)
-          return { status: 'CRITICAL', color: GAMING_COLORS.error };
-        if (value > 60) return { status: 'HIGH', color: GAMING_COLORS.warning };
+          return { status: 'CRITICAL', color: theme.palette.error.main };
+        if (value > 60) return { status: 'HIGH', color: theme.palette.warning.main };
         if (value > 40)
-          return { status: 'MODERATE', color: GAMING_COLORS.accent };
-        return { status: 'OPTIMAL', color: GAMING_COLORS.success };
+          return { status: 'MODERATE', color: theme.palette.info.main };
+        return { status: 'OPTIMAL', color: theme.palette.success.main };
       },
     },
   ];
@@ -138,23 +129,24 @@ const RealTimeMetrics: React.FC<RealTimeMetricsProps> = ({ data }) => {
     return (
       <motion.div
         layout
-        whileHover={{ scale: 1.05, rotateY: 5 }}
+        whileHover={{ scale: 1.02 }}
         transition={{ type: 'spring', stiffness: 300, damping: 20 }}
       >
         <Paper
+          elevation={0}
           sx={{
             p: 3,
-            background: `linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%)`,
-            border: `1px solid ${metric.color}40`,
+            backgroundColor: theme.palette.background.paper,
+            border: `1px solid ${theme.palette.divider}`,
+            borderLeft: `4px solid ${metric.color}`,
             borderRadius: 2,
-            boxShadow: `0 0 20px ${metric.color}20`,
             position: 'relative',
             overflow: 'hidden',
             height: '100%',
             transition: 'all 0.3s ease',
             '&:hover': {
-              boxShadow: `0 0 30px ${metric.color}40`,
-              border: `1px solid ${metric.color}80`,
+              borderColor: metric.color,
+              boxShadow: `0 2px 8px ${alpha(metric.color, 0.1)}`,
             },
           }}
         >
@@ -162,7 +154,6 @@ const RealTimeMetrics: React.FC<RealTimeMetricsProps> = ({ data }) => {
           <motion.div
             animate={{
               opacity: [1, 0.3, 1],
-              scale: [1, 1.2, 1],
             }}
             transition={{
               duration: 2,
@@ -176,21 +167,7 @@ const RealTimeMetrics: React.FC<RealTimeMetricsProps> = ({ data }) => {
               width: 8,
               height: 8,
               borderRadius: '50%',
-              background: GAMING_COLORS.success,
-              boxShadow: `0 0 10px ${GAMING_COLORS.success}`,
-            }}
-          />
-
-          {/* Background glow */}
-          <Box
-            position="absolute"
-            top={0}
-            left={0}
-            right={0}
-            bottom={0}
-            sx={{
-              background: `radial-gradient(circle at center, ${metric.color}15 0%, transparent 70%)`,
-              zIndex: 1,
+              background: status.color,
             }}
           />
 
@@ -201,7 +178,6 @@ const RealTimeMetrics: React.FC<RealTimeMetricsProps> = ({ data }) => {
                 sx={{
                   color: metric.color,
                   mr: 1,
-                  filter: `drop-shadow(0 0 8px ${metric.color}80)`,
                 }}
               >
                 {metric.icon}
@@ -209,9 +185,8 @@ const RealTimeMetrics: React.FC<RealTimeMetricsProps> = ({ data }) => {
               <Typography
                 variant="subtitle1"
                 sx={{
-                  color: '#fff',
                   fontWeight: 'bold',
-                  textShadow: `0 0 5px ${metric.color}40`,
+                  color: theme.palette.text.primary,
                 }}
               >
                 {metric.title}
@@ -229,22 +204,19 @@ const RealTimeMetrics: React.FC<RealTimeMetricsProps> = ({ data }) => {
                   transition={{ duration: 0.3 }}
                 >
                   <Typography
-                    variant="h3"
-                    component="div"
+                    variant="h4"
                     sx={{
+                      fontWeight: 900,
                       color: metric.color,
-                      fontWeight: 'bold',
-                      textShadow: `0 0 20px ${metric.color}80`,
-                      mb: 0.5,
+                      lineHeight: 1,
                     }}
                   >
                     {metric.formatter(value)}
                     <Typography
                       component="span"
-                      variant="h6"
+                      variant="body2"
                       sx={{
-                        color: metric.color,
-                        opacity: 0.8,
+                        color: theme.palette.text.secondary,
                         ml: 0.5,
                       }}
                     >
@@ -258,235 +230,159 @@ const RealTimeMetrics: React.FC<RealTimeMetricsProps> = ({ data }) => {
               <AnimatePresence>
                 {hasChange && (
                   <motion.div
-                    initial={{ opacity: 0, y: -10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: 10 }}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: 20 }}
                     transition={{ duration: 0.5 }}
                   >
-                    <Box
-                      display="flex"
-                      alignItems="center"
+                    <Typography
+                      variant="caption"
                       sx={{
-                        color:
-                          change > 0
-                            ? GAMING_COLORS.success
-                            : GAMING_COLORS.error,
+                        color: change > 0 ? theme.palette.success.main : theme.palette.error.main,
+                        fontWeight: 'bold',
+                        display: 'flex',
+                        alignItems: 'center',
+                        mt: 0.5,
                       }}
                     >
-                      <FlashIcon sx={{ fontSize: 16, mr: 0.5 }} />
-                      <Typography variant="body2" fontWeight="bold">
-                        {change > 0 ? '+' : ''}
-                        {change}
-                        {change > 0 ? ' ↗️' : ' ↘️'}
-                      </Typography>
-                    </Box>
+                      {change > 0 ? '+' : ''}
+                      {metric.formatter(Math.abs(change))}
+                      {metric.unit}
+                    </Typography>
                   </motion.div>
                 )}
               </AnimatePresence>
             </Box>
 
-            {/* Status badge */}
-            <motion.div
-              animate={hasChange ? { scale: [1, 1.1, 1] } : {}}
-              transition={{ duration: 0.3 }}
+            {/* Status */}
+            <Box
+              display="flex"
+              justifyContent="space-between"
+              alignItems="center"
+              mb={1}
             >
               <Chip
                 label={status.status}
                 size="small"
                 sx={{
-                  bgcolor: status.color,
-                  color: '#000',
+                  backgroundColor: alpha(status.color, 0.1),
+                  color: status.color,
                   fontWeight: 'bold',
-                  boxShadow: `0 0 10px ${status.color}60`,
-                  textTransform: 'uppercase',
                   fontSize: '0.7rem',
+                  border: `1px solid ${alpha(status.color, 0.3)}`,
                 }}
               />
-            </motion.div>
+            </Box>
 
-            {/* Progress bar for certain metrics */}
-            {(metric.key === 'serverLoad' ||
-              metric.key === 'conversionRate') && (
-              <Box mt={2}>
-                <Box
-                  sx={{
-                    height: 4,
-                    bgcolor: 'rgba(255,255,255,0.1)',
-                    borderRadius: 2,
-                    overflow: 'hidden',
+            {/* Performance bar */}
+            <Box position="relative">
+              <Box
+                sx={{
+                  height: 4,
+                  backgroundColor: alpha(theme.palette.divider, 0.3),
+                  borderRadius: 2,
+                  overflow: 'hidden',
+                }}
+              >
+                <motion.div
+                  initial={{ width: 0 }}
+                  animate={{
+                    width: `${Math.min((value / getMaxValue(metric.key)) * 100, 100)}%`,
                   }}
-                >
-                  <motion.div
-                    initial={{ width: 0 }}
-                    animate={{
-                      width:
-                        metric.key === 'serverLoad'
-                          ? `${value}%`
-                          : `${Math.min(100, (value / 30) * 100)}%`,
-                    }}
-                    transition={{ duration: 1.5, ease: 'easeOut' }}
-                    style={{
-                      height: '100%',
-                      background: `linear-gradient(90deg, ${status.color} 0%, ${status.color}80 100%)`,
-                      borderRadius: '2px',
-                      boxShadow: `0 0 8px ${status.color}60`,
-                    }}
-                  />
-                </Box>
+                  transition={{ duration: 1, ease: 'easeOut' }}
+                  style={{
+                    height: '100%',
+                    background: metric.color,
+                    borderRadius: 2,
+                  }}
+                />
               </Box>
-            )}
-
-            {/* Gaming corner accents */}
-            <Box
-              position="absolute"
-              top={0}
-              left={0}
-              width={12}
-              height={12}
-              sx={{
-                background: `linear-gradient(45deg, ${metric.color} 0%, transparent 100%)`,
-                clipPath: 'polygon(0 0, 100% 0, 0 100%)',
-                opacity: 0.6,
-              }}
-            />
-            <Box
-              position="absolute"
-              bottom={0}
-              right={0}
-              width={12}
-              height={12}
-              sx={{
-                background: `linear-gradient(225deg, ${metric.color} 0%, transparent 100%)`,
-                clipPath: 'polygon(100% 0, 100% 100%, 0 100%)',
-                opacity: 0.6,
-              }}
-            />
+            </Box>
           </Box>
+
+          {/* Background effect */}
+          <motion.div
+            animate={{
+              opacity: [0.05, 0.1, 0.05],
+            }}
+            transition={{
+              duration: 3,
+              repeat: Infinity,
+              ease: 'easeInOut',
+            }}
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              background: `radial-gradient(circle at 80% 20%, ${alpha(metric.color, 0.1)} 0%, transparent 50%)`,
+              pointerEvents: 'none',
+            }}
+          />
         </Paper>
       </motion.div>
     );
   };
 
+  // Helper function to determine max values for progress bars
+  const getMaxValue = (key: keyof RealTimeData): number => {
+    switch (key) {
+      case 'activeUsers':
+        return 2000;
+      case 'searchesPerMinute':
+        return 50;
+      case 'conversionRate':
+        return 30;
+      case 'serverLoad':
+        return 100;
+      default:
+        return 100;
+    }
+  };
+
   return (
-    <Paper
-      sx={{
-        p: 3,
-        background: `linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%)`,
-        border: `1px solid ${GAMING_COLORS.primary}40`,
-        borderRadius: 2,
-        boxShadow: `0 0 30px ${GAMING_COLORS.primary}20`,
-        position: 'relative',
-        overflow: 'hidden',
-      }}
-    >
-      {/* Background Grid Effect */}
-      <Box
-        position="absolute"
-        top={0}
-        left={0}
-        right={0}
-        bottom={0}
-        sx={{
-          backgroundImage: `
-            linear-gradient(rgba(0, 255, 136, 0.1) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(0, 255, 136, 0.1) 1px, transparent 1px)
-          `,
-          backgroundSize: '20px 20px',
-          opacity: 0.3,
-          zIndex: 1,
-        }}
-      />
-
-      <Box position="relative" zIndex={2}>
-        <Box
-          display="flex"
-          alignItems="center"
-          justifyContent="space-between"
-          mb={3}
-        >
-          <Typography
-            variant="h5"
-            component="h3"
-            sx={{
-              color: GAMING_COLORS.primary,
-              fontWeight: 'bold',
-              textShadow: `0 0 15px ${GAMING_COLORS.primary}60`,
-              display: 'flex',
-              alignItems: 'center',
-            }}
-          >
-            <WifiIcon sx={{ mr: 1 }} />
-            🔴 LIVE METRICS DASHBOARD
-          </Typography>
-
-          <motion.div
-            animate={{
-              opacity: [1, 0.5, 1],
-            }}
-            transition={{
-              duration: 1.5,
-              repeat: Infinity,
-              ease: 'easeInOut',
-            }}
-          >
-            <Chip
-              label="REAL-TIME"
-              size="small"
-              sx={{
-                bgcolor: GAMING_COLORS.success,
-                color: '#000',
-                fontWeight: 'bold',
-                boxShadow: `0 0 12px ${GAMING_COLORS.success}60`,
-                animation: 'pulse 2s infinite',
-              }}
-            />
-          </motion.div>
-        </Box>
-
-        <Grid container spacing={3}>
-          {metrics.map((metric, index) => (
-            <Grid item xs={12} sm={6} md={3} key={metric.key}>
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-              >
-                <MetricCardComponent metric={metric} />
-              </motion.div>
-            </Grid>
-          ))}
-        </Grid>
-
-        {/* System Status */}
-        <Box mt={3} textAlign="center">
-          <motion.div
-            animate={{
-              textShadow: [
-                `0 0 5px ${GAMING_COLORS.primary}60`,
-                `0 0 20px ${GAMING_COLORS.primary}80`,
-                `0 0 5px ${GAMING_COLORS.primary}60`,
-              ],
-            }}
-            transition={{
-              duration: 2,
-              repeat: Infinity,
-              ease: 'easeInOut',
-            }}
-          >
-            <Typography
-              variant="h6"
-              sx={{
-                color: GAMING_COLORS.primary,
-                fontWeight: 'bold',
-                textTransform: 'uppercase',
-              }}
-            >
-              ⚡ ALL SYSTEMS OPERATIONAL ⚡
-            </Typography>
-          </motion.div>
-        </Box>
+    <Box>
+      <Box mb={3}>
+        <Typography variant="h6" sx={{ fontWeight: 600, color: theme.palette.text.primary }}>
+          🔴 Live Metrics
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
+          Real-time system performance indicators
+        </Typography>
       </Box>
-    </Paper>
+
+      <Grid container spacing={2}>
+        {metrics.map((metric) => (
+          <Grid item xs={12} sm={6} lg={3} key={metric.key}>
+            <MetricCardComponent metric={metric} />
+          </Grid>
+        ))}
+      </Grid>
+
+      {/* Global indicators */}
+      <Box mt={3} display="flex" gap={2} flexWrap="wrap">
+        <Chip
+          icon={<WifiIcon />}
+          label="Connection Active"
+          variant="outlined"
+          sx={{
+            color: theme.palette.success.main,
+            borderColor: alpha(theme.palette.success.main, 0.3),
+            backgroundColor: alpha(theme.palette.success.main, 0.05),
+          }}
+        />
+        <Chip
+          icon={<FlashIcon />}
+          label={`Last Update: ${new Date().toLocaleTimeString()}`}
+          variant="outlined"
+          sx={{
+            color: theme.palette.text.secondary,
+            borderColor: theme.palette.divider,
+          }}
+        />
+      </Box>
+    </Box>
   );
 };
 

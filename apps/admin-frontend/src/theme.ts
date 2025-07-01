@@ -224,4 +224,4 @@ const getDesignTokens = (mode: 'light' | 'dark'): ThemeOptions => ({
 
 export const createAppTheme = (mode: 'light' | 'dark') => {
   return createTheme(getDesignTokens(mode));
-}; 
+};

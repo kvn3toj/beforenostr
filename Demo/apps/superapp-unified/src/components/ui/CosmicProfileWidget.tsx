@@ -15,6 +15,7 @@ import {
   Collapse,
   Stack,
   Badge,
+  Paper,
 } from '@mui/material';
 import {
   AutoAwesome,
@@ -31,62 +32,42 @@ import {
   AllInclusive,
 } from '@mui/icons-material';
 
-// Placeholder for RevolutionaryWidget if not available
-const RevolutionaryWidget: React.FC<any> = ({ children, ...props }) => (
-  <Box 
-    sx={{ 
-      position: 'relative',
-      borderRadius: 3,
-      background: 'linear-gradient(135deg, rgba(15, 23, 42, 0.9) 0%, rgba(30, 41, 59, 0.95) 50%)',
-      backdropFilter: 'blur(20px)',
-      border: '2px solid rgba(255, 107, 53, 0.3)',
-      boxShadow: '0 25px 80px rgba(0, 0, 0, 0.3)',
-      overflow: 'hidden',
-      '&::before': {
-        content: '""',
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        background: `
-          radial-gradient(circle at 20% 30%, rgba(225, 190, 231, 0.03) 0%, transparent 40%),
-          radial-gradient(circle at 80% 70%, rgba(79, 195, 247, 0.03) 0%, transparent 40%)
-        `,
-        pointerEvents: 'none'
-      },
-      ...props.style
-    }}
-  >
-    {children}
-  </Box>
-);
-
-interface CosmicProfileWidgetProps {
+interface MinimalistProfileWidgetProps {
   user: {
     id: string;
     name: string;
-    avatar: string;
+    email: string;
+    avatar?: string;
     level: number;
+    experience: number;
+    maxExperience: number;
     meritos: number;
     ondas: number;
-    reciprocidadScore: number;
-    currentStreak: number;
-    nextLevelProgress: number;
-    etherEnergy: number; // New cosmic element
-    cosmicAlignment: 'ascending' | 'balanced' | 'transcendent';
+    etherEnergy: number;
+    title?: string;
+    joinDate: string;
+    achievements: Achievement[];
+    activityScore: number;
+    reciprocidadIndex: number;
+    bienComunContributions: number;
   };
-  achievements: Array<{
-    id: string;
-    title: string;
-    rarity: 'common' | 'rare' | 'epic' | 'legendary' | 'cosmic';
-    unlockedAt: Date;
-    category: 'learning' | 'reciprocidad' | 'community' | 'wisdom' | 'transcendence';
-  }>;
+  achievements: Achievement[];
   compact?: boolean;
 }
 
-export const CosmicProfileWidget: React.FC<CosmicProfileWidgetProps> = ({
+interface Achievement {
+  id: string;
+  name: string;
+  description: string;
+  icon: React.ReactNode;
+  rarity: 'common' | 'rare' | 'epic' | 'legendary' | 'cosmic';
+  unlockedAt?: string;
+  category: string;
+  progress?: number;
+  maxProgress?: number;
+}
+
+export const MinimalistProfileWidget: React.FC<MinimalistProfileWidgetProps> = ({
   user,
   achievements,
   compact = false
@@ -94,25 +75,11 @@ export const CosmicProfileWidget: React.FC<CosmicProfileWidgetProps> = ({
   const theme = useTheme();
   const [expandedView, setExpandedView] = useState(false);
 
-  // Cosmic Ether Configuration (5th Element)
-  const etherConfig = {
-    name: 'Ether',
-    description: 'Consciencia Cósmica Expandida',
-    color: '#E1BEE7', // Violet-light for transcendence
-    gradient: 'linear-gradient(135deg, #E1BEE7 0%, #CE93D8 50%, #BA68C8 100%)',
-    icon: <AllInclusive sx={{ color: '#E1BEE7' }} />,
-    effects: {
-      particles: 'cosmic-dust',
-      glow: 'transcendent',
-      animation: 'ethereal-flow'
-    }
-  };
-
-  // Calculate Cosmic Alignment
-  const cosmicAlignment = useMemo(() => {
+  // Calculate Alignment
+  const alignment = useMemo(() => {
     const totalEnergy = user.meritos + user.ondas + user.etherEnergy;
     const balance = Math.abs(user.meritos - user.ondas) / totalEnergy;
-    
+
     if (user.etherEnergy > 80 && balance < 0.1) return 'transcendent';
     if (balance < 0.2) return 'balanced';
     return 'ascending';
@@ -120,436 +87,466 @@ export const CosmicProfileWidget: React.FC<CosmicProfileWidgetProps> = ({
 
   // Achievement Rarity Colors
   const rarityColors = {
-    common: '#64B5F6',
-    rare: '#81C784',
-    epic: '#FFB74D',
-    legendary: '#FF8A65',
-    cosmic: '#E1BEE7'
+    common: theme.palette.info.main,
+    rare: theme.palette.success.main,
+    epic: theme.palette.warning.main,
+    legendary: theme.palette.error.main,
+    cosmic: theme.palette.secondary.main
   };
 
   const levelTitles = {
-    1: 'Explorador Cósmico',
-    2: 'Buscador de Sabiduría', 
+    1: 'Explorador',
+    2: 'Buscador de Sabiduría',
     3: 'Tejedor de Conexiones',
     4: 'Guardián del Equilibrio',
     5: 'Maestro de la Reciprocidad',
-    6: 'Sabio Intergaláctico',
+    6: 'Sabio Experimentado',
     7: 'Avatar del Bien Común'
   };
 
-  return (
-    <RevolutionaryWidget
-      title="🌌 Perfil Cósmico CoomÜnity"
-      subtitle="Tu esencia multidimensional en el ecosistema"
-      variant="elevated"
-      element="ether"
-      cosmicEffects={{
-        enableGlow: true,
-        enableAnimations: true,
-        enableParticles: true,
-        glowIntensity: user.etherEnergy / 100,
-        particleTheme: 'cosmic-dust',
-        cosmicIntensity: cosmicAlignment === 'transcendent' ? 'cosmic' : 'intense'
-      }}
-      style={{ minHeight: compact ? '300px' : '500px' }}
-    >
-      <Box sx={{ p: 3, position: 'relative' }}>
-        {/* Header with Cosmic Avatar */}
-        <Box display="flex" alignItems="center" gap={3} mb={3}>
-          <Box position="relative">
+  // Función para obtener color de alineación
+  const getAlignmentColor = () => {
+    switch (alignment) {
+      case 'transcendent': return theme.palette.secondary.main;
+      case 'balanced': return theme.palette.success.main;
+      case 'ascending': return theme.palette.primary.main;
+      default: return theme.palette.primary.main;
+    }
+  };
+
+  // Stats principales
+  const mainStats = [
+    {
+      label: 'Mëritos',
+      value: user.meritos,
+      icon: <DiamondOutlined />,
+      color: theme.palette.primary.main,
+      description: 'Contribuciones al Bien Común'
+    },
+    {
+      label: 'Öndas',
+      value: user.ondas,
+      icon: <FlashOnOutlined />,
+      color: theme.palette.secondary.main,
+      description: 'Energía vibracional positiva'
+    },
+    {
+      label: 'Experiencia',
+      value: user.experience,
+      icon: <AutoAwesome />,
+      color: theme.palette.warning.main,
+      description: 'Puntos de experiencia acumulados'
+    },
+    {
+      label: 'Reciprocidad',
+      value: `${(user.reciprocidadIndex * 100).toFixed(0)}%`,
+      icon: <FavoriteOutlined />,
+      color: theme.palette.success.main,
+      description: 'Índice de balance Ayni'
+    }
+  ];
+
+  // Achievements recientes (últimos 3)
+  const recentAchievements = achievements
+    .filter(a => a.unlockedAt)
+    .sort((a, b) => new Date(b.unlockedAt!).getTime() - new Date(a.unlockedAt!).getTime())
+    .slice(0, 3);
+
+  if (compact) {
+    return (
+      <Card
+        elevation={0}
+        sx={{
+          p: 2,
+          backgroundColor: theme.palette.background.paper,
+          border: `1px solid ${theme.palette.divider}`,
+          borderRadius: 2,
+          transition: 'all 0.3s ease',
+          '&:hover': {
+            borderColor: theme.palette.primary.main,
+            boxShadow: `0 4px 12px ${alpha(theme.palette.primary.main, 0.1)}`,
+          }
+        }}
+      >
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+          <Badge
+            overlap="circular"
+            anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+            badgeContent={
+              <Avatar
+                sx={{
+                  width: 16,
+                  height: 16,
+                  backgroundColor: getAlignmentColor(),
+                  border: `2px solid ${theme.palette.background.paper}`
+                }}
+              >
+                <Typography sx={{ fontSize: '8px', color: 'white' }}>
+                  {user.level}
+                </Typography>
+              </Avatar>
+            }
+          >
             <Avatar
               src={user.avatar}
+              alt={user.name}
               sx={{
-                width: compact ? 80 : 120,
-                height: compact ? 80 : 120,
-                border: `3px solid ${etherConfig.color}`,
-                boxShadow: `0 0 20px ${alpha(etherConfig.color, 0.5)}`,
-                background: etherConfig.gradient,
-                '&::after': {
-                  content: '""',
-                  position: 'absolute',
-                  top: -5,
-                  left: -5,
-                  right: -5,
-                  bottom: -5,
-                  borderRadius: '50%',
-                  background: etherConfig.gradient,
-                  opacity: 0.3,
-                  zIndex: -1,
-                  animation: 'etherealPulse 3s ease-in-out infinite',
-                }
-              }}
-            />
-            
-            {/* Cosmic Alignment Indicator */}
-            <Chip
-              label={cosmicAlignment}
-              size="small"
-              sx={{
-                position: 'absolute',
-                bottom: -10,
-                left: '50%',
-                transform: 'translateX(-50%)',
-                background: etherConfig.gradient,
+                width: 48,
+                height: 48,
+                backgroundColor: theme.palette.primary.main,
                 color: 'white',
-                fontWeight: 'bold',
-                fontSize: '0.7rem',
-                '&::before': {
-                  content: cosmicAlignment === 'transcendent' ? '"✨"' : 
-                          cosmicAlignment === 'balanced' ? '"⚖️"' : '"🌱"',
-                  mr: 0.5
-                }
+                fontSize: '1.2rem',
+                fontWeight: 'bold'
               }}
-            />
-          </Box>
+            >
+              {user.name.charAt(0).toUpperCase()}
+            </Avatar>
+          </Badge>
 
-          <Box flex={1}>
-            <Typography variant="h5" fontWeight="bold" gutterBottom>
+          <Box sx={{ flex: 1, minWidth: 0 }}>
+            <Typography
+              variant="subtitle1"
+              sx={{
+                fontWeight: 600,
+                color: theme.palette.text.primary,
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap'
+              }}
+            >
               {user.name}
             </Typography>
-            
-            <Typography variant="subtitle1" color="text.secondary" gutterBottom>
-              Nivel {user.level} • {levelTitles[user.level as keyof typeof levelTitles]}
+            <Typography
+              variant="caption"
+              sx={{
+                color: theme.palette.text.secondary,
+                display: 'block'
+              }}
+            >
+              {levelTitles[user.level as keyof typeof levelTitles] || 'Miembro'}
+            </Typography>
+          </Box>
+
+          <Box sx={{ textAlign: 'right' }}>
+            <Typography
+              variant="h6"
+              sx={{
+                fontWeight: 700,
+                color: theme.palette.primary.main
+              }}
+            >
+              {user.meritos}
+            </Typography>
+            <Typography
+              variant="caption"
+              sx={{ color: theme.palette.text.secondary }}
+            >
+              Mëritos
+            </Typography>
+          </Box>
+        </Box>
+      </Card>
+    );
+  }
+
+  return (
+    <Paper
+      elevation={0}
+      sx={{
+        backgroundColor: theme.palette.background.paper,
+        border: `1px solid ${theme.palette.divider}`,
+        borderRadius: 3,
+        overflow: 'hidden',
+        transition: 'all 0.3s ease',
+        '&:hover': {
+          borderColor: theme.palette.primary.main,
+          boxShadow: `0 8px 24px ${alpha(theme.palette.primary.main, 0.12)}`,
+        }
+      }}
+    >
+      {/* Header del perfil */}
+      <Box
+        sx={{
+          p: 3,
+          background: `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.05)} 0%, ${alpha(theme.palette.secondary.main, 0.03)} 100%)`,
+          borderBottom: `1px solid ${theme.palette.divider}`,
+        }}
+      >
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 3 }}>
+          <Badge
+            overlap="circular"
+            anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+            badgeContent={
+              <Avatar
+                sx={{
+                  width: 24,
+                  height: 24,
+                  backgroundColor: getAlignmentColor(),
+                  border: `2px solid ${theme.palette.background.paper}`,
+                  fontSize: '0.75rem',
+                  fontWeight: 'bold'
+                }}
+              >
+                {user.level}
+              </Avatar>
+            }
+          >
+            <Avatar
+              src={user.avatar}
+              alt={user.name}
+              sx={{
+                width: 80,
+                height: 80,
+                backgroundColor: theme.palette.primary.main,
+                color: 'white',
+                fontSize: '2rem',
+                fontWeight: 'bold',
+                border: `3px solid ${theme.palette.background.paper}`,
+                boxShadow: `0 4px 12px ${alpha(theme.palette.primary.main, 0.3)}`,
+              }}
+            >
+              {user.name.charAt(0).toUpperCase()}
+            </Avatar>
+          </Badge>
+
+          <Box sx={{ flex: 1 }}>
+            <Typography
+              variant="h5"
+              sx={{
+                fontWeight: 700,
+                color: theme.palette.text.primary,
+                mb: 0.5
+              }}
+            >
+              {user.name}
             </Typography>
 
-            {/* Cosmic Progress to Next Level */}
-            <Box mt={2}>
-              <Box display="flex" justifyContent="space-between" alignItems="center" mb={1}>
-                <Typography variant="caption" color="text.secondary">
-                  Progreso Cósmico al Nivel {user.level + 1}
-                </Typography>
-                <Typography variant="caption" fontWeight="bold">
-                  {user.nextLevelProgress}%
-                </Typography>
-              </Box>
-              <LinearProgress
-                variant="determinate"
-                value={user.nextLevelProgress}
+            <Typography
+              variant="subtitle1"
+              sx={{
+                color: theme.palette.text.secondary,
+                mb: 1
+              }}
+            >
+              {user.title || levelTitles[user.level as keyof typeof levelTitles] || 'Miembro'}
+            </Typography>
+
+            <Chip
+              label={alignment === 'transcendent' ? 'Trascendente' : alignment === 'balanced' ? 'Equilibrado' : 'En Ascensión'}
+              size="small"
+              sx={{
+                backgroundColor: alpha(getAlignmentColor(), 0.1),
+                color: getAlignmentColor(),
+                fontWeight: 600,
+                border: `1px solid ${alpha(getAlignmentColor(), 0.2)}`,
+              }}
+            />
+          </Box>
+
+          <IconButton
+            onClick={() => setExpandedView(!expandedView)}
+            sx={{
+              color: theme.palette.text.secondary,
+              transform: expandedView ? 'rotate(180deg)' : 'rotate(0deg)',
+              transition: 'transform 0.3s ease',
+              '&:hover': {
+                backgroundColor: alpha(theme.palette.primary.main, 0.05)
+              }
+            }}
+          >
+            <ExpandMore />
+          </IconButton>
+        </Box>
+
+        {/* Barra de progreso de nivel */}
+        <Box sx={{ mt: 2 }}>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
+            <Typography variant="caption" sx={{ color: theme.palette.text.secondary }}>
+              Nivel {user.level}
+            </Typography>
+            <Typography variant="caption" sx={{ color: theme.palette.text.secondary }}>
+              {user.experience} / {user.maxExperience} XP
+            </Typography>
+          </Box>
+          <LinearProgress
+            variant="determinate"
+            value={(user.experience / user.maxExperience) * 100}
+            sx={{
+              height: 8,
+              borderRadius: 4,
+              backgroundColor: alpha(theme.palette.primary.main, 0.1),
+              '& .MuiLinearProgress-bar': {
+                backgroundColor: theme.palette.primary.main,
+                borderRadius: 4,
+              },
+            }}
+          />
+        </Box>
+      </Box>
+
+      {/* Stats principales */}
+      <Box sx={{ p: 3 }}>
+        <Typography
+          variant="h6"
+          sx={{
+            fontWeight: 600,
+            color: theme.palette.text.primary,
+            mb: 2
+          }}
+        >
+          📊 Estadísticas Principales
+        </Typography>
+
+        <Grid container spacing={2}>
+          {mainStats.map((stat, index) => (
+            <Grid item xs={6} sm={3} key={index}>
+              <Card
+                elevation={0}
                 sx={{
-                  height: 8,
-                  borderRadius: 4,
-                  background: alpha(etherConfig.color, 0.2),
-                  '& .MuiLinearProgress-bar': {
-                    borderRadius: 4,
-                    background: etherConfig.gradient,
-                    animation: 'cosmicFlow 2s ease-in-out infinite'
+                  p: 2,
+                  textAlign: 'center',
+                  backgroundColor: alpha(stat.color, 0.05),
+                  border: `1px solid ${alpha(stat.color, 0.1)}`,
+                  borderRadius: 2,
+                  transition: 'all 0.3s ease',
+                  '&:hover': {
+                    backgroundColor: alpha(stat.color, 0.08),
+                    borderColor: alpha(stat.color, 0.2),
+                    transform: 'translateY(-2px)',
                   }
                 }}
-              />
-            </Box>
-          </Box>
-        </Box>
-
-        {/* Cosmic Metrics Grid */}
-        <Grid container spacing={2} sx={{ mb: 3 }}>
-          {/* Mëritos */}
-          <Grid item xs={6} md={3}>
-            <Card
-              sx={{
-                p: 2,
-                textAlign: 'center',
-                background: 'linear-gradient(135deg, #FFD700 0%, #FFA726 100%)',
-                color: 'white',
-                position: 'relative',
-                overflow: 'hidden',
-                '&::before': {
-                  content: '""',
-                  position: 'absolute',
-                  top: -50,
-                  right: -50,
-                  width: 100,
-                  height: 100,
-                  background: 'radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%)',
-                  borderRadius: '50%'
-                }
-              }}
-            >
-              <DiamondOutlined sx={{ fontSize: 32, mb: 1 }} />
-              <Typography variant="h6" fontWeight="bold">
-                {user.meritos.toLocaleString()}
-              </Typography>
-              <Typography variant="caption">
-                Mëritos
-              </Typography>
-            </Card>
-          </Grid>
-
-          {/* Öndas */}
-          <Grid item xs={6} md={3}>
-            <Card
-              sx={{
-                p: 2,
-                textAlign: 'center',
-                background: 'linear-gradient(135deg, #10B981 0%, #34D399 100%)',
-                color: 'white',
-                position: 'relative',
-                overflow: 'hidden',
-                '&::before': {
-                  content: '""',
-                  position: 'absolute',
-                  top: -50,
-                  right: -50,
-                  width: 100,
-                  height: 100,
-                  background: 'radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%)',
-                  borderRadius: '50%'
-                }
-              }}
-            >
-              <FlashOnOutlined sx={{ fontSize: 32, mb: 1 }} />
-              <Typography variant="h6" fontWeight="bold">
-                {user.ondas.toLocaleString()}
-              </Typography>
-              <Typography variant="caption">
-                Öndas
-              </Typography>
-            </Card>
-          </Grid>
-
-          {/* Reciprocidad Score */}
-          <Grid item xs={6} md={3}>
-            <Card
-              sx={{
-                p: 2,
-                textAlign: 'center',
-                background: 'linear-gradient(135deg, #8B5CF6 0%, #A855F7 100%)',
-                color: 'white',
-                position: 'relative',
-                overflow: 'hidden',
-                '&::before': {
-                  content: '""',
-                  position: 'absolute',
-                  top: -50,
-                  right: -50,
-                  width: 100,
-                  height: 100,
-                  background: 'radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%)',
-                  borderRadius: '50%'
-                }
-              }}
-            >
-              <FavoriteOutlined sx={{ fontSize: 32, mb: 1 }} />
-              <Typography variant="h6" fontWeight="bold">
-                {user.reciprocidadScore}%
-              </Typography>
-              <Typography variant="caption">
-                Balance Reciprocidad
-              </Typography>
-            </Card>
-          </Grid>
-
-          {/* Ether Energy (New!) */}
-          <Grid item xs={6} md={3}>
-            <Card
-              sx={{
-                p: 2,
-                textAlign: 'center',
-                background: etherConfig.gradient,
-                color: 'white',
-                position: 'relative',
-                overflow: 'hidden',
-                boxShadow: `0 4px 20px ${alpha(etherConfig.color, 0.3)}`,
-                '&::before': {
-                  content: '""',
-                  position: 'absolute',
-                  top: -50,
-                  right: -50,
-                  width: 100,
-                  height: 100,
-                  background: 'radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%)',
-                  borderRadius: '50%',
-                  animation: 'etherealGlow 4s ease-in-out infinite'
-                }
-              }}
-            >
-              <AllInclusive sx={{ fontSize: 32, mb: 1 }} />
-              <Typography variant="h6" fontWeight="bold">
-                {user.etherEnergy}
-              </Typography>
-              <Typography variant="caption">
-                Ether Cósmico
-              </Typography>
-            </Card>
-          </Grid>
-        </Grid>
-
-        {/* Achievement Showcase */}
-        <Box mb={2}>
-          <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
-            <Typography variant="h6" fontWeight="bold">
-              🏆 Logros Cósmicos
-            </Typography>
-            <IconButton
-              onClick={() => setExpandedView(!expandedView)}
-              sx={{ 
-                background: alpha(etherConfig.color, 0.1),
-                '&:hover': { background: alpha(etherConfig.color, 0.2) }
-              }}
-            >
-              {expandedView ? <ExpandLess /> : <ExpandMore />}
-            </IconButton>
-          </Box>
-
-          <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
-            {achievements.slice(0, expandedView ? achievements.length : 3).map((achievement) => (
-              <Tooltip
-                key={achievement.id}
-                title={`${achievement.title} • ${achievement.category} • ${achievement.rarity}`}
               >
-                <Chip
-                  label={achievement.title}
-                  size="small"
+                <Box
                   sx={{
-                    background: `linear-gradient(135deg, ${rarityColors[achievement.rarity]}, ${alpha(rarityColors[achievement.rarity], 0.7)})`,
-                    color: 'white',
-                    fontWeight: 'bold',
+                    color: stat.color,
                     mb: 1,
-                    '&::before': {
-                      content: achievement.rarity === 'cosmic' ? '"🌌"' :
-                              achievement.rarity === 'legendary' ? '"👑"' :
-                              achievement.rarity === 'epic' ? '"⭐"' :
-                              achievement.rarity === 'rare' ? '"💎"' : '"🏅"',
-                      mr: 0.5
+                    '& > svg': { fontSize: '1.5rem' }
+                  }}
+                >
+                  {stat.icon}
+                </Box>
+                <Typography
+                  variant="h6"
+                  sx={{
+                    fontWeight: 700,
+                    color: stat.color,
+                    mb: 0.5
+                  }}
+                >
+                  {stat.value}
+                </Typography>
+                <Typography
+                  variant="caption"
+                  sx={{
+                    color: theme.palette.text.secondary,
+                    fontSize: '0.75rem'
+                  }}
+                >
+                  {stat.label}
+                </Typography>
+              </Card>
+            </Grid>
+          ))}
+        </Grid>
+      </Box>
+
+      {/* Logros recientes - Expandible */}
+      <Collapse in={expandedView}>
+        <Box sx={{ p: 3, pt: 0 }}>
+          <Typography
+            variant="h6"
+            sx={{
+              fontWeight: 600,
+              color: theme.palette.text.primary,
+              mb: 2
+            }}
+          >
+            🏆 Logros Recientes
+          </Typography>
+
+          {recentAchievements.length > 0 ? (
+            <Stack spacing={1.5}>
+              {recentAchievements.map((achievement) => (
+                <Card
+                  key={achievement.id}
+                  elevation={0}
+                  sx={{
+                    p: 2,
+                    backgroundColor: alpha(rarityColors[achievement.rarity], 0.05),
+                    border: `1px solid ${alpha(rarityColors[achievement.rarity], 0.1)}`,
+                    borderRadius: 2,
+                    transition: 'all 0.3s ease',
+                    '&:hover': {
+                      backgroundColor: alpha(rarityColors[achievement.rarity], 0.08),
+                      borderColor: alpha(rarityColors[achievement.rarity], 0.2),
                     }
                   }}
-                />
-              </Tooltip>
-            ))}
-          </Stack>
-
-          <Collapse in={expandedView}>
-            <Box mt={2}>
-              <Typography variant="body2" color="text.secondary" gutterBottom>
-                Distribución de Logros por Rareza:
-              </Typography>
-              <Stack direction="row" spacing={2} flexWrap="wrap">
-                {Object.entries(rarityColors).map(([rarity, color]) => {
-                  const count = achievements.filter(a => a.rarity === rarity).length;
-                  return count > 0 ? (
+                >
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                    <Box
+                      sx={{
+                        color: rarityColors[achievement.rarity],
+                        '& > svg': { fontSize: '1.8rem' }
+                      }}
+                    >
+                      {achievement.icon}
+                    </Box>
+                    <Box sx={{ flex: 1 }}>
+                      <Typography
+                        variant="subtitle2"
+                        sx={{
+                          fontWeight: 600,
+                          color: theme.palette.text.primary
+                        }}
+                      >
+                        {achievement.name}
+                      </Typography>
+                      <Typography
+                        variant="caption"
+                        sx={{
+                          color: theme.palette.text.secondary,
+                          display: 'block'
+                        }}
+                      >
+                        {achievement.description}
+                      </Typography>
+                    </Box>
                     <Chip
-                      key={rarity}
-                      label={`${rarity}: ${count}`}
+                      label={achievement.rarity}
                       size="small"
                       sx={{
-                        background: alpha(color, 0.2),
-                        color: color,
-                        border: `1px solid ${alpha(color, 0.3)}`
+                        backgroundColor: alpha(rarityColors[achievement.rarity], 0.2),
+                        color: rarityColors[achievement.rarity],
+                        fontSize: '0.7rem',
+                        height: 20,
+                        fontWeight: 600,
+                        textTransform: 'capitalize'
                       }}
                     />
-                  ) : null;
-                })}
-              </Stack>
-            </Box>
-          </Collapse>
+                  </Box>
+                </Card>
+              ))}
+            </Stack>
+          ) : (
+            <Paper
+              elevation={0}
+              sx={{
+                p: 3,
+                textAlign: 'center',
+                backgroundColor: alpha(theme.palette.text.secondary, 0.05),
+                border: `1px dashed ${theme.palette.divider}`,
+                borderRadius: 2,
+              }}
+            >
+              <Typography variant="body2" sx={{ color: theme.palette.text.secondary }}>
+                Aún no tienes logros desbloqueados
+              </Typography>
+            </Paper>
+          )}
         </Box>
-
-        {/* Cosmic Energy Visualization */}
-        {!compact && (
-          <Box>
-            <Typography variant="h6" fontWeight="bold" gutterBottom>
-              🌌 Alineación Energética
-            </Typography>
-            
-            <Grid container spacing={2}>
-              <Grid item xs={12} md={6}>
-                <Box
-                  sx={{
-                    p: 2,
-                    border: `2px solid ${alpha(etherConfig.color, 0.3)}`,
-                    borderRadius: 2,
-                    background: `linear-gradient(135deg, ${alpha(etherConfig.color, 0.05)}, ${alpha(etherConfig.color, 0.1)})`,
-                    textAlign: 'center'
-                  }}
-                >
-                  <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
-                    Estado Vibracional
-                  </Typography>
-                  <Box display="flex" justifyContent="center" alignItems="center" gap={1} mb={1}>
-                    {etherConfig.icon}
-                    <Typography variant="h4" fontWeight="bold" sx={{ color: etherConfig.color }}>
-                      {user.etherEnergy}
-                    </Typography>
-                  </Box>
-                  <Typography variant="caption" color="text.secondary">
-                    Consciencia expandida en dimensiones superiores
-                  </Typography>
-                </Box>
-              </Grid>
-
-              <Grid item xs={12} md={6}>
-                <Box
-                  sx={{
-                    p: 2,
-                    border: `2px solid ${alpha('#FFD700', 0.3)}`,
-                    borderRadius: 2,
-                    background: `linear-gradient(135deg, ${alpha('#FFD700', 0.05)}, ${alpha('#FFD700', 0.1)})`,
-                    textAlign: 'center'
-                  }}
-                >
-                  <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
-                    Racha Actual
-                  </Typography>
-                  <Box display="flex" justifyContent="center" alignItems="center" gap={1} mb={1}>
-                    <TrendingUpOutlined sx={{ color: '#FFD700' }} />
-                    <Typography variant="h4" fontWeight="bold" sx={{ color: '#FFD700' }}>
-                      {user.currentStreak}
-                    </Typography>
-                    <Typography variant="h6" color="text.secondary">🔥</Typography>
-                  </Box>
-                  <Typography variant="caption" color="text.secondary">
-                    Días consecutivos de contribución al Bien Común
-                  </Typography>
-                </Box>
-              </Grid>
-            </Grid>
-          </Box>
-        )}
-
-        {/* Floating Cosmic Action Button */}
-        <Fab
-          sx={{
-            position: 'absolute',
-            bottom: 16,
-            right: 16,
-            background: etherConfig.gradient,
-            color: 'white',
-            '&:hover': {
-              background: etherConfig.gradient,
-              transform: 'scale(1.1)',
-              boxShadow: `0 8px 30px ${alpha(etherConfig.color, 0.4)}`
-            }
-          }}
-          size="medium"
-        >
-          <AutoAwesome />
-        </Fab>
-
-        {/* Custom CSS animations in sx */}
-        <Box 
-          sx={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            width: '100%',
-            height: '100%',
-            pointerEvents: 'none',
-            '& @keyframes etherealPulse': {
-              '0%, 100%': { opacity: 0.3, transform: 'scale(1)' },
-              '50%': { opacity: 0.6, transform: 'scale(1.05)' }
-            },
-            '& @keyframes cosmicFlow': {
-              '0%, 100%': { filter: 'brightness(1)' },
-              '50%': { filter: 'brightness(1.2) hue-rotate(30deg)' }
-            },
-            '& @keyframes etherealGlow': {
-              '0%, 100%': { opacity: 0.15 },
-              '50%': { opacity: 0.25 }
-            }
-          }}
-        />
-      </Box>
-    </RevolutionaryWidget>
+      </Collapse>
+    </Paper>
   );
 };
 
-export default CosmicProfileWidget;
+export default MinimalistProfileWidget;

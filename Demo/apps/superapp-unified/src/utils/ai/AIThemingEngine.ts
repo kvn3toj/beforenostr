@@ -598,7 +598,7 @@ export class AIThemingEngine {
           userId: this.userId,
           themeId: feedback.themeId,
           learningData: learningPoint,
-          feedback: feedback,
+          feedback,
           timestamp: Date.now()
         });
 

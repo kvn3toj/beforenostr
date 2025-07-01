@@ -137,7 +137,7 @@ Especialízate en:
 - Interfaces que transmitan serenidad y propósito
 - Accesibilidad como acto de compasión
 
-Contexto: Necesito crear un componente que muestre las métricas de Ayni, Bien Común y Metanöia de manera visualmente atractiva y funcional.
+Contexto: Necesito crear un componente que muestre las métricas de Reciprocidad, Bien Común y Metanöia de manera visualmente atractiva y funcional.
 ```
 
 ### **Ejemplo 2: Implementar API Backend**
@@ -169,7 +169,7 @@ Convoco al concilio de Guardianes para un proyecto que requiere múltiples espec
 
 Proyecto: Sistema completo de métricas de consciencia con dashboard interactivo
 Objetivos: 
-- Backend API con métricas de Ayni, Bien Común, Metanöia
+- Backend API con métricas de Reciprocidad, Bien Común, Metanöia
 - Frontend con visualizaciones atractivas
 - Testing E2E completo del flujo
 
@@ -246,7 +246,7 @@ El script está en `scripts/invoke-guardian.sh` y puedes:
 
 ### **2. Incluye Filosofía:**
 - Menciona cómo tu tarea se relaciona con principios CoomÜnity
-- Considera el impacto en Ayni, Bien Común, etc.
+- Considera el impacto en Reciprocidad, Bien Común, etc.
 - Busca soluciones que promuevan cooperación
 
 ### **3. Combina Guardianes:**
@@ -350,7 +350,7 @@ export class ConsciousnessController {
     const metrics = await this.consciousnessService.calculateMetrics(userId);
     
     return {
-      ayniBalance: metrics.ayni,
+      reciprocidadBalance: metrics.reciprocidad,
       bienComun: metrics.bienComun,
       metanoia: metrics.metanoia,
       // ... más métricas

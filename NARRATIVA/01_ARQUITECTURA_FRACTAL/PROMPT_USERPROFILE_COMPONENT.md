@@ -8,7 +8,7 @@
 ### **1. 📜 Filosofía del Componente: El Reflejo del Ser**
 
 - **Identidad en Evolución:** El perfil no es estático; es un lienzo que evoluciona a medida que el Jugador crece. Debe mostrar su progreso, sus logros y su historia.
-- **Celebración de la Contribución:** Las métricas clave (Lükas, Öndas, Mëritos) no son solo números, son la manifestación visible del valor que el Jugador ha aportado. La interfaz debe celebrarlas y darles un lugar de honor.
+- **Celebración de la Contribución:** Las métricas clave (Ünits, Öndas, Mëritos) no son solo números, son la manifestación visible del valor que el Jugador ha aportado. La interfaz debe celebrarlas y darles un lugar de honor.
 - **Conexión Auténtica:** El perfil es una invitación a la conexión. Debe permitir a los Jugadores mostrar quiénes son de una manera auténtica, fomentando la confianza y la colaboración.
 
 ### **2. 🏗️ Arquitectura y Ubicación del Componente**
@@ -25,7 +25,7 @@
     └── features/
         └── profile/
             ├── UserProfileCard.tsx      # El componente principal con la info del usuario
-            ├── UserStats.tsx            # Componente visual para Lükas, Öndas, etc.
+            ├── UserStats.tsx            # Componente visual para Ünits, Öndas, etc.
             ├── AchievementsList.tsx     # Lista/Galería de logros
             ├── ActivityFeed.tsx         # Feed de actividad reciente
             └── EditProfileModal.tsx     # Modal con formulario para editar
@@ -59,7 +59,7 @@
         -   Si es el perfil de otro: "Añadir Conexión", "Enviar Mensaje".
         -   Si es el perfil propio: "Editar Perfil". Este botón abrirá el `EditProfileModal`.
 2.  **`UserStats.tsx`:**
-    -   Un componente visualmente atractivo que muestra **Lükas (moneda), Öndas (energía) y Mëritos (reputación)**.
+    -   Un componente visualmente atractivo que muestra **Ünits (moneda), Öndas (energía) y Mëritos (reputación)**.
     -   Puedes usar `Paper` o `Card` de MUI como base y Tailwind para el styling interno de cada stat (ícono + valor + nombre).
 3.  **Sistema de Pestañas (MUI `Tabs`):**
     -   Usa el componente `Tabs` de MUI para organizar el contenido secundario.

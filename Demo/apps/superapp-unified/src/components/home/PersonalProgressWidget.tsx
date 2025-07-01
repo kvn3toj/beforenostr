@@ -13,7 +13,8 @@ import Divider from '@mui/material/Divider';
 import { useTheme, alpha } from '@mui/material';
 
 // 🌌 COSMIC DESIGN SYSTEM IMPORTS - ARIA (Frontend Artist)
-import { RevolutionaryWidget } from '../../design-system';
+import { CosmicCard } from '../../design-system';
+import { UNIFIED_COLORS } from '../../theme/colors';
 
 // 🎯 REGLA #1: IMPORTS ESPECÍFICOS DE ICONOS
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
@@ -63,437 +64,334 @@ export const PersonalProgressWidget: React.FC<PersonalProgressWidgetProps> = ({
 }) => {
   const theme = useTheme();
   const [expanded, setExpanded] = useState(false);
-  const [selectedPeriod, setSelectedPeriod] = useState<
-    'daily' | 'weekly' | 'monthly'
-  >('daily');
+  const [selectedCategory, setSelectedCategory] = useState<string>('daily');
 
-  // 🎯 Calcular progreso hacia siguiente nivel
-  const levelProgress = useMemo(() => {
-    return Math.min(100, (currentXP / nextLevelXP) * 100);
-  }, [currentXP, nextLevelXP]);
+  // Calculamos el progreso hacia el próximo nivel
+  const levelProgress = useMemo(() =>
+    Math.min((currentXP / nextLevelXP) * 100, 100),
+    [currentXP, nextLevelXP]
+  );
 
-  // 🎯 Filtrar achievements por período seleccionado
-  const filteredAchievements = useMemo(() => {
-    return achievements.filter(
-      (achievement) => achievement.category === selectedPeriod
-    );
-  }, [achievements, selectedPeriod]);
-
-  // 🎯 Calcular estadísticas de achievements
+  // Estadísticas de logros por categoría
   const achievementStats = useMemo(() => {
-    const completed = filteredAchievements.filter((a) => a.isCompleted).length;
-    const total = filteredAchievements.length;
-    const percentage = total > 0 ? (completed / total) * 100 : 0;
+    const categories = ['daily', 'weekly', 'monthly', 'special'];
+    const stats: Record<string, { completed: number; total: number; progress: number }> = {};
 
-    return { completed, total, percentage };
-  }, [filteredAchievements]);
+    categories.forEach(category => {
+      const categoryAchievements = achievements.filter(a => a.category === category);
+      const completed = categoryAchievements.filter(a => a.isCompleted).length;
+      const total = categoryAchievements.length;
+      const progress = total > 0 ? (completed / total) * 100 : 0;
 
-  // 🎯 Datos de progreso por período
-  const progressData = useMemo(() => {
-    switch (selectedPeriod) {
-      case 'daily':
-        return {
-          current: dailyGoals,
-          target: 5,
-          label: 'Objetivos Diarios',
-          icon: <TodayIcon />,
-          color: '#FF6B35',
-        };
-      case 'weekly':
-        return {
-          current: weeklyGoals,
-          target: 15,
-          label: 'Objetivos Semanales',
-          icon: <CalendarMonthIcon />,
-          color: '#4FC3F7',
-        };
-      case 'monthly':
-        return {
-          current: monthlyGoals,
-          target: 50,
-          label: 'Objetivos Mensuales',
-          icon: <CalendarMonthIcon />,
-          color: '#8BC34A',
-        };
-    }
-  }, [selectedPeriod, dailyGoals, weeklyGoals, monthlyGoals]);
+      stats[category] = { completed, total, progress };
+    });
 
-  // 🧹 CLEANUP OBLIGATORIO según Builder.io
-  useEffect(() => {
-    return () => {
-      // Cleanup widget resources
-    };
-  }, []);
+    return stats;
+  }, [achievements]);
 
-  // 🎯 Handlers
-  const handleExpandToggle = useCallback(() => {
-    setExpanded((prev) => !prev);
-  }, []);
-
-  const handlePeriodChange = useCallback(
-    (period: 'daily' | 'weekly' | 'monthly') => {
-      setSelectedPeriod(period);
+  // Configuración de categorías con elementos cósmicos
+  const categoryConfig = {
+    daily: {
+      label: 'Diarios',
+      icon: <TodayIcon />,
+      color: UNIFIED_COLORS.elements.fuego.primary,
+      element: 'fuego' as const,
+      goals: dailyGoals,
     },
-    []
-  );
+    weekly: {
+      label: 'Semanales',
+      icon: <CalendarMonthIcon />,
+      color: UNIFIED_COLORS.elements.agua.primary,
+      element: 'agua' as const,
+      goals: weeklyGoals,
+    },
+    monthly: {
+      label: 'Mensuales',
+      icon: <EmojiEventsIcon />,
+      color: UNIFIED_COLORS.elements.tierra.primary,
+      element: 'tierra' as const,
+      goals: monthlyGoals,
+    },
+    special: {
+      label: 'Especiales',
+      icon: <WorkspacePremiumIcon />,
+      color: UNIFIED_COLORS.elements.eter.primary,
+      element: 'espiritu' as const,
+      goals: 0,
+    },
+  };
 
-  // 🎨 Renderizar nivel y progreso principal
-  const renderLevelProgress = () => (
-    <Box sx={{ mb: 3 }}>
-      <Box
-        sx={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          mb: 2,
-        }}
-      >
-        <Box>
-          <Typography variant="h6" sx={{ color: 'white', fontWeight: 'bold' }}>
-            {userLevel}
-          </Typography>
-          <Typography variant="body2" sx={{ color: alpha('#fff', 0.7) }}>
-            Nivel Actual
-          </Typography>
-        </Box>
-        <Box sx={{ textAlign: 'right' }}>
-          <Typography
-            variant="h6"
-            sx={{ color: '#8BC34A', fontWeight: 'bold' }}
-          >
-            {currentXP.toLocaleString()} XP
-          </Typography>
-          <Typography variant="caption" sx={{ color: alpha('#fff', 0.7) }}>
-            {(nextLevelXP - currentXP).toLocaleString()} para siguiente nivel
-          </Typography>
-        </Box>
-      </Box>
-
-      <LinearProgress
-        variant="determinate"
-        value={levelProgress}
-        sx={{
-          height: 12,
-          borderRadius: 6,
-          bgcolor: alpha('#fff', 0.1),
-          '& .MuiLinearProgress-bar': {
-            borderRadius: 6,
-            background: 'linear-gradient(90deg, #8BC34A 0%, #4FC3F7 100%)',
-          },
-        }}
-      />
-
-      <Typography
-        variant="caption"
-        sx={{
-          color: alpha('#fff', 0.8),
-          mt: 1,
-          display: 'block',
-          textAlign: 'center',
-        }}
-      >
-        {Math.round(levelProgress)}% progreso hacia siguiente nivel
-      </Typography>
-    </Box>
-  );
-
-  // 🎯 Renderizar selector de período
-  const renderPeriodSelector = () => (
-    <Box sx={{ display: 'flex', gap: 1, mb: 3 }}>
-      {[
-        { key: 'daily' as const, label: 'Hoy', icon: <TodayIcon /> },
-        {
-          key: 'weekly' as const,
-          label: 'Semana',
-          icon: <CalendarMonthIcon />,
-        },
-        { key: 'monthly' as const, label: 'Mes', icon: <CalendarMonthIcon /> },
-      ].map((period) => (
-        <Chip
-          key={period.key}
-          icon={period.icon}
-          label={period.label}
-          onClick={() => handlePeriodChange(period.key)}
-          sx={{
-            bgcolor:
-              selectedPeriod === period.key
-                ? alpha(progressData.color, 0.3)
-                : alpha('#fff', 0.1),
-            color:
-              selectedPeriod === period.key
-                ? progressData.color
-                : alpha('#fff', 0.8),
-            border:
-              selectedPeriod === period.key
-                ? `1px solid ${progressData.color}`
-                : `1px solid ${alpha('#fff', 0.2)}`,
-            '&:hover': {
-              bgcolor: alpha(progressData.color, 0.2),
-            },
-          }}
-        />
-      ))}
-    </Box>
-  );
-
-  // 📊 Renderizar progreso de objetivos
-  const renderGoalsProgress = () => (
-    <Box sx={{ mb: 3 }}>
-      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-        <Box sx={{ color: progressData.color }}>{progressData.icon}</Box>
-        <Typography
-          variant="subtitle1"
-          sx={{ color: 'white', fontWeight: 'bold' }}
+  // Renderizar estadísticas principales
+  const renderMainStats = () => (
+    <Grid container spacing={2} sx={{ marginBottom: 3 }}>
+      <Grid item xs={12}>
+        {/* Progreso de Nivel Cósmico */}
+        <CosmicCard
+          variant="elevated"
+          element="espiritu"
+          cosmicIntensity="subtle"
+          enableGlow
+          enableAnimations
+          sx={{ padding: 2, marginBottom: 2 }}
         >
-          {progressData.label}
-        </Typography>
-      </Box>
-
-      <Box
-        sx={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          mb: 1,
-        }}
-      >
-        <Typography
-          variant="h4"
-          sx={{ color: progressData.color, fontWeight: 'bold' }}
-        >
-          {progressData.current}
-        </Typography>
-        <Typography variant="body2" sx={{ color: alpha('#fff', 0.7) }}>
-          de {progressData.target} objetivos
-        </Typography>
-      </Box>
-
-      <LinearProgress
-        variant="determinate"
-        value={(progressData.current / progressData.target) * 100}
-        sx={{
-          height: 8,
-          borderRadius: 4,
-          bgcolor: alpha('#fff', 0.1),
-          '& .MuiLinearProgress-bar': {
-            borderRadius: 4,
-            bgcolor: progressData.color,
-          },
-        }}
-      />
-    </Box>
-  );
-
-  // 🏆 Renderizar achievements
-  const renderAchievements = () => (
-    <Box>
-      <Box
-        sx={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          mb: 2,
-        }}
-      >
-        <Typography
-          variant="subtitle1"
-          sx={{ color: 'white', fontWeight: 'bold' }}
-        >
-          Logros{' '}
-          {selectedPeriod === 'daily'
-            ? 'Diarios'
-            : selectedPeriod === 'weekly'
-              ? 'Semanales'
-              : 'Mensuales'}
-        </Typography>
-        <Typography variant="caption" sx={{ color: alpha('#fff', 0.7) }}>
-          {achievementStats.completed}/{achievementStats.total} completados
-        </Typography>
-      </Box>
-
-      <Grid container spacing={2}>
-        {filteredAchievements
-          .slice(0, expanded ? filteredAchievements.length : 3)
-          .map((achievement) => (
-            <Grid item xs={12} key={achievement.id}>
-              <Tooltip
-                title={
-                  <Box>
-                    <Typography variant="subtitle2">
-                      {achievement.title}
-                    </Typography>
-                    <Typography variant="caption">
-                      {achievement.description}
-                    </Typography>
-                    <Typography
-                      variant="caption"
-                      sx={{ display: 'block', mt: 1, fontWeight: 'bold' }}
-                    >
-                      🎁 Recompensa: {achievement.reward}
-                    </Typography>
-                  </Box>
-                }
-                arrow
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, marginBottom: 2 }}>
+            <Avatar
+              sx={{
+                width: 50,
+                height: 50,
+                background: `linear-gradient(135deg, ${UNIFIED_COLORS.elements.eter.primary} 0%, ${UNIFIED_COLORS.elements.eter.dark} 100%)`,
+                color: 'white',
+                fontWeight: 'bold',
+                fontSize: '1.1rem',
+              }}
+            >
+              {userLevel}
+            </Avatar>
+            <Box sx={{ flex: 1 }}>
+              <Typography
+                variant="h6"
+                sx={{
+                  fontWeight: 700,
+                  background: `linear-gradient(135deg, ${UNIFIED_COLORS.elements.eter.primary} 0%, ${UNIFIED_COLORS.elements.agua.primary} 100%)`,
+                  backgroundClip: 'text',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                }}
               >
-                <Box
+                Nivel {userLevel}
+              </Typography>
+              <Typography variant="body2" sx={{ color: alpha('#000', 0.7) }}>
+                {currentXP.toLocaleString()} / {nextLevelXP.toLocaleString()} XP
+              </Typography>
+            </Box>
+            <Chip
+              icon={<TrendingUpIcon />}
+              label={`${levelProgress.toFixed(0)}%`}
+              sx={{
+                background: `linear-gradient(135deg, ${UNIFIED_COLORS.elements.eter.primary} 0%, ${UNIFIED_COLORS.elements.eter.dark} 100%)`,
+                color: 'white',
+                fontWeight: 600,
+              }}
+            />
+          </Box>
+
+          <LinearProgress
+            variant="determinate"
+            value={levelProgress}
+            sx={{
+              height: 8,
+              borderRadius: 4,
+              bgcolor: alpha(UNIFIED_COLORS.elements.eter.primary, 0.2),
+              '& .MuiLinearProgress-bar': {
+                borderRadius: 4,
+                background: `linear-gradient(90deg, ${UNIFIED_COLORS.elements.eter.primary} 0%, ${UNIFIED_COLORS.elements.fuego.primary} 100%)`,
+              },
+            }}
+          />
+        </CosmicCard>
+      </Grid>
+
+      {/* Estadísticas de categorías */}
+      {Object.entries(categoryConfig).map(([key, config]) => {
+        const stats = achievementStats[key];
+        return (
+          <Grid item xs={6} sm={3} key={key}>
+            <CosmicCard
+              variant="elevated"
+              element={config.element}
+              cosmicIntensity="subtle"
+              enableGlow
+              sx={{
+                padding: 1.5,
+                textAlign: 'center',
+                cursor: 'pointer',
+                border: selectedCategory === key ? `2px solid ${config.color}` : 'none',
+                transform: selectedCategory === key ? 'scale(1.05)' : 'scale(1)',
+                transition: 'all 0.3s ease',
+              }}
+              onClick={() => setSelectedCategory(key)}
+            >
+              <Avatar
+                sx={{
+                  width: 32,
+                  height: 32,
+                  margin: '0 auto',
+                  marginBottom: 1,
+                  background: `linear-gradient(135deg, ${config.color} 0%, ${alpha(config.color, 0.8)} 100%)`,
+                  color: 'white',
+                }}
+              >
+                {config.icon}
+              </Avatar>
+              <Typography
+                variant="h6"
+                sx={{
+                  fontWeight: 700,
+                  color: config.color,
+                  fontSize: '1rem',
+                }}
+              >
+                {stats.completed}/{stats.total}
+              </Typography>
+              <Typography
+                variant="caption"
+                sx={{
+                  color: alpha('#000', 0.7),
+                  fontSize: '0.75rem',
+                }}
+              >
+                {config.label}
+              </Typography>
+            </CosmicCard>
+          </Grid>
+        );
+      })}
+    </Grid>
+  );
+
+  // Renderizar logros por categoría
+  const renderAchievements = () => {
+    const filteredAchievements = achievements.filter(
+      achievement => achievement.category === selectedCategory
+    );
+
+    if (filteredAchievements.length === 0) {
+      return (
+        <CosmicCard
+          variant="elevated"
+          element="aire"
+          cosmicIntensity="subtle"
+          sx={{ padding: 3, textAlign: 'center' }}
+        >
+          <Typography sx={{ color: alpha('#000', 0.6) }}>
+            No hay logros en esta categoría aún
+          </Typography>
+        </CosmicCard>
+      );
+    }
+
+    return (
+      <Grid container spacing={2}>
+        {filteredAchievements.map((achievement) => (
+          <Grid item xs={12} key={achievement.id}>
+            <CosmicCard
+              variant="elevated"
+              element={categoryConfig[achievement.category].element}
+              cosmicIntensity="subtle"
+              enableGlow={achievement.isCompleted}
+              sx={{
+                padding: 2,
+                opacity: achievement.isCompleted ? 1 : 0.8,
+                border: achievement.isCompleted ? `1px solid ${achievement.color}` : 'none',
+              }}
+            >
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                <Avatar
                   sx={{
-                    p: 2,
-                    borderRadius: 2,
-                    background: achievement.isCompleted
-                      ? `linear-gradient(135deg, ${alpha(achievement.color, 0.2)} 0%, ${alpha(achievement.color, 0.1)} 100%)`
-                      : alpha('#fff', 0.05),
-                    border: `1px solid ${
-                      achievement.isCompleted
-                        ? alpha(achievement.color, 0.4)
-                        : alpha('#fff', 0.1)
-                    }`,
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: 2,
-                    cursor: 'pointer',
-                    transition: 'all 0.3s ease',
-                    '&:hover': {
-                      background: achievement.isCompleted
-                        ? `linear-gradient(135deg, ${alpha(achievement.color, 0.3)} 0%, ${alpha(achievement.color, 0.15)} 100%)`
-                        : alpha('#fff', 0.1),
-                      transform: 'translateY(-2px)',
-                    },
+                    bgcolor: achievement.isCompleted
+                      ? achievement.color
+                      : alpha(achievement.color, 0.3),
+                    color: achievement.isCompleted ? 'white' : alpha('#000', 0.6),
+                    width: 40,
+                    height: 40,
                   }}
                 >
-                  <Avatar
+                  {achievement.icon}
+                </Avatar>
+
+                <Box sx={{ flex: 1 }}>
+                  <Typography
+                    variant="subtitle2"
                     sx={{
-                      bgcolor: achievement.isCompleted
-                        ? achievement.color
-                        : alpha('#fff', 0.1),
-                      color: achievement.isCompleted
-                        ? 'white'
-                        : alpha('#fff', 0.6),
-                      width: 40,
-                      height: 40,
+                      color: achievement.isCompleted ? achievement.color : alpha('#000', 0.8),
+                      fontWeight: 'bold',
+                      opacity: achievement.isCompleted ? 1 : 0.8,
                     }}
                   >
-                    {achievement.icon}
-                  </Avatar>
+                    {achievement.title}
+                  </Typography>
 
-                  <Box sx={{ flex: 1 }}>
-                    <Typography
-                      variant="subtitle2"
-                      sx={{
-                        color: 'white',
-                        fontWeight: 'bold',
-                        opacity: achievement.isCompleted ? 1 : 0.8,
-                      }}
-                    >
-                      {achievement.title}
-                    </Typography>
-
-                    <LinearProgress
-                      variant="determinate"
-                      value={
-                        (achievement.progress / achievement.maxProgress) * 100
-                      }
-                      sx={{
-                        height: 4,
+                  <LinearProgress
+                    variant="determinate"
+                    value={(achievement.progress / achievement.maxProgress) * 100}
+                    sx={{
+                      height: 4,
+                      borderRadius: 2,
+                      bgcolor: alpha(achievement.color, 0.2),
+                      marginTop: 1,
+                      '& .MuiLinearProgress-bar': {
                         borderRadius: 2,
-                        bgcolor: alpha('#fff', 0.1),
-                        mt: 1,
-                        '& .MuiLinearProgress-bar': {
-                          borderRadius: 2,
-                          bgcolor: achievement.color,
-                        },
-                      }}
-                    />
+                        bgcolor: achievement.color,
+                      },
+                    }}
+                  />
 
-                    <Typography
-                      variant="caption"
-                      sx={{
-                        color: alpha('#fff', 0.7),
-                        mt: 0.5,
-                        display: 'block',
-                      }}
-                    >
-                      {achievement.progress}/{achievement.maxProgress}
-                      {achievement.isCompleted && ' ✅ Completado'}
-                    </Typography>
-                  </Box>
-
-                  {achievement.isCompleted && (
-                    <Box sx={{ color: achievement.color }}>
-                      <WorkspacePremiumIcon />
-                    </Box>
-                  )}
+                  <Typography
+                    variant="caption"
+                    sx={{
+                      color: alpha('#000', 0.7),
+                      marginTop: 0.5,
+                      display: 'block',
+                    }}
+                  >
+                    {achievement.progress}/{achievement.maxProgress}
+                    {achievement.isCompleted && ' ✅ Completado'}
+                  </Typography>
                 </Box>
-              </Tooltip>
-            </Grid>
-          ))}
+
+                {achievement.isCompleted && (
+                  <Chip
+                    icon={<StarIcon />}
+                    label={achievement.reward}
+                    size="small"
+                    sx={{
+                      background: `linear-gradient(135deg, ${achievement.color} 0%, ${alpha(achievement.color, 0.8)} 100%)`,
+                      color: 'white',
+                      fontWeight: 600,
+                    }}
+                  />
+                )}
+              </Box>
+            </CosmicCard>
+          </Grid>
+        ))}
       </Grid>
-    </Box>
-  );
+    );
+  };
 
   return (
-    <RevolutionaryWidget
-      title="🚀 Progreso Personal"
-      subtitle="Tu evolución en CoomÜnity"
+    <CosmicCard
       variant="elevated"
-      element="fuego"
+      element="espiritu"
       cosmicIntensity="medium"
-      cosmicEffects={{
-        enableGlow: true,
-        enableAnimations: true,
-        enableParticles: true,
-        glowIntensity: 1.3,
-        particleConfig: {
-          count: 8,
-          size: 5,
-          color: '#FF6B35',
-          speed: 0.9,
-          opacity: 0.8,
-          blur: false
-        }
+      enableGlow
+      enableAnimations
+      sx={{
+        minHeight: '400px',
+        padding: 3,
       }}
-      interactionMode="hover"
       className={`personal-progress-widget ${className}`}
-      style={{ minHeight: '380px' }}
-      onRefresh={() => console.log('🔄 Refreshing progress...')}
-      onExpand={() => setExpanded(!expanded)}
     >
-      <Box
-        sx={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          mb: 3,
-        }}
-      >
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-          <Box
-            sx={{
-              p: 1.5,
-              borderRadius: 2,
-              background: 'linear-gradient(135deg, #8BC34A 0%, #4FC3F7 100%)',
-              color: 'white',
-              animation: 'pulse 2s ease-in-out infinite',
-            }}
-          >
-            <TrendingUpIcon />
-          </Box>
-          <Box>
-            <Typography
-              variant="h6"
-              sx={{ fontWeight: 'bold', color: 'white' }}
-            >
-              Progreso Personal
-            </Typography>
-            <Typography variant="body2" sx={{ color: alpha('#fff', 0.8) }}>
-              Tu evolución en CoomÜnity
-            </Typography>
-          </Box>
-        </Box>
+      {/* Header */}
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 3 }}>
+        <Typography
+          variant="h6"
+          sx={{
+            fontWeight: 700,
+            background: `linear-gradient(135deg, ${UNIFIED_COLORS.elements.eter.primary} 0%, ${UNIFIED_COLORS.elements.fuego.primary} 100%)`,
+            backgroundClip: 'text',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            fontSize: '1.3rem'
+          }}
+        >
+          🌟 Progreso Personal
+        </Typography>
 
         <IconButton
-          onClick={handleExpandToggle}
+          onClick={() => setExpanded(!expanded)}
           sx={{
-            color: theme.palette.primary.main,
+            color: UNIFIED_COLORS.elements.eter.primary,
             transform: expanded ? 'rotate(180deg)' : 'rotate(0deg)',
             transition: 'transform 0.3s ease',
           }}
@@ -502,44 +400,26 @@ export const PersonalProgressWidget: React.FC<PersonalProgressWidgetProps> = ({
         </IconButton>
       </Box>
 
-      {/* Progreso de nivel */}
-      {renderLevelProgress()}
+      {/* Estadísticas principales */}
+      {renderMainStats()}
 
-      <Divider sx={{ bgcolor: alpha('#fff', 0.1), my: 3 }} />
-
-      {/* Selector de período */}
-      {renderPeriodSelector()}
-
-      {/* Progreso de objetivos */}
-      {renderGoalsProgress()}
-
-      {/* Achievements expandibles */}
-      {expanded && (
-        <>
-          <Divider sx={{ bgcolor: alpha('#fff', 0.1), my: 3 }} />
-          {renderAchievements()}
-        </>
-      )}
-
-      {/* Estadísticas de logros compacta */}
-      {!expanded && (
-        <Box
+      {/* Selector de categorías */}
+      <Box sx={{ marginBottom: 3 }}>
+        <Typography
+          variant="subtitle1"
           sx={{
-            p: 2,
-            borderRadius: 2,
-            background: alpha(theme.palette.success.main, 0.1),
-            border: `1px solid ${alpha(theme.palette.success.main, 0.3)}`,
-            textAlign: 'center',
+            fontWeight: 600,
+            marginBottom: 2,
+            color: alpha('#000', 0.8)
           }}
         >
-          <Typography variant="caption" sx={{ color: alpha('#fff', 0.9) }}>
-            🏆 {achievementStats.completed} logros completados hoy
-            {achievementStats.percentage > 0 &&
-              ` (${Math.round(achievementStats.percentage)}%)`}
-          </Typography>
-        </Box>
-      )}
-    </RevolutionaryWidget>
+          Logros por Categoría
+        </Typography>
+      </Box>
+
+      {/* Logros filtrados */}
+      {renderAchievements()}
+    </CosmicCard>
   );
 };
 

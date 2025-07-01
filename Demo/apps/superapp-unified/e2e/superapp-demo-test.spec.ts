@@ -65,7 +65,7 @@ test.describe('SuperApp Demo - Comprehensive Testing Showcase', () => {
       console.log(`🔍 Found ${buttons.length} interactive elements`);
       
       let functionalButtons = 0;
-      let totalButtons = buttons.length;
+      const totalButtons = buttons.length;
       
       for (const button of buttons) {
         try {

@@ -31,6 +31,9 @@ import {
   preloadCriticalComponents,
 } from './utils/lazyComponents';
 
+// Dev Test Pages
+import MiroSyncPage from './pages/dev/MiroSyncPage';
+
 // Styles
 import './index.css';
 
@@ -167,6 +170,12 @@ const AppRoutes: React.FC = () => {
 
         {/* ✨ Discovery Tutorials */}
         <Route path="/tutorials" element={<LazyPages.DiscoveryTutorialsPage />} />
+
+        {/* 🎯 Customer Journey - Sistema de Gestión de Stages */}
+        <Route path="/customer-journey" element={<LazyPages.CustomerJourney />} />
+
+        {/* 🛠️ Dev Test Routes */}
+        <Route path="/dev/miro-test" element={<MiroSyncPage />} />
       </Route>
 
       {/* 404 */}

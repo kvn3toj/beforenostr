@@ -21,8 +21,8 @@
 #### **💰 Sistema Monetario Oficial:**
 ```typescript
 // ✅ Moneda oficial implementada
-currency: 'Lükas'
-price: 250 // en Lükas, no en COP o USD
+currency: 'Ünits'
+price: 250 // en Ünits, no en COP o USD
 ```
 
 #### **👥 Terminología Oficial:**
@@ -49,7 +49,7 @@ description: 'Como miembro CoomÜnity, obtén hasta 30% de descuento'
 
 #### **DESPUÉS (Implementación Alineada):**
 - ✅ **5 servicios específicos** de Emprendedores Confiables
-- ✅ **Moneda Lükas** con conversión aproximada a USD
+- ✅ **Moneda Ünits** con conversión aproximada a USD
 - ✅ **Sistema de Mëritos** comunicado claramente
 - ✅ **Descuentos 10%-50%** para miembros
 - ✅ **Acceso por invitación** explicado
@@ -63,7 +63,7 @@ description: 'Como miembro CoomÜnity, obtén hasta 30% de descuento'
 
 | Categoría | Elementos Validados | Estado | Puntuación |
 |-----------|-------------------|--------|------------|
-| **Conceptos Core** | Marketplace Gamificado, Mëritos, Lükas | ✅ | 95% |
+| **Conceptos Core** | Marketplace Gamificado, Mëritos, Ünits | ✅ | 95% |
 | **Terminología** | Emprendedores/Consumidores Confiables | ✅ | 100% |
 | **Filosofía** | Bien Común, Economía Colaborativa | ✅ | 90% |
 | **Funcionalidad** | Filtros, búsqueda, ratings | ✅ | 85% |
@@ -130,11 +130,11 @@ description: 'Como miembro CoomÜnity, obtén hasta 30% de descuento'
 
 | Servicio | Emprendedor | Precio | Categoría | Rating | Filosofía |
 |----------|-------------|--------|-----------|--------|-----------|
-| **Desarrollo Web Profesional** | Jhonatan Arias | 250 Lükas | Tecnología | 4.8⭐ | "30% descuento CoomÜnity" |
-| **Diseño UX/UI Premium** | Ana González | 180 Lükas | Diseño | 4.9⭐ | "Apoyo al talento local" |
-| **Marketing Digital Estratégico** | Carlos Mendez | 320 Lükas | Marketing | 4.7⭐ | "Ética y sostenible" |
-| **Curso Online Programación** | María Tech | 95 Lükas | Educación | 4.6⭐ | "Educación consciente" |
-| **Consultoría Empresarial** | Roberto Silva | 150 Lükas | Consultoría | 4.5⭐ | "Enfoque Bien Común" |
+| **Desarrollo Web Profesional** | Jhonatan Arias | 250 Ünits | Tecnología | 4.8⭐ | "30% descuento CoomÜnity" |
+| **Diseño UX/UI Premium** | Ana González | 180 Ünits | Diseño | 4.9⭐ | "Apoyo al talento local" |
+| **Marketing Digital Estratégico** | Carlos Mendez | 320 Ünits | Marketing | 4.7⭐ | "Ética y sostenible" |
+| **Curso Online Programación** | María Tech | 95 Ünits | Educación | 4.6⭐ | "Educación consciente" |
+| **Consultoría Empresarial** | Roberto Silva | 150 Ünits | Consultoría | 4.5⭐ | "Enfoque Bien Común" |
 
 ---
 
@@ -143,7 +143,7 @@ description: 'Como miembro CoomÜnity, obtén hasta 30% de descuento'
 ### **🎛️ Sistema de Filtros Avanzados:**
 - ✅ **Drawer lateral** con múltiples filtros
 - ✅ **Categorías temáticas** con colores
-- ✅ **Rango de precios** en Lükas (0-1000+)
+- ✅ **Rango de precios** en Ünits (0-1000+)
 - ✅ **Rating mínimo** (3+, 4+, 4.5+ estrellas)
 - ✅ **Tipos de entrega** (delivery, virtual, presencial)
 - ✅ **Ordenamiento** por relevancia, precio, rating, etc.
@@ -201,7 +201,7 @@ description: 'Como miembro CoomÜnity, obtén hasta 30% de descuento'
    ```
 
 3. **Integración Blockchain:**
-   - Lightning Network Bitcoin para Ünits/Lükas
+   - Lightning Network Bitcoin para Ünits/Ünits
    - Liquid Network para NFTs (Mëritos)
 
 ### **🔄 Aplicación del Modelo a Otros Módulos:**

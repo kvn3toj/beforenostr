@@ -74,7 +74,7 @@ export const MainModuleCards: React.FC = () => {
 
   return (
     <Box>
-      <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
+      <Typography variant="h6" sx={{ mb: 2, fontWeight: 600, color: theme.palette.text.primary }}>
         Módulos Principales
       </Typography>
       <Grid container spacing={2}>
@@ -86,7 +86,7 @@ export const MainModuleCards: React.FC = () => {
                 variant="outlined"
                 onClick={() => navigate(module.route)}
                 sx={{
-                  p: 2,
+                  p: 3,
                   height: '100%',
                   display: 'flex',
                   flexDirection: 'column',
@@ -94,33 +94,49 @@ export const MainModuleCards: React.FC = () => {
                   alignItems: 'center',
                   textAlign: 'center',
                   cursor: 'pointer',
-                  borderColor: '#e2e8f0',
-                  transition: 'transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out',
+                  backgroundColor: theme.palette.background.paper,
+                  borderColor: theme.palette.divider,
+                  borderRadius: theme.shape.borderRadius,
+                  transition: 'transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out, border-color 0.2s ease-in-out',
                   '&:hover': {
-                    transform: 'translateY(-4px)',
-                    boxShadow: `0 4px 20px ${alpha(module.color, 0.1)}`,
-                    borderColor: alpha(module.color, 0.5),
+                    transform: 'translateY(-2px)',
+                    boxShadow: `0 4px 16px ${alpha(module.color, 0.08)}`,
+                    borderColor: alpha(module.color, 0.3),
                   },
                 }}
               >
                 <Box
                   sx={{
-                    width: 56,
-                    height: 56,
+                    width: 48,
+                    height: 48,
                     borderRadius: '50%',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    mb: 1.5,
-                    backgroundColor: alpha(module.color, 0.1),
+                    mb: 2,
+                    backgroundColor: theme.palette.background.paper,
+                    border: `2px solid ${alpha(module.color, 0.2)}`,
                   }}
                 >
-                  <Icon sx={{ fontSize: 28, color: module.color }} />
+                  <Icon sx={{ fontSize: 24, color: module.color }} />
                 </Box>
-                <Typography variant="h6" sx={{ fontWeight: 600, color: 'text.primary' }}>
+                <Typography
+                  variant="h6"
+                  sx={{
+                    fontWeight: 600,
+                    color: theme.palette.text.primary,
+                    mb: 1,
+                  }}
+                >
                   {module.title}
                 </Typography>
-                <Typography variant="body2" color="text.secondary">
+                <Typography
+                  variant="body2"
+                  sx={{
+                    color: theme.palette.text.secondary,
+                    lineHeight: 1.4,
+                  }}
+                >
                   {module.description}
                 </Typography>
               </Paper>

@@ -13,7 +13,8 @@ import Divider from '@mui/material/Divider';
 import { useTheme, alpha } from '@mui/material';
 
 // 🌌 COSMIC DESIGN SYSTEM IMPORTS - ARIA (Frontend Artist)
-import { RevolutionaryWidget } from '../../design-system';
+import { CosmicCard } from '../../design-system';
+import { UNIFIED_COLORS } from '../../theme/colors';
 
 // 🎯 REGLA #1: IMPORTS ESPECÍFICOS DE ICONOS
 import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
@@ -418,7 +419,12 @@ export const LiveActivityFeed: React.FC<LiveActivityFeedProps> = ({
   };
 
   return (
-    <RevolutionaryWidget
+    <CosmicCard
+      variant="elevated"
+      element="aire"
+      cosmicIntensity="medium"
+      enableGlow
+      enableAnimations
       className={`glassmorphism-card interactive-card-advanced live-activity-feed ${className}`}
       sx={{
         background: `linear-gradient(135deg, ${alpha(theme.palette.background.paper, 0.9)} 0%, ${alpha(theme.palette.background.default, 0.8)} 100%)`,
@@ -431,9 +437,9 @@ export const LiveActivityFeed: React.FC<LiveActivityFeedProps> = ({
     >
       <Box
         sx={{
-          p: 3,
-          background: `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.1)} 0%, ${alpha(theme.palette.secondary.main, 0.1)} 100%)`,
-          borderBottom: `1px solid ${alpha('#fff', 0.1)}`,
+          padding: 3,
+          background: `linear-gradient(135deg, ${alpha(UNIFIED_COLORS.elements.aire.primary, 0.1)} 0%, ${alpha(UNIFIED_COLORS.elements.fuego.primary, 0.1)} 100%)`,
+          borderBottom: `1px solid ${alpha('#000', 0.1)}`,
         }}
       >
         <Box
@@ -450,7 +456,7 @@ export const LiveActivityFeed: React.FC<LiveActivityFeedProps> = ({
                   <FiberManualRecordIcon
                     sx={{
                       fontSize: '0.8rem',
-                      color: isLive ? '#4CAF50' : '#757575',
+                      color: isLive ? UNIFIED_COLORS.elements.tierra.primary : '#757575',
                       animation: isLive
                         ? 'pulse 1.5s ease-in-out infinite'
                         : 'none',
@@ -460,7 +466,13 @@ export const LiveActivityFeed: React.FC<LiveActivityFeedProps> = ({
               >
                 <Typography
                   variant="h6"
-                  sx={{ fontWeight: 'bold', color: 'white' }}
+                  sx={{
+                    fontWeight: 700,
+                    background: `linear-gradient(135deg, ${UNIFIED_COLORS.elements.aire.primary} 0%, ${UNIFIED_COLORS.elements.fuego.primary} 100%)`,
+                    backgroundClip: 'text',
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent',
+                  }}
                 >
                   Actividad Comunitaria
                 </Typography>
@@ -472,9 +484,9 @@ export const LiveActivityFeed: React.FC<LiveActivityFeedProps> = ({
               size="small"
               sx={{
                 bgcolor: isLive
-                  ? alpha('#4CAF50', 0.2)
+                  ? alpha(UNIFIED_COLORS.elements.tierra.primary, 0.2)
                   : alpha('#757575', 0.2),
-                color: isLive ? '#4CAF50' : '#757575',
+                color: isLive ? UNIFIED_COLORS.elements.tierra.primary : '#757575',
                 fontWeight: 'bold',
                 fontSize: '0.7rem',
                 animation: isLive ? 'pulse 2s ease-in-out infinite' : 'none',
@@ -487,8 +499,8 @@ export const LiveActivityFeed: React.FC<LiveActivityFeedProps> = ({
               <AutoAwesomeIcon
                 sx={{
                   color: isLive
-                    ? theme.palette.primary.main
-                    : alpha('#fff', 0.5),
+                    ? UNIFIED_COLORS.elements.aire.primary
+                    : alpha('#000', 0.5),
                   fontSize: '1.2rem',
                 }}
               />
@@ -498,7 +510,7 @@ export const LiveActivityFeed: React.FC<LiveActivityFeedProps> = ({
 
         <Typography
           variant="caption"
-          sx={{ color: alpha('#fff', 0.7), mt: 1, display: 'block' }}
+          sx={{ color: alpha('#000', 0.7), marginTop: 1, display: 'block' }}
         >
           Última actualización: {lastUpdate.toLocaleTimeString()}
         </Typography>
@@ -512,10 +524,10 @@ export const LiveActivityFeed: React.FC<LiveActivityFeedProps> = ({
             width: 6,
           },
           '&::-webkit-scrollbar-track': {
-            background: alpha('#fff', 0.1),
+            background: alpha('#000', 0.1),
           },
           '&::-webkit-scrollbar-thumb': {
-            background: alpha('#fff', 0.3),
+            background: alpha(UNIFIED_COLORS.elements.aire.primary, 0.3),
             borderRadius: 3,
           },
         }}
@@ -537,7 +549,7 @@ export const LiveActivityFeed: React.FC<LiveActivityFeedProps> = ({
                     : 'none',
                   transition: 'all 0.3s ease',
                   '&:hover': {
-                    background: alpha('#fff', 0.05),
+                    background: alpha('#000', 0.05),
                   },
                 }}
               >
@@ -601,19 +613,19 @@ export const LiveActivityFeed: React.FC<LiveActivityFeedProps> = ({
                         display: 'flex',
                         alignItems: 'flex-start',
                         justifyContent: 'space-between',
-                        mb: 1,
+                        marginBottom: 1,
                       }}
                     >
                       <Box>
                         <Typography
                           variant="subtitle2"
-                          sx={{ color: 'white', fontWeight: 'bold' }}
+                          sx={{ color: alpha('#000', 0.9), fontWeight: 'bold' }}
                         >
                           {activity.user.name}
                         </Typography>
                         <Typography
                           variant="caption"
-                          sx={{ color: alpha('#fff', 0.6) }}
+                          sx={{ color: alpha('#000', 0.6) }}
                         >
                           {activity.user.level}
                         </Typography>
@@ -621,7 +633,7 @@ export const LiveActivityFeed: React.FC<LiveActivityFeedProps> = ({
 
                       <Typography
                         variant="caption"
-                        sx={{ color: alpha('#fff', 0.5) }}
+                        sx={{ color: alpha('#000', 0.5) }}
                       >
                         {formatTimeAgo(activity.timestamp)}
                       </Typography>
@@ -629,24 +641,24 @@ export const LiveActivityFeed: React.FC<LiveActivityFeedProps> = ({
 
                     <Typography
                       variant="body2"
-                      sx={{ color: alpha('#fff', 0.9), mb: 2 }}
+                      sx={{ color: alpha('#000', 0.8), marginBottom: 2 }}
                     >
                       {activity.action}
                     </Typography>
 
                     {/* Reciprocidad Score Bar */}
-                    <Box sx={{ mb: 2 }}>
+                    <Box sx={{ marginBottom: 2 }}>
                       <Box
                         sx={{
                           display: 'flex',
                           justifyContent: 'space-between',
                           alignItems: 'center',
-                          mb: 0.5,
+                          marginBottom: 0.5,
                         }}
                       >
                         <Typography
                           variant="caption"
-                          sx={{ color: alpha('#fff', 0.7) }}
+                          sx={{ color: alpha('#000', 0.7) }}
                         >
                           Score Reciprocidad
                         </Typography>
@@ -663,7 +675,7 @@ export const LiveActivityFeed: React.FC<LiveActivityFeedProps> = ({
                         sx={{
                           height: 4,
                           borderRadius: 2,
-                          bgcolor: alpha('#fff', 0.1),
+                          bgcolor: alpha('#000', 0.1),
                           '& .MuiLinearProgress-bar': {
                             borderRadius: 2,
                             bgcolor: config.color,
@@ -680,10 +692,10 @@ export const LiveActivityFeed: React.FC<LiveActivityFeedProps> = ({
                         <IconButton
                           size="small"
                           onClick={() => handleLike(activity.id)}
-                          sx={{ color: alpha('#fff', 0.6) }}
+                          sx={{ color: alpha('#000', 0.6) }}
                         >
                           <FavoriteIcon sx={{ fontSize: '1rem' }} />
-                          <Typography variant="caption" sx={{ ml: 0.5 }}>
+                          <Typography variant="caption" sx={{ marginLeft: 0.5 }}>
                             {activity.engagement.likes}
                           </Typography>
                         </IconButton>
@@ -693,10 +705,10 @@ export const LiveActivityFeed: React.FC<LiveActivityFeedProps> = ({
                         <IconButton
                           size="small"
                           onClick={() => handleComment(activity.id)}
-                          sx={{ color: alpha('#fff', 0.6) }}
+                          sx={{ color: alpha('#000', 0.6) }}
                         >
                           <ChatBubbleIcon sx={{ fontSize: '1rem' }} />
-                          <Typography variant="caption" sx={{ ml: 0.5 }}>
+                          <Typography variant="caption" sx={{ marginLeft: 0.5 }}>
                             {activity.engagement.comments}
                           </Typography>
                         </IconButton>
@@ -706,10 +718,10 @@ export const LiveActivityFeed: React.FC<LiveActivityFeedProps> = ({
                         <IconButton
                           size="small"
                           onClick={() => handleShare(activity.id)}
-                          sx={{ color: alpha('#fff', 0.6) }}
+                          sx={{ color: alpha('#000', 0.6) }}
                         >
                           <ShareIcon sx={{ fontSize: '1rem' }} />
-                          <Typography variant="caption" sx={{ ml: 0.5 }}>
+                          <Typography variant="caption" sx={{ marginLeft: 0.5 }}>
                             {activity.engagement.shares}
                           </Typography>
                         </IconButton>
@@ -720,13 +732,13 @@ export const LiveActivityFeed: React.FC<LiveActivityFeedProps> = ({
               </Box>
 
               {index < activities.length - 1 && (
-                <Divider sx={{ bgcolor: alpha('#fff', 0.05) }} />
+                <Divider sx={{ bgcolor: alpha('#000', 0.05) }} />
               )}
             </Box>
           );
         })}
       </Box>
-    </RevolutionaryWidget>
+    </CosmicCard>
   );
 };
 

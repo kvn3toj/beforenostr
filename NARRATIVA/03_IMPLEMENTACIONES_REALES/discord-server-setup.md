@@ -45,7 +45,7 @@
 ```
 🎉 #logros-y-celebraciones  - Achievements de beta testers
 🏅 #ranking-beta-testers    - Leaderboard de contribuciones
-💰 #economia-lukas-meritos  - Discusión sobre tokenomics
+💰 #economia-units-meritos  - Discusión sobre tokenomics
 🤝 #colaboraciones          - Partnerships entre members
 ```
 

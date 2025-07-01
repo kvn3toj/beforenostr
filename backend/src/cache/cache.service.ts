@@ -31,11 +31,18 @@ export class CacheService implements OnModuleInit, OnModuleDestroy {
       this.useRedis = false;
     });
 
-    this.connect();
+    // Remover la llamada automática para evitar doble conexión
+    // La conexión se manejará en onModuleInit()
   }
 
   async connect() {
     try {
+      // Verificar si ya está conectado antes de intentar conectar
+      if (this.client?.isReady) {
+        this.logger.log('Redis already connected, skipping connection attempt', 'CacheService');
+        return;
+      }
+
       await this.client?.connect();
       this.logger.log('Connected to Redis', 'CacheService');
     } catch (err) {
@@ -47,6 +54,13 @@ export class CacheService implements OnModuleInit, OnModuleDestroy {
   async onModuleInit() {
     try {
       this.logger.log('Connecting to Redis...', 'CacheService');
+
+      // Verificar estado antes de conectar
+      if (this.client?.isReady) {
+        this.logger.log('Redis already connected', 'CacheService');
+        return;
+      }
+
       await this.client?.connect();
       this.logger.log('Redis connection established', 'CacheService');
     } catch (error) {
