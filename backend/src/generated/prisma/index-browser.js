@@ -414,7 +414,8 @@ exports.Prisma.TransactionScalarFieldEnum = {
   type: 'type',
   status: 'status',
   description: 'description',
-  createdAt: 'createdAt'
+  createdAt: 'createdAt',
+  metadata: 'metadata'
 };
 
 exports.Prisma.GroupScalarFieldEnum = {

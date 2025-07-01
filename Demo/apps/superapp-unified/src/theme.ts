@@ -121,12 +121,12 @@ const getDesignTokens = (mode: 'light' | 'dark'): ThemeOptions => ({
           fontWeight: 500,
           boxShadow: 'none',
           '&:hover': {
-            boxShadow: '0 2px 8px rgba(0, 0, 0, 0.15)',
+            boxShadow: 'none',
           },
         },
         contained: {
           '&:hover': {
-            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+            boxShadow: 'none',
           },
         },
       },
@@ -135,13 +135,11 @@ const getDesignTokens = (mode: 'light' | 'dark'): ThemeOptions => ({
       styleOverrides: {
         root: {
           borderRadius: 12,
-          boxShadow: mode === 'light' 
-            ? '0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06)'
-            : '0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.2)',
+          boxShadow: 'none',
+          border: `1px solid ${mode === 'light' ? '#E5E7EB' : '#374151'}`,
           '&:hover': {
-            boxShadow: mode === 'light'
-              ? '0 4px 6px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.06)'
-              : '0 4px 6px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.3)',
+            boxShadow: '0 2px 4px rgba(0, 0, 0, 0.05)',
+            borderColor: mode === 'light' ? '#CDAB5A' : '#E4C373',
           },
         },
       },
@@ -152,9 +150,8 @@ const getDesignTokens = (mode: 'light' | 'dark'): ThemeOptions => ({
           borderRadius: 8,
         },
         elevation1: {
-          boxShadow: mode === 'light'
-            ? '0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06)'
-            : '0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.2)',
+          boxShadow: 'none',
+          border: `1px solid ${mode === 'light' ? '#E5E7EB' : '#374151'}`,
         },
       },
     },
@@ -178,15 +175,16 @@ const getDesignTokens = (mode: 'light' | 'dark'): ThemeOptions => ({
     MuiAppBar: {
       styleOverrides: {
         root: {
-          boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
+          boxShadow: 'none',
+          borderBottom: `1px solid ${mode === 'light' ? '#E5E7EB' : '#374151'}`,
         },
       },
     },
     MuiDrawer: {
       styleOverrides: {
         paper: {
-          borderRight: 'none',
-          boxShadow: '2px 0 8px rgba(0, 0, 0, 0.1)',
+          boxShadow: 'none',
+          borderRight: `1px solid ${mode === 'light' ? '#E5E7EB' : '#374151'}`,
         },
       },
     },
@@ -224,4 +222,4 @@ const getDesignTokens = (mode: 'light' | 'dark'): ThemeOptions => ({
 
 export const createAppTheme = (mode: 'light' | 'dark') => {
   return createTheme(getDesignTokens(mode));
-}; 
+};

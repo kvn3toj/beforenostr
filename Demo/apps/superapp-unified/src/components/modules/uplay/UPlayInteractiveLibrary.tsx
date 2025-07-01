@@ -92,20 +92,27 @@ export const UPlayInteractiveLibrary: React.FC = () => {
   // 🎯 Uso de useUPlayProgress para obtener progreso compartido
   const progress = useUPlayProgress();
 
+  // 🎯 Paso 1: Mapear los datos del backend al formato que espera el hook de corrección
+  const videosForDurationFix = useMemo(() => {
+    if (!backendVideos) return [];
+    return backendVideos.map((video: any) => ({
+      id: video.id,
+      title: video.title,
+      content: video.content || video.url,
+      duration: video.duration || 0,
+    }));
+  }, [backendVideos]);
+
+  // 🎯 Paso 2: Llamar al hook en el nivel superior del componente
+  const videosWithCorrectedDurations = useVideosWithCorrectDurations(videosForDurationFix);
+
   // 🎯 Adaptador Backend → Frontend mejorado
   const adaptBackendVideo = (backendVideo: any): VideoItem => {
-    // 🎯 Aplicar corrección de duración usando videoDurationFixer
-    const videoWithFixedDuration = {
-      id: backendVideo.id,
-      title: backendVideo.title,
-      content: backendVideo.content || backendVideo.url,
-      duration: backendVideo.duration || 0
-    };
+    // 🎯 Paso 3: Encontrar la duración corregida en lugar de llamar al hook aquí
+    const correctedVideo = videosWithCorrectedDurations.find(v => v.id === backendVideo.id);
+    const duration = correctedVideo ? correctedVideo.duration : (backendVideo.duration || 0);
 
-    const fixedVideo = useVideosWithCorrectDurations([videoWithFixedDuration])[0];
-    const duration = fixedVideo ? fixedVideo.duration : (backendVideo.duration || 0);
-
-        console.log(`[ÜPLAY LIBRARY DEBUG] Video "${backendVideo.title}": ${backendVideo.duration}s → ${duration}s (${fixedFormatDuration(duration)})`);
+    console.log(`[ÜPLAY LIBRARY DEBUG] Video "${backendVideo.title}": ${backendVideo.duration}s → ${duration}s (${fixedFormatDuration(duration)})`);
 
     const questionCount = backendVideo.questions?.length || 0;
 
@@ -172,9 +179,9 @@ export const UPlayInteractiveLibrary: React.FC = () => {
       return [];
     }
 
-    // Primero adaptar los videos y luego aplicar corrección de duraciones en el adaptador
+    // Usar el array con duraciones ya corregidas para el mapeo
     return backendVideos.map(adaptBackendVideo);
-  }, [backendVideos]);
+  }, [backendVideos, videosWithCorrectedDurations]);
 
   // 🎯 Categorías dinámicas
   const categories = useMemo(() => {
@@ -362,11 +369,7 @@ export const UPlayInteractiveLibrary: React.FC = () => {
             flexDirection: 'column',
             position: 'relative',
             overflow: 'hidden',
-            transform: hoveredVideo === video.id ? 'translateY(-8px) scale(1.02)' : 'translateY(0)',
-            transition: 'all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
-            '&:hover': {
-              boxShadow: '0 20px 40px rgba(0, 0, 0, 0.2)',
-            }
+            transition: 'all 0.3s ease-in-out',
           }}
         >
           {/* Thumbnail con overlay */}
@@ -378,7 +381,7 @@ export const UPlayInteractiveLibrary: React.FC = () => {
                 thumbnailUrl: video.thumbnailUrl,
                 externalId: video.externalId,
                 url: video.youtubeUrl,
-              })}
+              }) ?? '/placeholder-video.svg'}
               alt={video.title}
               data-testid="uplay-video-thumbnail"
               onError={(e) => {
@@ -396,7 +399,7 @@ export const UPlayInteractiveLibrary: React.FC = () => {
                 left: 0,
                 right: 0,
                 bottom: 0,
-                background: 'linear-gradient(135deg, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.7) 100%)',
+                background: 'linear-gradient(to top, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0) 60%)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -407,17 +410,17 @@ export const UPlayInteractiveLibrary: React.FC = () => {
               <IconButton
                 className="uplay-play-button"
                 sx={{
-                  background: 'rgba(255, 255, 255, 0.9)',
-                  color: '#6366f1',
-                  width: 60,
-                  height: 60,
+                  background: alpha(theme.palette.primary.main, 0.9),
+                  color: theme.palette.primary.contrastText,
+                  width: 50,
+                  height: 50,
                   '&:hover': {
-                    background: 'white',
+                    background: theme.palette.primary.main,
                     transform: 'scale(1.1)'
                   }
                 }}
               >
-                <PlayArrowIcon sx={{ fontSize: 32 }} />
+                <PlayArrowIcon sx={{ fontSize: 30 }} />
               </IconButton>
             </Box>
 
@@ -427,19 +430,12 @@ export const UPlayInteractiveLibrary: React.FC = () => {
                 label={video.difficulty}
                 size="small"
                 sx={{
-                  background: video.difficulty === 'Avanzado'
-                    ? 'linear-gradient(135deg, #6366f1, #7c3aed)'
-                    : video.difficulty === 'Intermedio'
-                    ? 'linear-gradient(135deg, #a78bfa, #6366f1)'
-                    : 'linear-gradient(135deg, #64748b, #a0aec0)',
+                  backgroundColor: alpha(theme.palette.secondary.dark, 0.8),
                   color: 'white',
                   fontWeight: 600,
                   fontSize: '0.7rem',
-                  minHeight: 36,
-                  minWidth: 48,
-                  px: 2,
                   borderRadius: 2,
-                  boxShadow: '0 2px 8px 0 rgba(99,102,241,0.12)'
+                  boxShadow: 'none',
                 }}
               />
             </Box>
@@ -449,12 +445,12 @@ export const UPlayInteractiveLibrary: React.FC = () => {
                 <IconButton
                   size="small"
                   sx={{
-                    background: alpha('#fbbf24', 0.9),
+                    background: alpha(theme.palette.warning.main, 0.9),
                     color: 'white',
                     width: 32,
                     height: 32,
                     '&:hover': {
-                      background: '#fbbf24'
+                      background: theme.palette.warning.main
                     }
                   }}
                 >
@@ -553,14 +549,14 @@ export const UPlayInteractiveLibrary: React.FC = () => {
                     {Math.round(video.progress)}%
                   </Typography>
                 </Box>
-                <Box className="uplay-progress-container" sx={{ height: 6 }}>
+                <Box className="uplay-progress-container" sx={{ height: 4, backgroundColor: theme.palette.divider, borderRadius: 2 }}>
                   <Box
                     className="uplay-progress-bar"
                     sx={{
                       width: `${video.progress}%`,
                       height: '100%',
-                      background: 'linear-gradient(90deg, #2563eb, #6c5ce7)',
-                      borderRadius: 3
+                      backgroundColor: theme.palette.primary.main,
+                      borderRadius: 2,
                     }}
                   />
                 </Box>
@@ -568,22 +564,17 @@ export const UPlayInteractiveLibrary: React.FC = () => {
             )}
 
             {/* Recompensas */}
-            <Box sx={{ display: 'flex', gap: 1, mb: 2 }}>
+            <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
               <Chip
                 icon={<DiamondIcon />}
                 label={`${video.rewards.meritos} Mëritos`}
                 size="small"
+                variant="outlined"
                 sx={{
-                  background: 'linear-gradient(135deg, #7c3aed, #6366f1)',
-                  color: 'white',
-                  fontSize: '0.7rem',
-                  minHeight: 36,
-                  minWidth: 48,
-                  px: 2,
-                  borderRadius: 2,
+                  borderColor: theme.palette.primary.light,
+                  color: theme.palette.primary.dark,
                   '& .MuiChip-icon': {
-                    color: 'white',
-                    fontSize: 14
+                    color: theme.palette.primary.main
                   }
                 }}
               />
@@ -591,17 +582,12 @@ export const UPlayInteractiveLibrary: React.FC = () => {
                 icon={<BoltIcon />}
                 label={`${video.rewards.ondas} Öndas`}
                 size="small"
+                variant="outlined"
                 sx={{
-                  background: 'linear-gradient(135deg, #bfae60, #a0aec0)',
-                  color: 'white',
-                  fontSize: '0.7rem',
-                  minHeight: 36,
-                  minWidth: 48,
-                  px: 2,
-                  borderRadius: 2,
+                  borderColor: theme.palette.secondary.light,
+                  color: theme.palette.secondary.dark,
                   '& .MuiChip-icon': {
-                    color: 'white',
-                    fontSize: 14
+                    color: theme.palette.secondary.main,
                   }
                 }}
               />

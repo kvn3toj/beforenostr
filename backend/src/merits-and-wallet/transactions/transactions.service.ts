@@ -7,6 +7,8 @@ import {
 import { PrismaService } from '../../prisma/prisma.service';
 import { WalletsService } from '../wallets/wallets.service';
 import { Transaction } from '../../generated/prisma';
+import { SendTransactionDto, TransactionCurrency } from './dto/send-transaction.dto';
+import { Merit } from '../../generated/prisma';
 
 // Define a basic type for the authenticated user passed from the controller
 type AuthenticatedUser = { id: string; roles: string[] /* other properties */ };
@@ -107,6 +109,79 @@ export class TransactionsService {
   async findAllTransactionsAdmin(): Promise<Transaction[]> {
     return this.prisma.transaction.findMany({
       orderBy: { createdAt: 'desc' },
+    });
+  }
+
+  /**
+   * Procesa una transacción de envío de Ünits o Mëritos entre jugadores.
+   * - Valida que el emisor tenga saldo suficiente (Reciprocidad Binaria).
+   * - Realiza la operación de forma atómica (ACID).
+   * - Registra metadata filosófica para trazabilidad y visualización sistémica.
+   *
+   * @param senderId ID del usuario que envía
+   * @param dto Datos de la transacción
+   */
+  async sendTransaction(senderId: string, dto: SendTransactionDto): Promise<Transaction> {
+    // 1. Validar que el destinatario existe y no es el mismo que el emisor
+    if (dto.recipientId === senderId) {
+      throw new ForbiddenException('No puedes enviarte Ünits o Mëritos a ti mismo.');
+    }
+    const recipient = await this.prisma.user.findUnique({ where: { id: dto.recipientId } });
+    if (!recipient) {
+      throw new NotFoundException('El destinatario no existe.');
+    }
+
+    // 2. Validar saldo suficiente según la moneda
+    const senderWallet = await this.prisma.wallet.findUnique({ where: { userId: senderId } });
+    if (!senderWallet) {
+      throw new NotFoundException('El emisor no tiene wallet.');
+    }
+    let senderBalance = 0;
+    let balanceField: 'balanceUnits' | 'balanceToins';
+    if (dto.currency === TransactionCurrency.UNITS) {
+      senderBalance = senderWallet.balanceUnits;
+      balanceField = 'balanceUnits';
+    } else {
+      senderBalance = senderWallet.balanceToins;
+      balanceField = 'balanceToins';
+    }
+    if (senderBalance < dto.amount) {
+      // Ley de Reciprocidad Binaria: nunca permitir saldo negativo
+      throw new ForbiddenException('Saldo insuficiente para completar la transacción.');
+    }
+
+    // 3. Transacción atómica: deducir del emisor y acreditar al receptor
+    // Comentario filosófico: La atomicidad garantiza la Confianza y la armonía sistémica
+    return this.prisma.$transaction(async (prisma) => {
+      // Deducir saldo del emisor
+      await prisma.wallet.update({
+        where: { userId: senderId },
+        data: { [balanceField]: { decrement: dto.amount } },
+      });
+      // Acreditar saldo al receptor (crear wallet si no existe)
+      await prisma.wallet.upsert({
+        where: { userId: dto.recipientId },
+        update: { [balanceField]: { increment: dto.amount } },
+        create: {
+          userId: dto.recipientId,
+          balanceUnits: balanceField === 'balanceUnits' ? dto.amount : 0,
+          balanceToins: balanceField === 'balanceToins' ? dto.amount : 0,
+        },
+      });
+      // Registrar la transacción con metadata filosófica
+      const transaction = await prisma.transaction.create({
+        data: {
+          fromUserId: senderId,
+          toUserId: dto.recipientId,
+          amount: dto.amount,
+          tokenType: dto.currency,
+          type: 'TRANSFER',
+          status: 'COMPLETED',
+          description: dto.metadata?.purpose || 'Transferencia de valor',
+          metadata: dto.metadata || {},
+        },
+      });
+      return transaction;
     });
   }
 }

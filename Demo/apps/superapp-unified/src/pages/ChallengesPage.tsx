@@ -310,7 +310,7 @@ export const ChallengesPage: React.FC = () => {
             transition: 'all 0.3s ease',
             '&:hover': {
               borderColor: theme.palette.primary.main,
-              boxShadow: `0 2px 8px ${alpha(theme.palette.primary.main, 0.1)}`,
+              boxShadow: 'none',
             }
           }}>
             <CardContent sx={{ textAlign: 'center', py: 2 }}>
@@ -335,8 +335,8 @@ export const ChallengesPage: React.FC = () => {
             borderRadius: 2,
             transition: 'all 0.3s ease',
             '&:hover': {
-              borderColor: theme.palette.success.main,
-              boxShadow: `0 2px 8px ${alpha(theme.palette.success.main, 0.1)}`,
+              borderColor: theme.palette.primary.main,
+              boxShadow: 'none',
             }
           }}>
             <CardContent sx={{ textAlign: 'center', py: 2 }}>
@@ -361,8 +361,8 @@ export const ChallengesPage: React.FC = () => {
             borderRadius: 2,
             transition: 'all 0.3s ease',
             '&:hover': {
-              borderColor: theme.palette.info.main,
-              boxShadow: `0 2px 8px ${alpha(theme.palette.info.main, 0.1)}`,
+              borderColor: theme.palette.primary.main,
+              boxShadow: 'none',
             }
           }}>
             <CardContent sx={{ textAlign: 'center', py: 2 }}>
@@ -387,8 +387,8 @@ export const ChallengesPage: React.FC = () => {
             borderRadius: 2,
             transition: 'all 0.3s ease',
             '&:hover': {
-              borderColor: theme.palette.warning.main,
-              boxShadow: `0 2px 8px ${alpha(theme.palette.warning.main, 0.1)}`,
+              borderColor: theme.palette.primary.main,
+              boxShadow: 'none',
             }
           }}>
             <CardContent sx={{ textAlign: 'center', py: 2 }}>

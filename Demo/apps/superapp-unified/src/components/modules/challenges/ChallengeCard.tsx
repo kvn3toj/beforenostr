@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import {
+  Card,
   CardContent,
   CardActions,
   Typography,
@@ -56,10 +57,7 @@ import {
   ChallengeCategory,
 } from '../../../types/challenges';
 import { safeToString, safeLog } from '../../../utils/safeConversion';
-
-// 🌌 ARIA (Frontend Artist) - Cosmic Design System
-import { CosmicCard } from '../../../design-system';
-import { UNIFIED_COLORS } from '../../../theme/colors';
+import { useTheme } from '@mui/material/styles';
 
 interface ChallengeCardProps {
   challenge: Challenge;
@@ -75,27 +73,19 @@ interface ChallengeCardProps {
 // 🌟 Mapping de categorías a elementos cósmicos
 const getCategoryElement = (category: ChallengeCategory) => {
   switch (category) {
-    case 'PERSONAL_DEVELOPMENT':
-    case 'MINDFULNESS':
-    case 'MEDITATION':
-      return 'espiritu'; // Desarrollo personal y mindfulness = espíritu
-    case 'FITNESS':
-    case 'HEALTH':
-      return 'tierra'; // Fitness y salud = tierra (cuerpo físico)
-    case 'CREATIVITY':
-    case 'ART':
-    case 'WRITING':
-      return 'fuego'; // Creatividad y arte = fuego (pasión, creación)
-    case 'SOCIAL':
-    case 'COMMUNITY':
-    case 'VOLUNTEERING':
-      return 'agua'; // Social y comunidad = agua (fluidez, conexión)
-    case 'LEARNING':
-    case 'EDUCATION':
-    case 'SKILL_BUILDING':
-      return 'aire'; // Aprendizaje y educación = aire (ideas, conocimiento)
+    case ChallengeCategory.CREATIVITY:
+    case ChallengeCategory.INNOVATION:
+      return 'fuego'; // Creatividad e innovación = fuego
+    case ChallengeCategory.SOCIAL:
+    case ChallengeCategory.COMMUNITY:
+      return 'agua'; // Social y comunidad = agua
+    case ChallengeCategory.LEARNING:
+      return 'aire'; // Aprendizaje = aire
+    case ChallengeCategory.SUSTAINABILITY:
+       return 'tierra'; // Sostenibilidad = tierra
+    case ChallengeCategory.WELLNESS:
     default:
-      return 'espiritu'; // Default
+      return 'espiritu'; // Bienestar y default = espíritu
   }
 };
 
@@ -119,72 +109,72 @@ const getCategoryConfig = (category: ChallengeCategory) => {
     PERSONAL_DEVELOPMENT: {
       icon: Psychology,
       label: 'Desarrollo Personal',
-      color: UNIFIED_COLORS.elements.eter.primary,
+      color: 'primary',
     },
     FITNESS: {
       icon: MonetizationOn,
       label: 'Fitness',
-      color: UNIFIED_COLORS.elements.tierra.primary,
+      color: 'primary',
     },
     CREATIVITY: {
       icon: Lightbulb,
       label: 'Creatividad',
-      color: UNIFIED_COLORS.elements.fuego.primary,
+      color: 'primary',
     },
     SOCIAL: {
       icon: Group,
       label: 'Social',
-      color: UNIFIED_COLORS.elements.agua.primary,
+      color: 'primary',
     },
     LEARNING: {
       icon: School,
       label: 'Aprendizaje',
-      color: UNIFIED_COLORS.elements.aire.primary,
+      color: 'primary',
     },
     HEALTH: {
       icon: Nature,
       label: 'Salud',
-      color: UNIFIED_COLORS.elements.tierra.primary,
+      color: 'primary',
     },
     MINDFULNESS: {
       icon: Psychology,
       label: 'Mindfulness',
-      color: UNIFIED_COLORS.elements.eter.primary,
+      color: 'primary',
     },
     COMMUNITY: {
       icon: Public,
       label: 'Comunidad',
-      color: UNIFIED_COLORS.elements.agua.primary,
+      color: 'primary',
     },
     EDUCATION: {
       icon: School,
       label: 'Educación',
-      color: UNIFIED_COLORS.elements.aire.primary,
+      color: 'primary',
     },
     VOLUNTEERING: {
       icon: Recycling,
       label: 'Voluntariado',
-      color: UNIFIED_COLORS.elements.agua.primary,
+      color: 'primary',
     },
     ART: {
       icon: EmojiObjects,
       label: 'Arte',
-      color: UNIFIED_COLORS.elements.fuego.primary,
+      color: 'primary',
     },
     WRITING: {
       icon: Lightbulb,
       label: 'Escritura',
-      color: UNIFIED_COLORS.elements.fuego.primary,
+      color: 'primary',
     },
     MEDITATION: {
       icon: Psychology,
       label: 'Meditación',
-      color: UNIFIED_COLORS.elements.eter.primary,
+      color: 'primary',
     },
     SKILL_BUILDING: {
       icon: Timeline,
       label: 'Desarrollo de Habilidades',
-      color: UNIFIED_COLORS.elements.aire.primary,
+      color: 'primary',
     },
   };
 
@@ -192,7 +182,7 @@ const getCategoryConfig = (category: ChallengeCategory) => {
     configs[category] || {
       icon: EmojiEvents,
       label: category,
-      color: UNIFIED_COLORS.brand.coomunityBlue,
+      color: 'primary',
     }
   );
 };
@@ -212,7 +202,7 @@ const formatPoints = (points: number | undefined | null) => {
 
 const getChallengeImage = (challenge: Challenge) => {
   if (challenge.imageUrl) return challenge.imageUrl;
-  
+
   // Imagen por defecto basada en categoría
   const category = challenge.category || 'PERSONAL_DEVELOPMENT';
   const images = {
@@ -231,7 +221,7 @@ const getChallengeImage = (challenge: Challenge) => {
     MEDITATION: '/images/challenges/meditation.jpg',
     SKILL_BUILDING: '/images/challenges/skill-building.jpg',
   };
-  
+
   return images[category] || '/images/challenges/default.jpg';
 };
 
@@ -245,15 +235,21 @@ export const ChallengeCard: React.FC<ChallengeCardProps> = ({
   compact = false,
   variant = 'default',
 }) => {
+  const theme = useTheme();
   const [liked, setLiked] = useState(false);
   const [expanded, setExpanded] = useState(false);
   const [showDetails, setShowDetails] = useState(false);
 
   // 🎨 Configuración visual
-  const categoryConfig = getCategoryConfig(challenge.category);
-  const difficultyConfig = getDifficultyColor(challenge.difficulty);
-  const CategoryIcon = categoryConfig.icon;
-  const cosmicElement = getCategoryElement(challenge.category);
+  const { color: difficultyColor, label: difficultyLabel } = getDifficultyColor(
+    challenge.difficulty
+  );
+
+  const {
+    icon: CategoryIcon,
+    label: categoryLabel,
+    color: categoryColor,
+  } = getCategoryConfig(challenge.category);
 
   // 🎯 Estado del challenge
   const isCompleted = challenge.status === 'COMPLETED';
@@ -287,474 +283,103 @@ export const ChallengeCard: React.FC<ChallengeCardProps> = ({
   };
 
   const getCardHeight = () => {
-    if (isMinimal) return 'auto';
-    if (compact) return 350;
-    if (isFeatured) return 500;
-    return 420;
+    if (compact) return 280;
+    return expanded ? 520 : 420;
   };
 
   return (
-    <>
-      <CosmicCard
-        data-testid="challenge-card"
-        variant={isFeatured ? 'elevated' : 'primary'}
-        element={cosmicElement}
-        enableGlow={isFeatured}
-        enableAnimations={true}
-        enableOrbitalEffects={isFeatured}
-        cosmicIntensity={isFeatured ? 'intense' : 'medium'}
-        onClick={handleViewClick}
-        sx={{
-          height: getCardHeight(),
-          display: 'flex',
-          flexDirection: 'column',
-          cursor: onView ? 'pointer' : 'default',
-          border: isParticipating ? '2px solid' : '1px solid',
-          borderColor: isParticipating ? 'primary.main' : 'divider',
-          opacity: challenge.status === 'INACTIVE' ? 0.7 : 1,
-          position: 'relative',
-          overflow: 'hidden',
-        }}
-      >
-        {/* Featured badge */}
-        {isFeatured && (
-          <Box
-            sx={{
-              position: 'absolute',
-              top: 0,
-              right: 0,
-              background: `linear-gradient(135deg, ${categoryConfig.color}, ${categoryConfig.color}CC)`,
-              color: 'white',
-              px: 2,
-              py: 0.5,
-              borderBottomLeftRadius: 16,
-              zIndex: 1,
-              display: 'flex',
-              alignItems: 'center',
-              gap: 0.5,
-            }}
-          >
-            <Star sx={{ fontSize: 16 }} />
-            <Typography variant="caption" fontWeight={600}>
-              Destacado
-            </Typography>
-          </Box>
-        )}
-
-        {/* Header with image/icon */}
-        <Box
-          sx={{
-            height: isMinimal ? 60 : compact ? 100 : isFeatured ? 160 : 120,
-            background: 'transparent',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            position: 'relative',
-            overflow: 'hidden',
-          }}
-        >
-          <Box
-            component="img"
-            src={getChallengeImage(challenge)}
-            alt={challenge.title}
-            sx={{
-              width: '100%',
-              height: '100%',
-              objectFit: 'cover',
-            }}
+    <Card
+      variant="outlined"
+      elevation={0}
+      sx={{
+        height: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'space-between',
+        borderRadius: 2,
+        transition: 'all 0.2s ease-in-out',
+        borderColor: 'divider',
+        '&:hover': {
+          borderColor: 'primary.main',
+        },
+      }}
+    >
+      <CardContent sx={{ p: 2 }}>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 1 }}>
+          <Chip
+            icon={<CategoryIcon />}
+            label={categoryLabel}
+            size="small"
+            variant="outlined"
+            sx={{ borderColor: categoryColor, color: categoryColor }}
           />
-
-          {/* Status indicators */}
-          <Box sx={{ position: 'absolute', top: 8, left: 8 }}>
-            {isCompleted && (
-              <Tooltip title="Completado exitosamente">
-                <CheckCircle
-                  sx={{
-                    color: 'success.main',
-                    bgcolor: 'background.paper',
-                    borderRadius: '50%',
-                    fontSize: 24,
-                  }}
-                />
-              </Tooltip>
-            )}
-            {isParticipating && !isCompleted && (
-              <Tooltip title="En progreso">
-                <Badge
-                  badgeContent={
-                    challenge.userProgress?.progress
-                      ? `${challenge.userProgress.progress}%`
-                      : ''
-                  }
-                  color="primary"
-                  sx={{
-                    '& .MuiBadge-badge': {
-                      fontSize: '0.6rem',
-                      minWidth: 'auto',
-                      height: 16,
-                    },
-                  }}
-                >
-                  <PlayArrow
-                    sx={{
-                      color: 'primary.main',
-                      bgcolor: 'background.paper',
-                      borderRadius: '50%',
-                      fontSize: 24,
-                      p: 0.2,
-                    }}
-                  />
-                </Badge>
-              </Tooltip>
-            )}
-          </Box>
-
-          {/* Action buttons overlay */}
-          {!isMinimal && (
-            <Box
-              sx={{
-                position: 'absolute',
-                top: 8,
-                right: 8,
-                display: 'flex',
-                gap: 0.5,
-              }}
-            >
-              <IconButton
-                size="small"
-                onClick={handleLikeClick}
-                sx={{
-                  bgcolor: 'background.paper',
-                  '&:hover': { bgcolor: 'background.default' },
-                  boxShadow: 1,
-                }}
-              >
-                <Favorite
-                  sx={{
-                    color: liked ? 'error.main' : 'text.secondary',
-                    fontSize: 18,
-                  }}
-                />
-              </IconButton>
-              <IconButton
-                size="small"
-                onClick={handleShareClick}
-                sx={{
-                  bgcolor: 'background.paper',
-                  '&:hover': { bgcolor: 'background.default' },
-                  boxShadow: 1,
-                }}
-              >
-                <Share sx={{ fontSize: 18 }} />
-              </IconButton>
-            </Box>
-          )}
+          <Chip
+            label={difficultyLabel}
+            size="small"
+            color={difficultyColor as any}
+            variant="filled"
+            sx={{ color: '#fff' }}
+          />
         </Box>
 
-        <CardContent sx={{ flexGrow: 1, p: isMinimal ? 2 : 3 }}>
-          {/* Title and description */}
-          <Box sx={{ mb: 2 }}>
-            <Typography
-              data-testid="challenge-title"
-              variant={isMinimal ? 'subtitle1' : isFeatured ? 'h5' : 'h6'}
-              component="h3"
-              gutterBottom
-              sx={{
-                fontWeight: 700,
-                lineHeight: 1.2,
-                display: '-webkit-box',
-                WebkitLineClamp: isMinimal ? 1 : 2,
-                WebkitBoxOrient: 'vertical',
-                overflow: 'hidden',
-                color: isFeatured ? categoryConfig.color : 'text.primary',
-              }}
-            >
-              {challenge.title}
+        <Typography variant="h6" component="h2" sx={{ my: 1, fontWeight: 'bold' }}>
+          {challenge.title}
+        </Typography>
+
+        <Typography variant="body2" color="text.secondary" sx={{
+          height: 60,
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+        }}>
+          {challenge.description}
+        </Typography>
+
+        <Divider sx={{ my: 2 }} />
+
+        <Stack spacing={1}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <MonetizationOn fontSize="small" color="action" />
+            <Typography variant="body2" color="text.secondary">
+              Recompensa: {formatPoints(challenge.points)}
             </Typography>
-
-            <Typography
-              data-testid="challenge-description"
-              variant="body2"
-              color="text.secondary"
-              sx={{
-                display: '-webkit-box',
-                WebkitLineClamp: isMinimal ? 1 : expanded ? 6 : 3,
-                WebkitBoxOrient: 'vertical',
-                overflow: 'hidden',
-                mb: 1,
-                lineHeight: 1.4,
-              }}
-            >
-              {challenge.shortDescription || challenge.description}
+          </Box>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <Schedule fontSize="small" color="action" />
+            <Typography variant="body2" color="text.secondary">
+              Duración: {formatDuration(challenge.duration)}
             </Typography>
-
-            {!isMinimal &&
-              challenge.description &&
-              challenge.description.length > 150 && (
-                <Button
-                  size="small"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setExpanded(!expanded);
-                  }}
-                  endIcon={expanded ? <ExpandLess /> : <ExpandMore />}
-                  sx={{ p: 0, minWidth: 'auto', textTransform: 'none' }}
-                >
-                  {expanded ? 'Ver menos' : 'Ver más'}
-                </Button>
-              )}
           </Box>
-
-          {/* Tags/Categories */}
-          <Box sx={{ display: 'flex', gap: 1, mb: 2, flexWrap: 'wrap' }}>
-            <Chip
-              icon={<CategoryIcon sx={{ fontSize: 16 }} />}
-              label={categoryConfig.label}
-              size="small"
-              sx={{
-                bgcolor: `${categoryConfig.color}15`,
-                color: categoryConfig.color,
-                fontWeight: 600,
-                '& .MuiChip-icon': {
-                  color: categoryConfig.color,
-                },
-              }}
-            />
-            <Chip
-              label={difficultyConfig.label}
-              size="small"
-              color={difficultyConfig.color as any}
-              variant="outlined"
-              sx={{ fontWeight: 500 }}
-            />
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <Group fontSize="small" color="action" />
+            <Typography variant="body2" color="text.secondary">
+              {challenge.participantCount} participantes
+            </Typography>
           </Box>
+        </Stack>
 
-          {/* Progress bar for participating challenges */}
-          {isParticipating && !isCompleted && challenge.userProgress && (
-            <Box sx={{ mb: 2 }}>
-              <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
-                <Typography variant="caption" color="text.secondary">
-                  Progreso
-                </Typography>
-                <Typography variant="caption" color="text.secondary">
-                  {challenge.userProgress.progress || 0}%
-                </Typography>
-              </Box>
-              <LinearProgress
-                variant="determinate"
-                value={challenge.userProgress.progress || 0}
-                sx={{
-                  height: 6,
-                  borderRadius: 3,
-                  bgcolor: `${categoryConfig.color}20`,
-                  '& .MuiLinearProgress-bar': {
-                    bgcolor: categoryConfig.color,
-                    borderRadius: 3,
-                  },
-                }}
-              />
-            </Box>
-          )}
+      </CardContent>
 
-          {/* Challenge metadata */}
-          <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', mb: 2 }}>
-            {/* Duration */}
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-              <Schedule sx={{ fontSize: 16, color: 'text.secondary' }} />
-              <Typography variant="caption" color="text.secondary">
-                {formatDuration(challenge.duration)}
-              </Typography>
-            </Box>
-
-            {/* Participants */}
-            {challenge.participantCount !== undefined && (
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                <Group sx={{ fontSize: 16, color: 'text.secondary' }} />
-                <Typography variant="caption" color="text.secondary">
-                  {challenge.participantCount.toLocaleString()}
-                </Typography>
-              </Box>
-            )}
-
-            {/* Points/Rewards */}
-            {challenge.points && (
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                <Star sx={{ fontSize: 16, color: 'warning.main' }} />
-                <Typography variant="caption" color="text.secondary">
-                  {formatPoints(challenge.points)}
-                </Typography>
-              </Box>
-            )}
-          </Box>
-
-          {/* Completion status */}
-          {isCompleted && (
-            <Box
-              sx={{
-                p: 2,
-                borderRadius: 2,
-                bgcolor: 'success.main',
-                color: 'success.contrastText',
-                textAlign: 'center',
-                mb: 2,
-              }}
-            >
-              <Typography variant="body2" fontWeight={600}>
-                🎉 ¡Challenge Completado!
-              </Typography>
-              {challenge.userProgress?.completedAt && (
-                <Typography variant="caption">
-                  Completado el{' '}
-                  {new Date(challenge.userProgress.completedAt).toLocaleDateString()}
-                </Typography>
-              )}
-            </Box>
-          )}
-        </CardContent>
-
-        {/* Action buttons */}
-        {showActions && !isMinimal && (
-          <CardActions sx={{ p: 2, pt: 0 }}>
-            <Box sx={{ display: 'flex', gap: 1, width: '100%' }}>
-              {!isParticipating && !isCompleted && (
-                <Button
-                  variant="contained"
-                  fullWidth
-                  onClick={handleJoinClick}
-                  sx={{
-                    bgcolor: categoryConfig.color,
-                    '&:hover': {
-                      bgcolor: categoryConfig.color,
-                      transform: 'scale(1.02)',
-                    },
-                  }}
-                >
-                  Unirse al Challenge
-                </Button>
-              )}
-
-              {isParticipating && !isCompleted && (
-                <Button
-                  variant="outlined"
-                  fullWidth
-                  onClick={handleViewClick}
-                  sx={{
-                    borderColor: categoryConfig.color,
-                    color: categoryConfig.color,
-                    '&:hover': {
-                      bgcolor: `${categoryConfig.color}15`,
-                      borderColor: categoryConfig.color,
-                    },
-                  }}
-                >
-                  Continuar Challenge
-                </Button>
-              )}
-
-              {isCompleted && (
-                <Button
-                  variant="outlined"
-                  fullWidth
-                  onClick={handleViewClick}
-                  color="success"
-                >
-                  Ver Detalles
-                </Button>
-              )}
-
-              <IconButton
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setShowDetails(true);
-                }}
-                sx={{
-                  color: categoryConfig.color,
-                  '&:hover': {
-                    bgcolor: `${categoryConfig.color}15`,
-                  },
-                }}
-              >
-                <Info />
-              </IconButton>
-            </Box>
-          </CardActions>
-        )}
-      </CosmicCard>
-
-      {/* Details Dialog */}
-      <Dialog open={showDetails} onClose={() => setShowDetails(false)} maxWidth="md">
-        <DialogTitle>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-            <Avatar sx={{ bgcolor: categoryConfig.color }}>
-              <CategoryIcon />
-            </Avatar>
-            <Box>
-              <Typography variant="h6">{challenge.title}</Typography>
-              <Typography variant="body2" color="text.secondary">
-                {categoryConfig.label} • {difficultyConfig.label}
-              </Typography>
-            </Box>
-          </Box>
-        </DialogTitle>
-
-        <DialogContent>
-          <Typography variant="body1" paragraph>
-            {challenge.description}
-          </Typography>
-
-          {challenge.requirements && challenge.requirements.length > 0 && (
-            <Box sx={{ mb: 3 }}>
-              <Typography variant="h6" gutterBottom>
-                📋 Requisitos:
-              </Typography>
-              <List dense>
-                {challenge.requirements.map((req, index) => (
-                  <ListItem key={index}>
-                    <ListItemIcon>
-                      <CheckBox color="primary" />
-                    </ListItemIcon>
-                    <ListItemText primary={req} />
-                  </ListItem>
-                ))}
-              </List>
-            </Box>
-          )}
-
-          {challenge.rewards && challenge.rewards.length > 0 && (
-            <Box sx={{ mb: 3 }}>
-              <Typography variant="h6" gutterBottom>
-                🎁 Recompensas:
-              </Typography>
-              <List dense>
-                {challenge.rewards.map((reward, index) => (
-                  <ListItem key={index}>
-                    <ListItemIcon>
-                      <WorkspacePremium color="warning" />
-                    </ListItemIcon>
-                    <ListItemText primary={reward.description} secondary={reward.type} />
-                  </ListItem>
-                ))}
-              </List>
-            </Box>
-          )}
-        </DialogContent>
-
-        <DialogActions>
-          <Button onClick={() => setShowDetails(false)}>Cerrar</Button>
-          {!isParticipating && !isCompleted && (
-            <Button
-              variant="contained"
-              onClick={(e) => {
-                setShowDetails(false);
-                handleJoinClick(e);
-              }}
-              sx={{ bgcolor: categoryConfig.color }}
-            >
-              Unirse al Challenge
-            </Button>
-          )}
-        </DialogActions>
-      </Dialog>
-    </>
+      <CardActions sx={{ p: 2, pt: 0, mt: 'auto' }}>
+        <Button
+          variant="contained"
+          color="primary"
+          fullWidth
+          onClick={handleJoinClick}
+          startIcon={<PlayArrow />}
+        >
+          Unirse al Desafío
+        </Button>
+        <Tooltip title={liked ? 'Quitar de favoritos' : 'Añadir a favoritos'}>
+          <IconButton onClick={handleLikeClick} color={liked ? 'primary' : 'default'}>
+            <Favorite />
+          </IconButton>
+        </Tooltip>
+        <Tooltip title="Compartir">
+          <IconButton onClick={handleShareClick}>
+            <Share />
+          </IconButton>
+        </Tooltip>
+      </CardActions>
+    </Card>
   );
 };

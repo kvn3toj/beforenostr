@@ -11,8 +11,8 @@ import { useTheme, alpha } from '@mui/material/styles';
 // 🧠 PHILOSOPHICAL INTELLIGENCE HOOKS - NIRA
 import { useDashboardAnalytics } from '../../../hooks/analytics/useDashboardAnalytics';
 import { useReciprocidadMetrics } from '../../../hooks/home/useReciprocidadMetrics';
-import { useReciprocidadIntelligence } from '../../../hooks/useReciprocidadIntelligence';
-import { useElementalBalance } from '../../../hooks/home/useElementalBalance';
+import { useReciprocidadIntelligence, ReciprocidadIntelligenceData } from '../../../hooks/useReciprocidadIntelligence';
+import { useElementalBalance, ElementType } from '../../../hooks/home/useElementalBalance';
 
 // 🎨 MINIMALIST COMPONENTS
 import MinimalistReciprocidadCard from './components/MinimalistReciprocidadCard';
@@ -34,7 +34,7 @@ import RealTimeReciprocidadFlow from './components/RealTimeReciprocidadFlow';
  * - Progreso consciente del usuario
  *
  * Filosofía: "Medir lo que realmente importa - El equilibrio Reciprocidad,
- * el impacto al Bien Común, y la salud del ecosistema"
+ * el impacto al Bien Común, y la danza armónica de tus elementos internos"
  */
 const UStatsMain: React.FC = React.memo(() => {
   const theme = useTheme();
@@ -50,34 +50,37 @@ const UStatsMain: React.FC = React.memo(() => {
   // 🧠 HOOKS DE INTELIGENCIA FILOSÓFICA
   const { data: analytics, isLoading: analyticsLoading, refetch: refetchAnalytics } = useDashboardAnalytics();
   const { data: reciprocidadMetrics } = useReciprocidadMetrics();
-  const { data: reciprocidadIntelligence } = useReciprocidadIntelligence('current-user');
+  const { reciprocityData } = useReciprocidadIntelligence('current-user');
+  const reciprocidadIntelligence = reciprocityData as ReciprocidadIntelligenceData | undefined;
 
   // 🌪️ BALANCE ELEMENTAL DINÁMICO
   const elementalBalance = useElementalBalance(
     reciprocidadMetrics?.elementos || { fuego: 50, agua: 50, tierra: 50, aire: 50 },
     reciprocidadMetrics?.metricas.ondas || 0,
     reciprocidadMetrics?.metricas.meritos || 0,
-    'fuego' // ÜStats como módulo fuego
+    'fuego' as ElementType // ÜStats como módulo fuego
   );
 
   // 📊 MÉTRICAS FILOSÓFICAS CALCULADAS
   const philosophicalKPIs = useMemo(() => {
-    if (!reciprocidadMetrics || !reciprocidadIntelligence) {
-      return {
-        reciprocidadBalanceIndex: 75,
-        bienComunVector: 82,
-        reciprocidadEfficiency: 68,
-        communityResonance: 91,
-        transcendenceLevel: 'Colaborador Consciente',
-        nextMilestone: 'Guardián del Bien Común'
-      };
+    const defaults = {
+      reciprocidadBalanceIndex: 75,
+      bienComunVector: 82,
+      reciprocidadEfficiency: 68,
+      communityResonance: 91,
+      transcendenceLevel: 'Colaborador Consciente',
+      nextMilestone: 'Guardián del Bien Común'
+    };
+
+    if (!reciprocidadMetrics) {
+      return defaults;
     }
 
     return {
       reciprocidadBalanceIndex: Math.round(reciprocidadMetrics.metricas.balance * 100),
       bienComunVector: reciprocidadMetrics.metricas.contribucionesBienComun,
       reciprocidadEfficiency: elementalBalance.reciprocidadEfficiency,
-      communityResonance: reciprocidadIntelligence?.impact?.networkInfluence ?? 91,
+      communityResonance: reciprocidadIntelligence?.communityImpact?.networkInfluence ?? defaults.communityResonance,
       transcendenceLevel: reciprocidadMetrics.nivel.actual,
       nextMilestone: reciprocidadMetrics.nivel.siguiente
     };
@@ -166,182 +169,152 @@ const UStatsMain: React.FC = React.memo(() => {
           </Box>
         </Box>
 
-        {/* 🌟 GRID PRINCIPAL DE MÉTRICAS */}
-        <Grid container spacing={3}>
+        {/* 🌟 GRID PRINCIPAL DE MÉTRICAS - REESTRUCTURADO PARA MEJOR RESPONSIVIDAD Y ORDEN */}
+        <Grid container spacing={4}>
 
-          {/* 🔥 BALANCE RECIPROCIDAD */}
-          <Grid item xs={12} lg={8}>
-            <Paper sx={{
-              p: 3,
-              minHeight: '400px',
-              border: `1px solid ${theme.palette.divider}`
-            }}>
-              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-                <Typography variant="h5" sx={{ color: theme.palette.text.primary, fontWeight: 600 }}>
-                  🌟 Índice de Equilibrio Reciprocidad (IER)
+          {/* PRIMERA FILA: MÉTRICAS DE RECIPROCIDAD Y PROGRESO */}
+          <Grid item xs={12} container spacing={4}>
+            {/* COLUMNA IZQUIERDA: ÍNDICE DE EQUILIBRIO RECIPROCIDAD */}
+            <Grid item xs={12} lg={8}>
+              <Paper sx={{
+                p: { xs: 2, md: 3 },
+                height: '100%',
+                border: `1px solid ${theme.palette.divider}`,
+                display: 'flex',
+                flexDirection: 'column'
+              }}>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+                  <Typography variant="h5" sx={{ color: theme.palette.text.primary, fontWeight: 700 }}>
+                    Índice de Equilibrio Reciprocidad
+                  </Typography>
+                  <IconButton
+                    onClick={() => toggleSection('reciprocidad')}
+                    size="small"
+                    sx={{ color: theme.palette.text.secondary }}
+                  >
+                    {expandedSections.reciprocidad ? <ExpandLess /> : <ExpandMore />}
+                  </IconButton>
+                </Box>
+
+                <Typography variant="subtitle1" sx={{ color: theme.palette.text.secondary, mb: 3 }}>
+                  {philosophicalKPIs.reciprocidadBalanceIndex}% - Reciprocidad en armonía.
                 </Typography>
-                <IconButton
-                  onClick={() => toggleSection('reciprocidad')}
-                  size="small"
-                  sx={{ color: theme.palette.text.secondary }}
-                >
-                  {expandedSections.reciprocidad ? <ExpandLess /> : <ExpandMore />}
-                </IconButton>
-              </Box>
 
-              <Typography variant="subtitle2" sx={{ color: theme.palette.text.secondary, mb: 3 }}>
-                {philosophicalKPIs.reciprocidadBalanceIndex}% - Reciprocidad en armonía perfecta
-              </Typography>
+                <MinimalistReciprocidadCard
+                  reciprocidadBalance={philosophicalKPIs.reciprocidadBalanceIndex}
+                  reciprocidadEfficiency={philosophicalKPIs.reciprocidadEfficiency}
+                  trends={{
+                    weekly: 0,
+                    monthly: 0,
+                    historical: []
+                  }}
+                  insights={[]}
+                  isExpanded={expandedSections.reciprocidad}
+                />
 
-              <MinimalistReciprocidadCard
-                reciprocidadBalance={philosophicalKPIs.reciprocidadBalanceIndex}
-                reciprocidadEfficiency={philosophicalKPIs.reciprocidadEfficiency}
-                trends={{
-                  weekly: 0,
-                  monthly: 0,
-                  historical: []
-                }}
-                insights={[]}
-                isExpanded={expandedSections.reciprocidad}
-              />
+                <Collapse in={expandedSections.reciprocidad} timeout="auto" unmountOnExit>
+                  <Box sx={{ mt: 3, borderTop: `1px solid ${theme.palette.divider}`, pt: 3 }}>
+                    <ReciprocidadBalanceIndicator
+                      data={{
+                        currentBalance: philosophicalKPIs.reciprocidadBalanceIndex,
+                        trend: reciprocidadMetrics?.metricas?.crecimientoSemanal || 0,
+                        reciprocidadGiven: reciprocidadMetrics?.metricas?.ondas || 0,
+                        reciprocidadReceived: reciprocidadMetrics?.metricas?.meritos || 0,
+                        harmonyLevel: philosophicalKPIs.communityResonance,
+                        lastUpdate: new Date().toISOString()
+                      }}
+                    />
+                  </Box>
+                </Collapse>
+              </Paper>
+            </Grid>
 
-              <Collapse in={expandedSections.reciprocidad}>
-                <Box sx={{ mt: 3 }}>
-                  <ReciprocidadBalanceIndicator
-                    data={{
-                      currentBalance: philosophicalKPIs.reciprocidadBalanceIndex,
-                      trend: reciprocidadMetrics?.metricas?.crecimientoSemanal || 0,
-                      reciprocidadGiven: reciprocidadMetrics?.metricas?.ondas || 0,
-                      reciprocidadReceived: reciprocidadMetrics?.metricas?.meritos || 0,
-                      harmonyLevel: philosophicalKPIs.communityResonance,
-                      lastUpdate: new Date().toISOString()
-                    }}
+            {/* COLUMNA DERECHA: PROGRESO CONSCIENTE */}
+            <Grid item xs={12} lg={4}>
+              <Paper sx={{
+                p: { xs: 2, md: 3 },
+                height: '100%',
+                border: `1px solid ${theme.palette.divider}`,
+                display: 'flex',
+                flexDirection: 'column'
+              }}>
+                <Typography variant="h6" sx={{ mb: 2, fontWeight: 700 }}>
+                  Progreso Consciente
+                </Typography>
+                <Box sx={{ flexGrow: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <ConsciousProgressOrb
+                    currentLevel={philosophicalKPIs.transcendenceLevel}
+                    nextLevel={philosophicalKPIs.nextMilestone}
+                    progress={philosophicalKPIs.reciprocidadBalanceIndex}
+                    meritos={reciprocidadMetrics?.metricas.meritos || 0}
                   />
                 </Box>
-              </Collapse>
-            </Paper>
+              </Paper>
+            </Grid>
           </Grid>
 
-          {/* 🎯 PROGRESO CONSCIENTE */}
-          <Grid item xs={12} lg={4}>
-            <Paper sx={{
-              p: 3,
-              minHeight: '400px',
-              border: `1px solid ${theme.palette.divider}`
-            }}>
-              <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
-                🎯 Progreso Consciente
-              </Typography>
+          {/* SEGUNDA FILA: IMPACTO AL BIEN COMÚN Y BALANCE ELEMENTAL */}
+          <Grid item xs={12} container spacing={4}>
+            {/* COLUMNA IZQUIERDA: IMPACTO AL BIEN COMÚN */}
+            <Grid item xs={12} md={6}>
+              <Paper sx={{
+                p: { xs: 2, md: 3 },
+                height: '100%',
+                border: `1px solid ${theme.palette.divider}`,
+                display: 'flex',
+                flexDirection: 'column'
+              }}>
+                <BienComunImpactVisualization
+                  currentImpact={philosophicalKPIs.bienComunVector}
+                  contributionHistory={[60, 65, 75, 72, 82]}
+                  communityResonance={philosophicalKPIs.communityResonance}
+                  trends={{
+                    semanal: reciprocidadMetrics?.metricas?.crecimientoSemanal || 0,
+                    mensual: 0,
+                    anual: 0,
+                  }}
+                />
+              </Paper>
+            </Grid>
 
-              <ConsciousProgressOrb
-                currentLevel={philosophicalKPIs.transcendenceLevel}
-                progress={philosophicalKPIs.reciprocidadBalanceIndex}
-                meritosCount={reciprocidadMetrics?.metricas.meritos || 0}
-              />
-            </Paper>
+            {/* COLUMNA DERECHA: BALANCE ELEMENTAL */}
+            <Grid item xs={12} md={6}>
+              <Paper sx={{
+                p: { xs: 2, md: 3 },
+                height: '100%',
+                border: `1px solid ${theme.palette.divider}`,
+                display: 'flex',
+                flexDirection: 'column'
+              }}>
+                <ElementalHarmonyRadar
+                  elementos={elementalBalance.elements}
+                  dominantElement={elementalBalance.dominantElement}
+                />
+              </Paper>
+            </Grid>
           </Grid>
 
-          {/* 🌍 IMPACTO AL BIEN COMÚN */}
-          <Grid item xs={12} lg={6}>
-            <Paper sx={{
-              p: 3,
-              minHeight: '360px',
-              border: `1px solid ${theme.palette.divider}`
-            }}>
-              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-                <Typography variant="h6" sx={{ fontWeight: 600 }}>
-                  🌍 Vector de Impacto al Bien Común
-                </Typography>
-                <IconButton
-                  onClick={() => toggleSection('impacto')}
-                  size="small"
-                  sx={{ color: theme.palette.text.secondary }}
-                >
-                  {expandedSections.impacto ? <ExpandLess /> : <ExpandMore />}
-                </IconButton>
-              </Box>
-
-              <BienComunImpactVisualization
-                currentImpact={philosophicalKPIs.bienComunVector}
-                contributionHistory={[]}
-                communityResonance={philosophicalKPIs.communityResonance}
-                trends={{ semanal: reciprocidadMetrics?.metricas?.crecimientoSemanal || 0, mensual: 0, anual: 0 }}
-                isExpanded={expandedSections.impacto}
-              />
-            </Paper>
-          </Grid>
-
-          {/* 🌪️ GALAXIA ELEMENTAL */}
-          <Grid item xs={12} lg={6}>
-            <Paper sx={{
-              p: 3,
-              minHeight: '360px',
-              border: `1px solid ${theme.palette.divider}`
-            }}>
-              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-                <Typography variant="h6" sx={{ fontWeight: 600 }}>
-                  🌪️ Balance Elemental Dinámico
-                </Typography>
-                <IconButton
-                  onClick={() => toggleSection('elementos')}
-                  size="small"
-                  sx={{ color: theme.palette.text.secondary }}
-                >
-                  {expandedSections.elementos ? <ExpandLess /> : <ExpandMore />}
-                </IconButton>
-              </Box>
-
-              <PhilosophicalMetricsGalaxy
-                elementos={elementalBalance.elements}
-                dominantElement={elementalBalance.dominantElement}
-                balanceScore={elementalBalance.balanceScore}
-                recommendations={elementalBalance.recommendations}
-                isExpanded={expandedSections.elementos}
-              />
-
-              <Collapse in={expandedSections.elementos}>
-                <Box sx={{ mt: 3 }}>
-                  <ElementalHarmonyRadar
-                    elementos={elementalBalance?.elements || { fuego: 50, agua: 50, tierra: 50, aire: 50 }}
-                    dominantElement={elementalBalance?.dominantElement || 'fuego'}
-                    balanceScore={elementalBalance?.balanceScore || 75}
-                    recommendations={elementalBalance?.recommendations?.slice(0, 2).map(rec => ({
-                      element: 'fuego' as keyof ElementalData,
-                      action: rec,
-                      philosophy: 'Mantén el equilibrio y la armonía en tu desarrollo'
-                    })) || []}
-                    isExpanded={expandedSections.elementos}
-                    size={280}
-                  />
-                </Box>
-              </Collapse>
-            </Paper>
-          </Grid>
-
-          {/* 🌊 FLUJO DE RECIPROCIDAD EN TIEMPO REAL */}
+          {/* TERCERA FILA: FLUJO DE RECIPROCIDAD EN TIEMPO REAL */}
           <Grid item xs={12}>
             <Paper sx={{
-              p: 3,
+              p: { xs: 2, md: 3 },
               border: `1px solid ${theme.palette.divider}`
             }}>
-              <Typography variant="h6" sx={{ mb: 3, fontWeight: 600 }}>
-                🌊 Flujo de Reciprocidad en Tiempo Real
-              </Typography>
-
               <RealTimeReciprocidadFlow
                 data={{
-                  givingFlow: reciprocidadMetrics?.metricas.flujosSalida || [],
-                  receivingFlow: reciprocidadMetrics?.metricas.flujosEntrada || [],
+                  givingFlow: reciprocidadMetrics?.metricas.ondas || 0,
+                  receivingFlow: reciprocidadMetrics?.metricas.meritos || 0,
                   balanceIndex: philosophicalKPIs.reciprocidadBalanceIndex,
                   totalTransactions: reciprocidadMetrics?.metricas.transaccionesTotales || 0,
-                  activeConnections: reciprocidadMetrics?.metricas.conexionesActivas || 0,
+                  activeConnections: reciprocidadMetrics?.metricas.rangoComunidad || 0,
                   networkResonance: philosophicalKPIs.communityResonance,
-                  lastActivity: reciprocidadMetrics?.metricas.ultimaActividad || new Date().toISOString(),
-                  trend: reciprocidadMetrics?.tendencias?.semanal || 0
+                  lastActivity: new Date(reciprocidadMetrics?.fechas?.ultimaActualizacion || Date.now()),
+                  trend: (reciprocidadMetrics?.metricas?.crecimientoSemanal ?? 0) > 0 ? 'ascending' : ((reciprocidadMetrics?.metricas?.crecimientoSemanal ?? 0) < 0 ? 'descending' : 'stable'),
                 }}
               />
             </Paper>
           </Grid>
+
         </Grid>
 
         {/* 🎪 FAB DE ACCIÓN RÁPIDA */}
@@ -380,6 +353,7 @@ const UStatsMain: React.FC = React.memo(() => {
   );
 });
 
+// @ts-ignore
 UStatsMain.displayName = 'UStatsMain';
 
 export default UStatsMain;

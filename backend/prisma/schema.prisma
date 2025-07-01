@@ -508,6 +508,9 @@ model Transaction {
   toUser      User     @relation("TransactionTo", fields: [toUserId], references: [id], map: "transaction_to_user_fkey")
   fromUser    User?    @relation("TransactionFrom", fields: [fromUserId], references: [id], map: "transaction_from_user_fkey")
 
+  /// 🌟 CAMPO CRÍTICO PARA LA METADATA FILOSÓFICA (NIRA) 🌟
+  metadata    Json?    // Detalles filosóficos y contextuales (ej. purpose, context)
+
   @@index([fromUserId])
   @@index([toUserId])
   @@index([type])

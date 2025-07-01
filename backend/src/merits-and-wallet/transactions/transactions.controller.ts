@@ -17,11 +17,13 @@ import {
   ApiOperation,
   ApiResponse,
   ApiParam,
+  ApiBody,
 } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '@/rbac/guards/roles.guard';
 import { Roles } from '@/rbac/decorators/roles.decorator';
 import { Request } from 'express';
+import { SendTransactionDto } from './dto/send-transaction.dto';
 
 // Define a basic type for the authenticated user
 interface AuthenticatedRequest extends Request {
@@ -112,6 +114,28 @@ export class TransactionsController {
   @ApiResponse({ status: 403, description: 'Forbidden resource.' })
   findAllAdmin() {
     return this.transactionsService.findAllTransactionsAdmin();
+  }
+
+  @Post('/send')
+  @ApiOperation({
+    summary: 'Send Ünits or Mëritos to another user',
+    description:
+      'Creates a transaction between the authenticated user and a recipient, ensuring Reciprocity and atomic balance updates.',
+  })
+  @ApiBody({ type: SendTransactionDto })
+  @ApiResponse({
+    status: 201,
+    description: 'The transaction has been successfully created.',
+  })
+  @ApiResponse({ status: 403, description: 'Forbidden. Insufficient balance.' })
+  @ApiResponse({ status: 404, description: 'Recipient or sender not found.' })
+  async sendTransaction(
+    @Req() req: AuthenticatedRequest,
+    @Body() sendTransactionDto: SendTransactionDto,
+  ) {
+    // El senderId se obtiene del usuario autenticado a través del token JWT
+    const senderId = req.user.id;
+    return this.transactionsService.sendTransaction(senderId, sendTransactionDto);
   }
 
   // Create transaction endpoint would typically be internal or triggered by other modules (e.g., challenges)
