@@ -20,6 +20,7 @@ import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from './config/config.module';
 import { ChallengesModule } from './challenges/challenges.module';
 import { FeedbackModule } from './feedback/feedback.module';
+import { PhilosophyModule } from './philosophy/philosophy.module'; // 🌌 Módulo de Métricas Filosóficas
 import { CacheModule } from '@nestjs/cache-manager';
 import { CacheService } from './cache/cache.service';
 import { MetricsModule } from './common/metrics/metrics.module';
@@ -45,6 +46,7 @@ import { MetricsModule } from './common/metrics/metrics.module';
     ChallengesModule, // 🏆 Challenges Module - gamified challenges and tasks
     FeedbackModule, // 🤖 Feedback Agent Module - sistema de recolección de reportes
     ConsoleModule, // 🎮 Módulo de la Consola de Experiencias
+    PhilosophyModule, // 🌌 Philosophy Module - métricas filosóficas (HambrE, IEA)
     CacheModule.register({ isGlobal: true }),
     MetricsModule,
   ],

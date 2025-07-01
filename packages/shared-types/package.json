@@ -1,0 +1,27 @@
+{
+  "name": "@coomunity/shared-types",
+  "version": "1.0.0",
+  "description": "Tipos TypeScript compartidos para métricas filosóficas de CoomÜnity",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "clean": "rm -rf dist"
+  },
+  "keywords": [
+    "coomunity",
+    "types",
+    "philosophy",
+    "metrics",
+    "typescript"
+  ],
+  "author": "CoomÜnity Guardianes",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "files": [
+    "dist"
+  ]
+}

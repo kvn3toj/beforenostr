@@ -30,7 +30,7 @@ import NostrDemoPage from './pages/NostrDemoPage'
 import { ChallengesPage } from './pages/ChallengesPage'
 import { MarketplacePage } from './pages/MarketplacePage'
 import { TransactionsPage } from './pages/TransactionsPage'
-import ConsolePage from './pages/ConsolePage'
+import { ExperienceConsolePage } from './pages/ExperienceConsolePage'
 
 const queryClient = new QueryClient()
 const theme = createAppTheme('light');
@@ -51,7 +51,7 @@ function App() {
             {/* Rutas de autenticación (sin layout) */}
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
-            
+
             {/* Rutas principales (con layout) */}
             <Route element={<MainLayout />}>
               <Route path="/" element={<HomePage />} />
@@ -63,7 +63,7 @@ function App() {
               <Route path="/playlists/:playlistId" element={<PlaylistDetailPage />} />
               <Route path="/items" element={<ItemsPage />} />
               <Route path="/items/:itemId/config" element={<VideoConfigPage />} />
-              
+
               {/* Rutas de administración */}
               <Route path="/users" element={<UsersPage />} />
               <Route path="/roles" element={<RolesPage />} />
@@ -74,13 +74,13 @@ function App() {
               <Route path="/challenges" element={<ChallengesPage />} />
               <Route path="/marketplace" element={<MarketplacePage />} />
               <Route path="/transactions" element={<TransactionsPage />} />
-              
+
               {/* 🎮 Consola de Experiencias CoomÜnity */}
-              <Route path="/console" element={<ConsolePage />} />
-              
+              <Route path="/console" element={<ExperienceConsolePage />} />
+
               {/* Ruta de perfil de usuario */}
               <Route path="/profile" element={<ProfilePage />} />
-              
+
               {/* Otras rutas */}
               <Route path="/ai-test" element={<AITest />} />
               <Route path="/nostr-demo" element={<NostrDemoPage />} />

@@ -11,3 +11,4 @@ export { default as ProgressRing } from './ProgressRing';
 export { default as ActivityChart } from './ActivityChart';
 export { default as AchievementBar } from './AchievementBar';
 export { default as RealTimeMetrics } from './RealTimeMetrics';
+export { default as ConsciousProgressOrb } from './ConsciousProgressOrb';
