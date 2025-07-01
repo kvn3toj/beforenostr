@@ -40,6 +40,9 @@ import './index.css';
 // El sistema de notificaciones centralizado se proporciona a través de NotificationProvider
 // importado de './components/common/NotificationSystem'.
 
+import { useAuthStore } from './store/authStore';
+import { LoadingSpinner } from './components/ui/LoadingSpinner';
+
 const EnvironmentBanner: React.FC = () => {
   const env = import.meta.env.VITE_APP_ENV || 'development';
   const isMock = import.meta.env.VITE_ENABLE_MOCK_AUTH === 'true';
@@ -187,13 +190,19 @@ const AppRoutes: React.FC = () => {
 // Main App Component
 const App: React.FC = () => {
   const [, startTransition] = useTransition();
+  const { initializeAuth, isAuthenticated, isLoading } = useAuthStore();
 
   useEffect(() => {
     // Preload critical components on app start
     startTransition(() => {
       preloadCriticalComponents();
     });
-  }, []);
+    initializeAuth();
+  }, [initializeAuth]);
+
+  if (isLoading) {
+    return <LoadingSpinner />;
+  }
 
   return (
     <ErrorBoundary>

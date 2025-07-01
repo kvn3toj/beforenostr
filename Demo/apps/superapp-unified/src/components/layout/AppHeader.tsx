@@ -66,6 +66,9 @@ export const AppHeader: React.FC<AppHeaderProps> = ({ onDrawerToggle }) => {
         borderColor: 'divider',
         backgroundColor: 'background.paper',
         color: 'text.primary',
+        zIndex: (theme) => theme.zIndex.appBar + 1,
+        position: 'sticky',
+        top: 0,
       }}
     >
       <Toolbar>
@@ -79,12 +82,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({ onDrawerToggle }) => {
           <MenuIcon />
         </IconButton>
 
-        <Box sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center', gap: 1 }}>
-          <img src="/coomunity-logo.svg" alt="CoomÜnity Logo" style={{ height: 32 }} />
-          <Typography variant="h6" sx={{ fontWeight: 700 }}>
-            CoomÜnity
-          </Typography>
-        </Box>
+        {/* Logo removido - solo visible en sidebar para evitar duplicación */}
 
         <Box sx={{ flexGrow: 1 }} />
 
@@ -140,19 +138,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({ onDrawerToggle }) => {
             <Typography variant="subtitle1" sx={{fontWeight: 600}}>{user?.fullName}</Typography>
           </MenuItem>
           <Divider />
-          <MenuItem onClick={() => handleNavigate('/profile')}>
-            <ListItemIcon>
-              <AccountCircle fontSize="small" />
-            </ListItemIcon>
-            Mi Perfil
-          </MenuItem>
-          <MenuItem onClick={() => handleNavigate('/settings')}>
-            <ListItemIcon>
-              <Settings fontSize="small" />
-            </ListItemIcon>
-            Configuración
-          </MenuItem>
-          <Divider />
+          {/* Navegación de perfil y configuración movida al sidebar para evitar duplicación */}
           <MenuItem onClick={handleSignOut}>
              <ListItemIcon>
               <Logout fontSize="small" />

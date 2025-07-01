@@ -210,9 +210,9 @@ const UStatsMain: React.FC = React.memo(() => {
                   <ReciprocidadBalanceIndicator
                     data={{
                       currentBalance: philosophicalKPIs.reciprocidadBalanceIndex,
-                      trend: reciprocidadMetrics?.tendencias?.semanal || 0,
-                      reciprocidadGiven: reciprocidadMetrics?.metricas.dadoTotal || 0,
-                      reciprocidadReceived: reciprocidadMetrics?.metricas.recibidoTotal || 0,
+                      trend: reciprocidadMetrics?.metricas?.crecimientoSemanal || 0,
+                      reciprocidadGiven: reciprocidadMetrics?.metricas?.ondas || 0,
+                      reciprocidadReceived: reciprocidadMetrics?.metricas?.meritos || 0,
                       harmonyLevel: philosophicalKPIs.communityResonance,
                       lastUpdate: new Date().toISOString()
                     }}
@@ -236,7 +236,6 @@ const UStatsMain: React.FC = React.memo(() => {
               <ConsciousProgressOrb
                 currentLevel={philosophicalKPIs.transcendenceLevel}
                 progress={philosophicalKPIs.reciprocidadBalanceIndex}
-                nextMilestone={philosophicalKPIs.nextMilestone}
                 meritosCount={reciprocidadMetrics?.metricas.meritos || 0}
               />
             </Paper>
@@ -264,9 +263,9 @@ const UStatsMain: React.FC = React.memo(() => {
 
               <BienComunImpactVisualization
                 currentImpact={philosophicalKPIs.bienComunVector}
-                contributionHistory={reciprocidadMetrics?.historial?.contribucionesBienComun || []}
+                contributionHistory={[]}
                 communityResonance={philosophicalKPIs.communityResonance}
-                trends={reciprocidadMetrics?.tendencias || { semanal: 0, mensual: 0, anual: 0 }}
+                trends={{ semanal: reciprocidadMetrics?.metricas?.crecimientoSemanal || 0, mensual: 0, anual: 0 }}
                 isExpanded={expandedSections.impacto}
               />
             </Paper>
@@ -293,7 +292,7 @@ const UStatsMain: React.FC = React.memo(() => {
               </Box>
 
               <PhilosophicalMetricsGalaxy
-                elementos={elementalBalance.currentBalance}
+                elementos={elementalBalance.elements}
                 dominantElement={elementalBalance.dominantElement}
                 balanceScore={elementalBalance.balanceScore}
                 recommendations={elementalBalance.recommendations}
@@ -303,11 +302,11 @@ const UStatsMain: React.FC = React.memo(() => {
               <Collapse in={expandedSections.elementos}>
                 <Box sx={{ mt: 3 }}>
                   <ElementalHarmonyRadar
-                    elementos={elementalBalance?.currentBalance || { fuego: 50, agua: 50, tierra: 50, aire: 50 }}
+                    elementos={elementalBalance?.elements || { fuego: 50, agua: 50, tierra: 50, aire: 50 }}
                     dominantElement={elementalBalance?.dominantElement || 'fuego'}
                     balanceScore={elementalBalance?.balanceScore || 75}
                     recommendations={elementalBalance?.recommendations?.slice(0, 2).map(rec => ({
-                      element: 'fuego' as keyof typeof elementalBalance.currentBalance,
+                      element: 'fuego' as keyof ElementalData,
                       action: rec,
                       philosophy: 'Mantén el equilibrio y la armonía en tu desarrollo'
                     })) || []}

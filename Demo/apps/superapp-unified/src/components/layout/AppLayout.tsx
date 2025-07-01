@@ -10,6 +10,9 @@ import { FeedbackAgent } from '../feedback/FeedbackAgent';
 import { useLoadingStates } from '../../hooks/useLoadingStates';
 import { preloadCriticalResources, setupResourceCache, useLazyImage, monitorResourcePerformance } from '../../utils/resourceOptimization';
 
+// 🛠️ KIRA + ARIA + ZENO - Definir drawerWidth consistente
+const DRAWER_WIDTH = 280;
+
 export const AppLayout: React.FC = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
@@ -52,21 +55,21 @@ export const AppLayout: React.FC = () => {
     <Box sx={{ display: 'flex', height: '100vh', overflow: 'hidden' }}>
       <UniversalCosmicBackground />
 
-      {/* Desktop Sidebar */}
-      {!isMobile && <Sidebar variant="permanent" />}
+      {/* Desktop Sidebar - 🛠️ ARIA: Agregar drawerWidth */}
+      {!isMobile && <Sidebar variant="permanent" drawerWidth={DRAWER_WIDTH} />}
 
-      {/* Main Content Area */}
+      {/* Main Content Area - 🛠️ ZENO: Mejorar espaciado para desktop */}
       <Box
         sx={{
           display: 'flex',
           flexDirection: 'column',
           flex: 1,
           overflow: 'hidden',
-          // Add margin for desktop sidebar
-          marginLeft: isMobile ? 0 : 0, // Drawer handles its own spacing
+          // 🛠️ KIRA + ZENO: Corregir margin para desktop sidebar
+          marginLeft: isMobile ? 0 : `${DRAWER_WIDTH}px`,
         }}
       >
-        <AppHeader onDrawerToggle={handleDrawerToggle} showTopLoader={showTopLoader} />
+        <AppHeader onDrawerToggle={handleDrawerToggle} />
         <Box
           component="main"
           data-contextual="main-content"
@@ -84,12 +87,13 @@ export const AppLayout: React.FC = () => {
       {/* Mobile Navigation */}
       {isMobile && <BottomNavigation />}
 
-      {/* Mobile Drawer */}
+      {/* Mobile Drawer - 🛠️ ARIA: Agregar drawerWidth */}
       {isMobile && (
         <Sidebar
           variant="temporary"
           open={mobileDrawerOpen}
           onClose={handleDrawerToggle}
+          drawerWidth={DRAWER_WIDTH}
         />
       )}
 

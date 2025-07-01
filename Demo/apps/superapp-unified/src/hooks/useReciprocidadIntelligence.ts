@@ -1,21 +1,20 @@
 import { useState, useEffect, useMemo, useCallback } from 'react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useMutation } from '@tanstack/react-query';
 import { apiService } from '../lib/api-service';
 
 // Tipos para el Sistema de Inteligencia de Reciprocidad
+export interface UserPreferences {
+  preferredElements: Array<keyof any>; // Simplificado, ya que la lógica compleja se eliminó
+  learningStyle: string;
+  availableTime: number;
+  goals: string[];
+}
+
 export interface UserAction {
-  id: string;
-  type: 'giving' | 'receiving' | 'learning' | 'teaching' | 'collaborating' | 'creating';
-  module: 'uplay' | 'marketplace' | 'social' | 'profile' | 'groups' | 'lets';
-  value: number; // Impacto cuantificado de la acción
+  type: string;
+  value: number;
+  module: string;
   timestamp: Date;
-  metadata: {
-    recipient?: string;
-    resourceType?: string;
-    skillCategory?: string;
-    collaborators?: string[];
-    impact?: 'local' | 'regional' | 'global';
-  };
 }
 
 export interface ReciprocidadBalance {
@@ -87,213 +86,43 @@ export interface ReciprocidadIntelligenceData {
 
 // Hook principal para el Sistema de Inteligencia de Reciprocidad
 export const useReciprocidadIntelligence = (userId: string) => {
-  const [preferences, setPreferences] = useState({
-    preferredElements: ['fuego', 'agua'] as Array<keyof ReciprocidadBalance['elements']>,
-    learningStyle: 'visual' as 'visual' | 'auditory' | 'kinesthetic' | 'collaborative',
-    availableTime: 30, // minutos por día
-    goals: ['balance_reciprocidad', 'learn_skills', 'help_community'] as string[]
-  });
 
-  // Consulta principal de datos de inteligencia
-  const {
-    data: intelligenceData,
-    isLoading,
-    error,
-    refetch
-  } = useQuery<ReciprocidadIntelligenceData>({
-    queryKey: ['reciprocidad-intelligence', userId, preferences],
+  const reciprocityMetricsQuery = useQuery({
+    queryKey: ['reciprocityMetrics', userId],
     queryFn: async () => {
-      try {
-        // Construir URL con parámetros de query
-        const queryParams = new URLSearchParams();
-        queryParams.append('preferredElements', preferences.preferredElements.join(','));
-        queryParams.append('learningStyle', preferences.learningStyle);
-        queryParams.append('availableTime', preferences.availableTime.toString());
-        queryParams.append('goals', preferences.goals.join(','));
-
-        // TODO: El endpoint del backend también debe ser refactorizado de /reciprocidad-intelligence a /reciprocidad-intelligence
-        const response = await apiService.get(`/reciprocidad-intelligence/${userId}?${queryParams.toString()}`);
-        return (response as any).data || response;
-      } catch (error) {
-        console.warn('🧠 [ReciprocidadIntelligence] Backend not available, using intelligent mock data');
-        return generateIntelligentMockData(userId, preferences);
-      }
+      if (!userId) throw new Error('User ID is required');
+      // Apuntar al endpoint de usuario existente que ya funciona
+      const data = await apiService.get(`/users/${userId}/reciprocidad-metrics`);
+      return data;
     },
-    staleTime: 5 * 60 * 1000, // 5 minutos
-    gcTime: 15 * 60 * 1000,   // 15 minutos
     enabled: !!userId,
-    refetchOnWindowFocus: false
+    staleTime: 1000 * 60 * 5, // 5 minutes
+    refetchOnWindowFocus: false,
   });
 
-  // Registrar nueva acción de usuario
-  const recordActionMutation = useMutation({
-    mutationFn: async (action: Omit<UserAction, 'id' | 'timestamp'>) => {
-      const actionWithMetadata = {
-        ...action,
-        id: `action_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
-        timestamp: new Date(),
-        userId
-      };
+  // Las siguientes mutaciones se dejan como placeholders, pero no se usarán por ahora
+  // ya que la lógica de "intelligence" no existe en el backend.
 
-      try {
-        await apiService.post('/reciprocidad-intelligence/actions', actionWithMetadata);
-      } catch (error) {
-        console.warn('🧠 [ReciprocidadIntelligence] Action recorded locally (backend unavailable)');
-        // Guardar en localStorage como fallback
-        const localActions = JSON.parse(localStorage.getItem('reciprocidad_actions') || '[]');
-        localActions.push(actionWithMetadata);
-        localStorage.setItem('reciprocidad_actions', JSON.stringify(localActions.slice(-100))); // Keep last 100
-      }
-
-      return actionWithMetadata;
+  const sendActionMutation = useMutation({
+    mutationFn: async (action: UserAction) => {
+      console.warn("sendActionMutation is a placeholder and doesn't call a real endpoint.");
+      return Promise.resolve();
     },
-    onSuccess: () => {
-      // Recalcular inteligencia después de nueva acción
-      refetch();
-    }
   });
 
-  // Aplicar recomendación
   const applyRecommendationMutation = useMutation({
     mutationFn: async (recommendationId: string) => {
-      try {
-        await apiService.post(`/reciprocidad-intelligence/recommendations/${recommendationId}/apply`);
-      } catch (error) {
-        console.warn('🧠 [ReciprocidadIntelligence] Recommendation applied locally');
-      }
+      console.warn("applyRecommendationMutation is a placeholder and doesn't call a real endpoint.");
+      return Promise.resolve();
     },
-    onSuccess: () => {
-      refetch();
-    }
   });
 
-  // Calcular Balance de Reciprocidad en tiempo real
-  const calculateReciprocidadBalance = useCallback((actions: UserAction[]): ReciprocidadBalance => {
-    if (!actions.length) {
-      return {
-        overall: 50,
-        elements: { fuego: 50, agua: 50, tierra: 50, aire: 50, ether: 50 },
-        trend: 'stable',
-        lastCalculated: new Date()
-      };
-    }
-
-    const recent = actions.filter(a =>
-      Date.now() - new Date(a.timestamp).getTime() < 30 * 24 * 60 * 60 * 1000 // Last 30 days
-    );
-
-    const givingActions = recent.filter(a => ['giving', 'teaching', 'creating'].includes(a.type));
-    const receivingActions = recent.filter(a => ['receiving', 'learning'].includes(a.type));
-    const collaboratingActions = recent.filter(a => a.type === 'collaborating');
-
-    const givingScore = givingActions.reduce((sum, a) => sum + a.value, 0);
-    const receivingScore = receivingActions.reduce((sum, a) => sum + a.value, 0);
-    const collaboratingScore = collaboratingActions.reduce((sum, a) => sum + a.value, 0);
-
-    const totalScore = givingScore + receivingScore + collaboratingScore;
-    const reciprocidadBalance = totalScore > 0 ? givingScore / totalScore : 0.5;
-
-    // Calcular elementos basado en tipos de actividades
-    const elementScores = {
-      fuego: recent.filter(a => ['creating', 'teaching'].includes(a.type)).length * 10 + 30,
-      agua: recent.filter(a => a.type === 'collaborating').length * 15 + 25,
-      tierra: recent.filter(a => a.module === 'marketplace').length * 12 + 35,
-      aire: recent.filter(a => ['teaching', 'collaborating'].includes(a.type)).length * 8 + 40,
-      ether: Math.min(recent.length * 2 + 20, 100)
-    };
-
-    // Normalizar a 0-100
-    Object.keys(elementScores).forEach(key => {
-      elementScores[key as keyof typeof elementScores] = Math.min(100, Math.max(0, elementScores[key as keyof typeof elementScores]));
-    });
-
-    const overall = Math.round(reciprocidadBalance * 100);
-
-    return {
-      overall,
-      elements: elementScores,
-      trend: overall > 70 ? 'ascending' : overall < 40 ? 'declining' : 'stable',
-      lastCalculated: new Date()
-    };
-  }, []);
-
-  // Generar recomendaciones inteligentes
-  const generateRecommendations = useCallback((
-    balance: ReciprocidadBalance,
-    userPreferences: typeof preferences
-  ): SmartRecommendation[] => {
-    const recommendations: SmartRecommendation[] = [];
-
-    // Recomendaciones para equilibrar elementos bajos
-    Object.entries(balance.elements).forEach(([element, score]) => {
-      if (score < 60) {
-        const recommendation = generateElementBoostRecommendation(
-          element as keyof ReciprocidadBalance['elements'],
-          score,
-          userPreferences
-        );
-        if (recommendation) recommendations.push(recommendation);
-      }
-    });
-
-    // Recomendaciones de colaboración
-    if (balance.overall < 70) {
-      recommendations.push({
-        id: `collab_${Date.now()}`,
-        type: 'collaboration_match',
-        title: '🤝 Encuentra tu Compañero de Reciprocidad',
-        description: 'Conecta con alguien que complemente tus habilidades y mejore tu balance',
-        module: 'social',
-        action: {
-          route: '/social/reciprocidad-matches',
-          expectedImpact: 25
-        },
-        priority: 'high',
-        reciprocidadElement: 'agua',
-        estimatedTimeToComplete: 15
-      });
-    }
-
-    // ... más lógica de recomendación
-
-    return recommendations.slice(0, 5); // Limitar a 5 recomendaciones
-  }, []);
-
-  // Memoizar los datos derivados para evitar recálculos
-  const derivedData = useMemo(() => {
-    if (!intelligenceData) return null;
-    return {
-      balance: intelligenceData.reciprocidadBalance,
-      recommendations: intelligenceData.recommendations,
-      matches: intelligenceData.collaborationMatches,
-      insights: intelligenceData.personalizedInsights,
-      impact: intelligenceData.communityImpact
-    };
-  }, [intelligenceData]);
-
   return {
-    // Estado principal
-    isLoading,
-    error,
-    data: derivedData,
-
-    // Datos crudos para componentes avanzados
-    rawIntelligenceData: intelligenceData,
-
-    // Acciones y Mutaciones
-    recordAction: recordActionMutation.mutate,
+    reciprocityData: reciprocityMetricsQuery.data,
+    isLoading: reciprocityMetricsQuery.isLoading,
+    error: reciprocityMetricsQuery.error,
+    sendAction: sendActionMutation.mutate,
     applyRecommendation: applyRecommendationMutation.mutate,
-
-    // Preferencias del usuario
-    preferences,
-    setPreferences,
-
-    // Utilidades
-    recalculate: refetch,
-
-    // Funciones de cálculo expuestas
-    calculateReciprocidadBalance,
-    generateRecommendations
   };
 };
 

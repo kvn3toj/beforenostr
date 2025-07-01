@@ -258,60 +258,184 @@ async function seedMarketplace(prisma) {
   console.log('Marketplace data seeded successfully.');
 }
 
-async function main() {
-  try {
-    // --- Hashear contraseñas ---
-    const adminPassword = await bcrypt.hash('admin123', 10);
-    const userPassword = await bcrypt.hash('123456', 10);
+async function seedPermissionsAndRoles(prisma) {
+  console.log('Seeding permissions and roles...');
 
-    // --- Roles ---
-    await prisma.role.upsert({ where: { name: 'admin' }, update: {}, create: { name: 'admin' } });
-    await prisma.role.upsert({ where: { name: 'user' }, update: {}, create: { name: 'user' } });
-    await prisma.role.upsert({ where: { name: 'premium' }, update: {}, create: { name: 'premium' } });
-    await prisma.role.upsert({ where: { name: 'creator' }, update: {}, create: { name: 'creator' } });
-    await prisma.role.upsert({ where: { name: 'moderator' }, update: {}, create: { name: 'moderator' } });
+  const permissions = [
+    // System & Analytics
+    { name: 'system:health', description: 'Access to system health metrics' },
+    { name: 'analytics:read', description: 'Access to all analytics dashboards' },
+    { name: 'dashboard:view', description: 'Can view the main admin dashboard' },
 
-    // --- Usuarios ---
-    await prisma.user.upsert({
-      where: { email: 'admin@gamifier.com' },
-      update: { password: adminPassword },
-      create: { email: 'admin@gamifier.com', password: adminPassword, name: 'Admin', userRoles: { create: { role: { connect: { name: 'admin' } } } } },
+    // User Management
+    { name: 'users:read', description: 'Read access to user data' },
+    { name: 'users:write', description: 'Write access to user data' },
+    { name: 'users:manage', description: 'Full access to manage users' },
+
+    // Content Management
+    { name: 'content:read', description: 'Read access to content' },
+    { name: 'content:write', description: 'Write access to content' },
+    { name: 'content:manage', description: 'Full access to manage content' },
+
+    // Gamification & Challenges
+    { name: 'gamification:manage', description: 'Manage gamification settings' },
+    { name: 'challenges:manage', description: 'Manage challenges' },
+
+    // Marketplace & Wallet
+    { name: 'marketplace:manage', description: 'Manage marketplace items' },
+    { name: 'wallet:manage', description: 'Manage user wallets and transactions' },
+
+    // RBAC
+    { name: 'roles:read', description: 'Read access to roles and permissions' },
+    { name: 'roles:write', description: 'Write access to roles and permissions' },
+
+    // Invitations
+    { name: 'invitations:send', description: 'Ability to send invitations' },
+  ];
+
+  for (const p of permissions) {
+    await prisma.permission.upsert({
+      where: { name: p.name },
+      update: {},
+      create: p,
     });
-    await prisma.user.upsert({
-      where: { email: 'user@gamifier.com' },
-      update: { password: userPassword },
-      create: { email: 'user@gamifier.com', password: userPassword, name: 'Regular User', userRoles: { create: { role: { connect: { name: 'user' } } } } },
-    });
-     await prisma.user.upsert({
-      where: { email: 'premium@gamifier.com' },
-      update: { password: userPassword },
-      create: { email: 'premium@gamifier.com', password: userPassword, name: 'Premium User', userRoles: { create: [{ role: { connect: { name: 'user' } } }, { role: { connect: { name: 'premium' } } }] } },
-    });
-    await prisma.user.upsert({
-      where: { email: 'creator@gamifier.com' },
-      update: { password: userPassword },
-      create: { email: 'creator@gamifier.com', password: userPassword, name: 'Content Creator', userRoles: { create: [{ role: { connect: { name: 'user' } } }, { role: { connect: { name: 'creator' } } }] } },
-    });
-    await prisma.user.upsert({
-      where: { email: 'moderator@gamifier.com' },
-      update: { password: userPassword },
-      create: { email: 'moderator@gamifier.com', password: userPassword, name: 'Moderator', userRoles: { create: [{ role: { connect: { name: 'user' } } }, { role: { connect: { name: 'moderator' } } }] } },
-    });
-
-    console.log('Seed data for gamifier admin created successfully.');
-
-    // --- Videos de UPlay ---
-    await seedUPlay(prisma);
-
-    // --- Marketplace ---
-    await seedMarketplace(prisma);
-
-  } catch (e) {
-    console.error('Error during seeding:', e);
-    process.exit(1);
-  } finally {
-    await prisma.$disconnect();
   }
+  console.log('   - Upserted all application permissions.');
+
+  const allPermissions = await prisma.permission.findMany();
+
+  // Roles
+  const roles = [
+    { name: 'admin', description: 'Administrator with all permissions' },
+    { name: 'user', description: 'Regular user with basic permissions' },
+    { name: 'premium', description: 'Premium user with extended permissions' },
+    { name: 'creator', description: 'Content creator' },
+    { name: 'moderator', description: 'Content and community moderator' },
+  ];
+
+  for (const r of roles) {
+    await prisma.role.upsert({
+      where: { name: r.name },
+      update: {},
+      create: r,
+    });
+  }
+  console.log('   - Upserted all application roles.');
+
+  const adminRole = await prisma.role.findUnique({ where: { name: 'admin' } });
+  const userRole = await prisma.role.findUnique({ where: { name: 'user' } });
+
+  if (adminRole) {
+    for (const permission of allPermissions) {
+      await prisma.rolePermission.upsert({
+        where: {
+          roleId_permissionId: {
+            roleId: adminRole.id,
+            permissionId: permission.id,
+          },
+        },
+        update: {},
+        create: {
+          roleId: adminRole.id,
+          permissionId: permission.id,
+        },
+      });
+    }
+    console.log('   - Assigned all permissions to "admin" role.');
+  }
+
+  // Assign basic permissions to 'user' role
+  const userPermissions = await prisma.permission.findMany({
+    where: {
+      name: { in: ['content:read', 'wallet:read'] },
+    },
+  });
+
+  if (userRole) {
+    for (const permission of userPermissions) {
+      await prisma.rolePermission.upsert({
+        where: {
+          roleId_permissionId: {
+            roleId: userRole.id,
+            permissionId: permission.id,
+          },
+        },
+        update: {},
+        create: {
+          roleId: userRole.id,
+          permissionId: permission.id,
+        },
+      });
+    }
+    console.log('   - Assigned basic permissions to "user" role.');
+  }
+
+  console.log('Permissions and roles seeded successfully.');
 }
 
-main();
+async function main() {
+  console.log('Starting database seeding...');
+
+  // Seed Permissions and Roles first as other entities depend on them
+  await seedPermissionsAndRoles(prisma);
+
+  // Then seed users, as they are needed by Marketplace and others
+  const users = [
+    // ... (user creation logic remains the same)
+    { email: 'admin@gamifier.com', name: 'Admin', password: 'admin123', roles: ['admin'] },
+    { email: 'user@gamifier.com', name: 'User', password: '123456', roles: ['user'] },
+    { email: 'premium@gamifier.com', name: 'Premium User', password: '123456', roles: ['user', 'premium'] },
+    { email: 'creator@gamifier.com', name: 'Content Creator', password: '123456', roles: ['user', 'creator'] },
+    { email: 'moderator@gamifier.com', name: 'Moderator', password: '123456', roles: ['user', 'moderator'] },
+  ];
+
+  const salt = await bcrypt.genSalt(12);
+
+  for (const userData of users) {
+    const hashedPassword = await bcrypt.hash(userData.password, salt);
+    const user = await prisma.user.upsert({
+      where: { email: userData.email },
+      update: {},
+      create: {
+        email: userData.email,
+        name: userData.name,
+        password: hashedPassword,
+      },
+    });
+
+    const userRoles = await prisma.role.findMany({
+      where: { name: { in: userData.roles } },
+    });
+
+    for (const role of userRoles) {
+      await prisma.userRole.upsert({
+        where: {
+          userId_roleId: {
+            userId: user.id,
+            roleId: role.id,
+          },
+        },
+        update: {},
+        create: {
+          userId: user.id,
+          roleId: role.id,
+        },
+      });
+    }
+    console.log(`   - Upserted user: ${userData.email} with roles: ${userData.roles.join(', ')}`);
+  }
+
+  await seedUPlay(prisma);
+  await seedMarketplace(prisma);
+
+  console.log('Database seeding finished.');
+}
+
+main()
+  .catch((e) => {
+    console.error(e);
+    process.exit(1);
+  })
+  .finally(async () => {
+    await prisma.$disconnect();
+  });

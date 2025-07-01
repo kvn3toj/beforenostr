@@ -116,7 +116,7 @@ export const BottomNavigation: React.FC = () => {
         bottom: 0,
         left: 0,
         right: 0,
-        zIndex: 1000,
+        zIndex: (theme) => theme.zIndex.appBar - 1,
         display: { xs: 'block', md: 'none' },
         backgroundColor: 'rgba(255, 255, 255, 0.95)',
         backdropFilter: 'blur(20px)',

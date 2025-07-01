@@ -6,15 +6,15 @@
       "localStorage": [
         {
           "name": "COOMUNITY_AUTH_TOKEN",
-          "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxNzIyMDY2YS00NmRhLTRkYWItOGEwNi0zNzhjNzEzODgxYTIiLCJlbWFpbCI6InVzZXJAY29vbXVuaXR5LmNvbSIsIm5hbWUiOiJSb2RlcmljayBFYmVydCIsInJvbGVzIjpbXSwicGVybWlzc2lvbnMiOltdLCJpYXQiOjE3NTEwNDg1NjQsImV4cCI6MTc1MTY1MzM2NH0._32NqIxBwfmLEU1-QfWB2FmkyoDnTY3FdSDa6LxPihM"
+          "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkZDI5MGE4My1iMGU3LTQ1YzItYjk5Yi1hN2Q5ZjRlYzZiMmQiLCJlbWFpbCI6InVzZXJAZ2FtaWZpZXIuY29tIiwibmFtZSI6IlJlZ3VsYXIgVXNlciIsInJvbGVzIjpbInVzZXIiXSwicGVybWlzc2lvbnMiOltdLCJpYXQiOjE3NTEzOTc3NzksImV4cCI6MTc1MjAwMjU3OX0.6URMMc-NeEEC84Nx0J8v81BUWnCBOSWcKvFQA3rIka0"
         },
         {
           "name": "lets_education_state",
-          "value": "{\"userLevel\":\"newcomer\",\"hasCompletedOnboarding\":false,\"preferredExplanationStyle\":\"visual\",\"showSimplifiedUI\":true,\"completedAchievements\":[],\"currentStep\":\"welcome\",\"understoodConcepts\":[],\"gamificationPreferences\":{\"enableAnimations\":true,\"enableSoundEffects\":true,\"enableCelebrations\":true,\"difficultyLevel\":\"easy\"},\"interactionHistory\":{\"conceptsViewed\":[],\"tutorialsCompleted\":[],\"errorsEncountered\":[],\"lastActiveDate\":\"2025-06-27T18:22:44.067Z\"}}"
+          "value": "{\"userLevel\":\"newcomer\",\"hasCompletedOnboarding\":false,\"preferredExplanationStyle\":\"visual\",\"showSimplifiedUI\":true,\"completedAchievements\":[],\"currentStep\":\"welcome\",\"understoodConcepts\":[],\"gamificationPreferences\":{\"enableAnimations\":true,\"enableSoundEffects\":true,\"enableCelebrations\":true,\"difficultyLevel\":\"easy\"},\"interactionHistory\":{\"conceptsViewed\":[],\"tutorialsCompleted\":[],\"errorsEncountered\":[],\"lastActiveDate\":\"2025-07-01T19:22:58.678Z\"}}"
         },
         {
           "name": "COOMUNITY_USER_DATA",
-          "value": "{\"id\":\"1722066a-46da-4dab-8a06-378c713881a2\",\"email\":\"user@coomunity.com\",\"fullName\":\"Roderick Ebert\",\"roles\":[],\"createdAt\":\"2025-06-27T18:22:44.720Z\",\"accessToken\":\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxNzIyMDY2YS00NmRhLTRkYWItOGEwNi0zNzhjNzEzODgxYTIiLCJlbWFpbCI6InVzZXJAY29vbXVuaXR5LmNvbSIsIm5hbWUiOiJSb2RlcmljayBFYmVydCIsInJvbGVzIjpbXSwicGVybWlzc2lvbnMiOltdLCJpYXQiOjE3NTEwNDg1NjQsImV4cCI6MTc1MTY1MzM2NH0._32NqIxBwfmLEU1-QfWB2FmkyoDnTY3FdSDa6LxPihM\"}"
+          "value": "{\"id\":\"dd290a83-b0e7-45c2-b99b-a7d9f4ec6b2d\",\"email\":\"user@gamifier.com\",\"fullName\":\"Regular User\",\"roles\":[\"user\"],\"createdAt\":\"2025-07-01T19:22:59.397Z\",\"accessToken\":\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkZDI5MGE4My1iMGU3LTQ1YzItYjk5Yi1hN2Q5ZjRlYzZiMmQiLCJlbWFpbCI6InVzZXJAZ2FtaWZpZXIuY29tIiwibmFtZSI6IlJlZ3VsYXIgVXNlciIsInJvbGVzIjpbInVzZXIiXSwicGVybWlzc2lvbnMiOltdLCJpYXQiOjE3NTEzOTc3NzksImV4cCI6MTc1MjAwMjU3OX0.6URMMc-NeEEC84Nx0J8v81BUWnCBOSWcKvFQA3rIka0\"}"
         }
       ]
     }

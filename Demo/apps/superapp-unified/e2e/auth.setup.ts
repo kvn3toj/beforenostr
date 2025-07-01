@@ -13,9 +13,9 @@ setup('authenticate as admin', async ({ page }) => {
   await page.goto('/login');
   await page.waitForSelector('#root');
 
-  // Llenar credenciales del usuario de prueba verificadas
-  await page.fill('[data-testid="login-email-input"] input', 'user@coomunity.com');
-  await page.fill('[data-testid="login-password-input"] input', 'test123');
+  // Llenar credenciales del usuario de prueba verificadas (según Regla 2.7)
+  await page.fill('[data-testid="login-email-input"] input', 'user@gamifier.com');
+  await page.fill('[data-testid="login-password-input"] input', '123456');
 
   // Hacer clic en login
   await page.click('[data-testid="login-submit-button"]');

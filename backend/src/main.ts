@@ -16,24 +16,19 @@ async function bootstrap() {
 
   //   console.log('>>> Bootstrap: NestFactory created successfully');
 
-  // Lista blanca de dominios permitidos
+  // Habilitar CORS de forma explícita
   app.enableCors({
-    origin: (origin, callback) => {
-      const allowedOrigins = [
-        /http:\/\/localhost:\d+$/,
-        'https://godsplan.onrender.com',
-        'https://tu-dominio-frontend.com',
-        'https://superapp-unified-iota.vercel.app',
-        'https://superapp-unified-git-main-kvn3tojs-projects-9cd69e29.vercel.app',
-        'https://admin-frontend-git-main-kvn3tojs-projects-9cd69e29.vercel.app',
-        'https://superapp-unified-git-main-kvn3tojs-projects-642e52c0.vercel.app',
-      ];
-      if (!origin || allowedOrigins.some((regex) => (typeof regex === 'string' ? regex === origin : regex.test(origin)))) {
-        callback(null, true);
-      } else {
-        callback(new Error('Not allowed by CORS'));
-      }
-    },
+    origin: [
+      'http://localhost:3000', // Gamifier Admin local
+      'http://localhost:3001', // SuperApp local
+      'http://localhost:5173', // Puerto por defecto de Vite (SuperApp)
+      'https://godsplan.onrender.com',
+      'https://tu-dominio-frontend.com',
+      'https://superapp-unified-iota.vercel.app',
+      'https://superapp-unified-git-main-kvn3tojs-projects-9cd69e29.vercel.app',
+      'https://admin-frontend-git-main-kvn3tojs-projects-9cd69e29.vercel.app',
+      'https://superapp-unified-git-main-kvn3tojs-projects-642e52c0.vercel.app',
+    ],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     allowedHeaders: 'Content-Type, Authorization, X-Requested-With',
     credentials: true,

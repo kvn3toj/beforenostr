@@ -120,12 +120,16 @@ export const Sidebar: React.FC<SidebarProps> = ({
   const sidebarContent = (
     <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
       <Stack sx={{ p: 2, pt: 3 }} direction="row" alignItems="center" spacing={1.5}>
-        <img src="/coomunity-logo.svg" alt="CoomÜnity Logo" style={{ height: 40 }} />
-         <Typography variant="h6" sx={{ fontWeight: 700, color: 'text.primary' }}>
-          CoomÜnity
-        </Typography>
+        <img
+          src="/coomunity-logo.svg"
+          alt="CoomÜnity Logo"
+          style={{
+            height: 40,
+            width: 'auto'
+          }}
+        />
       </Stack>
-      <Divider sx={{ my: 1 }} />
+      <Divider />
       <Box sx={{ flexGrow: 1 }}>
         <List dense>
           {mainNavItems.map((item) => (

@@ -29,10 +29,11 @@ export default defineConfig({
     },
   ],
 
-  webServer: {
-    command: 'echo "Usando servidor existente en puerto 3000"',
-    url: 'http://localhost:3000',
-    reuseExistingServer: true,
-    timeout: 5000,
-  },
+  // Temporalmente deshabilitado - usando servidor manual
+  // webServer: {
+  //   command: 'echo "Usando servidor existente en puerto 3000"',
+  //   url: 'http://localhost:3000',
+  //   reuseExistingServer: true,
+  //   timeout: 5000,
+  // },
 });

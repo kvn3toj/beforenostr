@@ -28,6 +28,7 @@ import {
   List,
   ListItem,
   ListItemText,
+  Container,
 } from '@mui/material';
 import {
   Add as AddIcon,
@@ -87,6 +88,9 @@ export const ExperienceConsolePage: React.FC = () => {
     deleteChallenge,
   } = useConsoleData(realTimeUpdates);
 
+  // ✅ DEFENSIVE VALIDATION: Asegurar que challenges sea siempre un array
+  const safeChallenges = Array.isArray(challenges) ? challenges : [];
+
   // =====================================================================
   // HANDLERS
   // =====================================================================
@@ -129,7 +133,7 @@ export const ExperienceConsolePage: React.FC = () => {
     },
     {
       label: 'Desafíos Activos',
-      value: challenges?.filter(c => c.isActive).length || 0,
+      value: safeChallenges.filter(c => c.status === 'ACTIVE').length || 0,
       change: `+${consoleStats?.pendingValidations || 0} pend.`,
       icon: <ChallengeIcon />,
       gradient: 'linear-gradient(135deg, #2196F3 0%, #64B5F6 100%)',
@@ -149,6 +153,24 @@ export const ExperienceConsolePage: React.FC = () => {
       gradient: 'linear-gradient(135deg, #9C27B0 0%, #BA68C8 100%)',
     },
   ];
+
+  // ✅ DEBUG INFO: Mostrar información de debugging cuando hay errores
+  if (error) {
+    console.error('Console Data Error:', error);
+  }
+
+  if (isLoading) {
+    console.log('Console Data Loading...');
+  }
+
+  console.log('Console Data State:', {
+    challenges: safeChallenges.length,
+    metrics: !!metrics,
+    consoleStats: !!consoleStats,
+    stages: Array.isArray(stages) ? stages.length : 'not array',
+    isLoading,
+    error: !!error
+  });
 
   // =====================================================================
   // COMPONENTES UI MEJORADOS
@@ -218,17 +240,18 @@ export const ExperienceConsolePage: React.FC = () => {
 
   if (error) {
     return (
-      <Box sx={{ p: 3 }}>
-        <Alert severity="error" sx={{ borderRadius: 3 }}>
-          <Typography variant="h6">🚨 Error en el Cerebro Operativo</Typography>
-          <Typography>
-            No se pudieron cargar las métricas de la Consola. Verificando conexión con el backend...
-          </Typography>
-          <Button variant="outlined" startIcon={<RefreshIcon />} onClick={refreshConsole} sx={{ mt: 2 }}>
-            Reactivar Sistema
-          </Button>
+      <Container maxWidth="lg" sx={{ py: 4 }}>
+        <Alert
+          severity="error"
+          action={
+            <Button onClick={refreshConsole} size="small">
+              Reintentar
+            </Button>
+          }
+        >
+          Error al cargar datos de la consola: {error.message || 'Error desconocido'}
         </Alert>
-      </Box>
+      </Container>
     );
   }
 
@@ -399,11 +422,11 @@ export const ExperienceConsolePage: React.FC = () => {
             <Box>
               <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
                 <Typography variant="h5" color="primary" fontWeight="bold">
-                  🎯 Desafíos Activos ({challenges?.filter(c => c.isActive).length || 0})
+                  🎯 Desafíos Activos ({safeChallenges.length})
                 </Typography>
               </Box>
 
-              {!challenges || challenges.length === 0 ? (
+              {!safeChallenges || safeChallenges.length === 0 ? (
                 <Box sx={{ textAlign: 'center', py: 8, background: 'linear-gradient(135deg, #f6f9fc 0%, #e9ecef 100%)', borderRadius: 3 }}>
                   <ChallengeIcon sx={{ fontSize: 100, color: 'text.secondary', mb: 3 }} />
                   <Typography variant="h5" color="text.secondary" gutterBottom fontWeight="bold">
@@ -428,7 +451,7 @@ export const ExperienceConsolePage: React.FC = () => {
                 </Box>
               ) : (
                 <Box>
-                  {challenges.map((challenge) => (
+                  {safeChallenges.map((challenge) => (
                     <Card key={challenge.id} sx={{ my: 2 }}>
                       <CardContent>
                         <Typography variant="h6">{challenge.name}</Typography>
