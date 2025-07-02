@@ -1,6 +1,10 @@
-const { PrismaClient } = require('../src/generated/prisma');
-const bcrypt = require('bcrypt');
-const { faker } = require('@faker-js/faker');
+import { PrismaClient } from '../src/generated/prisma';
+import bcrypt from 'bcrypt';
+import { faker } from '@faker-js/faker';
+import dotenv from 'dotenv';
+
+// Cargar variables de entorno del .env
+dotenv.config();
 
 const prisma = new PrismaClient();
 
