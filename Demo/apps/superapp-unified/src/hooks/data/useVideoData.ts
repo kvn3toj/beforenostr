@@ -99,11 +99,11 @@ const adaptBackendVideoData = (backendVideo: any): any => {
       title: backendVideo.title || '',
       description: backendVideo.description || '',
       url: backendVideo.externalId ? `https://www.youtube.com/watch?v=${backendVideo.externalId}` : (backendVideo.url || ''),
-      thumbnail: backendVideo.thumbnailUrl || backendVideo.thumbnail || '🎬', // Emoji por defecto
+      thumbnailUrl: backendVideo.thumbnailUrl || (backendVideo.externalId ? `https://i3.ytimg.com/vi/${backendVideo.externalId}/hqdefault.jpg` : undefined),
       duration: backendVideo.duration || 0,
       questions: adaptedQuestions,
       category: categories[0] || 'General', // Tomar la primera categoría
-      difficulty: 'beginner', // Default ya que el backend no mapea difficulty
+      difficulty: 'Principiante', // FIX: Default a un valor válido del enum. El backend no mapea difficulty.
       tags,
       createdAt: backendVideo.createdAt ? new Date(backendVideo.createdAt) : undefined,
       updatedAt: backendVideo.updatedAt ? new Date(backendVideo.updatedAt) : undefined,
@@ -135,11 +135,11 @@ const adaptBackendVideoData = (backendVideo: any): any => {
       title: backendVideo.title || 'Video sin título',
       description: backendVideo.description || '',
       url: backendVideo.url || '',
-      thumbnail: backendVideo.thumbnailUrl || '🎬',
+      thumbnailUrl: backendVideo.thumbnailUrl || (backendVideo.externalId ? `https://i3.ytimg.com/vi/${backendVideo.externalId}/hqdefault.jpg` : undefined),
       duration: backendVideo.duration || 0,
       questions: [],
       category: 'General',
-      difficulty: 'beginner',
+      difficulty: 'Principiante', // FIX: Default a un valor válido del enum.
       tags: [],
       rewards: {
         meritos: 50,
@@ -215,17 +215,17 @@ const VideoApiService = {
     if (params.offset) queryParams.append('offset', params.offset.toString());
     if (params.search) queryParams.append('search', params.search);
 
-    console.log('🎬 Obteniendo videos del backend...');
-    const response: any = await apiService.get(`/video-items?${queryParams.toString()}`);
-    console.log('🎬 Respuesta completa del backend:', response);
+    console.log('🎬 Obteniendo playlists con videos del backend...');
+    const response: any = await apiService.get(`/playlists?includeItems=true&${queryParams.toString()}`);
+    console.log('🎬 Respuesta completa del backend (playlists):', response);
 
-    // La respuesta directa ya es el array de videos
-    const videosArray = response;
-    console.log('🎬 Videos array:', videosArray);
+    const videosArray = response?.data?.flatMap((playlist: any) => playlist.videoItems || []) || [];
+
+    console.log('🎬 Videos extraídos de las playlists:', videosArray);
     console.log('🎬 Es array?', Array.isArray(videosArray));
 
     // Adaptar y validar cada video en la respuesta
-    if (Array.isArray(videosArray)) {
+    if (Array.isArray(videosArray) && videosArray.length > 0) {
       console.log('🎥 Procesando videos del backend:', videosArray.length, 'videos');
       const processedVideos = videosArray.map((video: unknown, index: number) => {
         console.log(`📹 Procesando video ${index + 1}:`, video);

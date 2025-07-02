@@ -65,11 +65,41 @@ export class PlaylistService {
 
     const include: any = {};
     if (includeMundo) include.mundo = true;
-    if (includeItems)
+    if (includeItems) {
       include.videoItems = {
+        select: {
+          id: true,
+          title: true,
+          description: true,
+          url: true,
+          thumbnailUrl: true,
+          duration: true,
+          categories: true,
+          platform: true,
+          externalId: true,
+          isActive: true,
+          order: true,
+          questions: {
+            select: {
+              id: true,
+              text: true,
+              timestamp: true,
+              type: true,
+              answerOptions: {
+                select: {
+                  id: true,
+                  text: true,
+                  isCorrect: true,
+                  order: true
+                }
+              }
+            }
+          }
+        },
         where: { isActive: true },
         orderBy: { order: 'asc' },
       };
+    }
 
     const orderByClause: any = {
       [orderBy]: orderDirection,

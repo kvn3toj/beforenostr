@@ -1,12 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Container, Tabs, Tab, Fade, Paper, Typography, IconButton, useTheme } from '@mui/material';
+import { Box, Container, Tabs, Tab, Fade, Paper, Typography, IconButton, useTheme, Chip, Badge } from '@mui/material';
 import {
   Dashboard,
   VideoLibrary,
   EmojiEvents,
   Groups,
   PlayArrow,
+  BrightnessHigh,
+  School,
+  Extension,
 } from '@mui/icons-material';
+import { keyframes } from '@mui/system';
 
 // ✅ UPlay Core Components (solo los esenciales)
 import { UPlayGamifiedDashboard as UPlayEnhancedDashboard } from '../components/modules/uplay/UPlayGamifiedDashboard';
@@ -44,10 +48,27 @@ const TabPanel: React.FC<TabPanelProps> = ({ children, value, index }) => {
       id={`uplay-tabpanel-${index}`}
       aria-labelledby={`uplay-tab-${index}`}
     >
-      {value === index && <Box sx={{ pt: 3 }}>{children}</Box>}
+      {value === index && (
+        <Fade in={true} timeout={600}>
+          <Box sx={{ pt: 3 }}>{children}</Box>
+        </Fade>
+      )}
     </div>
   );
 };
+
+// Keyframes para la animación de pulso
+const pulseAnimation = keyframes`
+  0% {
+    box-shadow: 0 0 0 0 rgba(92, 36, 131, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(92, 36, 131, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(92, 36, 131, 0);
+  }
+`;
 
 // ✅ Simple Header Component
 interface UPlayHeaderProps {
@@ -65,73 +86,94 @@ const UPlayHeader: React.FC<UPlayHeaderProps> = ({ learningState }) => {
 
   return (
     <Fade in={true} timeout={800}>
-      <Paper elevation={0} sx={{
-        background: theme.palette.background.default,
-        borderRadius: 2,
-        border: `1px solid ${theme.palette.divider}`,
-        mb: 3,
-        p: { xs: 2, md: 3 },
-      }}>
-        <Container maxWidth="xl">
-          <Box display="flex" flexDirection={{ xs: 'column', md: 'row' }} alignItems="center" justifyContent="space-between" gap={3} py={1}>
+      <Paper
+        elevation={0}
+        sx={{
+          background: `linear-gradient(145deg, ${theme.palette.background.paper}, ${theme.palette.background.default})`,
+          borderRadius: 4,
+          border: `1px solid ${theme.palette.divider}`,
+          mb: 3,
+          p: { xs: 2, md: 3 },
+          position: 'relative',
+          overflow: 'hidden',
+          '&::before': {
+            content: '""',
+            position: 'absolute',
+            top: '-50%',
+            left: '-50%',
+            width: '200%',
+            height: '200%',
+            background: `radial-gradient(circle, rgba(92, 36, 131, 0.05) 0%, rgba(92, 36, 131, 0) 40%)`,
+            animation: 'rotate 20s linear infinite',
+          },
+          '@keyframes rotate': {
+            '0%': { transform: 'rotate(0deg)' },
+            '100%': { transform: 'rotate(360deg)' },
+          },
+        }}
+      >
+        <Container maxWidth="xl" sx={{ position: 'relative', zIndex: 1 }}>
+          <Box display="flex" flexDirection={{ xs: 'column', md: 'row' }} alignItems="center" justifyContent="space-between" gap={3}>
             <Box textAlign={{ xs: 'center', md: 'left' }}>
-              <Typography variant="h3" fontWeight="600" sx={{
+              <Typography variant="h2" fontWeight="bold" sx={{
                 mb: 0.5,
                 color: theme.palette.primary.main,
-                fontSize: { xs: '1.5rem', md: '1.75rem' }
+                fontSize: { xs: '2rem', md: '2.5rem' },
+                letterSpacing: '-1px',
               }}>
                 ÜPlay
               </Typography>
-              <Typography variant="body2" color={theme.palette.text.secondary} sx={{ fontSize: { xs: '0.85rem', md: '0.9rem' } }}>
-                Gamified Play List - Experiencia de Aprendizaje Interactiva
+              <Typography variant="h6" color={theme.palette.text.secondary} sx={{ fontSize: { xs: '0.9rem', md: '1rem' }, fontWeight: 400 }}>
+                Gamified Play List
               </Typography>
-              <Box sx={{ display: 'flex', gap: 1, mt: 2, flexWrap: 'wrap', justifyContent: { xs: 'center', md: 'flex-start' } }}>
-                <LearningLevelChip
-                  level={learningState.level}
-                  progress={learningState.sessionProgress}
-                  size="small"
+            </Box>
+
+            <Box sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, alignItems: 'center', gap: 3, mt: { xs: 2, md: 0 } }}>
+              {/* Insignias de estado */}
+              <Box sx={{ display: 'flex', gap: 2, alignItems: 'center', justifyContent: 'center' }}>
+                <Chip
+                  icon={<School />}
+                  label={learningState.level}
+                  variant="outlined"
+                  size="medium"
+                  sx={{ borderColor: 'primary.main', color: 'primary.main', fontWeight: 500 }}
                   data-testid="learning-level-indicator"
                 />
-                <ConsciousStateChip
-                  state={learningState.consciousState}
-                  intensity={2}
-                  size="small"
+                <Chip
+                  icon={<BrightnessHigh />}
+                  label={learningState.consciousState}
+                  variant="outlined"
+                  size="medium"
+                  sx={{ borderColor: 'secondary.main', color: 'secondary.main', fontWeight: 500 }}
                   data-testid="conscious-state-indicator"
                 />
-                <LearningModeChip
-                  mode={learningState.mode}
-                  active={learningState.currentModule !== ''}
-                  size="small"
+                <Chip
+                  icon={<Extension />}
+                  label={learningState.mode}
+                  variant="outlined"
+                  size="medium"
+                  sx={{ borderColor: 'info.main', color: 'info.main', fontWeight: 500 }}
                   data-testid="learning-mode-indicator"
                 />
               </Box>
-            </Box>
-            <Box display="flex" alignItems="center" gap={2}>
-              <Paper elevation={0} sx={{
-                px: 2.5,
-                py: 1,
-                borderRadius: 2,
-                background: 'rgba(92, 36, 131, 0.02)',
-                border: `1px solid ${theme.palette.divider}`
-              }}>
-                <Typography variant="caption" color={theme.palette.text.disabled}>Estado</Typography>
-                <Typography variant="subtitle2" fontWeight="500" color={theme.palette.primary.main}>En Línea</Typography>
-              </Paper>
+
               <IconButton
                 data-testid="cosmic-play-button"
                 aria-label="Iniciar experiencia cósmica principal"
                 sx={{
-                  bgcolor: 'rgba(92, 36, 131, 0.04)',
-                  color: theme.palette.primary.main,
-                  width: 48,
-                  height: 48,
+                  bgcolor: 'primary.main',
+                  color: 'primary.contrastText',
+                  width: 56,
+                  height: 56,
+                  animation: `${pulseAnimation} 2s infinite`,
+                  transition: 'transform 0.3s ease',
                   '&:hover': {
-                    bgcolor: 'rgba(92, 36, 131, 0.08)',
-                    transform: 'scale(1.05)'
+                    bgcolor: 'primary.dark',
+                    transform: 'scale(1.1)'
                   }
                 }}
               >
-                <PlayArrow />
+                <PlayArrow sx={{ fontSize: 32 }} />
               </IconButton>
             </Box>
           </Box>
@@ -248,108 +290,112 @@ const UPlay: React.FC = () => {
     };
 
     // Initialize session after a small delay for better UX
-    const timer = setTimeout(initializeSession, 1200);
+    setTimeout(initializeSession, 500);
 
     return () => {
-      clearTimeout(timer);
+      isSessionInitialized = false;
     };
-  }, [showWisdomIntegration]);
+  }, []);
 
-  // Handle dismissal of feedback with index parameter
   const handleDismissFeedback = (index: number) => {
     dismissFeedback(index);
+    showMetacognition('Has procesado un insight. La metacognición es clave para la maestría.');
   };
 
   return (
-    <Box
-      sx={{
-        flexGrow: 1,
-        bgcolor: theme.palette.background.default,
-        minHeight: '100vh',
-        pb: 10,
-      }}
-      data-testid="uplay-page"
-    >
-      {/* Header */}
-      <UPlayHeader learningState={learningState} />
-
-      {/* Navigation Tabs */}
-      <Container maxWidth="xl">
-        <Paper
-          elevation={0}
+    <Container maxWidth="xl" sx={{ py: { xs: 2, md: 4 } }}>
+      <UPlayHeader
+        learningState={learningState}
+      />
+      <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+        <Tabs
+          value={activeTab}
+          onChange={handleTabChange}
+          aria-label="UPlay Navigation Tabs"
+          variant="scrollable"
+          scrollButtons="auto"
+          allowScrollButtonsMobile
           sx={{
-            bgcolor: theme.palette.background.default,
-            borderRadius: 2,
-            border: `1px solid ${theme.palette.divider}`,
-            mb: 3,
-            overflow: 'hidden',
+            '& .MuiTabs-indicator': {
+              backgroundColor: theme.palette.primary.main,
+              height: '3px',
+              borderRadius: '3px 3px 0 0',
+            },
+            '& .MuiTab-root': {
+              minWidth: 0,
+              flex: 1,
+              textTransform: 'none',
+              fontWeight: 500,
+              fontSize: '1rem',
+              color: theme.palette.text.secondary,
+              '&.Mui-selected': {
+                color: theme.palette.primary.main,
+              },
+              '&:hover': {
+                backgroundColor: 'rgba(92, 36, 131, 0.04)',
+                borderRadius: '8px 8px 0 0',
+              },
+            },
           }}
         >
-          <Tabs
-            value={activeTab}
-            onChange={handleTabChange}
-            aria-label="UPlay navigation tabs"
-            variant="scrollable"
-            scrollButtons="auto"
-            allowScrollButtonsMobile
-            sx={{
-              minHeight: 56,
-              '& .MuiTabs-flexContainer': {
-                borderBottom: 'none',
-              },
-              '& .MuiTabs-indicator': {
-                height: 2,
-                borderRadius: '2px 2px 0 0',
-              },
-              '& .MuiTab-root': {
-                minHeight: 56,
-                fontSize: { xs: '0.8rem', md: '0.875rem' },
-                fontWeight: 500,
-                color: theme.palette.text.secondary,
-                '&.Mui-selected': {
-                  color: theme.palette.primary.main,
-                  fontWeight: 600,
-                },
-                '&:hover': {
-                  color: theme.palette.primary.main,
-                  opacity: 0.8,
-                }
+          {tabs.map((tab, index) => (
+            <Tab
+              key={tab.id}
+              label={
+                tab.notifications ? (
+                  <Badge
+                    color="secondary"
+                    variant="dot"
+                    sx={{
+                      '& .MuiBadge-badge': {
+                        right: -5,
+                        top: 5,
+                      },
+                    }}
+                  >
+                    {tab.label}
+                  </Badge>
+                ) : (
+                  tab.label
+                )
               }
-            }}
-          >
-            {tabs.map((tab, index) => (
-              <Tab
-                key={tab.id}
-                icon={<tab.icon sx={{ fontSize: { xs: '1.2rem', md: '1.4rem' } }} />}
-                iconPosition="start"
-                label={tab.label}
-                id={`uplay-tab-${index}`}
-                aria-controls={`uplay-tabpanel-${index}`}
-                data-testid={`uplay-tab-${tab.id}`}
-                sx={{
-                  textTransform: 'none',
-                  px: { xs: 1.5, md: 2.5 },
-                  py: 1.5,
-                }}
-              />
-            ))}
-          </Tabs>
-        </Paper>
+              icon={<tab.icon />}
+              iconPosition="start"
+              id={`uplay-tab-${index}`}
+              aria-controls={`uplay-tabpanel-${index}`}
+              data-testid={`uplay-tab-${tab.id}`}
+              disableRipple
+            />
+          ))}
+        </Tabs>
+      </Box>
 
-        {/* Tab Content */}
-        {tabs.map((tab, index) => (
-          <TabPanel key={tab.id} value={activeTab} index={index}>
-            {tab.component}
-          </TabPanel>
+      {tabs.map((tab, index) => (
+        <TabPanel key={tab.id} value={activeTab} index={index}>
+          {tab.component}
+        </TabPanel>
+      ))}
+
+      {/* 🛡️ Guardian Conscious Feedback Container */}
+      <Box sx={{
+        position: 'fixed',
+        bottom: 16,
+        right: 16,
+        zIndex: 1400,
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 2,
+        maxWidth: 360,
+      }}>
+        {feedbacks.map((feedback, index) => (
+          <ConsciousUPlayFeedback
+            key={index}
+            feedback={feedback}
+            onDismiss={() => handleDismissFeedback(index)}
+          />
         ))}
-      </Container>
-
-      {/* Conscious Feedback System */}
-      <ConsciousUPlayFeedback
-        feedbacks={feedbacks}
-        onDismiss={handleDismissFeedback}
-      />
-    </Box>
+      </Box>
+    </Container>
   );
 };
 

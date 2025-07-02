@@ -711,7 +711,7 @@ export const DiscoveryTutorialProvider: React.FC<{ children: React.ReactNode }> 
         <Grid item xs={12} md={4} sx={{
           backgroundColor: '#f8fafc',
           borderRight: '1px solid #e2e8f0',
-          display: 'flex',
+          display: { xs: 'none', md: 'flex' },
           flexDirection: 'column',
           p: 3,
         }}>
@@ -752,7 +752,7 @@ export const DiscoveryTutorialProvider: React.FC<{ children: React.ReactNode }> 
         </Grid>
 
         {/* Contenido Principal */}
-        <Grid item xs={12} md={8} sx={{ display: 'flex', flexDirection: 'column', p: 4, position: 'relative' }}>
+        <Grid item xs={12} md={8} sx={{ display: 'flex', flexDirection: 'column', p: { xs: 2, sm: 3, md: 4 }, position: 'relative' }}>
           <IconButton onClick={closeTutorial} sx={{ position: 'absolute', top: 16, right: 16 }}>
             <CloseIcon />
           </IconButton>
@@ -852,13 +852,14 @@ export const DiscoveryTutorialProvider: React.FC<{ children: React.ReactNode }> 
         open={isActive}
         onClose={closeTutorial}
         fullWidth
-        maxWidth="lg"
+        maxWidth="md"
         PaperProps={{
           sx: {
-            height: '80vh',
-            maxHeight: '700px',
-            borderRadius: '24px',
-            overflow: 'hidden', // Evita que los hijos se desborden
+            maxHeight: { xs: '100%', sm: '90vh' },
+            height: { xs: '100%', sm: 'auto' },
+            borderRadius: { xs: 0, sm: '24px' },
+            margin: { xs: 0 },
+            overflow: 'hidden',
           }
         }}
       >

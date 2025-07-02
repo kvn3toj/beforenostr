@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate, useLocation } from 'react-router-dom';
+import { useParams, useNavigate, useLocation, useSearchParams } from 'react-router-dom';
 import {
   Box,
   Container,
@@ -40,41 +40,26 @@ import {
   Share as ShareIcon,
   Bookmark as BookmarkIcon,
   Favorite as FavoriteIcon,
+  HelpOutline as HelpOutlineIcon,
+  CheckCircleOutline as CheckCircleOutlineIcon,
 } from '@mui/icons-material';
+import { z } from 'zod';
 
 // Import components and hooks
 import InteractiveVideoPlayerOverlay from '../components/modules/uplay/components/InteractiveVideoPlayerOverlay';
-import { useVideos } from '../hooks/useRealBackendData'; // Hook del backend real
+import { useVideos, useVideoDetail } from '../hooks/data/useVideoData'; // Hook del backend real
 import { apiService } from '../lib/api-service'; // Para analytics
 import { getVideoThumbnail } from '../utils/videoUtils';
+import { LoadingSpinner } from '../components/ui/LoadingSpinner';
+import {
+  VideoDataSchema,
+  VideoItem,
+} from '../types/video-player.schemas';
+import YouTubePlayer from '../components/modules/uplay/components/YouTubePlayer';
 
-// Types
-interface VideoData {
-  id: string;
-  title: string;
-  description: string;
-  url: string;
-  duration: number;
-  questions: any[];
-  thumbnail?: string;
-  category?: string;
-  difficulty?: 'easy' | 'medium' | 'hard';
-  estimatedRewards?: {
-    merits: number;
-    ondas: number;
-  };
-  tags?: string[];
-}
-
-interface PlaylistVideo {
-  id: string;
-  title: string;
-  duration: number;
-  thumbnail?: string;
-  hasQuestions: boolean;
-  difficulty?: string;
-  isCompleted?: boolean;
-}
+// Types - Simplificado gracias a la fuente de verdad única
+// interface VideoData { ... } // Eliminado
+// interface PlaylistVideo { ... } // Eliminado
 
 interface UserProgress {
   completedVideos: number;
@@ -99,26 +84,6 @@ const isPreviewEnvironment = (): boolean => {
     return videoPlayerEnvCheckCache;
   }
 
-  // Check if we're forcing YouTube videos in development
-  const forceYouTube = import.meta.env.VITE_FORCE_YOUTUBE_VIDEOS === 'true';
-
-  // 🔧 DEBUG: Log completo para debugging
-  console.log('🔧 UPlayVideoPlayer isPreviewEnvironment Debug COMPLETO:', {
-    forceYouTube,
-    VITE_FORCE_YOUTUBE_VIDEOS_raw: import.meta.env.VITE_FORCE_YOUTUBE_VIDEOS,
-    hostname: typeof window !== 'undefined' ? window.location.hostname : 'undefined',
-    search: typeof window !== 'undefined' ? window.location.search : 'undefined',
-    cached: videoPlayerEnvCheckCache
-  });
-
-  // Si VITE_FORCE_YOUTUBE_VIDEOS está activo, SIEMPRE usar YouTube
-  if (forceYouTube) {
-    console.log('✅ UPlayVideoPlayer: ACTIVANDO modo YouTube por variable de entorno VITE_FORCE_YOUTUBE_VIDEOS=true');
-    videoPlayerEnvCheckCache = true;
-    videoPlayerEnvCheckTime = now;
-    return true;
-  }
-
   // Check for common preview environment indicators
   const result = (
     typeof window !== 'undefined' && (
@@ -136,7 +101,7 @@ const isPreviewEnvironment = (): boolean => {
 };
 
 // Direct video data without async loading
-const getVideoData = (videoId: string): VideoData => {
+const getVideoData = (videoId: string): VideoItem => {
   // console.log('🔍 getVideoData called with videoId:', videoId);
 
   // Use public videos for preview environments like Builder.io
@@ -155,7 +120,7 @@ const getVideoData = (videoId: string): VideoData => {
     return localUrl;
   };
 
-  const videoDatabase: Record<string, VideoData> = {
+  const videoDatabase: Record<string, VideoItem> = {
     'coomunity-intro': {
       id: 'coomunity-intro',
       title: 'Introducción a CoomÜnity: Filosofía y Principios',
@@ -165,7 +130,7 @@ const getVideoData = (videoId: string): VideoData => {
       duration: 240,
       questions: [],
       category: 'Fundamentos',
-      difficulty: 'easy',
+      difficulty: 'Principiante',
       estimatedRewards: { merits: 120, ondas: 50 },
       tags: ['Filosofía', 'Reciprocidad', 'Bien Común', 'Öndas'],
     },
@@ -178,7 +143,7 @@ const getVideoData = (videoId: string): VideoData => {
       duration: 320,
       questions: [],
       category: 'Principios',
-      difficulty: 'medium',
+      difficulty: 'Intermedio',
       estimatedRewards: { merits: 180, ondas: 75 },
       tags: ['Reciprocidad', 'Reciprocidad', 'Equilibrio', 'Armonía'],
     },
@@ -191,7 +156,7 @@ const getVideoData = (videoId: string): VideoData => {
       duration: 280,
       questions: [],
       category: 'Energía',
-      difficulty: 'hard',
+      difficulty: 'Avanzado',
       estimatedRewards: { merits: 220, ondas: 95 },
       tags: ['Öndas', 'Energía', 'Vibración', 'Bienestar'],
     },
@@ -205,7 +170,7 @@ const getVideoData = (videoId: string): VideoData => {
     duration: 180,
     questions: [],
     category: 'General',
-    difficulty: 'medium',
+    difficulty: 'Intermedio',
     estimatedRewards: { merits: 100, ondas: 40 },
     tags: ['CoomÜnity'],
   };
@@ -221,13 +186,13 @@ const getVideoData = (videoId: string): VideoData => {
   return result;
 };
 
-const getPlaylistVideos = (): PlaylistVideo[] => [
+const getPlaylistVideos = (): VideoItem[] => [
   {
     id: 'coomunity-intro',
     title: 'Introducción a CoomÜnity',
     duration: 240,
     hasQuestions: true,
-    difficulty: 'easy',
+    difficulty: 'Principiante',
     isCompleted: false,
   },
   {
@@ -235,7 +200,7 @@ const getPlaylistVideos = (): PlaylistVideo[] => [
     title: 'Reciprocidad: El Arte de la Reciprocidad',
     duration: 320,
     hasQuestions: true,
-    difficulty: 'medium',
+    difficulty: 'Intermedio',
     isCompleted: false,
   },
   {
@@ -243,7 +208,7 @@ const getPlaylistVideos = (): PlaylistVideo[] => [
     title: 'Öndas: Energía Vibracional',
     duration: 280,
     hasQuestions: true,
-    difficulty: 'hard',
+    difficulty: 'Avanzado',
     isCompleted: false,
   },
 ];
@@ -280,12 +245,216 @@ const convertToVideoPlayerUrl = (url: string): string => {
   return url;
 };
 
+// =================================================================
+// Subcomponentes de la página
+// =================================================================
+
+interface GamificationStatusBarProps {
+  level: number;
+  progress: number;
+  streak: number;
+  accuracy: number;
+}
+
+const GamificationStatusBar: React.FC<GamificationStatusBarProps> = ({ level, progress, streak, accuracy }) => {
+  const theme = useTheme();
+  return (
+    <Paper elevation={0} sx={{ p: 2, mb: 2, borderRadius: 3, background: theme.palette.background.default }}>
+      <Grid container alignItems="center" spacing={2}>
+        <Grid item>
+          <Chip label={`Nivel ${level}`} color="primary" sx={{ fontWeight: 'bold' }} />
+        </Grid>
+        <Grid item xs>
+          <LinearProgress variant="determinate" value={progress} />
+        </Grid>
+        <Grid item>
+          <Chip label={`${progress}%`} variant="outlined" size="small" />
+        </Grid>
+        <Grid item>
+          <Chip icon={<FireIcon />} label={`Racha: ${streak}`} variant="outlined" sx={{ color: theme.palette.warning.main, borderColor: theme.palette.warning.main }} />
+        </Grid>
+        <Grid item>
+          <Chip icon={<CheckCircleOutlineIcon />} label={`${accuracy}% precisión`} variant="outlined" sx={{ color: theme.palette.success.main, borderColor: theme.palette.success.main }} />
+        </Grid>
+      </Grid>
+    </Paper>
+  );
+};
+
+interface VideoInfoCardProps {
+  video: VideoItem;
+}
+
+const VideoInfoCard: React.FC<VideoInfoCardProps> = ({ video }) => (
+  <Paper elevation={0} sx={{ p: 2, borderRadius: 3, mb: 2 }}>
+    <Typography variant="h5" fontWeight="bold" gutterBottom>{video.title}</Typography>
+    <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+      {video.description}
+    </Typography>
+    <Box display="flex" gap={1} mb={2}>
+      <Chip label={video.category} size="small" />
+      <Chip label={video.difficulty} size="small" variant="outlined" />
+    </Box>
+    <Typography variant="subtitle2" fontWeight="bold">Recompensas Estimadas</Typography>
+    <Stack direction="row" spacing={2} mb={2}>
+      <Chip icon={<DiamondIcon />} label={`${video.rewards?.meritos ?? 0} Méritos`} />
+      <Chip icon={<BoltIcon />} label={`${video.rewards?.ondas ?? 0} Öndas`} />
+    </Stack>
+    <Stack direction="row" spacing={1}>
+      <Button startIcon={<BookmarkIcon />} variant="outlined">Guardar</Button>
+      <Button startIcon={<ShareIcon />} variant="outlined">Compartir</Button>
+      <Button startIcon={<FavoriteIcon />} variant="outlined" color="error">Me gusta</Button>
+    </Stack>
+  </Paper>
+);
+
+interface PlaylistSidebarProps {
+  videos: VideoItem[];
+  currentVideoId?: string;
+  onVideoSelect: (videoId: string) => void;
+}
+
+const PlaylistSidebar: React.FC<PlaylistSidebarProps> = ({
+  videos,
+  currentVideoId,
+  onVideoSelect,
+}) => {
+  const formatDuration = (seconds: number): string => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
+
+  const getDifficultyColor = (difficulty?: string) => {
+    switch (difficulty) {
+      case 'Principiante':
+        return '#10b981';
+      case 'Intermedio':
+        return '#f59e0b';
+      case 'Avanzado':
+        return '#ef4444';
+      default:
+        return '#6366f1';
+    }
+  };
+
+  return (
+    <Stack spacing={2}>
+       {videos.map((video) => (
+         <Card
+           key={video.id}
+           sx={{
+             cursor: 'pointer',
+             border:
+               video.id === currentVideoId
+                 ? '2px solid #6366f1'
+                 : '2px solid #e2e8f0',
+             backgroundColor:
+               video.id === currentVideoId ? '#f8fafc' : 'white',
+             '&:hover': {
+               borderColor: '#6366f1',
+               transform: 'translateY(-1px)',
+               boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+             },
+             transition: 'all 0.2s ease',
+           }}
+           onClick={() => onVideoSelect(video.id)}
+         >
+           <CardContent sx={{ p: 2 }}>
+             <Stack direction="row" alignItems="center" spacing={2}>
+               <Avatar
+                 sx={{
+                   backgroundColor: video.isCompleted
+                     ? '#10b981'
+                     : getDifficultyColor(video.difficulty),
+                   color: 'white',
+                   fontWeight: 700,
+                   width: 40,
+                   height: 40,
+                 }}
+               >
+                 {video.isCompleted ? '✓' : <PlayIcon />}
+               </Avatar>
+               <Box sx={{ flex: 1 }}>
+                 <Typography
+                   variant="subtitle2"
+                   sx={{
+                     fontWeight: 600,
+                     mb: 0.5,
+                     color:
+                       video.id === currentVideoId
+                         ? '#6366f1'
+                         : '#1e293b',
+                   }}
+                 >
+                   {video.title}
+                 </Typography>
+                 <Stack direction="row" spacing={1}>
+                   <Chip
+                     label={formatDuration(video.duration)}
+                     size="small"
+                     variant="outlined"
+                     sx={{ fontSize: '10px' }}
+                   />
+                   {(video.questions && video.questions.length > 0) && (
+                     <Badge
+                       badgeContent="Q"
+                       color="secondary"
+                       sx={{
+                         '& .MuiBadge-badge': {
+                           fontSize: '8px',
+                           height: 14,
+                           minWidth: 14,
+                         },
+                       }}
+                     >
+                       <QuizIcon sx={{ fontSize: 16 }} />
+                     </Badge>
+                   )}
+                 </Stack>
+               </Box>
+             </Stack>
+           </CardContent>
+         </Card>
+       ))}
+     </Stack>
+  )
+};
+
+interface UserStatsSummaryProps {
+  meritos: number;
+  ondas: number;
+}
+
+const UserStatsSummary: React.FC<UserStatsSummaryProps> = ({ meritos, ondas }) => (
+  <Paper elevation={0} sx={{ p: 2, borderRadius: 3 }}>
+    <Typography variant="h6" fontWeight="bold" mb={1}>Tus Estadísticas</Typography>
+    <Stack direction="row" justifyContent="space-around">
+      <Box textAlign="center">
+        <Typography variant="h5" fontWeight="bold">{meritos}</Typography>
+        <Typography variant="caption">Méritos</Typography>
+      </Box>
+      <Box textAlign="center">
+        <Typography variant="h5" fontWeight="bold">{ondas}</Typography>
+        <Typography variant="caption">Öndas</Typography>
+      </Box>
+    </Stack>
+  </Paper>
+);
+
+// =================================================================
+// Componente Principal del Reproductor de Video
+// =================================================================
+
 const UPlayVideoPlayer: React.FC = () => {
+  const forceYouTube = false; // import.meta.env.VITE_FORCE_YOUTUBE_VIDEOS === 'true';
+
   const { videoId } = useParams<{ videoId: string }>();
   const navigate = useNavigate();
   const location = useLocation();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const [searchParams] = useSearchParams();
 
   // 🔥 Usar datos reales del backend
   const {
@@ -295,7 +464,7 @@ const UPlayVideoPlayer: React.FC = () => {
   } = useVideos();
 
   // State para el video actual
-  const [currentVideo, setCurrentVideo] = useState<VideoData | null>(null);
+  const [currentVideo, setCurrentVideo] = useState<VideoItem | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -347,18 +516,18 @@ const UPlayVideoPlayer: React.FC = () => {
           }
 
           // Asegurar que las propiedades existen con fallbacks
-          const processedVideo = {
+          const processedVideo: VideoItem = {
             id: foundVideo.id?.toString() || videoId,
             title: foundVideo.title || 'Video sin título',
             description: foundVideo.description || 'Descripción no disponible',
-            url: `https://www.youtube.com/watch?v=${videoExternalId}`,
+            url: convertToVideoPlayerUrl(foundVideo.url),
             duration: foundVideo.duration || 0,
             questions: Array.isArray(foundVideo.questions) ? foundVideo.questions : [],
-            thumbnail: getVideoThumbnail(foundVideo),
+            thumbnailUrl: getVideoThumbnail(foundVideo),
             category: categories[0] || 'General',
-            difficulty: foundVideo.difficulty || 'medium',
-            estimatedRewards: {
-              merits: 100,
+            difficulty: foundVideo.difficulty || 'Intermedio',
+            rewards: {
+              meritos: 100,
               ondas: 50
             },
             tags: Array.isArray(foundVideo.tags)
@@ -383,20 +552,20 @@ const UPlayVideoPlayer: React.FC = () => {
         console.log('✅ Using video data from navigation state:', stateVideo);
 
         // 🎯 Usar datos del state que ya vienen procesados desde UPlayInteractiveLibrary
-        const processedVideo = {
+        const processedVideo: VideoItem = {
           id: stateVideo.id?.toString() || videoId,
           title: stateVideo.title || 'Video sin título',
           description: stateVideo.description || 'Descripción no disponible',
           url: stateVideo?.youtubeUrl || stateVideo?.url,
           duration: stateVideo.duration || 0,
           questions: Array.isArray(stateVideo.questions) ? stateVideo.questions : [],
-          thumbnail: stateVideo.thumbnailUrl && stateVideo.thumbnailUrl.includes('img.youtube.com')
+          thumbnailUrl: stateVideo.thumbnailUrl && stateVideo.thumbnailUrl.includes('img.youtube.com')
             ? `${stateVideo.thumbnailUrl}?cb=${Date.now()}`
             : (stateVideo.thumbnailUrl || `https://img.youtube.com/vi/${stateVideo.youtubeId}/hqdefault.jpg?cb=${Date.now()}`),
           category: stateVideo.category || 'General',
-          difficulty: stateVideo.difficulty || 'medium',
-          estimatedRewards: {
-            merits: stateVideo.rewards?.meritos || 100,
+          difficulty: stateVideo.difficulty || 'Intermedio',
+          rewards: {
+            meritos: stateVideo.rewards?.meritos || 100,
             ondas: stateVideo.rewards?.ondas || 50
           },
           tags: Array.isArray(stateVideo.tags) ? stateVideo.tags : []
@@ -414,18 +583,18 @@ const UPlayVideoPlayer: React.FC = () => {
         console.log('🔄 No video found in backend, using fallback mock data for:', videoId);
 
         // Crear video fallback basado en el videoId
-        const fallbackVideo = {
+        const fallbackVideo: VideoItem = {
           id: videoId || 'fallback-video',
           title: 'Video de Demostración',
           description: 'Este es un video de demostración mientras se carga el contenido real.',
           url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4', // Fallback URL
           duration: 300,
           questions: [],
-          thumbnail: '',
+          thumbnailUrl: '',
           category: 'Demo',
-          difficulty: 'medium' as const,
-          estimatedRewards: {
-            merits: 50,
+          difficulty: 'Intermedio',
+          rewards: {
+            meritos: 50,
             ondas: 25
           },
           tags: ['demo', 'fallback']
@@ -469,9 +638,15 @@ const UPlayVideoPlayer: React.FC = () => {
   // State
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
 
-  // Get data immediately without loading states
-  const playlistVideos = getPlaylistVideos();
+  // Ya no es necesario, se usan los datos del backend directamente
+  // const playlistVideos = getPlaylistVideos();
   const userProgress = getUserProgress();
+
+  // Crear un mapa de progreso para la sidebar
+  const videoProgressMap = (backendVideos || []).reduce((acc, video) => {
+    acc[video.id] = { isCompleted: video.progress === 100 }; // Asumimos 100% es completado
+    return acc;
+  }, {} as Record<string, { isCompleted: boolean }>);
 
   // console.log('🎬 UPlayVideoPlayer loaded:', {
   //   videoId,
@@ -515,96 +690,20 @@ const UPlayVideoPlayer: React.FC = () => {
   // Get difficulty color
   const getDifficultyColor = (difficulty?: string) => {
     switch (difficulty) {
-      case 'easy':
+      case 'Principiante':
         return '#10b981';
-      case 'medium':
+      case 'Intermedio':
         return '#f59e0b';
-      case 'hard':
+      case 'Avanzado':
         return '#ef4444';
       default:
         return '#6366f1';
     }
   };
 
-  // Loading state
-  if (isLoading || isBackendLoading) {
-    return (
-      <Box
-        sx={{
-          minHeight: '100vh',
-          backgroundColor: '#f8fafc',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
-      >
-        <Container maxWidth="sm">
-          <Card sx={{ textAlign: 'center', p: 4 }}>
-            <Stack spacing={3} alignItems="center">
-              <Box sx={{ position: 'relative' }}>
-                <VideoLibraryIcon sx={{ fontSize: 60, color: '#6366f1', opacity: 0.6 }} />
-                <Box
-                  sx={{
-                    position: 'absolute',
-                    top: '50%',
-                    left: '50%',
-                    transform: 'translate(-50%, -50%)',
-                  }}
-                >
-                  <CircularProgress size={30} />
-                </Box>
-              </Box>
-              <Typography variant="h6" sx={{ fontWeight: 600, color: '#6366f1' }}>
-                Cargando video...
-              </Typography>
-              <Typography variant="body2" sx={{ color: '#64748b' }}>
-                Conectando con el backend para obtener la información del video
-              </Typography>
-            </Stack>
-          </Card>
-        </Container>
-      </Box>
-    );
-  }
-
-  // Error state
-  if (error || !currentVideo) {
-    return (
-      <Box
-        sx={{
-          minHeight: '100vh',
-          backgroundColor: '#f8fafc',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
-      >
-        <Container maxWidth="sm">
-          <Card sx={{ textAlign: 'center', p: 4 }}>
-            <Typography variant="h5" sx={{ mb: 2, fontWeight: 700 }}>
-              {error || 'Video no encontrado'}
-            </Typography>
-            <Typography variant="body1" sx={{ mb: 3, color: '#64748b' }}>
-              {error || `El video "${videoId}" no existe o no está disponible`}
-            </Typography>
-            <Button
-              variant="contained"
-              onClick={handleBack}
-              sx={{
-                background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
-                '&:hover': {
-                  background:
-                    'linear-gradient(135deg, #5a56eb 0%, #7c3aed 100%)',
-                },
-              }}
-            >
-              Volver a ÜPlay
-            </Button>
-          </Card>
-        </Container>
-      </Box>
-    );
-  }
+  // Renderizado condicional
+  if (isLoading || isBackendLoading) return <LoadingSpinner />;
+  if (error || !currentVideo) return <Alert severity="error">Error al cargar el video: {error || 'Video no encontrado'}</Alert>;
 
   return (
     <Box
@@ -614,197 +713,25 @@ const UPlayVideoPlayer: React.FC = () => {
         p: isMobile ? 0 : 2,
       }}
     >
-      <Container maxWidth="xl" sx={{ p: isMobile ? 0 : 2 }}>
-        {/* Builder.io Preview Indicator */}
-        {isPreviewEnvironment() && (
-          <Box sx={{ mb: 2 }}>
-            <Alert
-              severity="info"
-              icon={<VideoLibraryIcon />}
-              sx={{
-                borderRadius: 2,
-                backgroundColor: '#e3f2fd',
-                border: '1px solid #2196f3',
-                '& .MuiAlert-message': {
-                  fontWeight: 600
-                }
-              }}
-            >
-              <Typography variant="body2">
-                <strong>Modo Preview:</strong> Usando videos de YouTube relacionados con los temas.
-                En localhost se cargarán los videos locales de CoomÜnity con funcionalidad completa.
-              </Typography>
-            </Alert>
-          </Box>
-        )}
-
-        {/* Enhanced Header */}
-        {!isMobile && (
-          <Box sx={{ mb: 3 }}>
-            <Stack direction="row" alignItems="center" spacing={2} mb={2}>
-              <IconButton
-                onClick={handleBack}
-                sx={{
-                  backgroundColor: 'white',
-                  boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-                  '&:hover': {
-                    backgroundColor: '#f8fafc',
-                    transform: 'translateY(-1px)',
-                  },
-                }}
-              >
-                <ArrowBackIcon />
-              </IconButton>
-              <Typography
-                variant="h4"
-                sx={{
-                  fontWeight: 800,
-                  background:
-                    'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
-                  backgroundClip: 'text',
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
-                }}
-              >
-                ÜPlay
-              </Typography>
-              <Chip
-                icon={<VideoLibraryIcon />}
-                label="Reproductor Interactivo"
-                sx={{
-                  backgroundColor: '#e0e7ff',
-                  color: '#3730a3',
-                  fontWeight: 600,
-                }}
-              />
-            </Stack>
-
-            {/* User progress bar */}
-            <Card sx={{ p: 2, mb: 2 }}>
-              <Stack direction="row" alignItems="center" spacing={3}>
-                <Stack direction="row" spacing={2} alignItems="center">
-                  <Avatar
-                    sx={{
-                      backgroundColor: '#6366f1',
-                      width: 40,
-                      height: 40,
-                      fontWeight: 700,
-                    }}
-                  >
-                    {userProgress.level}
-                  </Avatar>
-                  <Box>
-                    <Typography variant="subtitle2" sx={{ fontWeight: 700 }}>
-                      Nivel {userProgress.level}
-                    </Typography>
-                    <Typography variant="caption" sx={{ color: '#64748b' }}>
-                      {userProgress.completedVideos} de{' '}
-                      {userProgress.totalVideos} videos completados
-                    </Typography>
-                  </Box>
-                </Stack>
-
-                <Box sx={{ flex: 1 }}>
-                  <LinearProgress
-                    variant="determinate"
-                    value={
-                      (userProgress.completedVideos /
-                        userProgress.totalVideos) *
-                      100
-                    }
-                    sx={{
-                      height: 8,
-                      borderRadius: 4,
-                      backgroundColor: '#e2e8f0',
-                      '& .MuiLinearProgress-bar': {
-                        borderRadius: 4,
-                        background:
-                          'linear-gradient(90deg, #6366f1 0%, #8b5cf6 100%)',
-                      },
-                    }}
-                  />
-                </Box>
-
-                <Stack direction="row" spacing={2}>
-                  <Chip
-                    icon={<FireIcon />}
-                    label={`Racha: ${userProgress.currentStreak}`}
-                    size="small"
-                    sx={{
-                      backgroundColor: '#fecaca',
-                      color: '#dc2626',
-                      fontWeight: 600,
-                    }}
-                  />
-                  <Chip
-                    icon={<TrophyIcon />}
-                    label={`${userProgress.accuracyRate}% precisión`}
-                    size="small"
-                    sx={{
-                      backgroundColor: '#dcfce7',
-                      color: '#166534',
-                      fontWeight: 600,
-                    }}
-                  />
-                </Stack>
-              </Stack>
-            </Card>
-          </Box>
-        )}
-
-        <Grid container spacing={isMobile ? 0 : 3}>
-          {/* Video Player Section */}
-          <Grid item xs={12} lg={8}>
-            <Card
-              sx={{
-                borderRadius: isMobile ? 0 : 3,
-                overflow: 'hidden',
-                backgroundColor: '#000',
-              }}
-            >
-              {currentVideo ? (
+      <Container maxWidth="xl" sx={{ py: 4 }}>
+        <Grid container spacing={isMobile ? 2 : 4}>
+          {/* Main Content: Video Player */}
+          <Grid item xs={12} md={8}>
+            <Paper elevation={8} sx={{ borderRadius: 2, overflow: 'hidden', position: 'relative' }}>
+              {isLoading && <LoadingSpinner />}
+              {error && <Alert severity="error">{error}</Alert>}
+              {!isLoading && !error && currentVideo && (
                 <InteractiveVideoPlayerOverlay
-                  videoUrl={convertToVideoPlayerUrl(currentVideo.url)}
+                  videoUrl={currentVideo.url}
                   videoId={currentVideo.id}
                   questions={currentVideo.questions}
-                  onVideoComplete={handleVideoComplete}
-                  userId="demo-user"
-                  autoplay={false}
-                  enableAnalytics={true}
-                  isLandscape={false}
-                  onRewardEarned={(reward) => {
-                    console.log('🎉 Recompensa ganada:', reward);
-                  }}
-                  onQuestionAnswer={(questionId, answerId, isCorrect) => {
-                    console.log('📝 Respuesta:', { questionId, answerId, isCorrect });
-                  }}
                 />
-              ) : (
-                <Box
-                  sx={{
-                    height: 400,
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    color: 'white',
-                  }}
-                >
-                  <Stack alignItems="center" spacing={2}>
-                    <CircularProgress size={60} sx={{ color: '#6366f1' }} />
-                    <Typography color="white" variant="h6">
-                      Preparando video...
-                    </Typography>
-                  </Stack>
-                </Box>
               )}
-            </Card>
-          </Grid>
+            </Paper>
 
-          {/* Sidebar Section */}
-          <Grid item xs={12} lg={4}>
-            <Stack spacing={3}>
-              {/* Video Information */}
-              <Card sx={{ borderRadius: 3 }}>
+            {/* Video Info Card */}
+            {!isLoading && !error && currentVideo && (
+              <Card sx={{ borderRadius: 3, height: '100%' }}>
                 <CardContent sx={{ p: 3 }}>
                   <Typography
                     variant="h5"
@@ -891,27 +818,33 @@ const UPlayVideoPlayer: React.FC = () => {
                       )}
 
                       {/* Tags */}
-                      {currentVideo.tags && Array.isArray(currentVideo.tags) && currentVideo.tags.length > 0 && (
-                        <Box>
-                          <Typography
-                            variant="subtitle2"
-                            sx={{ fontWeight: 700, mb: 1 }}
-                          >
-                            Temas
-                          </Typography>
-                          <Stack direction="row" spacing={1} flexWrap="wrap">
-                            {currentVideo.tags.map((tag) => (
-                              <Chip
-                                key={tag}
-                                label={tag}
-                                size="small"
-                                variant="outlined"
-                                sx={{ fontWeight: 600 }}
-                              />
-                            ))}
-                          </Stack>
-                        </Box>
-                      )}
+                      {currentVideo.tags &&
+                        Array.isArray(currentVideo.tags) &&
+                        currentVideo.tags.length > 0 && (
+                          <Box>
+                            <Typography
+                              variant="subtitle2"
+                              sx={{ fontWeight: 700, mb: 1 }}
+                            >
+                              Temas
+                            </Typography>
+                            <Stack
+                              direction="row"
+                              spacing={1}
+                              flexWrap="wrap"
+                            >
+                              {currentVideo.tags.map((tag) => (
+                                <Chip
+                                  key={tag}
+                                  label={tag}
+                                  size="small"
+                                  variant="outlined"
+                                  sx={{ fontWeight: 600 }}
+                                />
+                              ))}
+                            </Stack>
+                          </Box>
+                        )}
                     </Stack>
                   )}
 
@@ -927,6 +860,10 @@ const UPlayVideoPlayer: React.FC = () => {
                         borderColor: '#6366f1',
                         color: '#6366f1',
                         fontWeight: 600,
+                        '&:hover': {
+                          backgroundColor: 'rgba(99, 102, 241, 0.08)',
+                          borderColor: '#4f46e5',
+                        },
                       }}
                     >
                       Guardar
@@ -936,21 +873,27 @@ const UPlayVideoPlayer: React.FC = () => {
                       startIcon={<ShareIcon />}
                       size="small"
                       sx={{
-                        borderColor: '#6366f1',
-                        color: '#6366f1',
+                        borderColor: '#6b7280',
+                        color: '#4b5563',
                         fontWeight: 600,
+                        '&:hover': {
+                          backgroundColor: 'rgba(107, 114, 128, 0.08)',
+                          borderColor: '#4b5563',
+                        },
                       }}
                     >
                       Compartir
                     </Button>
                     <Button
-                      variant="outlined"
+                      variant="contained"
                       startIcon={<FavoriteIcon />}
                       size="small"
                       sx={{
-                        borderColor: '#ef4444',
-                        color: '#ef4444',
+                        backgroundColor: '#ec4899',
                         fontWeight: 600,
+                        '&:hover': {
+                          backgroundColor: '#db2777',
+                        },
                       }}
                     >
                       Me gusta
@@ -958,183 +901,60 @@ const UPlayVideoPlayer: React.FC = () => {
                   </Stack>
                 </CardContent>
               </Card>
+            )}
+          </Grid>
 
-              {/* Related Videos */}
+          {/* Right Column: Playlist and Stats */}
+          <Grid item xs={12} md={4}>
+            <Stack spacing={3}>
+              {/* Videos de la Serie */}
               <Card sx={{ borderRadius: 3 }}>
                 <CardContent sx={{ p: 3 }}>
-                  <Typography variant="h6" sx={{ fontWeight: 700, mb: 2 }}>
+                  <Typography
+                    variant="h6"
+                    sx={{ fontWeight: 700, mb: 2 }}
+                  >
                     Videos de la Serie
                   </Typography>
-
-                  <Stack spacing={2}>
-                    {playlistVideos.map((video) => (
-                      <Card
-                        key={video.id}
-                        sx={{
-                          cursor: 'pointer',
-                          border:
-                            video.id === videoId
-                              ? '2px solid #6366f1'
-                              : '2px solid #e2e8f0',
-                          backgroundColor:
-                            video.id === videoId ? '#f8fafc' : 'white',
-                          '&:hover': {
-                            borderColor: '#6366f1',
-                            transform: 'translateY(-1px)',
-                            boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
-                          },
-                          transition: 'all 0.2s ease',
-                        }}
-                        onClick={() => handleVideoChange(video.id)}
-                      >
-                        <CardContent sx={{ p: 2 }}>
-                          <Stack
-                            direction="row"
-                            alignItems="center"
-                            spacing={2}
-                          >
-                            <Avatar
-                              sx={{
-                                backgroundColor: video.isCompleted
-                                  ? '#10b981'
-                                  : getDifficultyColor(video.difficulty),
-                                color: 'white',
-                                fontWeight: 700,
-                                width: 40,
-                                height: 40,
-                              }}
-                            >
-                              {video.isCompleted ? '✓' : <PlayIcon />}
-                            </Avatar>
-                            <Box sx={{ flex: 1 }}>
-                              <Typography
-                                variant="subtitle2"
-                                sx={{
-                                  fontWeight: 600,
-                                  mb: 0.5,
-                                  color:
-                                    video.id === videoId
-                                      ? '#6366f1'
-                                      : '#1e293b',
-                                }}
-                              >
-                                {video.title}
-                              </Typography>
-                              <Stack direction="row" spacing={1}>
-                                <Chip
-                                  label={formatDuration(video.duration)}
-                                  size="small"
-                                  variant="outlined"
-                                  sx={{ fontSize: '10px' }}
-                                />
-                                {video.hasQuestions && (
-                                  <Badge
-                                    badgeContent="Q"
-                                    color="secondary"
-                                    sx={{
-                                      '& .MuiBadge-badge': {
-                                        fontSize: '8px',
-                                        height: 14,
-                                        minWidth: 14,
-                                      },
-                                    }}
-                                  >
-                                    <QuizIcon sx={{ fontSize: 16 }} />
-                                  </Badge>
-                                )}
-                              </Stack>
-                            </Box>
-                          </Stack>
-                        </CardContent>
-                      </Card>
-                    ))}
-                  </Stack>
+                  <PlaylistSidebar
+                    videos={backendVideos || []}
+                    currentVideoId={currentVideo?.id}
+                    onVideoSelect={handleVideoChange}
+                  />
                 </CardContent>
               </Card>
 
-              {/* User Statistics */}
+              {/* User Stats */}
               <Card sx={{ borderRadius: 3 }}>
-                <CardContent sx={{ p: 3 }}>
-                  <Typography variant="h6" sx={{ fontWeight: 700, mb: 2 }}>
-                    Tus Estadísticas
-                  </Typography>
-
-                  <Grid container spacing={2}>
-                    <Grid item xs={6}>
-                      <Stack alignItems="center">
-                        <Typography
-                          variant="h5"
-                          sx={{ fontWeight: 800, color: '#6366f1' }}
-                        >
-                          {userProgress.totalMerits}
-                        </Typography>
-                        <Typography
-                          variant="caption"
-                          sx={{ textAlign: 'center', fontWeight: 600 }}
-                        >
-                          Mëritos
-                        </Typography>
-                      </Stack>
-                    </Grid>
-                    <Grid item xs={6}>
-                      <Stack alignItems="center">
-                        <Typography
-                          variant="h5"
-                          sx={{ fontWeight: 800, color: '#10b981' }}
-                        >
-                          {userProgress.totalOndas}
-                        </Typography>
-                        <Typography
-                          variant="caption"
-                          sx={{ textAlign: 'center', fontWeight: 600 }}
-                        >
-                          Öndas
-                        </Typography>
-                      </Stack>
-                    </Grid>
-                  </Grid>
+                <CardContent>
+                  <UserStatsSummary
+                    meritos={userProgress.totalMerits}
+                    ondas={userProgress.totalOndas}
+                  />
                 </CardContent>
               </Card>
             </Stack>
           </Grid>
         </Grid>
 
-        {/* Success notification */}
-        <Snackbar
-          open={showSuccessMessage}
-          autoHideDuration={5000}
-          onClose={() => setShowSuccessMessage(false)}
-          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-        >
-          <Alert
-            severity="success"
-            sx={{
-              backgroundColor: '#dcfce7',
-              color: '#166534',
-              fontWeight: 600,
-              '& .MuiAlert-icon': {
-                color: '#10b981',
-              },
+        {/* Floating Action Button for Help/Tour */}
+        {!isMobile && (
+          <Zoom
+            in={true}
+            timeout={500}
+            style={{
+              position: 'fixed',
+              bottom: 20,
+              right: 20,
             }}
           >
-            ¡Felicitaciones! Has completado el video exitosamente 🎉
-          </Alert>
-        </Snackbar>
-
-        {/* Floating action button for mobile */}
-        {isMobile && (
-          <Zoom in={true}>
             <Fab
               color="primary"
               onClick={handleBack}
               sx={{
-                position: 'fixed',
-                bottom: 20,
-                right: 20,
                 background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
                 '&:hover': {
-                  background:
-                    'linear-gradient(135deg, #5a56eb 0%, #7c3aed 100%)',
+                  background: 'linear-gradient(135deg, #5a56eb 0%, #7c3aed 100%)',
                 },
               }}
             >
@@ -1142,6 +962,23 @@ const UPlayVideoPlayer: React.FC = () => {
             </Fab>
           </Zoom>
         )}
+
+        {/* Success notification */}
+        <Snackbar
+          open={showSuccessMessage}
+          autoHideDuration={6000}
+          onClose={() => setShowSuccessMessage(false)}
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+        >
+          <Alert
+            onClose={() => setShowSuccessMessage(false)}
+            severity="success"
+            sx={{ width: '100%', fontWeight: 600, borderRadius: 2 }}
+            icon={<TrophyIcon />}
+          >
+            ¡Felicidades! Has completado el video.
+          </Alert>
+        </Snackbar>
       </Container>
     </Box>
   );

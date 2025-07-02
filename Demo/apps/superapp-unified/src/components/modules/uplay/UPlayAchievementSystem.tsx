@@ -1,7 +1,25 @@
 // @ts-nocheck
-import React, { useState } from 'react';
-import { Box, Typography, Paper, Chip, LinearProgress } from '@mui/material';
-import { EmojiEvents, Lock, CheckCircle } from '@mui/icons-material';
+import React, { useState, useMemo } from 'react';
+import {
+  Box,
+  Typography,
+  Paper,
+  Chip,
+  Grid,
+  Card,
+  CardContent,
+  CircularProgress,
+  useTheme,
+  alpha,
+  Fade,
+} from '@mui/material';
+import {
+  EmojiEvents,
+  Lock,
+  CheckCircle,
+  Star,
+  WorkspacePremium,
+} from '@mui/icons-material';
 
 type AchievementStatus = 'completed' | 'in-progress' | 'locked';
 
@@ -21,109 +39,233 @@ const mockAchievements: Achievement[] = [
   { id: '4', title: 'Colaborador Estrella', description: 'Participa en 5 salas de estudio.', status: 'in-progress', progress: 40, icon: <EmojiEvents /> },
   { id: '5', title: 'Orador Elocuente', description: 'Crea tu primera sala de estudio.', status: 'locked', icon: <Lock /> },
   { id: '6', title: 'Curador de Sabiduría', description: 'Crea una playlist personalizada.', status: 'locked', icon: <Lock /> },
+  { id: '7', title: 'Explorador Alfa', description: 'Descubre una función oculta.', status: 'completed', icon: <CheckCircle /> },
+  { id: '8', title: 'Maratonista del Saber', description: 'Mira más de 2 horas de contenido.', status: 'in-progress', progress: 60, icon: <EmojiEvents /> },
+  { id: '9', title: 'Arquitecto Social', description: 'Invita a 3 nuevos miembros a CoomÜnity.', status: 'locked', icon: <Lock /> },
 ];
 
-const getStatusChip = (status: AchievementStatus) => {
-  switch (status) {
-    case 'completed':
-      return <Chip label="Completado" color="success" size="small" variant="outlined" sx={{ ml: 2 }} />;
-    case 'in-progress':
-      return <Chip label="En Progreso" color="primary" size="small" variant="outlined" sx={{ ml: 2 }} />;
-    case 'locked':
-      return <Chip label="Bloqueado" color="default" size="small" sx={{ ml: 2 }} />;
-    default:
-      return null;
-  }
-};
-
-const MinimalistAchievementRow = ({ achievement }: { achievement: Achievement }) => {
+const AchievementCard = ({ achievement }: { achievement: Achievement }) => {
+  const theme = useTheme();
   const isLocked = achievement.status === 'locked';
+  const isCompleted = achievement.status === 'completed';
+
+  const cardStyles = {
+    height: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    textAlign: 'center',
+    p: 3,
+    borderRadius: 4,
+    transition: 'all 0.3s ease',
+    position: 'relative',
+    overflow: 'hidden',
+    border: `1px solid ${theme.palette.divider}`,
+    ...(isLocked && {
+      filter: 'grayscale(80%)',
+      backgroundColor: alpha(theme.palette.grey[500], 0.05),
+    }),
+    ...(isCompleted && {
+      borderColor: theme.palette.success.main,
+      boxShadow: `0 0 15px ${alpha(theme.palette.success.main, 0.3)}`,
+    }),
+    '&:hover': {
+      transform: isLocked ? 'none' : 'translateY(-5px)',
+      boxShadow: isLocked
+        ? 'none'
+        : `0 8px 25px ${alpha(theme.palette.primary.main, 0.2)}`,
+    },
+  };
+
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        alignItems: 'center',
-        p: 2,
-        transition: 'background-color 0.2s',
-        opacity: isLocked ? 0.6 : 1,
-        '&:hover': {
-          backgroundColor: !isLocked ? '#f8fafc' : 'transparent',
-        },
-      }}
-    >
-      <Box sx={{ mr: 2, color: isLocked ? '#94a3b8' : '#6366f1' }}>{achievement.icon}</Box>
-      <Box sx={{ flex: 1 }}>
-        <Typography sx={{ fontWeight: 600, color: '#1e293b' }}>{achievement.title}</Typography>
-        <Typography variant="body2" sx={{ color: '#64748b' }}>{achievement.description}</Typography>
-        {achievement.status === 'in-progress' && achievement.progress !== undefined && (
-          <Box sx={{ display: 'flex', alignItems: 'center', mt: 1 }}>
-            <LinearProgress
-              variant="determinate"
-              value={achievement.progress}
-              sx={{ flex: 1, height: 6, borderRadius: 3, mr: 1 }}
-            />
-            <Typography variant="caption" sx={{ color: '#64748b' }}>{`${achievement.progress}%`}</Typography>
-          </Box>
-        )}
+    <Card sx={cardStyles}>
+      <Box sx={{ position: 'relative', mb: 2 }}>
+        <CircularProgress
+          variant="determinate"
+          value={
+            achievement.status === 'in-progress' ? achievement.progress : 100
+          }
+          size={80}
+          thickness={3}
+          sx={{
+            color:
+              achievement.status === 'completed'
+                ? theme.palette.success.main
+                : theme.palette.primary.main,
+            position: 'absolute',
+            top: -10,
+            left: -10,
+            opacity: isLocked ? 0.3 : 1,
+          }}
+        />
+        <Box
+          sx={{
+            width: 60,
+            height: 60,
+            borderRadius: '50%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            color: isLocked
+              ? theme.palette.grey[500]
+              : isCompleted
+              ? theme.palette.success.main
+              : theme.palette.primary.main,
+            fontSize: 40,
+          }}
+        >
+          {achievement.icon}
+        </Box>
       </Box>
-      {getStatusChip(achievement.status)}
-    </Box>
+      <CardContent sx={{ p: 0 }}>
+        <Typography
+          variant="h6"
+          sx={{ fontWeight: 'bold', color: 'text.primary' }}
+        >
+          {achievement.title}
+        </Typography>
+        <Typography variant="body2" sx={{ color: 'text.secondary', mt: 1 }}>
+          {achievement.description}
+        </Typography>
+        {achievement.status === 'in-progress' && (
+          <Chip
+            label={`${achievement.progress}%`}
+            size="small"
+            color="primary"
+            variant="outlined"
+            sx={{ mt: 2 }}
+          />
+        )}
+        {isCompleted && (
+          <Chip
+            label="Completado"
+            size="small"
+            color="success"
+            icon={<CheckCircle />}
+            sx={{ mt: 2 }}
+          />
+        )}
+      </CardContent>
+    </Card>
   );
 };
 
 export const UPlayAchievementSystem: React.FC = () => {
   const [filter, setFilter] = useState<AchievementStatus | 'all'>('all');
+  const theme = useTheme();
 
-  const filteredAchievements = mockAchievements.filter(ach =>
-    filter === 'all' || ach.status === filter
+  const filteredAchievements = useMemo(
+    () =>
+      mockAchievements.filter(
+        ach => filter === 'all' || ach.status === filter
+      ),
+    [filter]
+  );
+
+  const completedCount = useMemo(
+    () => mockAchievements.filter(ach => ach.status === 'completed').length,
+    []
+  );
+
+  const completionPercentage = Math.round(
+    (completedCount / mockAchievements.length) * 100
   );
 
   return (
-    <Box sx={{ p: { xs: 2, md: 3 }, backgroundColor: '#f8fafc', minHeight: '100vh', borderRadius: 4 }}>
-      <Box sx={{ mb: 4 }}>
-        <Typography variant="h4" component="h1" sx={{ fontWeight: 700, color: '#1e293b' }}>
-          Logros Desbloqueados
+    <Box sx={{ p: { xs: 2, md: 3 } }}>
+      <Box sx={{ mb: 4, textAlign: 'center' }}>
+        <Typography
+          variant="h3"
+          component="h1"
+          sx={{
+            fontWeight: 'bold',
+            color: 'primary.main',
+            letterSpacing: '-1px',
+          }}
+        >
+          Muro de Logros
         </Typography>
-        <Typography sx={{ color: '#475569', mt: 1, fontSize: '1.1rem' }}>
-          Tus reconocimientos por contribuir al Bien Común.
+        <Typography sx={{ color: 'text.secondary', mt: 1, fontSize: '1.1rem' }}>
+          Tu progreso y contribuciones al ecosistema CoomÜnity.
         </Typography>
       </Box>
 
-      <Box sx={{ mb: 3, display: 'flex', gap: 1 }}>
+      <Grid container spacing={3} sx={{ mb: 4 }}>
+        <Grid item xs={12} sm={6}>
+          <Paper
+            elevation={0}
+            sx={{
+              p: 3,
+              textAlign: 'center',
+              borderRadius: 3,
+              border: `1px solid ${theme.palette.divider}`,
+            }}
+          >
+            <Star sx={{ fontSize: 40, color: 'warning.main', mb: 1 }} />
+            <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
+              {completionPercentage}%
+            </Typography>
+            <Typography color="text.secondary">Completado</Typography>
+          </Paper>
+        </Grid>
+        <Grid item xs={12} sm={6}>
+          <Paper
+            elevation={0}
+            sx={{
+              p: 3,
+              textAlign: 'center',
+              borderRadius: 3,
+              border: `1px solid ${theme.palette.divider}`,
+            }}
+          >
+            <WorkspacePremium
+              sx={{ fontSize: 40, color: 'success.main', mb: 1 }}
+            />
+            <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
+              {completedCount} / {mockAchievements.length}
+            </Typography>
+            <Typography color="text.secondary">Logros Desbloqueados</Typography>
+          </Paper>
+        </Grid>
+      </Grid>
+
+      <Box sx={{ mb: 3, display: 'flex', gap: 1, justifyContent: 'center' }}>
         {(['all', 'in-progress', 'completed', 'locked'] as const).map(f => (
           <Chip
             key={f}
-            label={f.charAt(0).toUpperCase() + f.slice(1).replace('-', ' ')}
+            label={
+              f === 'all'
+                ? 'Todos'
+                : f.charAt(0).toUpperCase() + f.slice(1).replace('-', ' ')
+            }
             onClick={() => setFilter(f)}
             variant={filter === f ? 'filled' : 'outlined'}
             color={filter === f ? 'primary' : 'default'}
+            sx={{ fontWeight: 500 }}
           />
         ))}
       </Box>
 
-      <Paper
-        variant="outlined"
-        sx={{
-          borderRadius: '16px',
-          background: '#ffffff',
-          borderColor: '#e2e8f0',
-          overflow: 'hidden',
-        }}
-      >
+      <Grid container spacing={3}>
         {filteredAchievements.map((ach, index) => (
-          <React.Fragment key={ach.id}>
-            <MinimalistAchievementRow achievement={ach} />
-            {index < filteredAchievements.length - 1 && <hr style={{ border: 'none', height: '1px', backgroundColor: '#f1f5f9' }} />}
-          </React.Fragment>
+          <Grid item xs={12} sm={6} md={4} key={ach.id}>
+            <Fade in timeout={300 * (index + 1)}>
+              <div>
+                <AchievementCard achievement={ach} />
+              </div>
+            </Fade>
+          </Grid>
         ))}
-        {filteredAchievements.length === 0 && (
-          <Box sx={{ p: 4, textAlign: 'center' }}>
-            <Typography sx={{ color: '#64748b' }}>
-              No hay logros en esta categoría.
-            </Typography>
-          </Box>
-        )}
-      </Paper>
+      </Grid>
+
+      {filteredAchievements.length === 0 && (
+        <Box sx={{ p: 4, textAlign: 'center' }}>
+          <Typography sx={{ color: 'text.secondary' }}>
+            No hay logros en esta categoría.
+          </Typography>
+        </Box>
+      )}
     </Box>
   );
 };

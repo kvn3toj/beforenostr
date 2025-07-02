@@ -27,15 +27,24 @@ export const VideoDataSchema = z.object({
   title: z.string(),
   description: z.string().optional(),
   url: z.string().url(),
-  thumbnail: z.string().optional(),
+  thumbnailUrl: z.string().optional(),
   duration: z.number().min(0),
   questions: z.array(QuestionSchema).default([]),
   category: z.string().optional(),
-  difficulty: z.enum(['beginner', 'intermediate', 'advanced']).default('beginner'),
-  tags: z.array(z.string()).default([]),
+  difficulty: z.enum(['Principiante', 'Intermedio', 'Avanzado']).optional(),
+  tags: z.array(z.string()).optional(),
+  isCompleted: z.boolean().optional(),
+  hasQuestions: z.boolean().optional(),
+  rewards: z.object({
+    meritos: z.number().optional(),
+    ondas: z.number().optional(),
+    questionsCount: z.number().optional(),
+  }).optional(),
   createdAt: z.date().optional(),
   updatedAt: z.date().optional(),
 });
+
+export type VideoItem = z.infer<typeof VideoDataSchema>;
 
 // ============================================================================
 // ESQUEMAS DE MÉTRICAS Y GAMIFICACIÓN
@@ -324,4 +333,4 @@ export const createValidationResult = <T>(
     data,
     errors,
   });
-}; 
+};

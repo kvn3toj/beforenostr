@@ -17,7 +17,7 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Fade from '@mui/material/Fade';
 import Zoom from '@mui/material/Zoom';
-import { useTheme, alpha } from '@mui/material';
+import { useTheme, alpha, Paper, LinearProgress, Skeleton, Button as MuiButton } from '@mui/material';
 
 // 🎯 Iconos
 import SearchIcon from '@mui/icons-material/Search';
@@ -31,6 +31,7 @@ import StarIcon from '@mui/icons-material/Star';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
+import VideocamOffIcon from '@mui/icons-material/VideocamOff';
 
 // 🎨 Revolutionary Widget
 import { RevolutionaryWidget } from '../../../design-system/templates';
@@ -92,96 +93,16 @@ export const UPlayInteractiveLibrary: React.FC = () => {
   // 🎯 Uso de useUPlayProgress para obtener progreso compartido
   const progress = useUPlayProgress();
 
-  // 🎯 Paso 1: Mapear los datos del backend al formato que espera el hook de corrección
-  const videosForDurationFix = useMemo(() => {
+  // 🎯 Videos procesados - SIMPLIFICADO
+  // El hook `useVideos` ya se encarga de la adaptación y validación de datos.
+  // No es necesario un segundo mapeo aquí. Consumimos los datos directamente.
+  const processedVideos: VideoItem[] = useMemo(() => {
     if (!backendVideos) return [];
-    return backendVideos.map((video: any) => ({
-      id: video.id,
-      title: video.title,
-      content: video.content || video.url,
-      duration: video.duration || 0,
-    }));
+    // Los datos de 'backendVideos' ya están adaptados y son compatibles con 'VideoItem'.
+    // Si se necesitara alguna propiedad extra solo para la UI, se añadiría aquí,
+    // pero la estructura principal ya es correcta.
+    return backendVideos as VideoItem[];
   }, [backendVideos]);
-
-  // 🎯 Paso 2: Llamar al hook en el nivel superior del componente
-  const videosWithCorrectedDurations = useVideosWithCorrectDurations(videosForDurationFix);
-
-  // 🎯 Adaptador Backend → Frontend mejorado
-  const adaptBackendVideo = (backendVideo: any): VideoItem => {
-    // 🎯 Paso 3: Encontrar la duración corregida en lugar de llamar al hook aquí
-    const correctedVideo = videosWithCorrectedDurations.find(v => v.id === backendVideo.id);
-    const duration = correctedVideo ? correctedVideo.duration : (backendVideo.duration || 0);
-
-    console.log(`[ÜPLAY LIBRARY DEBUG] Video "${backendVideo.title}": ${backendVideo.duration}s → ${duration}s (${fixedFormatDuration(duration)})`);
-
-    const questionCount = backendVideo.questions?.length || 0;
-
-    // 🎯 CORRECCIÓN CRÍTICA: Usar externalId del backend (no youtubeVideoId) y evitar conflictos de declaración
-    const extractedVideoId = backendVideo?.externalId;
-
-    // Parse categories if it's a JSON string
-    let categories = [];
-    try {
-      categories = backendVideo.categories ? JSON.parse(backendVideo.categories) : ['Educación'];
-    } catch (e) {
-      categories = [backendVideo.category || 'Educación'];
-    }
-    const mainCategory = categories[0] || 'Educación';
-
-    // Fórmulas de recompensas CoomÜnity dinámicas
-    const baseMeritos = Math.floor(duration / 60) * 10;
-    const questionBonus = questionCount * 15;
-    const difficultyMultiplier = mainCategory?.includes('Avanzado') ? 1.5 :
-                                mainCategory?.includes('Intermedio') ? 1.2 : 1.0;
-
-    // 🔧 THUMBNAIL MEJORADO: Usar thumbnailUrl del backend si existe, sino externalId, sino fallback
-    let finalThumbnailUrl = undefined;
-    let finalYoutubeUrl = undefined;
-
-    if (backendVideo.thumbnailUrl) {
-      finalThumbnailUrl = backendVideo.thumbnailUrl;
-    } else if (extractedVideoId) {
-      finalThumbnailUrl = `https://img.youtube.com/vi/${extractedVideoId}/hqdefault.jpg`;
-    }
-
-    if (extractedVideoId) {
-      finalYoutubeUrl = `https://www.youtube.com/watch?v=${extractedVideoId}`;
-    } else if (backendVideo.url) {
-      finalYoutubeUrl = backendVideo.url;
-    }
-
-    return {
-      id: backendVideo.id.toString(), // Asegurar que sea string para navegación
-      title: backendVideo.title || 'Video Sin Título',
-      description: backendVideo.description || 'Explora este contenido educativo interactivo.',
-      duration,
-      thumbnailUrl: finalThumbnailUrl,
-      externalId: extractedVideoId, // Pasar el externalId para generar thumbnails
-      youtubeUrl: finalYoutubeUrl,
-      category: mainCategory,
-      difficulty: duration > 300 ? 'Avanzado' : duration > 180 ? 'Intermedio' : 'Principiante',
-      rewards: {
-        meritos: Math.floor((baseMeritos + questionBonus) * difficultyMultiplier),
-        ondas: Math.floor(duration / 30) * 5 + questionCount * 8
-      },
-      questions: backendVideo.questions || [],
-      progress: Math.random() * 100,
-      isCompleted: Math.random() > 0.7,
-      isFavorite: Math.random() > 0.8,
-      rating: 4 + Math.random(),
-      views: Math.floor(Math.random() * 1000) + 50
-    };
-  };
-
-  // 🎯 Videos procesados
-  const processedVideos = useMemo(() => {
-    if (!backendVideos || backendVideos.length === 0) {
-      return [];
-    }
-
-    // Usar el array con duraciones ya corregidas para el mapeo
-    return backendVideos.map(adaptBackendVideo);
-  }, [backendVideos, videosWithCorrectedDurations]);
 
   // 🎯 Categorías dinámicas
   const categories = useMemo(() => {
@@ -248,375 +169,294 @@ export const UPlayInteractiveLibrary: React.FC = () => {
 
   // 🎨 Header de búsqueda mejorado
   const renderSearchHeader = () => (
-    <Fade in={animate} timeout={600}>
-      <Box sx={{ mb: 4 }}>
-        <Box sx={{ textAlign: 'center', mb: 4 }}>
-          <Typography
-            variant="h4"
-            sx={{
-              fontWeight: 700,
-              background: 'linear-gradient(135deg, #6366f1 0%, #a855f7 100%)',
-              backgroundClip: 'text',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              mb: 2
-            }}
-          >
-            Biblioteca Interactiva
-          </Typography>
-          <Typography variant="body1" color="text.secondary">
-            Explora {processedVideos.length} videos gamificados diseñados para maximizar tu aprendizaje
-          </Typography>
-        </Box>
-
-        {/* Barra de búsqueda y filtros */}
+    <Fade in={animate} timeout={500}>
+      <Paper
+        elevation={0}
+        sx={{
+          p: 3,
+          mb: 4,
+          borderRadius: 3,
+          background: `linear-gradient(145deg, ${alpha(
+            theme.palette.background.paper,
+            0.8
+          )}, ${alpha(theme.palette.background.default, 0.8)})`,
+          backdropFilter: 'blur(10px)',
+          border: `1px solid ${theme.palette.divider}`,
+        }}
+      >
         <Grid container spacing={2} alignItems="center">
-          <Grid item xs={12} md={8}>
+          <Grid item xs={12} md={6}>
             <TextField
               fullWidth
-              placeholder="Buscar videos por título o contenido..."
+              variant="outlined"
+              placeholder="Buscar por título, tema o concepto..."
               value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
+              onChange={e => setSearchTerm(e.target.value)}
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
-                    <SearchIcon sx={{ color: '#6366f1' }} />
+                    <SearchIcon color="primary" />
                   </InputAdornment>
                 ),
                 sx: {
-                  background: alpha('#ffffff', 0.05),
-                  backdropFilter: 'blur(20px)',
-                  border: `1px solid ${alpha('#6366f1', 0.2)}`,
-                  borderRadius: 3,
-                  '&:hover': {
-                    border: `1px solid ${alpha('#6366f1', 0.4)}`
-                  },
-                  '&.Mui-focused': {
-                    border: `2px solid #6366f1`,
-                    boxShadow: '0 0 20px rgba(99, 102, 241, 0.3)'
-                  }
-                }
+                  borderRadius: 2,
+                  backgroundColor: theme.palette.background.default,
+                },
               }}
             />
           </Grid>
-          <Grid item xs={12} md={4}>
-            <Button
-              fullWidth
-              variant="outlined"
-              startIcon={<FilterListIcon />}
-              onClick={handleFilterClick}
-              sx={{
-                borderColor: alpha('#6366f1', 0.3),
-                color: '#6366f1',
-                borderRadius: 3,
-                py: 1.5,
-                minHeight: 48,
-                minWidth: 48,
-                fontWeight: 700,
-                boxShadow: '0 2px 8px 0 rgba(99,102,241,0.12)',
-                background: 'linear-gradient(135deg, #2563eb 0%, #6c5ce7 100%)',
-                '&:hover': {
-                  borderColor: '#6366f1',
-                  background: 'linear-gradient(135deg, #1e293b 0%, #6366f1 100%)',
-                  color: '#fff',
-                }
-              }}
-            >
-              Filtrar ({selectedCategory === 'all' ? 'Todos' : selectedCategory})
-            </Button>
-            <Menu
-              anchorEl={filterAnchorEl}
-              open={Boolean(filterAnchorEl)}
-              onClose={handleFilterClose}
-              PaperProps={{
-                sx: {
-                  background: alpha('#ffffff', 0.1),
-                  backdropFilter: 'blur(20px)',
-                  border: `1px solid ${alpha('#ffffff', 0.2)}`,
-                  borderRadius: 2
-                }
-              }}
-            >
-              {categories.map((category) => (
-                <MenuItem
+          <Grid item xs={12} md={6}>
+            <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
+              {categories.map(category => (
+                <Chip
                   key={category}
+                  label={category === 'all' ? 'Todos' : category}
+                  clickable
                   onClick={() => handleCategorySelect(category)}
-                  selected={selectedCategory === category}
-                >
-                  {category === 'all' ? 'Todas las categorías' : category}
-                </MenuItem>
+                  color={selectedCategory === category ? 'primary' : 'default'}
+                  variant={
+                    selectedCategory === category ? 'filled' : 'outlined'
+                  }
+                  sx={{ fontWeight: 500 }}
+                />
               ))}
-            </Menu>
+            </Box>
           </Grid>
         </Grid>
-      </Box>
+      </Paper>
     </Fade>
   );
 
-  // 🎨 Card de video mejorada
-  const renderVideoCard = (video: VideoItem, index: number) => (
-    <Grid key={video.id} item xs={12} sm={6} md={4}>
-      <Zoom in={animate} timeout={800 + index * 100}>
-        <Card
-          className="uplay-video-card"
-          onMouseEnter={() => setHoveredVideo(video.id)}
-          onMouseLeave={() => setHoveredVideo(null)}
-          onClick={() => handleVideoClick(video.id)}
+  const VideoCard: React.FC<{ video: VideoItem; onPlay: () => void }> = ({
+    video,
+    onPlay,
+  }) => {
+    const theme = useTheme();
+    const difficultyColor =
+      video.difficulty === 'Principiante'
+        ? theme.palette.success.main
+        : video.difficulty === 'Intermedio'
+        ? theme.palette.warning.main
+        : theme.palette.error.main;
+
+    const hasThumbnail = !!video.thumbnailUrl;
+
+    return (
+      <Card
+        onClick={onPlay}
+        sx={{
+          height: '250px',
+          cursor: 'pointer',
+          transition: 'all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1)',
+          position: 'relative',
+          overflow: 'hidden',
+          borderRadius: 3,
+          boxShadow: 'none',
+          border: `1px solid ${theme.palette.divider}`,
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'flex-end',
+          backgroundImage: hasThumbnail ? `url(${video.thumbnailUrl})` : 'none',
+          backgroundColor: hasThumbnail ? 'transparent' : theme.palette.background.paper,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          '&::before': {
+            content: '""',
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background:
+              'linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.5) 50%, rgba(0,0,0,0) 100%)',
+            opacity: hasThumbnail ? 1 : 0,
+            transition: 'background 0.3s, opacity 0.3s',
+          },
+          '&:hover': {
+            transform: 'scale(1.03)',
+            boxShadow: `0 8px 30px ${alpha(difficultyColor, 0.2)}`,
+            '& .play-icon': {
+              opacity: 1,
+              transform: 'scale(1.2)',
+            },
+            '&::before': {
+              background:
+                'linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.6) 50%, rgba(0,0,0,0.1) 100%)',
+            },
+          },
+        }}
+      >
+        {!hasThumbnail && (
+          <Box
+            sx={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              backgroundColor: theme.palette.background.default,
+              flexDirection: 'column',
+            }}
+          >
+            <VideocamOffIcon sx={{ fontSize: 60, color: 'text.disabled' }} />
+            <Typography variant="caption" color="text.secondary" mt={1}>
+              Thumbnail no disponible
+            </Typography>
+          </Box>
+        )}
+        <Box
+          className="play-icon"
           sx={{
-            cursor: 'pointer',
-            height: '100%',
-            display: 'flex',
-            flexDirection: 'column',
-            position: 'relative',
-            overflow: 'hidden',
-            transition: 'all 0.3s ease-in-out',
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%) scale(1)',
+            color: hasThumbnail ? '#fff' : 'primary.main',
+            opacity: 0.8,
+            transition: 'all 0.3s ease',
+            pointerEvents: 'none',
           }}
         >
-          {/* Thumbnail con overlay */}
-          <Box sx={{ position: 'relative' }}>
-            <CardMedia
-              component="img"
-              height="200"
-              image={getVideoThumbnail({
-                thumbnailUrl: video.thumbnailUrl,
-                externalId: video.externalId,
-                url: video.youtubeUrl,
-              }) ?? '/placeholder-video.svg'}
-              alt={video.title}
-              data-testid="uplay-video-thumbnail"
-              onError={(e) => {
-                const target = e.target as HTMLImageElement;
-                target.src = '/placeholder-video.svg';
-              }}
-            />
+          <PlayArrowIcon sx={{ fontSize: 60 }} />
+        </Box>
 
-            {/* Overlay con información */}
-            <Box
-              className="uplay-video-overlay"
-              sx={{
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                right: 0,
-                bottom: 0,
-                background: 'linear-gradient(to top, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0) 60%)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                opacity: hoveredVideo === video.id ? 1 : 0,
-                transition: 'opacity 0.3s ease'
-              }}
-            >
-              <IconButton
-                className="uplay-play-button"
-                sx={{
-                  background: alpha(theme.palette.primary.main, 0.9),
-                  color: theme.palette.primary.contrastText,
-                  width: 50,
-                  height: 50,
-                  '&:hover': {
-                    background: theme.palette.primary.main,
-                    transform: 'scale(1.1)'
-                  }
-                }}
-              >
-                <PlayArrowIcon sx={{ fontSize: 30 }} />
-              </IconButton>
-            </Box>
+        <CardContent
+          sx={{
+            position: 'relative',
+            zIndex: 1,
+            color: '#fff',
+            pt: 6,
+            pb: '16px !important',
+            opacity: hasThumbnail ? 1 : 0,
+          }}
+        >
+          <Typography
+            variant="h6"
+            sx={{
+              fontWeight: 'bold',
+              lineHeight: 1.3,
+              mb: 1,
+              textShadow: '1px 1px 3px rgba(0,0,0,0.7)',
+            }}
+          >
+            {video.title}
+          </Typography>
 
-            {/* Badges informativos */}
-            <Box sx={{ position: 'absolute', top: 12, left: 12 }}>
+          <Grid
+            container
+            justifyContent="space-between"
+            alignItems="center"
+            spacing={1}
+          >
+            <Grid item>
               <Chip
-                label={video.difficulty}
+                icon={<DiamondIcon fontSize="small" />}
+                label={`${video.rewards?.meritos ?? 0} M`}
                 size="small"
                 sx={{
-                  backgroundColor: alpha(theme.palette.secondary.dark, 0.8),
-                  color: 'white',
-                  fontWeight: 600,
-                  fontSize: '0.7rem',
-                  borderRadius: 2,
-                  boxShadow: 'none',
+                  background: alpha(theme.palette.primary.light, 0.2),
+                  color: '#fff',
+                  fontWeight: 500,
+                  border: `1px solid ${alpha(theme.palette.primary.light, 0.3)}`,
+                  backdropFilter: 'blur(4px)',
                 }}
               />
-            </Box>
-
-            <Box sx={{ position: 'absolute', top: 12, right: 12 }}>
-              {video.isFavorite && (
-                <IconButton
-                  size="small"
-                  sx={{
-                    background: alpha(theme.palette.warning.main, 0.9),
-                    color: 'white',
-                    width: 32,
-                    height: 32,
-                    '&:hover': {
-                      background: theme.palette.warning.main
-                    }
-                  }}
-                >
-                  <BookmarkIcon sx={{ fontSize: 16 }} />
-                </IconButton>
-              )}
-            </Box>
-
-            {/* Duración */}
-            <Box
-              sx={{
-                position: 'absolute',
-                bottom: 12,
-                right: 12,
-                background: 'rgba(0, 0, 0, 0.8)',
-                color: 'white',
-                px: 1,
-                py: 0.5,
-                borderRadius: 1,
-                fontSize: '0.75rem',
-                fontWeight: 600,
-                display: 'flex',
-                alignItems: 'center',
-                gap: 0.5
-              }}
-            >
-              <AccessTimeIcon sx={{ fontSize: 14 }} />
-              {formatDuration(video.duration)}
-            </Box>
-
-            {/* Sparkle effect para videos completados */}
-            {video.isCompleted && (
-              <Box
-                sx={{
-                  position: 'absolute',
-                  top: 16,
-                  left: '50%',
-                  transform: 'translateX(-50%)',
-                  width: 24,
-                  height: 24,
-                  background: 'radial-gradient(circle, #6366f1, #7c3aed)',
-                  borderRadius: '50%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  animation: 'uplay-sparkle 3s ease-in-out infinite'
-                }}
-              >
-                <CheckCircleIcon sx={{ color: 'white', fontSize: 16 }} />
-              </Box>
-            )}
-          </Box>
-
-          {/* Contenido de la tarjeta */}
-          <CardContent sx={{ flex: 1, p: 3 }}>
-            <Typography
-              variant="h6"
-              sx={{
-                fontWeight: 600,
-                mb: 1,
-                lineHeight: 1.3,
-                display: '-webkit-box',
-                WebkitLineClamp: 2,
-                WebkitBoxOrient: 'vertical',
-                overflow: 'hidden',
-                textOverflow: 'ellipsis'
-              }}
-            >
-              {video.title}
-            </Typography>
-
-            <Typography
-              variant="body2"
-              color="text.secondary"
-              sx={{
-                mb: 2,
-                display: '-webkit-box',
-                WebkitLineClamp: 2,
-                WebkitBoxOrient: 'vertical',
-                overflow: 'hidden',
-                textOverflow: 'ellipsis',
-                lineHeight: 1.4
-              }}
-            >
-              {video.description}
-            </Typography>
-
-            {/* Progreso */}
-            {video.progress && video.progress > 0 && (
-              <Box sx={{ mb: 2 }}>
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 0.5 }}>
-                  <Typography variant="caption" color="text.secondary">
-                    Progreso
-                  </Typography>
-                  <Typography variant="caption" sx={{ fontWeight: 600 }}>
-                    {Math.round(video.progress)}%
-                  </Typography>
-                </Box>
-                <Box className="uplay-progress-container" sx={{ height: 4, backgroundColor: theme.palette.divider, borderRadius: 2 }}>
-                  <Box
-                    className="uplay-progress-bar"
-                    sx={{
-                      width: `${video.progress}%`,
-                      height: '100%',
-                      backgroundColor: theme.palette.primary.main,
-                      borderRadius: 2,
-                    }}
-                  />
-                </Box>
-              </Box>
-            )}
-
-            {/* Recompensas */}
-            <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
+            </Grid>
+            <Grid item>
               <Chip
-                icon={<DiamondIcon />}
-                label={`${video.rewards.meritos} Mëritos`}
+                icon={<BoltIcon fontSize="small" />}
+                label={`${video.rewards?.ondas ?? 0} Ö`}
                 size="small"
-                variant="outlined"
                 sx={{
-                  borderColor: theme.palette.primary.light,
-                  color: theme.palette.primary.dark,
-                  '& .MuiChip-icon': {
-                    color: theme.palette.primary.main
-                  }
+                  background: alpha(theme.palette.secondary.light, 0.2),
+                  color: '#fff',
+                  fontWeight: 500,
+                  border: `1px solid ${alpha(theme.palette.secondary.light, 0.3)}`,
+                  backdropFilter: 'blur(4px)',
                 }}
               />
-              <Chip
-                icon={<BoltIcon />}
-                label={`${video.rewards.ondas} Öndas`}
-                size="small"
-                variant="outlined"
-                sx={{
-                  borderColor: theme.palette.secondary.light,
-                  color: theme.palette.secondary.dark,
-                  '& .MuiChip-icon': {
-                    color: theme.palette.secondary.main,
-                  }
-                }}
-              />
-            </Box>
+            </Grid>
+          </Grid>
+        </CardContent>
+        <Chip
+          label={video.difficulty}
+          size="small"
+          sx={{
+            position: 'absolute',
+            top: 12,
+            right: 12,
+            zIndex: 2,
+            background: difficultyColor,
+            color: theme.palette.getContrastText(difficultyColor),
+            fontWeight: 'bold',
+            boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
+            opacity: hasThumbnail ? 1 : 0,
+          }}
+        />
+        <LinearProgress
+          variant="determinate"
+          value={video.progress || 0}
+          sx={{
+            height: 6,
+            borderBottomLeftRadius: 12,
+            borderBottomRightRadius: 12,
+            backgroundColor: alpha('#fff', 0.2),
+            opacity: hasThumbnail ? 1 : 0,
+            '& .MuiLinearProgress-bar': {
+              backgroundColor: difficultyColor,
+            },
+          }}
+        />
+      </Card>
+    );
+  };
 
-            {/* Footer de la tarjeta */}
-            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                <StarIcon sx={{ color: '#bfae60', fontSize: 16 }} />
-                <Typography variant="caption" sx={{ fontWeight: 600 }}>
-                  {video.rating.toFixed(1)}
-                </Typography>
-                <Typography variant="caption" color="text.secondary">
-                  ({video.views} vistas)
-                </Typography>
-              </Box>
+  const renderLoadingSkeletons = () => (
+    <Grid container spacing={3}>
+      {Array.from(new Array(6)).map((_, index) => (
+        <Grid item xs={12} sm={6} md={4} key={index}>
+          <Skeleton variant="rectangular" height={250} sx={{ borderRadius: 3 }} />
+        </Grid>
+      ))}
+    </Grid>
+  );
 
-              {video.questions.length > 0 && (
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                  <QuestionAnswerIcon sx={{ color: '#6366f1', fontSize: 16 }} />
-                  <Typography variant="caption" sx={{ fontWeight: 600, color: '#6366f1' }}>
-                    {video.questions.length} preguntas
-                  </Typography>
-                </Box>
-              )}
-            </Box>
-          </CardContent>
-        </Card>
-      </Zoom>
+  const renderEmptyState = () => (
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        py: 10,
+        textAlign: 'center',
+        color: 'text.secondary',
+      }}
+    >
+      <VideocamOffIcon sx={{ fontSize: 64, mb: 2 }} />
+      <Typography variant="h5" gutterBottom>
+        No se encontraron videos
+      </Typography>
+      <Typography>
+        Intenta ajustar tu búsqueda o selecciona otra categoría.
+      </Typography>
+    </Box>
+  );
+
+  // 🎨 Video Card
+  const renderVideoCard = (video: VideoItem, index: number) => (
+    <Grid item xs={12} sm={6} md={4} key={video.id}>
+      <Fade in={animate} timeout={(index + 1) * 200}>
+        <div>
+          <VideoCard
+            video={video}
+            onPlay={() => handleVideoClick(video.id)}
+          />
+        </div>
+      </Fade>
     </Grid>
   );
 
@@ -654,74 +494,36 @@ export const UPlayInteractiveLibrary: React.FC = () => {
   }
 
   return (
-    <Box sx={{ position: 'relative', minHeight: '100vh' }}>
-      {/* Efectos de fondo */}
+    <Box sx={{ p: { xs: 1, md: 3 } }}>
+      {renderSearchHeader()}
+
+      {isLoading && renderLoadingSkeletons()}
+
+      {!isLoading && filteredVideos.length > 0 && (
+        <Grid container spacing={3}>
+          {filteredVideos.map(renderVideoCard)}
+        </Grid>
+      )}
+
+      {!isLoading && filteredVideos.length === 0 && renderEmptyState()}
+
       <RevolutionaryWidget
-        variant="minimal"
-        style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          zIndex: 0,
-          opacity: 0.12
-        }}
-      >{null}</RevolutionaryWidget>
-
-      {/* Partículas flotantes */}
-      <Box
-        sx={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          overflow: 'hidden',
-          pointerEvents: 'none',
-          zIndex: 0
-        }}
+        title="Tu Biblioteca de Sabiduría"
+        subtitle="Cada video es una puerta a un nuevo nivel de conciencia. Explora, aprende y contribuye al Bien Común."
+        actions={[
+          <MuiButton
+            key="discover"
+            variant="contained"
+            color="primary"
+            onClick={() => navigate('/ustats')}
+          >
+            Descubre tu Potencial
+          </MuiButton>,
+        ]}
+        style={{ marginTop: theme.spacing(5) }}
       >
-        {[...Array(10)].map((_, i) => (
-          <Box
-            key={i}
-            className="uplay-particle sparkle"
-            sx={{
-              width: Math.random() * 6 + 3,
-              height: Math.random() * 6 + 3,
-              top: `${Math.random() * 100}%`,
-              left: `${Math.random() * 100}%`,
-              animationDelay: `${Math.random() * 4}s`,
-              animationDuration: `${3 + Math.random() * 2}s`
-            }}
-          />
-        ))}
-      </Box>
-
-      {/* Contenido principal */}
-      <Box sx={{ position: 'relative', zIndex: 1, pb: 4 }}>
-        {/* Header de búsqueda */}
-        {renderSearchHeader()}
-
-        {/* Grid de videos */}
-        {filteredVideos.length === 0 ? (
-          <Fade in={animate} timeout={1000}>
-            <Box sx={{ textAlign: 'center', py: 8 }}>
-              <SearchIcon sx={{ fontSize: 64, color: 'text.secondary', mb: 2 }} />
-              <Typography variant="h6" color="text.secondary" sx={{ mb: 1 }}>
-                No se encontraron videos
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                Intenta ajustar tu búsqueda o filtros
-              </Typography>
-            </Box>
-          </Fade>
-        ) : (
-          <Grid container spacing={3} sx={{ px: 3 }}>
-            {filteredVideos.map((video, index) => renderVideoCard(video, index))}
-          </Grid>
-        )}
-      </Box>
+        {null}
+      </RevolutionaryWidget>
     </Box>
   );
 };

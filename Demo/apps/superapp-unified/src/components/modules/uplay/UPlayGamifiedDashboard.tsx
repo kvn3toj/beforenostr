@@ -20,13 +20,17 @@ import {
   Paper,
   useTheme,
   Theme,
+  LinearProgress,
 } from '@mui/material';
 import {
   PlayArrow,
   Menu,
   Diamond,
   Bolt,
+  WorkspacePremium,
+  Whatshot,
 } from '@mui/icons-material';
+import { alpha } from '@mui/material/styles';
 
 // Hooks y Componentes
 import DynamicMetricsDashboard from './DynamicMetricsDashboard';
@@ -38,112 +42,184 @@ interface VideoItem {
   id: string;
   title: string;
   difficulty: 'easy' | 'medium' | 'hard';
-  rewards: { meritos: number; ondas: number; };
-  thumbnail: string;
+  rewards: { meritos: number; ondas: number };
+  thumbnailUrl: string;
+  progress: number;
 }
 
 // ADAPTADOR
-const adaptBackendVideoToVideoItem = (backendVideo: Video): VideoItem => {
-    let difficulty: 'easy' | 'medium' | 'hard' = 'easy';
-    if (backendVideo.questions?.length >= 5) difficulty = 'medium';
-    if (backendVideo.questions?.length >= 10) difficulty = 'hard';
+const adaptBackendVideoToVideoItem = (
+  backendVideo: Video,
+  playlistImageUrl?: string
+): VideoItem => {
+  let difficulty: 'easy' | 'medium' | 'hard' = 'easy';
+  if (backendVideo.questions?.length >= 5) difficulty = 'medium';
+  if (backendVideo.questions?.length >= 10) difficulty = 'hard';
 
-    return {
-        id: backendVideo.id,
-        title: backendVideo.title,
-        difficulty,
-        rewards: {
-            meritos: backendVideo.rewards?.meritos || 50,
-            ondas: backendVideo.rewards?.ondas || 30,
-        },
-        thumbnail: '🎬',
-    };
+  return {
+    id: backendVideo.id,
+    title: backendVideo.title,
+    difficulty,
+    rewards: {
+      meritos: backendVideo.rewards?.meritos || 50,
+      ondas: backendVideo.rewards?.ondas || 30,
+    },
+    thumbnailUrl: backendVideo.thumbnailUrl || playlistImageUrl || '',
+    progress: Math.floor(Math.random() * 80) + 10,
+  };
 };
 
 const getDifficultyLabel = (difficulty: 'easy' | 'medium' | 'hard') => {
-    if (difficulty === 'easy') return 'Fácil';
-    if (difficulty === 'medium') return 'Intermedio';
-    return 'Avanzado';
+  if (difficulty === 'easy') return 'Fácil';
+  if (difficulty === 'medium') return 'Intermedio';
+  return 'Avanzado';
 };
 
-const getDifficultyColor = (difficulty: 'easy' | 'medium' | 'hard') => {
-    if (difficulty === 'easy') return '#3E8638'; // Verde - success
-    if (difficulty === 'medium') return '#FBBA00'; // Amarillo - warning
-    return '#5D1626'; // Rojo oscuro - error
+const getDifficultyColor = (
+  difficulty: 'easy' | 'medium' | 'hard',
+  theme: Theme
+) => {
+  if (difficulty === 'easy') return theme.palette.success.main;
+  if (difficulty === 'medium') return theme.palette.warning.main;
+  return theme.palette.error.main;
 };
 
-// COMPONENTE VideoCard
-const VideoCard: React.FC<{ video: VideoItem; onPlay: () => void }> = ({ video, onPlay }) => {
+// COMPONENTE VideoCard MEJORADO
+const VideoCard: React.FC<{ video: VideoItem; onPlay: () => void }> = ({
+  video,
+  onPlay,
+}) => {
   const theme = useTheme();
+  const difficultyColor = getDifficultyColor(video.difficulty, theme);
+  const hasThumbnail = !!video.thumbnailUrl;
 
   return (
     <Card
       onClick={onPlay}
       sx={{
-        height: '100%',
+        height: '250px',
         cursor: 'pointer',
-        transition: 'all 0.2s',
+        transition: 'all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1)',
         position: 'relative',
         overflow: 'hidden',
-        background: theme.palette.background.paper,
-        border: `1px solid ${theme.palette.divider}`,
-        borderRadius: 2,
+        borderRadius: 3,
         boxShadow: 'none',
+        border: `1px solid ${theme.palette.divider}`,
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'flex-end',
+        backgroundImage: hasThumbnail ? `url(${video.thumbnailUrl})` : 'none',
+        backgroundColor: hasThumbnail ? 'transparent' : theme.palette.background.paper,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        '&::before': {
+          content: '""',
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background:
+            'linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.5) 50%, rgba(0,0,0,0) 100%)',
+          opacity: hasThumbnail ? 1 : 0.7,
+          transition: 'background 0.3s, opacity 0.3s',
+        },
         '&:hover': {
-          transform: 'translateY(-2px)',
-          boxShadow: '0 1px 4px rgba(0, 0, 0, 0.03)',
-          borderColor: 'rgba(92, 36, 131, 0.1)',
+          transform: 'scale(1.03)',
+          boxShadow: `0 8px 30px ${alpha(difficultyColor, 0.3)}`,
+          '& .play-icon': {
+            opacity: 1,
+            transform: 'scale(1.2)',
+          },
+          '&::before': {
+            background:
+              'linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.6) 50%, rgba(0,0,0,0.1) 100%)',
+          },
         },
       }}
     >
-      <Box sx={{ p: 2, height: '100%', display: 'flex', flexDirection: 'column' }}>
-        <Typography variant="h6" sx={{ fontWeight: 500, mb: 1, color: theme.palette.text.primary, flexGrow: 1 }}>
-          {video.thumbnail} {video.title}
+      <Box
+        className="play-icon"
+        sx={{
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%) scale(1)',
+          color: '#fff',
+          opacity: 0.8,
+          transition: 'all 0.3s ease',
+          pointerEvents: 'none',
+        }}
+      >
+        <PlayArrow sx={{ fontSize: 60 }} />
+      </Box>
+
+      <Box sx={{ p: 2, zIndex: 1, color: '#fff' }}>
+        <Typography
+          variant="h6"
+          sx={{ fontWeight: 'bold', mb: 1, textShadow: '1px 1px 3px #000' }}
+        >
+          {video.title}
         </Typography>
-        <Divider sx={{ my: 1.5, borderColor: theme.palette.divider }} />
-        <Grid container justifyContent="space-between" alignItems="center" spacing={1}>
+        <Grid
+          container
+          justifyContent="space-between"
+          alignItems="center"
+          spacing={1}
+        >
           <Grid item>
             <Chip
               icon={<Diamond fontSize="small" />}
-              label={`${video.rewards.meritos}`}
+              label={`${video.rewards.meritos} M`}
               size="small"
               sx={{
-                background: 'rgba(92, 36, 131, 0.02)',
-                border: 'none',
-                color: theme.palette.text.secondary,
-                fontWeight: 400,
+                background: alpha(theme.palette.primary.light, 0.2),
+                color: '#fff',
+                fontWeight: 500,
+                border: `1px solid ${alpha(theme.palette.primary.light, 0.3)}`,
               }}
             />
           </Grid>
           <Grid item>
             <Chip
               icon={<Bolt fontSize="small" />}
-              label={`${video.rewards.ondas}`}
+              label={`${video.rewards.ondas} Ö`}
               size="small"
               sx={{
-                background: 'rgba(92, 36, 131, 0.02)',
-                border: 'none',
-                color: theme.palette.text.secondary,
-                fontWeight: 400,
+                background: alpha(theme.palette.secondary.light, 0.2),
+                color: '#fff',
+                fontWeight: 500,
+                border: `1px solid ${alpha(theme.palette.secondary.light, 0.3)}`,
               }}
             />
           </Grid>
         </Grid>
       </Box>
+      <LinearProgress
+        variant="determinate"
+        value={video.progress}
+        sx={{
+          height: 6,
+          borderBottomLeftRadius: 12,
+          borderBottomRightRadius: 12,
+          backgroundColor: alpha('#fff', 0.2),
+          '& .MuiLinearProgress-bar': {
+            backgroundColor: difficultyColor,
+          },
+        }}
+      />
       <Chip
         label={getDifficultyLabel(video.difficulty)}
         size="small"
         sx={{
           position: 'absolute',
-          top: 8,
-          right: 8,
-          background: 'white',
-          color: getDifficultyColor(video.difficulty),
-          fontWeight: 500,
-          border: `1px solid ${getDifficultyColor(video.difficulty)}10`,
-          borderRadius: 1,
-          height: 20,
-          fontSize: '0.7rem',
+          top: 12,
+          right: 12,
+          zIndex: 2,
+          background: difficultyColor,
+          color: theme.palette.getContrastText(difficultyColor),
+          fontWeight: 'bold',
+          boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
         }}
       />
     </Card>
@@ -213,33 +289,82 @@ export const UPlayGamifiedDashboard: React.FC = () => {
         <DynamicMetricsDashboard />
 
         {/* Sendas de Aprendizaje */}
-        <Typography variant="h4" sx={{ mt: 5, mb: 3, fontWeight: 600, color: theme.palette.text.primary }}>
-          Sendas de Aprendizaje
+        <Typography
+          variant="h4"
+          sx={{
+            mt: 5,
+            mb: 3,
+            fontWeight: 'bold',
+            color: theme.palette.text.primary,
+            letterSpacing: '-0.5px',
+          }}
+        >
+          Explora tus Sendas de Aprendizaje
         </Typography>
-        <Grid container spacing={3}>
-          {playlistsData?.map((playlist) => (
-            <React.Fragment key={playlist.id}>
-              <Grid item xs={12}>
-                <Typography variant="h5" sx={{ mt: 2, mb: 1, fontWeight: 500, color: theme.palette.text.primary }}>
-                  {playlist.name}
-                </Typography>
-                <Typography variant="body2" sx={{ mb: 2, color: theme.palette.text.secondary }}>
-                  {playlist.description || 'Explora esta colección de videos para expandir tu conciencia.'}
-                </Typography>
-              </Grid>
-              {playlist.videoItems.map((video) => (
-                <Grid item xs={12} sm={6} md={4} key={video.id}>
-                  <VideoCard
-                    video={adaptBackendVideoToVideoItem(video)}
-                    onPlay={() => handlePlayAction(playlist, video)}
+        <Grid container spacing={4}>
+          {playlistsData?.map(playlist => (
+            <Grid item xs={12} key={playlist.id}>
+              <Paper
+                elevation={0}
+                sx={{
+                  p: 3,
+                  borderRadius: 3,
+                  background: 'transparent',
+                  border: `1px solid ${theme.palette.divider}`,
+                }}
+              >
+                <Box sx={{ mb: 3 }}>
+                  <Typography
+                    variant="h5"
+                    sx={{ fontWeight: 'bold', color: theme.palette.text.primary }}
+                  >
+                    {playlist.name}
+                  </Typography>
+                  <Typography
+                    variant="body1"
+                    sx={{
+                      mb: 2,
+                      color: theme.palette.text.secondary,
+                      maxWidth: '80ch',
+                    }}
+                  >
+                    {playlist.description ||
+                      'Explora esta colección de videos para expandir tu conciencia.'}
+                  </Typography>
+                </Box>
+                <Divider
+                  sx={{
+                    mb: 3,
+                    '&::before, &::after': {
+                      borderColor: theme.palette.divider,
+                    },
+                  }}
+                >
+                  <Chip
+                    label="Contenido"
+                    icon={<WorkspacePremium />}
+                    size="small"
                   />
+                </Divider>
+                <Grid container spacing={3}>
+                  {playlist.videoItems.map(video => (
+                    <Grid item xs={12} sm={6} md={4} lg={3} key={video.id}>
+                      <VideoCard
+                        video={adaptBackendVideoToVideoItem(
+                          video,
+                          playlist.imageUrl
+                        )}
+                        onPlay={() => handlePlayAction(playlist, video)}
+                      />
+                    </Grid>
+                  ))}
                 </Grid>
-              ))}
-            </React.Fragment>
+              </Paper>
+            </Grid>
           ))}
         </Grid>
 
-        <Box sx={{ position: 'fixed', bottom: 24, right: 24 }}>
+        <Box sx={{ position: 'fixed', bottom: 24, right: 24, zIndex: 1000 }}>
           <Fab
             color="primary"
             aria-label="play"

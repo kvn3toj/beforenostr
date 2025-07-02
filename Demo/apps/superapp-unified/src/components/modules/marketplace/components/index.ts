@@ -26,6 +26,9 @@ export { MobileSearchBar } from './MobileSearchBar';
 export { RequestCreationSection } from './RequestCreationSection';
 export * from './RoleToggle';
 
+// Dashboard and seller components
+export { default as MarketplaceDashboard } from './MarketplaceDashboard';
+
 // Nuevos componentes para el detalle del producto
 export { ProductDetailView } from './ProductDetailView';
 export { ProductGallery } from './ProductGallery';

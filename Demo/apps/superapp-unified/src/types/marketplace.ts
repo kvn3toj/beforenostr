@@ -333,11 +333,21 @@ export interface Address {
 export interface Message {
   id: string;
   senderId: string;
-  senderName: string;
   content: string;
-  attachments?: string[];
-  createdAt: Date;
+  attachments?: any[];
+  createdAt: string;
   read: boolean;
+  status: 'pending' | 'sent' | 'delivered' | 'read' | 'failed';
+  reactions?: {
+    [emoji: string]: string[];
+  };
+  sender: {
+    id: string;
+    name: string;
+    avatar: string;
+  };
+  replyTo?: Message;
+  isEdited?: boolean;
 }
 
 // Tipos para filtros y búsqueda

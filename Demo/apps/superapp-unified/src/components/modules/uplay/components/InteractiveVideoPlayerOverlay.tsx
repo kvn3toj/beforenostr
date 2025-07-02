@@ -27,6 +27,12 @@ import {
   Stack,
   Tooltip,
   Avatar,
+  Paper,
+  Radio,
+  RadioGroup,
+  FormControlLabel,
+  FormControl,
+  TextField,
 } from '@mui/material';
 import {
   PlayArrow as PlayIcon,
@@ -50,7 +56,10 @@ import {
   Refresh as RefreshIcon,
   Quiz as QuizIcon,
   Check as CheckIcon,
+  EmojiEvents as EmojiEventsIcon,
+  Waves as WavesIcon,
 } from '@mui/icons-material';
+import YouTubePlayer from './YouTubePlayer';
 
 // Importar servicios para integración con backend
 import { apiService } from '../../../../lib/api-service';
@@ -228,6 +237,7 @@ const InteractiveVideoPlayerOverlay: React.FC<
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [showControls, setShowControls] = useState(true);
   const [playbackSpeed, setPlaybackSpeed] = useState(1);
+  const [lastActivity, setLastActivity] = useState(Date.now());
 
   // Debug state
   const [showDebugControls, setShowDebugControls] = useState(process.env.NODE_ENV === 'development');
@@ -280,6 +290,71 @@ const InteractiveVideoPlayerOverlay: React.FC<
     Array<{ start: number; end: number }>
   >([]);
   const [lastAnalyticsUpdate, setLastAnalyticsUpdate] = useState<number>(0);
+
+  // Enhanced audio support for Öndas generation
+  const audioContextRef = useRef<AudioContext | null>(null);
+  const soundEnabledRef = useRef(true); // This should come from user settings
+
+  // Initialize audio context
+  useEffect(() => {
+    try {
+      audioContextRef.current = new (window.AudioContext || (window as any).webkitAudioContext)();
+    } catch (error) {
+      console.warn('Audio context not supported:', error);
+    }
+  }, []);
+
+  // Function to play Öndas generation sound
+  const playOndasSound = useCallback((ondasAmount: number) => {
+    if (!soundEnabledRef.current || !audioContextRef.current) return;
+
+    try {
+      const ctx = audioContextRef.current;
+      const oscillator = ctx.createOscillator();
+      const gainNode = ctx.createGain();
+
+      oscillator.connect(gainNode);
+      gainNode.connect(ctx.destination);
+
+      // Create a harmonious sound based on Öndas amount
+      const baseFrequency = 440; // A4 note
+      const frequency = baseFrequency + (ondasAmount * 10); // Higher Öndas = higher pitch
+
+      oscillator.frequency.setValueAtTime(frequency, ctx.currentTime);
+      oscillator.type = 'sine';
+
+      // Fade in and out
+      gainNode.gain.setValueAtTime(0, ctx.currentTime);
+      gainNode.gain.linearRampToValueAtTime(0.1, ctx.currentTime + 0.1);
+      gainNode.gain.linearRampToValueAtTime(0, ctx.currentTime + 0.8);
+
+      oscillator.start(ctx.currentTime);
+      oscillator.stop(ctx.currentTime + 0.8);
+
+      // Add a second harmonic for richness
+      setTimeout(() => {
+        if (!audioContextRef.current) return;
+        const oscillator2 = ctx.createOscillator();
+        const gainNode2 = ctx.createGain();
+
+        oscillator2.connect(gainNode2);
+        gainNode2.connect(ctx.destination);
+
+        oscillator2.frequency.setValueAtTime(frequency * 1.5, ctx.currentTime);
+        oscillator2.type = 'triangle';
+
+        gainNode2.gain.setValueAtTime(0, ctx.currentTime);
+        gainNode2.gain.linearRampToValueAtTime(0.05, ctx.currentTime + 0.05);
+        gainNode2.gain.linearRampToValueAtTime(0, ctx.currentTime + 0.4);
+
+        oscillator2.start(ctx.currentTime);
+        oscillator2.stop(ctx.currentTime + 0.4);
+      }, 200);
+
+    } catch (error) {
+      console.warn('Failed to play Öndas sound:', error);
+    }
+  }, []);
 
   // Format time display
   const formatTime = useCallback((seconds: number): string => {
@@ -503,6 +578,11 @@ const InteractiveVideoPlayerOverlay: React.FC<
         isVisible: true,
         reward: finalReward,
       });
+
+      // Play Öndas generation sound
+      if (finalReward.ondas > 0) {
+        playOndasSound(finalReward.ondas);
+      }
 
       setTimeout(() => {
         setRewardAnimation((prev) => ({ ...prev, isVisible: false }));
@@ -747,22 +827,28 @@ const InteractiveVideoPlayerOverlay: React.FC<
       sx={{
         position: 'relative',
         width: '100%',
-        height: isLandscape
-          ? isFullscreen
-            ? '100vh'
-            : { xs: '100vw', md: '500px' }
+        height: isFullscreen
+          ? '100vh'
           : '400px',
         backgroundColor: '#000',
         borderRadius: isFullscreen ? 0 : 2,
         overflow: 'hidden',
-        transform: isLandscape && !isFullscreen ? 'rotate(-90deg)' : 'none',
+        transform: 'none', // Removed automatic rotation - let videos display in their natural orientation
         transformOrigin: 'center',
-        ...(isLandscape &&
-          !isFullscreen && {
-            width: { xs: '100vh', md: '700px' },
-            height: { xs: '100vw', md: '400px' },
-            margin: 'auto',
-          }),
+        // Enhanced responsive video container based on industry standards
+        aspectRatio: isFullscreen ? 'auto' : '16 / 9',
+        maxWidth: '100%',
+        // Prevent video cropping and ensure proper scaling
+        '& iframe, & video': {
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          objectFit: 'contain', // Prevents cropping, maintains aspect ratio
+          backgroundColor: '#000',
+        },
+        // Removed complex conditional sizing - using standard responsive approach
       }}
     >
       {/* Video Element */}
@@ -957,11 +1043,11 @@ const InteractiveVideoPlayerOverlay: React.FC<
         <Box
           sx={{
             position: 'absolute',
-            bottom: 120,
+            bottom: { xs: 80, sm: 100, md: 120 }, // Responsive bottom positioning
             left: '50%',
             transform: 'translateX(-50%)',
-            width: '90%',
-            maxWidth: 700,
+            width: { xs: '95%', sm: '88%', md: '82%' }, // 🌸 ARIA: Balanced width for optimal viewing
+            maxWidth: { xs: 450, sm: 600, md: 750 }, // 🌸 ARIA: More conservative max widths
             zIndex: 20,
             display: activeQuestion ? 'block' : 'none',
           }}
@@ -988,27 +1074,31 @@ const InteractiveVideoPlayerOverlay: React.FC<
                 }
               }}
             >
-              <CardContent sx={{ p: 4, position: 'relative', zIndex: 2 }}>
+              <CardContent sx={{ p: { xs: 2.5, sm: 3.5, md: 4 }, position: 'relative', zIndex: 2 }}> {/* 🌸 ARIA: Balanced padding for optimal spacing */}
                 {/* Question Header */}
-                <Box sx={{ textAlign: 'center', mb: 4 }}>
+                <Box sx={{ textAlign: 'center', mb: { xs: 3, sm: 4, md: 4 } }}> {/* 🌸 ARIA: Increased margins */}
                   <Typography
-                    variant="h5"
+                    variant="h6"
                     sx={{
                       color: 'white',
                       fontWeight: 700,
                       textShadow: '0 2px 8px rgba(0,0,0,0.3)',
-                      mb: 1,
+                      mb: { xs: 1, sm: 1.5, md: 2 }, // 🌸 ARIA: Increased margin
+                      fontSize: { xs: '1.2rem', sm: '1.35rem', md: '1.6rem' }, // 🌸 ARIA: Balanced font sizes
                     }}
                   >
                     🤔 Pregunta Interactiva
                   </Typography>
                   <Typography
-                    variant="h6"
+                    variant="body1"
                     sx={{
                       color: 'white',
                       fontWeight: 500,
                       textShadow: '0 1px 4px rgba(0,0,0,0.2)',
-                      lineHeight: 1.4,
+                      lineHeight: 1.4, // 🌸 ARIA: Improved line height for readability
+                      fontSize: { xs: '1.05rem', sm: '1.15rem', md: '1.3rem' }, // 🌸 ARIA: Balanced font sizes
+                      maxWidth: '90%', // 🌸 ARIA: Prevent overly long lines
+                      mx: 'auto', // 🌸 ARIA: Center the text
                     }}
                   >
                     {activeQuestion.question}
@@ -1016,7 +1106,7 @@ const InteractiveVideoPlayerOverlay: React.FC<
                 </Box>
 
                 {/* Question Options */}
-                <Stack spacing={2} sx={{ mb: 3 }}>
+                <Stack spacing={{ xs: 1.5, sm: 2, md: 2.5 }} sx={{ mb: { xs: 3, sm: 4, md: 4 } }}> {/* 🌸 ARIA: Increased spacing between options */}
                   {(activeQuestion?.options || []).map((option) => (
                     <Button
                       key={option.id}
@@ -1025,8 +1115,8 @@ const InteractiveVideoPlayerOverlay: React.FC<
                       disabled={!!selectedAnswer}
                       sx={{
                         borderRadius: 3,
-                        py: 2,
-                        px: 3,
+                        py: { xs: 1.5, sm: 2, md: 2.5 }, // 🌸 ARIA: Increased vertical padding
+                        px: { xs: 2.5, sm: 3, md: 4 }, // 🌸 ARIA: Increased horizontal padding
                         textAlign: 'left',
                         justifyContent: 'flex-start',
                         background: selectedAnswer === option.id
@@ -1035,8 +1125,9 @@ const InteractiveVideoPlayerOverlay: React.FC<
                         borderColor: 'rgba(255, 255, 255, 0.3)',
                         color: 'white',
                         textTransform: 'none',
-                        fontSize: '16px',
+                        fontSize: { xs: '0.95rem', sm: '1.05rem', md: '1.1rem' }, // 🌸 ARIA: Balanced option text size
                         fontWeight: 500,
+                        minHeight: { xs: '55px', sm: '65px', md: '75px' }, // 🌸 ARIA: Balanced height for touch targets
                         transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
                         '&:hover': {
                           background: selectedAnswer === option.id
@@ -1054,24 +1145,32 @@ const InteractiveVideoPlayerOverlay: React.FC<
                         display: 'flex',
                         alignItems: 'center',
                         width: '100%',
-                        gap: 2
+                        gap: { xs: 1.5, sm: 2, md: 2.5 } // 🌸 ARIA: Increased gap between elements
                       }}>
                         <Avatar sx={{
-                          width: 36,
-                          height: 36,
+                          width: { xs: 30, sm: 36, md: 42 }, // 🌸 ARIA: Balanced avatar sizes
+                          height: { xs: 30, sm: 36, md: 42 }, // 🌸 ARIA: Balanced avatar sizes
                           bgcolor: selectedAnswer === option.id ? 'rgba(255, 255, 255, 0.9)' : 'rgba(255, 255, 255, 0.2)',
                           color: selectedAnswer === option.id ? '#10b981' : 'white',
-                          fontSize: '16px',
+                          fontSize: { xs: '0.9rem', sm: '1.1rem', md: '1.3rem' }, // 🌸 ARIA: Balanced avatar font size
                           fontWeight: 800,
                           transition: 'all 0.3s ease',
                         }}>
                           {option.label}
                         </Avatar>
-                        <Typography variant="body1" sx={{ fontWeight: 500, flex: 1 }}>
+                        <Typography
+                          variant="body1"
+                          sx={{
+                            fontWeight: 500,
+                            flex: 1,
+                            fontSize: { xs: '0.95rem', sm: '1.05rem', md: '1.1rem' }, // 🌸 ARIA: Balanced option text size
+                            lineHeight: 1.3, // 🌸 ARIA: Better line height
+                          }}
+                        >
                           {option.text}
                         </Typography>
                         {selectedAnswer === option.id && (
-                          <CheckIcon sx={{ color: 'white', fontSize: 24 }} />
+                          <CheckIcon sx={{ color: 'white', fontSize: { xs: 24, sm: 28, md: 32 } }} />
                         )}
                       </Box>
                     </Button>
@@ -1079,20 +1178,21 @@ const InteractiveVideoPlayerOverlay: React.FC<
                 </Stack>
 
                 {/* Action Buttons */}
-                <Box sx={{ display: 'flex', gap: 2, justifyContent: 'center' }}>
+                <Box sx={{ display: 'flex', gap: { xs: 1.5, sm: 2, md: 2.5 }, justifyContent: 'center', flexWrap: 'wrap' }}> {/* 🌸 ARIA: Increased gap for better spacing */}
                   <Button
                     variant="contained"
                     onClick={handleAnswerSubmit}
                     disabled={!selectedAnswer}
                     sx={{
                       borderRadius: 3,
-                      py: 1.5,
-                      px: 4,
+                      py: { xs: 1.5, sm: 2, md: 2.5 }, // 🌸 ARIA: Responsive padding matching options
+                      px: { xs: 3, sm: 4, md: 5 }, // 🌸 ARIA: Increased horizontal padding
                       background: 'linear-gradient(135deg, #10b981 0%, #34d399 100%)',
                       boxShadow: '0 8px 25px rgba(16, 185, 129, 0.3)',
                       fontWeight: 700,
-                      fontSize: '16px',
+                      fontSize: { xs: '1rem', sm: '1.1rem', md: '1.2rem' }, // 🌸 ARIA: Responsive font size
                       textTransform: 'none',
+                      minHeight: { xs: '50px', sm: '56px', md: '64px' }, // 🌸 ARIA: Minimum height for better touch targets
                       '&:hover': {
                         background: 'linear-gradient(135deg, #059669 0%, #10b981 100%)',
                         boxShadow: '0 12px 35px rgba(16, 185, 129, 0.4)',
@@ -1111,12 +1211,14 @@ const InteractiveVideoPlayerOverlay: React.FC<
                     onClick={handleSkipQuestion}
                     sx={{
                       borderRadius: 3,
-                      py: 1.5,
-                      px: 3,
+                      py: { xs: 1.5, sm: 2, md: 2.5 }, // 🌸 ARIA: Responsive padding matching options
+                      px: { xs: 2.5, sm: 3, md: 4 }, // 🌸 ARIA: Increased horizontal padding
                       borderColor: 'rgba(255, 255, 255, 0.3)',
                       color: 'white',
                       fontWeight: 600,
+                      fontSize: { xs: '1rem', sm: '1.1rem', md: '1.2rem' }, // 🌸 ARIA: Responsive font size
                       textTransform: 'none',
+                      minHeight: { xs: '50px', sm: '56px', md: '64px' }, // 🌸 ARIA: Minimum height for better touch targets
                       '&:hover': {
                         borderColor: 'rgba(255, 255, 255, 0.5)',
                         background: 'rgba(255, 255, 255, 0.1)',
@@ -1232,7 +1334,7 @@ const InteractiveVideoPlayerOverlay: React.FC<
         </Alert>
       </Snackbar>
 
-      {/* Reward Animation */}
+      {/* Enhanced Reward Animation with Öndas Effects */}
       <Zoom in={rewardAnimation.isVisible}>
         <Box
           sx={{
@@ -1252,32 +1354,114 @@ const InteractiveVideoPlayerOverlay: React.FC<
               p: 3,
               color: 'white',
               boxShadow: '0 8px 32px rgba(251, 191, 36, 0.5)',
-              animation: 'pulse 2s infinite',
-              '@keyframes pulse': {
-                '0%': { transform: 'scale(1)' },
-                '50%': { transform: 'scale(1.05)' },
-                '100%': { transform: 'scale(1)' },
+              position: 'relative',
+              overflow: 'hidden',
+              animation: 'rewardPulse 2s infinite, sparkle 3s infinite',
+              '@keyframes rewardPulse': {
+                '0%': { transform: 'scale(1)', boxShadow: '0 8px 32px rgba(251, 191, 36, 0.5)' },
+                '50%': { transform: 'scale(1.05)', boxShadow: '0 12px 48px rgba(251, 191, 36, 0.8)' },
+                '100%': { transform: 'scale(1)', boxShadow: '0 8px 32px rgba(251, 191, 36, 0.5)' },
+              },
+              '@keyframes sparkle': {
+                '0%, 100%': { '&::before': { opacity: 0 } },
+                '50%': { '&::before': { opacity: 1 } },
+              },
+              '&::before': {
+                content: '""',
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                background: 'linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.3) 50%, transparent 70%)',
+                animation: 'shimmer 2s infinite',
+                '@keyframes shimmer': {
+                  '0%': { transform: 'translateX(-100%) skewX(-15deg)' },
+                  '100%': { transform: 'translateX(200%) skewX(-15deg)' },
+                },
+              },
+              // Global animation keyframes
+              '@keyframes rotate': {
+                '0%': { transform: 'rotate(0deg)' },
+                '100%': { transform: 'rotate(360deg)' },
               },
             }}
           >
-            <Typography variant="h4" sx={{ mb: 1, fontWeight: 800 }}>
+            <Typography variant="h4" sx={{ mb: 1, fontWeight: 800, position: 'relative', zIndex: 2 }}>
               🎉 ¡Excelente!
             </Typography>
-            <Stack direction="row" justifyContent="center" spacing={2}>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                <DiamondIcon />
+            <Stack direction="row" justifyContent="center" spacing={2} sx={{ position: 'relative', zIndex: 2 }}>
+              <Box sx={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 0.5,
+                animation: 'bounceIn 0.8s ease-out',
+                '@keyframes bounceIn': {
+                  '0%': { transform: 'scale(0)', opacity: 0 },
+                  '50%': { transform: 'scale(1.2)', opacity: 0.8 },
+                  '100%': { transform: 'scale(1)', opacity: 1 },
+                },
+              }}>
+                <DiamondIcon sx={{ animation: 'rotate 2s linear infinite' }} />
                 <Typography variant="h6" sx={{ fontWeight: 700 }}>
                   +{rewardAnimation.reward.merits}
                 </Typography>
               </Box>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                <BoltIcon />
+              <Box sx={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 0.5,
+                animation: 'ondasWave 1.5s ease-in-out infinite',
+                '@keyframes ondasWave': {
+                  '0%, 100%': { transform: 'translateY(0px)' },
+                  '50%': { transform: 'translateY(-5px)' },
+                },
+              }}>
+                <WavesIcon sx={{
+                  animation: 'ondasGlow 2s ease-in-out infinite alternate',
+                  '@keyframes ondasGlow': {
+                    '0%': { filter: 'drop-shadow(0 0 5px #10b981)' },
+                    '100%': { filter: 'drop-shadow(0 0 15px #10b981)' },
+                  },
+                }} />
                 <Typography variant="h6" sx={{ fontWeight: 700 }}>
                   +{rewardAnimation.reward.ondas}
                 </Typography>
               </Box>
             </Stack>
           </Box>
+
+          {/* Floating Öndas particles */}
+          {rewardAnimation.reward.ondas > 0 && (
+            <>
+              {[...Array(Math.min(rewardAnimation.reward.ondas, 8))].map((_, i) => (
+                <Box
+                  key={i}
+                  sx={{
+                    position: 'absolute',
+                    top: '50%',
+                    left: '50%',
+                    width: 8,
+                    height: 8,
+                    backgroundColor: '#10b981',
+                    borderRadius: '50%',
+                    animation: `ondasFloat${i} 3s ease-out infinite`,
+                    boxShadow: '0 0 10px #10b981',
+                    [`@keyframes ondasFloat${i}`]: {
+                      '0%': {
+                        transform: 'translate(-50%, -50%) scale(0)',
+                        opacity: 1,
+                      },
+                      '100%': {
+                        transform: `translate(${(i - 4) * 40}px, ${-100 - (i * 20)}px) scale(0.5)`,
+                        opacity: 0,
+                      },
+                    },
+                  }}
+                />
+              ))}
+            </>
+          )}
         </Box>
       </Zoom>
 

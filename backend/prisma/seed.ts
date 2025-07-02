@@ -6,44 +6,77 @@ const prisma = new PrismaClient();
 
 const uPlayVideos = [
   {
-    title: 'La Economía del Bien Común: Un Nuevo Modelo',
-    description: 'Christian Felber explica los principios de la Economía del Bien Común como alternativa al capitalismo tradicional.',
-    youtubeId: '7xX-KF08v6I',
-    duration: 1089,
-    categories: ['Economía', 'Bien Común'],
-    thumbnailUrl: 'https://i3.ytimg.com/vi/7xX-KF08v6I/maxresdefault.jpg',
+    title: '¿De dónde vienen los memes?',
+    description: 'Magic Markers',
+    youtubeId: 'NYh2yl3R9GU',
+    duration: 0,
+    categories: ['Memes', 'Cultura Digital'],
+    thumbnailUrl: 'https://i3.ytimg.com/vi/NYh2yl3R9GU/maxresdefault.jpg',
   },
   {
-    title: 'Permacultura: Diseñando un Futuro Sostenible',
-    description: 'Introducción a los principios de la permacultura y cómo aplicarlos para crear sistemas regenerativos.',
-    youtubeId: 'hftgWcD-1Nw',
-    duration: 1456,
-    categories: ['Sustentabilidad', 'Permacultura'],
-    thumbnailUrl: 'https://i3.ytimg.com/vi/hftgWcD-1Nw/maxresdefault.jpg',
+    title: 'El valor de la Libertad',
+    description: 'Pepe Mujica',
+    youtubeId: 'WR0WBXXXwI0',
+    duration: 0,
+    categories: ['Clips cortos', 'Filosofía'],
+    thumbnailUrl: 'https://i3.ytimg.com/vi/WR0WBXXXwI0/maxresdefault.jpg',
   },
   {
-    title: 'Mindfulness: La Revolución de la Atención Plena',
-    description: 'Jon Kabat-Zinn explica los beneficios de la práctica de mindfulness para el bienestar integral.',
-    youtubeId: '3nwwKbM_vJc',
-    duration: 3654,
-    categories: ['Bienestar', 'Mindfulness'],
-    thumbnailUrl: 'https://i3.ytimg.com/vi/3nwwKbM_vJc/maxresdefault.jpg',
+    title: 'Autoconocimiento, 5 trucos para conocerte y mejorar tu día',
+    description: 'Juan Pablo Gaviria',
+    youtubeId: 'rNEnwWmNEQY',
+    duration: 0,
+    categories: ['Clips cortos', 'Autoconocimiento'],
+    thumbnailUrl: 'https://i3.ytimg.com/vi/rNEnwWmNEQY/maxresdefault.jpg',
   },
   {
-    title: 'Economía Circular: Rediseñando el Futuro',
-    description: 'Ellen MacArthur presenta el concepto de economía circular y su potencial transformador.',
-    youtubeId: 'zCRKvDyyHmI',
-    duration: 913,
-    categories: ['Economía', 'Sustentabilidad'],
-    thumbnailUrl: 'https://i3.ytimg.com/vi/zCRKvDyyHmI/maxresdefault.jpg',
+    title: 'Gamificación, ¿se puede ser productivo jugando?',
+    description: 'Magic Markers',
+    youtubeId: 'ixBgrqho03E',
+    duration: 0,
+    categories: ['Clips cortos', 'Gamificación'],
+    thumbnailUrl: 'https://i3.ytimg.com/vi/ixBgrqho03E/maxresdefault.jpg',
   },
   {
-    title: 'Biomímesis: Innovación Inspirada en la Naturaleza',
-    description: 'Janine Benyus explora cómo la naturaleza puede inspirar soluciones tecnológicas sostenibles.',
-    youtubeId: 'k_GFq12w5WU',
-    duration: 1034,
-    categories: ['Innovación', 'Biomímesis'],
-    thumbnailUrl: 'https://i3.ytimg.com/vi/k_GFq12w5WU/maxresdefault.jpg',
+    title: 'Define tu Visión',
+    description: 'Carisma al Instante',
+    youtubeId: 'N33xXPOWPPA',
+    duration: 0,
+    categories: ['Clips cortos', 'Desarrollo Personal'],
+    thumbnailUrl: 'https://i3.ytimg.com/vi/N33xXPOWPPA/maxresdefault.jpg',
+  },
+  {
+    title: 'El Método Wim Hof',
+    description: 'El Sendero de Rubén',
+    youtubeId: 'p5OFO5OZoTk',
+    duration: 0,
+    categories: ['LifeHacks', 'Bienestar'],
+    thumbnailUrl: 'https://i3.ytimg.com/vi/p5OFO5OZoTk/maxresdefault.jpg',
+  },
+];
+
+const testQuestions = [
+  {
+    text: 'Según el video, ¿qué es la gamificación?',
+    timestamp: 30, // seconds
+    type: 'multiple-choice',
+    options: [
+      { text: 'Una técnica para crear videojuegos', isCorrect: false },
+      { text: 'El uso de elementos de juego en contextos no lúdicos', isCorrect: true },
+      { text: 'Una forma de marketing digital', isCorrect: false },
+      { text: 'Una metodología para enseñar a programar', isCorrect: false },
+    ],
+  },
+  {
+    text: '¿Cuál de estos NO es un elemento de gamificación mencionado en el video?',
+    timestamp: 60, // seconds
+    type: 'multiple-choice',
+    options: [
+      { text: 'Puntos y recompensas', isCorrect: false },
+      { text: 'Niveles y progreso', isCorrect: false },
+      { text: 'Contratos y acuerdos legales', isCorrect: true },
+      { text: 'Rankings y tablas de clasificación', isCorrect: false },
+    ],
   },
 ];
 
@@ -85,12 +118,12 @@ async function seedUPlay(prisma) {
   }
 
   for (const video of uPlayVideos) {
-    const existingVideo = await prisma.videoItem.findFirst({
+    let videoRecord = await prisma.videoItem.findFirst({
       where: { title: video.title },
     });
 
-    if (!existingVideo) {
-      await prisma.videoItem.create({
+    if (!videoRecord) {
+      videoRecord = await prisma.videoItem.create({
         data: {
           title: video.title,
           description: video.description,
@@ -106,6 +139,34 @@ async function seedUPlay(prisma) {
         },
       });
       console.log(`   - Created video: ${video.title}`);
+
+      // Añadir preguntas de prueba solo al video de Gamificación
+      if (video.title.includes('Gamificación')) {
+        console.log(`   - Adding test questions to video: ${video.title}`);
+        for (const q of testQuestions) {
+          const createdQuestion = await prisma.question.create({
+            data: {
+              videoItemId: videoRecord.id,
+              text: q.text,
+              timestamp: q.timestamp,
+              type: q.type,
+              languageCode: 'es',
+              isActive: true,
+            },
+          });
+
+          await prisma.answerOption.createMany({
+            data: q.options.map((opt, index) => ({
+              questionId: createdQuestion.id,
+              text: opt.text,
+              isCorrect: opt.isCorrect,
+              order: index,
+            })),
+          });
+        }
+        console.log(`   - Successfully added ${testQuestions.length} questions.`);
+      }
+
     } else {
       console.log(`   - Video already exists, skipping: ${video.title}`);
     }

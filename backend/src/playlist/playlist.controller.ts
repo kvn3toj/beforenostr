@@ -78,7 +78,7 @@ export class PlaylistController {
     description: 'Listado de playlists obtenido exitosamente',
   })
   async findAll(
-    @Query(new ValidationPipe({ transform: true }))
+    @Query(new ValidationPipe({ transform: true, whitelist: true, forbidNonWhitelisted: true }))
     findAllDto: FindAllPlaylistsDto
   ) {
     //     console.log('>>> PlaylistController findAll: Called');

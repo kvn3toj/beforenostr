@@ -24,7 +24,9 @@ import {
   Collapse,
   Stack,
   Card,
-  CardContent
+  CardContent,
+  useTheme,
+  alpha,
 } from '@mui/material';
 import {
   Send as SendIcon,
@@ -44,7 +46,8 @@ import {
   Check as CheckIcon,
   CheckCircle as DeliveredIcon,
   Schedule as PendingIcon,
-  Error as ErrorIcon
+  Error as ErrorIcon,
+  CheckCircle,
 } from '@mui/icons-material';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiService } from '../../../../lib/api-service';
@@ -53,24 +56,19 @@ import { formatDistanceToNow } from 'date-fns';
 import { es } from 'date-fns/locale';
 import type { Message } from '../../../../types/marketplace';
 
-// 🔧 SOLUCIÓN: Función segura para formatear fechas
 const formatSafeDate = (dateString?: string, options?: Intl.DateTimeFormatOptions): string => {
   if (!dateString) return 'Fecha no válida';
-
   try {
     const date = new Date(dateString);
-
-    // Verificar si la fecha es válida
     if (isNaN(date.getTime())) {
       console.warn(`⚠️ Fecha inválida detectada en chat: ${dateString}`);
       return 'Fecha inválida';
     }
-
     return date.toLocaleDateString('es-ES', options || {
       weekday: 'long',
       year: 'numeric',
       month: 'long',
-      day: 'numeric'
+      day: 'numeric',
     });
   } catch (error) {
     console.error(`❌ Error al formatear fecha en chat: ${dateString}`, error);
@@ -103,6 +101,7 @@ const EMOJI_LIST = ['👍', '❤️', '😂', '😮', '😢', '😡', '🎉', '�
 
 const EnhancedChatArea: React.FC<EnhancedChatAreaProps> = ({ chatId, onClose }) => {
   const { user } = useAuth();
+  const theme = useTheme();
   const queryClient = useQueryClient();
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -119,31 +118,26 @@ const EnhancedChatArea: React.FC<EnhancedChatAreaProps> = ({ chatId, onClose }) 
     message: Message;
   } | null>(null);
 
-  // Fetch chat details
-  const { data: chat, isLoading: chatLoading } = useQuery({
+  const { data: chat, isLoading: chatLoading } = useQuery<Chat>({
     queryKey: ['chat', chatId],
     queryFn: () => apiService.get(`/chats/${chatId}`),
     enabled: !!chatId,
   });
 
-  // Fetch messages
-  const { data: messages = [], isLoading: messagesLoading } = useQuery({
+  const { data: messages = [], isLoading: messagesLoading } = useQuery<Message[]>({
     queryKey: ['messages', chatId],
     queryFn: () => apiService.get(`/chats/${chatId}/messages`),
     enabled: !!chatId,
-    refetchInterval: 3000, // Poll for new messages every 3 seconds
+    refetchInterval: 3000,
   });
 
-  // Send message mutation
   const sendMessageMutation = useMutation({
     mutationFn: async (messageData: {
       content: string;
       type: string;
       replyToId?: string;
       attachments?: any[];
-    }) => {
-      return apiService.post(`/chats/${chatId}/messages`, messageData);
-    },
+    }) => apiService.post(`/chats/${chatId}/messages`, messageData),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['messages', chatId] });
       queryClient.invalidateQueries({ queryKey: ['chats'] });
@@ -154,93 +148,76 @@ const EnhancedChatArea: React.FC<EnhancedChatAreaProps> = ({ chatId, onClose }) 
     },
   });
 
-  // Edit message mutation
   const editMessageMutation = useMutation({
-    mutationFn: async ({ messageId, content }: { messageId: string; content: string }) => {
-      return apiService.put(`/messages/${messageId}`, { content });
-    },
+    mutationFn: async ({ messageId, content }: { messageId: string; content: string }) =>
+      apiService.put(`/messages/${messageId}`, { content }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['messages', chatId] });
       setEditingMessage(null);
     },
   });
 
-  // Delete message mutation
   const deleteMessageMutation = useMutation({
-    mutationFn: async (messageId: string) => {
-      return apiService.delete(`/messages/${messageId}`);
-    },
+    mutationFn: async (messageId: string) => apiService.delete(`/messages/${messageId}`),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['messages', chatId] });
     },
   });
 
-  // React to message mutation
   const reactToMessageMutation = useMutation({
-    mutationFn: async ({ messageId, emoji }: { messageId: string; emoji: string }) => {
-      return apiService.post(`/messages/${messageId}/reactions`, { emoji });
-    },
+    mutationFn: async ({ messageId, emoji }: { messageId: string; emoji: string }) =>
+      apiService.post(`/messages/${messageId}/reactions`, { emoji }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['messages', chatId] });
     },
   });
 
-  // Mark messages as read
   const markAsReadMutation = useMutation({
-    mutationFn: async () => {
-      return apiService.post(`/chats/${chatId}/mark-read`);
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['chats'] });
-    },
+      mutationFn: async () => apiService.post(`/chats/${chatId}/mark-read`),
+      onSuccess: () => {
+          queryClient.invalidateQueries({queryKey: ['chats']});
+      }
   });
 
-  // Scroll to bottom
   const scrollToBottom = useCallback(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, []);
 
-  // Handle scroll
   const handleScroll = useCallback((e: React.UIEvent<HTMLDivElement>) => {
+    if (!e.currentTarget) return;
     const { scrollTop, scrollHeight, clientHeight } = e.currentTarget;
     const isNearBottom = scrollHeight - scrollTop - clientHeight < 100;
     setShowScrollDown(!isNearBottom);
   }, []);
 
-  // Send message
   const handleSendMessage = useCallback(async () => {
     if (!messageText.trim() && !selectedFile) return;
-
     const messageData: any = {
       content: messageText.trim(),
       type: selectedFile ? 'file' : 'text',
       replyToId: replyingTo?.id,
     };
-
     if (selectedFile) {
-      // Handle file upload
       const formData = new FormData();
       formData.append('file', selectedFile);
-
       try {
         const uploadResponse = await apiService.post('/upload', formData, {
-          onUploadProgress: (progressEvent) => {
-            const progress = Math.round((progressEvent.loaded * 100) / (progressEvent.total || 1));
-            setUploadProgress(progress);
+          onUploadProgress: (progressEvent: ProgressEvent) => {
+            if (progressEvent.lengthComputable) {
+              const progress = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+              setUploadProgress(progress);
+            }
           },
-        });
-
-        messageData.attachments = [uploadResponse.data];
+        } as any);
+        messageData.attachments = [(uploadResponse as any).data];
       } catch (error) {
         console.error('File upload failed:', error);
         return;
       }
     }
-
     sendMessageMutation.mutate(messageData);
   }, [messageText, selectedFile, replyingTo, sendMessageMutation]);
 
-  // Handle key press
   const handleKeyPress = useCallback((e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
@@ -248,555 +225,259 @@ const EnhancedChatArea: React.FC<EnhancedChatAreaProps> = ({ chatId, onClose }) 
     }
   }, [handleSendMessage]);
 
-  // Handle file selection
-  const handleFileSelect = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      setSelectedFile(file);
-    }
-  }, []);
-
-  // Handle emoji reaction
-  const handleEmojiReaction = useCallback((messageId: string, emoji: string) => {
-    reactToMessageMutation.mutate({ messageId, emoji });
-  }, [reactToMessageMutation]);
-
-  // Handle message edit
-  const handleEditMessage = useCallback((messageId: string, newContent: string) => {
-    editMessageMutation.mutate({ messageId, content: newContent });
-  }, [editMessageMutation]);
-
-  // Format timestamp
-  const formatTimestamp = useCallback((timestamp: string) => {
-    try {
-      const date = new Date(timestamp);
-
-      // Verificar si la fecha es válida
-      if (isNaN(date.getTime())) {
-        console.warn(`⚠️ Fecha inválida detectada en chat: ${timestamp}`);
-        return 'Fecha inválida';
-      }
-
-      return formatDistanceToNow(date, {
-        addSuffix: true,
-        locale: es
-      });
-    } catch (error) {
-      console.error(`❌ Error al formatear timestamp en chat: ${timestamp}`, error);
-      return 'Hace un momento';
-    }
-  }, []);
-
-  // Group messages by date
-  const groupedMessages = useMemo(() => {
-    const groups: { [key: string]: Message[] } = {};
-
-    messages.forEach((message: Message) => {
-      try {
-        const date = new Date(message.createdAt);
-        const dateString = isNaN(date.getTime()) ? 'Fecha inválida' : date.toDateString();
-
-        if (!groups[dateString]) {
-          groups[dateString] = [];
-        }
-        groups[dateString].push(message);
-      } catch (error) {
-        console.error(`❌ Error al agrupar mensaje por fecha: ${message.createdAt}`, error);
-        if (!groups['Fecha inválida']) {
-          groups['Fecha inválida'] = [];
-        }
-        groups['Fecha inválida'].push(message);
-      }
-    });
-
-    return groups;
-  }, [messages]);
-
-  // Mark messages as read when chat opens
   useEffect(() => {
-    if (chatId && user) {
+    scrollToBottom();
+  }, [messages, scrollToBottom]);
+
+  useEffect(() => {
       markAsReadMutation.mutate();
-    }
-  }, [chatId, user, markAsReadMutation]);
+  }, [chatId, messages, markAsReadMutation]);
 
-  // Auto-scroll to bottom on new messages
-  useEffect(() => {
-    if (messages.length > 0) {
-      const timer = setTimeout(scrollToBottom, 100);
-      return () => clearTimeout(timer);
-    }
-  }, [messages.length, scrollToBottom]);
-
-  // Render message status icon
   const renderMessageStatus = (status: Message['status']) => {
     switch (status) {
-      case 'sending':
-        return <PendingIcon fontSize="small" color="action" />;
+      case 'pending':
+        return <PendingIcon sx={{ fontSize: 16, color: 'text.disabled' }} />;
       case 'sent':
-        return <CheckIcon fontSize="small" color="action" />;
+        return <CheckIcon sx={{ fontSize: 16, color: 'text.disabled' }} />;
       case 'delivered':
-        return <DeliveredIcon fontSize="small" color="action" />;
+        return <CheckCircle sx={{ fontSize: 16, color: 'text.secondary' }} />;
       case 'read':
-        return <DeliveredIcon fontSize="small" color="primary" />;
+        return <CheckCircle sx={{ fontSize: 16, color: 'primary.main' }} />;
       case 'failed':
-        return <ErrorIcon fontSize="small" color="error" />;
+        return <ErrorIcon sx={{ fontSize: 16, color: 'error' }} />;
       default:
         return null;
     }
   };
 
-  // Render message bubble
-  const renderMessage = (message: Message) => {
-    const isOwnMessage = message.senderId === user?.id;
-    const showAvatar = !isOwnMessage;
+  const renderMessage = (message: Message, index: number) => {
+    const isSentByMe = message.sender.id === user?.id;
+    const prevMessage = messages[index - 1];
+    const showDateHeader = !prevMessage || new Date(message.createdAt).toDateString() !== new Date(prevMessage.createdAt).toDateString();
 
     return (
+      <Box key={message.id}>
+        {showDateHeader && (
+           <Typography align="center" variant="caption" color="text.secondary" sx={{ display: 'block', my: 2 }}>
+             {formatSafeDate(message.createdAt)}
+           </Typography>
+        )}
       <Box
-        key={message.id}
         sx={{
           display: 'flex',
-          flexDirection: isOwnMessage ? 'row-reverse' : 'row',
-          mb: 1,
+          flexDirection: isSentByMe ? 'row-reverse' : 'row',
           alignItems: 'flex-end',
+          mb: 2,
+          gap: 1,
         }}
       >
-        {showAvatar && (
-          <Avatar
-            src={message.sender.avatar}
-            alt={message.sender.name}
-            sx={{ width: 32, height: 32, mr: 1 }}
-          />
-        )}
-
-        <Box sx={{ maxWidth: '70%', minWidth: '120px' }}>
-          {/* Reply indicator */}
+        <Tooltip title={message.sender.name}>
+          <Avatar src={message.sender.avatar} sx={{ width: 40, height: 40 }} />
+        </Tooltip>
+        <Card
+          sx={{
+            maxWidth: '70%',
+            borderRadius: isSentByMe ? '20px 20px 5px 20px' : '20px 20px 20px 5px',
+            bgcolor: isSentByMe ? 'primary.main' : 'background.paper',
+            color: isSentByMe ? 'primary.contrastText' : 'text.primary',
+            boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
+            p: 1.5,
+          }}
+        >
           {message.replyTo && (
-            <Paper
+            <Box
               sx={{
                 p: 1,
-                mb: 0.5,
-                bgcolor: 'action.hover',
-                borderLeft: 3,
-                borderColor: 'primary.main',
+                bgcolor: alpha(isSentByMe ? '#fff' : theme.palette.primary.main, 0.1),
+                borderRadius: '12px',
+                borderLeft: `3px solid ${theme.palette.primary.main}`,
+                mb: 1,
               }}
             >
-              <Typography variant="caption" color="primary" fontWeight="bold">
-                Respondiendo a {message.replyTo.senderName}
+              <Typography variant="caption" sx={{ fontWeight: 'bold' }}>
+                Respondiendo a {message.replyTo.sender.name}
               </Typography>
-              <Typography variant="caption" display="block" noWrap>
+              <Typography variant="body2" color="text.secondary" noWrap>
                 {message.replyTo.content}
               </Typography>
-            </Paper>
+            </Box>
           )}
-
-          {/* Message bubble */}
-          <Paper
+          <Typography
+            variant="body1"
             sx={{
-              p: 1.5,
-              bgcolor: isOwnMessage ? 'primary.main' : 'background.paper',
-              color: isOwnMessage ? 'primary.contrastText' : 'text.primary',
-              borderRadius: 2,
-              position: 'relative',
-              '&:hover .message-actions': {
-                opacity: 1,
-              },
-            }}
-            onContextMenu={(e) => {
-              e.preventDefault();
-              setMessageMenuAnchor({ element: e.currentTarget, message });
+              whiteSpace: 'pre-wrap',
+              wordBreak: 'break-word',
             }}
           >
-            {/* Sender name for group chats */}
-            {!isOwnMessage && chat?.type === 'group' && (
-              <Typography variant="caption" color="primary" fontWeight="bold" display="block">
-                {message.senderName}
+            {message.content}
+          </Typography>
+          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', mt: 1, gap: 0.5 }}>
+            {message.isEdited && (
+              <Typography variant="caption" sx={{ color: isSentByMe ? 'rgba(255,255,255,0.7)' : 'text.disabled', fontStyle: 'italic', mr: 'auto' }}>
+                Editado
               </Typography>
             )}
-
-            {/* Message content */}
-            <Typography variant="body2" sx={{ wordBreak: 'break-word' }}>
-              {message.content}
+            {message.reactions && Object.keys(message.reactions).length > 0 && (
+              <Box sx={{ display: 'flex', gap: 0.5 }}>
+                {Object.keys(message.reactions).map((emoji) => (
+                  <Chip
+                    key={emoji}
+                    label={`${emoji} ${message.reactions?.[emoji]?.length ?? 0}`}
+                    size="small"
+                    sx={{
+                      bgcolor: alpha(theme.palette.primary.main, 0.1),
+                      color: 'primary.main',
+                    }}
+                  />
+                ))}
+              </Box>
+            )}
+            <Typography variant="caption" sx={{ color: isSentByMe ? 'rgba(255,255,255,0.7)' : 'text.disabled' }}>
+              {formatDistanceToNow(new Date(message.createdAt), {
+                addSuffix: true,
+                locale: es,
+              })}
             </Typography>
-
-            {/* Attachments */}
-            {message.attachments && message.attachments.length > 0 && (
-              <Box sx={{ mt: 1 }}>
-                {message.attachments.map((attachment) => (
-                  <Chip
-                    key={attachment.id}
-                    label={attachment.name}
-                    size="small"
-                    clickable
-                    onClick={() => window.open(attachment.url, '_blank')}
-                    sx={{ mr: 0.5, mb: 0.5 }}
-                  />
-                ))}
-              </Box>
-            )}
-
-            {/* Reactions */}
-            {message.reactions.length > 0 && (
-              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5, mt: 1 }}>
-                {message.reactions.map((reaction, index) => (
-                  <Chip
-                    key={index}
-                    label={`${reaction.emoji} ${reaction.count}`}
-                    size="small"
-                    variant={reaction.users.includes(user?.id || '') ? 'filled' : 'outlined'}
-                    onClick={() => handleEmojiReaction(message.id, reaction.emoji)}
-                    sx={{ fontSize: '0.7rem', height: 24 }}
-                  />
-                ))}
-              </Box>
-            )}
-
-            {/* Message metadata */}
-            <Box
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                mt: 0.5,
-              }}
-            >
-              <Typography variant="caption" sx={{ opacity: 0.7 }}>
-                {formatTimestamp(message.createdAt)}
-                {message.isEdited && ' (editado)'}
-              </Typography>
-
-              {isOwnMessage && (
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                  {renderMessageStatus(message.status)}
-                </Box>
-              )}
-            </Box>
-
-            {/* Quick actions */}
-            <Box
-              className="message-actions"
-              sx={{
-                position: 'absolute',
-                top: -20,
-                right: isOwnMessage ? 'auto' : 8,
-                left: isOwnMessage ? 8 : 'auto',
-                display: 'flex',
-                gap: 0.5,
-                opacity: 0,
-                transition: 'opacity 0.2s',
-                bgcolor: 'background.paper',
-                borderRadius: 1,
-                boxShadow: 1,
-                p: 0.5,
-              }}
-            >
-              {EMOJI_LIST.slice(0, 3).map((emoji) => (
-                <IconButton
-                  key={emoji}
-                  size="small"
-                  onClick={() => handleEmojiReaction(message.id, emoji)}
-                  sx={{ fontSize: '0.8rem', p: 0.25 }}
-                >
-                  {emoji}
-                </IconButton>
-              ))}
-              <IconButton
-                size="small"
-                onClick={() => setReplyingTo(message)}
-              >
-                <ReplyIcon fontSize="small" />
-              </IconButton>
-            </Box>
-          </Paper>
+            {isSentByMe && renderMessageStatus(message.status)}
+          </Box>
+        </Card>
+        <Box>
+          <IconButton size="small" onClick={(e) => setMessageMenuAnchor({ element: e.currentTarget, message })}>
+            <MoreIcon />
+          </IconButton>
         </Box>
+      </Box>
       </Box>
     );
   };
 
-  if (chatLoading || messagesLoading) {
-    return (
-      <Box sx={{ p: 2 }}>
-        <LinearProgress />
-        <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
-          Cargando chat...
-        </Typography>
-      </Box>
-    );
-  }
-
-  if (!chat) {
-    return (
-      <Box sx={{ p: 2, textAlign: 'center' }}>
-        <Typography variant="h6" color="text.secondary">
-          Chat no encontrado
-        </Typography>
-      </Box>
-    );
-  }
+  if (chatLoading) return <LinearProgress />;
+  if (!chat) return <Alert severity="error">No se pudo cargar el chat. Inténtalo de nuevo.</Alert>;
 
   return (
-    <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-      {/* Chat Header */}
-      <Paper sx={{ p: 2, borderRadius: 0 }}>
-        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            <Avatar
-              src={chat.type === 'direct' ? chat.participants[0]?.avatar : undefined}
-              sx={{ width: 40, height: 40 }}
-            >
-              {chat.name.charAt(0)}
-            </Avatar>
-            <Box>
-              <Typography variant="h6" fontWeight="bold">
-                {chat.name}
-              </Typography>
-              <Typography variant="caption" color="text.secondary">
-                {chat.type === 'direct'
-                  ? chat.participants[0]?.isOnline
-                    ? 'En línea'
-                    : `Visto ${formatTimestamp(chat.participants[0]?.lastSeen || '')}`
-                  : `${chat.participants.length} participantes`
-                }
-              </Typography>
-            </Box>
-          </Box>
-
-          <Box sx={{ display: 'flex', gap: 1 }}>
-            <IconButton>
-              <VideoIcon />
-            </IconButton>
-            <IconButton>
-              <MoreIcon />
-            </IconButton>
-            {onClose && (
-              <IconButton onClick={onClose}>
-                <CloseIcon />
-              </IconButton>
-            )}
-          </Box>
+    <Box sx={{ display: 'flex', flexDirection: 'column', height: '100vh', bgcolor: 'grey.100' }}>
+       {/* Chat Header */}
+      <Paper elevation={2} sx={{ p: 2, display: 'flex', alignItems: 'center', gap: 2, zIndex: 10 }}>
+        <Badge
+          overlap="circular"
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+          variant="dot"
+          sx={{
+            '& .MuiBadge-badge': {
+              backgroundColor: chat.participants.find(p => p.id !== user?.id)?.isOnline ? '#44b700' : 'grey.400',
+              color: '#44b700',
+              boxShadow: `0 0 0 2px ${theme.palette.background.paper}`,
+            },
+          }}
+        >
+          <Avatar src={chat.participants.find(p => p.id !== user?.id)?.avatar} />
+        </Badge>
+        <Box sx={{ flex: 1 }}>
+          <Typography variant="h6">{chat.name}</Typography>
+          <Typography variant="body2" color="text.secondary">
+            {chat.type === 'direct'
+              ? (chat.participants.find(p => p.id !== user?.id)?.isOnline ? 'En línea' : `Últ. vez ${formatDistanceToNow(new Date(chat.participants.find(p => p.id !== user?.id)?.lastSeen || Date.now()), { locale: es, addSuffix: true })}`)
+              : `${chat.participants.length} miembros`}
+          </Typography>
         </Box>
+        <IconButton><VideoIcon /></IconButton>
+        <IconButton onClick={onClose}><CloseIcon /></IconButton>
       </Paper>
 
-      {/* Messages Area */}
+       {/* Messages Area */}
       <Box
-        sx={{
-          flex: 1,
-          overflow: 'auto',
-          p: 1,
-          position: 'relative',
-        }}
         onScroll={handleScroll}
+        sx={{ flex: 1, overflowY: 'auto', p: { xs: 1, md: 3 } }}
       >
-        {Object.entries(groupedMessages).map(([date, dayMessages]) => (
-          <Box key={date}>
-            {/* Date separator */}
-            <Box sx={{ textAlign: 'center', my: 2 }}>
-              <Chip
-                label={formatSafeDate(date, {
-                  weekday: 'long',
-                  year: 'numeric',
-                  month: 'long',
-                  day: 'numeric',
-                })}
-                size="small"
-                variant="outlined"
-              />
-            </Box>
-
-            {/* Messages for this date */}
-            {dayMessages.map(renderMessage)}
-          </Box>
-        ))}
-
-        {/* Typing indicator */}
-        {chat.isTyping.length > 0 && (
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, p: 1 }}>
-            <Avatar sx={{ width: 24, height: 24 }} />
-            <Typography variant="caption" color="text.secondary">
-              {chat.isTyping.join(', ')} está{chat.isTyping.length > 1 ? 'n' : ''} escribiendo...
-            </Typography>
-          </Box>
-        )}
-
+        {messagesLoading && <LinearProgress />}
+        {messages.map(renderMessage)}
         <div ref={messagesEndRef} />
       </Box>
 
-      {/* Reply indicator */}
-      <Collapse in={!!replyingTo}>
-        <Paper sx={{ p: 1, m: 1, bgcolor: 'action.hover' }}>
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <Box>
-              <Typography variant="caption" color="primary" fontWeight="bold">
-                Respondiendo a {replyingTo?.senderName}
-              </Typography>
-              <Typography variant="caption" display="block" noWrap>
-                {replyingTo?.content}
-              </Typography>
-            </Box>
-            <IconButton size="small" onClick={() => setReplyingTo(null)}>
-              <CloseIcon fontSize="small" />
-            </IconButton>
-          </Box>
-        </Paper>
-      </Collapse>
-
-      {/* File upload progress */}
-      <Collapse in={uploadProgress > 0 && uploadProgress < 100}>
-        <Box sx={{ p: 1 }}>
-          <LinearProgress variant="determinate" value={uploadProgress} />
-          <Typography variant="caption" color="text.secondary">
-            Subiendo archivo... {uploadProgress}%
-          </Typography>
-        </Box>
-      </Collapse>
-
-      {/* Selected file indicator */}
-      <Collapse in={!!selectedFile}>
-        <Paper sx={{ p: 1, m: 1, bgcolor: 'action.hover' }}>
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-              <AttachIcon fontSize="small" />
-              <Typography variant="caption">
-                {selectedFile?.name}
-              </Typography>
-            </Box>
-            <IconButton size="small" onClick={() => setSelectedFile(null)}>
-              <CloseIcon fontSize="small" />
-            </IconButton>
-          </Box>
-        </Paper>
-      </Collapse>
-
-      {/* Message Input */}
-      <Paper sx={{ p: 2, borderRadius: 0 }}>
-        <Box sx={{ display: 'flex', alignItems: 'flex-end', gap: 1 }}>
-          <IconButton
-            onClick={() => fileInputRef.current?.click()}
-            color="primary"
-          >
-            <AttachIcon />
-          </IconButton>
-
-          <TextField
-            fullWidth
-            multiline
-            maxRows={4}
-            placeholder="Escribe un mensaje..."
-            value={messageText}
-            onChange={(e) => setMessageText(e.target.value)}
-            onKeyPress={handleKeyPress}
-            variant="outlined"
-            size="small"
-            sx={{
-              '& .MuiOutlinedInput-root': {
-                borderRadius: 3,
-              },
-            }}
-          />
-
-          <IconButton
-            onClick={() => setShowEmojiPicker(!showEmojiPicker)}
-            color="primary"
-          >
-            <EmojiIcon />
-          </IconButton>
-
-          <IconButton
-            onClick={handleSendMessage}
-            disabled={!messageText.trim() && !selectedFile}
-            color="primary"
-            sx={{
-              bgcolor: 'primary.main',
-              color: 'white',
-              '&:hover': { bgcolor: 'primary.dark' },
-              '&:disabled': { bgcolor: 'action.disabled' },
-            }}
-          >
-            <SendIcon />
-          </IconButton>
-        </Box>
-
-        {/* Emoji picker */}
-        <Collapse in={showEmojiPicker}>
-          <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5, mt: 1, p: 1, bgcolor: 'action.hover', borderRadius: 1 }}>
-            {EMOJI_LIST.map((emoji) => (
-              <IconButton
-                key={emoji}
-                size="small"
-                onClick={() => {
-                  setMessageText(prev => prev + emoji);
-                  setShowEmojiPicker(false);
-                }}
-              >
-                {emoji}
-              </IconButton>
-            ))}
-          </Box>
-        </Collapse>
-      </Paper>
-
-      {/* Scroll to bottom FAB */}
-      <Zoom in={showScrollDown}>
+        {/* Scroll Down FAB */}
+       <Zoom in={showScrollDown}>
         <Fab
+          color="secondary"
           size="small"
-          color="primary"
           onClick={scrollToBottom}
-          sx={{
-            position: 'absolute',
-            bottom: 80,
-            right: 16,
-            zIndex: 1000,
-          }}
+          sx={{ position: 'absolute', bottom: 100, right: 24 }}
         >
           <ScrollDownIcon />
         </Fab>
       </Zoom>
 
-      {/* Hidden file input */}
-      <input
-        ref={fileInputRef}
-        type="file"
-        hidden
-        onChange={handleFileSelect}
-        accept="image/*,video/*,audio/*,.pdf,.doc,.docx,.txt"
-      />
+       {/* Message Input Area */}
+      <Paper elevation={3} sx={{ p: 1, pb: 2, zIndex: 10 }}>
+         <Collapse in={!!replyingTo}>
+          <Box sx={{ p: 1, mb: 1, bgcolor: 'grey.200', borderRadius: 2 }}>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <Typography variant="caption" color="primary" fontWeight="bold">
+              Respondiendo a {replyingTo?.sender.name}
+            </Typography>
+            <IconButton size="small" onClick={() => setReplyingTo(null)}><CloseIcon fontSize="small"/></IconButton>
+            </Box>
+            <Typography variant="body2" noWrap>{replyingTo?.content}</Typography>
+          </Box>
+        </Collapse>
 
-      {/* Message context menu */}
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+          <IconButton onClick={() => setShowEmojiPicker(!showEmojiPicker)}><EmojiIcon /></IconButton>
+          <IconButton onClick={() => fileInputRef.current?.click()}><AttachIcon /></IconButton>
+          <input type="file" ref={fileInputRef} hidden onChange={(e) => setSelectedFile(e.target.files?.[0] || null)} />
+
+          <TextField
+            fullWidth
+            multiline
+            maxRows={5}
+            variant="outlined"
+            placeholder="Escribe un mensaje..."
+            value={messageText}
+            onChange={(e) => setMessageText(e.target.value)}
+            onKeyPress={handleKeyPress}
+            sx={{
+              '& .MuiOutlinedInput-root': {
+                borderRadius: '20px',
+                '& fieldset': {
+                  borderColor: 'grey.300',
+                },
+              },
+            }}
+          />
+          <IconButton color="primary" onClick={handleSendMessage} disabled={sendMessageMutation.isPending}>
+            <SendIcon />
+          </IconButton>
+        </Box>
+         {showEmojiPicker && (
+          <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mt: 1 }}>
+            {EMOJI_LIST.map(emoji => (
+              <Button key={emoji} onClick={() => setMessageText(prev => prev + emoji)}>{emoji}</Button>
+            ))}
+          </Box>
+        )}
+      </Paper>
+
+      {/* Menú de Mensaje */}
       <Menu
         anchorEl={messageMenuAnchor?.element}
-        open={!!messageMenuAnchor}
+        open={Boolean(messageMenuAnchor)}
         onClose={() => setMessageMenuAnchor(null)}
       >
-        <MenuItem onClick={() => setReplyingTo(messageMenuAnchor!.message)}>
-          <ReplyIcon sx={{ mr: 1 }} />
-          Responder
+        <MenuItem onClick={() => { setReplyingTo(messageMenuAnchor!.message); setMessageMenuAnchor(null); }}>
+          <ReplyIcon sx={{ mr: 1 }} /> Responder
         </MenuItem>
-        {messageMenuAnchor?.message.senderId === user?.id && (
-          <>
-            <MenuItem onClick={() => setEditingMessage(messageMenuAnchor!.message.id)}>
-              <EditIcon sx={{ mr: 1 }} />
-              Editar
+        <MenuItem onClick={() => { reactToMessageMutation.mutate({ messageId: messageMenuAnchor!.message.id, emoji: '❤️' }); setMessageMenuAnchor(null); }}>
+          <LikeIcon sx={{ mr: 1 }} /> Reaccionar
+        </MenuItem>
+        {messageMenuAnchor?.message.sender.id === user?.id && (
+          <Box>
+            <MenuItem onClick={() => { setEditingMessage(messageMenuAnchor!.message.id); setMessageText(messageMenuAnchor!.message.content); setMessageMenuAnchor(null); }}>
+              <EditIcon sx={{ mr: 1 }} /> Editar
             </MenuItem>
-            <MenuItem
-              onClick={() => deleteMessageMutation.mutate(messageMenuAnchor!.message.id)}
-              sx={{ color: 'error.main' }}
-            >
-              <DeleteIcon sx={{ mr: 1 }} />
-              Eliminar
+            <MenuItem onClick={() => { deleteMessageMutation.mutate(messageMenuAnchor!.message.id); setMessageMenuAnchor(null); }}>
+              <DeleteIcon sx={{ mr: 1 }} /> Eliminar
             </MenuItem>
-          </>
+          </Box>
         )}
-        <Divider />
-        {EMOJI_LIST.map((emoji) => (
-          <MenuItem
-            key={emoji}
-            onClick={() => {
-              handleEmojiReaction(messageMenuAnchor!.message.id, emoji);
-              setMessageMenuAnchor(null);
-            }}
-          >
-            {emoji}
-          </MenuItem>
-        ))}
       </Menu>
     </Box>
   );

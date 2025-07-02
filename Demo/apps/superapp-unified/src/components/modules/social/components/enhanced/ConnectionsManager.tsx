@@ -110,6 +110,15 @@ const mockConnections: Connection[] = [
   },
 ];
 
+const UNIFIED_CARD_STYLE = {
+  p: { xs: 2, md: 3 },
+  borderRadius: 4,
+  height: '100%',
+  boxShadow: '0 4px 12px 0 rgba(0, 0, 0, 0.05)',
+  border: '1px solid rgba(0, 0, 0, 0.02)',
+  backgroundColor: 'background.paper',
+};
+
 const ConnectionCard: React.FC<{
   connection: Connection;
   onChatClick: (connectionId: string) => void;
@@ -312,270 +321,77 @@ export const ConnectionsManager: React.FC<ConnectionsManagerProps> = ({
   userStats,
 }) => {
   const theme = useTheme();
-  const [menuAnchor, setMenuAnchor] = useState<null | HTMLElement>(null);
-  const [selectedConnection, setSelectedConnection] = useState<string | null>(
-    null
-  );
-  const [filter, setFilter] = useState<string>('all');
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [selectedConnection, setSelectedConnection] = useState<string | null>(null);
 
-  // Usar conexiones mock si no hay datos del backend
-  const connections = backendConnections.length > 0 ? [] : mockConnections; // Placeholder para mapear datos reales
+  // Usa los datos mock si los del backend están vacíos o cargando
+  const connections = (!backendConnections || backendConnections.length === 0) && !isLoading ? mockConnections : backendConnections;
 
   const handleMenuClick = (event: React.MouseEvent, connectionId: string) => {
-    setMenuAnchor(event.currentTarget as HTMLElement);
+    setAnchorEl(event.currentTarget as HTMLElement);
     setSelectedConnection(connectionId);
   };
 
   const handleMenuClose = () => {
-    setMenuAnchor(null);
+    setAnchorEl(null);
     setSelectedConnection(null);
   };
 
   const handleChatClick = (connectionId: string) => {
-    console.log(`💬 Abrir chat con conexión: ${connectionId}`);
+    console.log(`Iniciar chat con ${connectionId}`);
   };
-
-  const filteredConnections = connections.filter((connection) => {
-    if (filter === 'all') return true;
-    return connection.connectionType === filter;
-  });
 
   if (isError) {
     return (
-      <Card>
-        <CardContent>
-          <Alert
-            severity="error"
-            action={
-              <Button size="small" onClick={onRefresh} startIcon={<Refresh />}>
-                Reintentar
-              </Button>
-            }
-          >
-            Error cargando conexiones
-          </Alert>
-        </CardContent>
-      </Card>
+      <Alert severity="error" action={<Button onClick={onRefresh}>Reintentar</Button>}>
+        No se pudieron cargar las conexiones.
+      </Alert>
     );
   }
 
   return (
-    <Stack spacing={2}>
-      {/* 📊 Resumen de conexiones */}
-      <Card
-        sx={{
-          background: `linear-gradient(135deg, ${alpha(
-            '#2196F3',
-            0.1
-          )} 0%, ${alpha('#E91E63', 0.05)} 100%)`,
-          border: `1px solid ${alpha('#2196F3', 0.2)}`,
-        }}
-      >
-        <CardContent>
-          <Typography variant="h6" fontWeight="bold" gutterBottom>
-            🤝 Mis Conexiones Reciprocidad
-          </Typography>
-          <Stack spacing={2}>
-            <Stack direction="row" spacing={2}>
-              <Box sx={{ textAlign: 'center' }}>
-                <Typography variant="h5" fontWeight="bold" color="primary.main">
-                  {userStats.connectionsCount}
-                </Typography>
-                <Typography variant="caption" color="text.secondary">
-                  Conexiones
-                </Typography>
-              </Box>
-              <Box sx={{ textAlign: 'center' }}>
-                <Typography variant="h5" fontWeight="bold" color="success.main">
-                  {Math.round(userStats.reciprocidadBalance * 100)}%
-                </Typography>
-                <Typography variant="caption" color="text.secondary">
-                  Balance Reciprocidad
-                </Typography>
-              </Box>
-              <Box sx={{ textAlign: 'center' }}>
-                <Typography variant="h5" fontWeight="bold" color="warning.main">
-                  {userStats.trustScore}
-                </Typography>
-                <Typography variant="caption" color="text.secondary">
-                  Confianza
-                </Typography>
-              </Box>
-            </Stack>
+    <Paper sx={UNIFIED_CARD_STYLE}>
+      <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 2 }}>
+        <Typography variant="h6" fontWeight="bold">
+          Conexiones Conscientes ({connections.length})
+        </Typography>
+        <Stack direction="row" spacing={1}>
+          <IconButton>
+            <Search />
+          </IconButton>
+          <IconButton>
+            <FilterList />
+          </IconButton>
+          <IconButton onClick={onRefresh}>
+            <Refresh />
+          </IconButton>
+        </Stack>
+      </Stack>
 
-            <LinearProgress
-              variant="determinate"
-              value={userStats.reciprocidadBalance * 100}
-              sx={{
-                height: 8,
-                borderRadius: 4,
-                bgcolor: alpha('#2196F3', 0.1),
-                '& .MuiLinearProgress-bar': {
-                  bgcolor: '#2196F3',
-                  borderRadius: 4,
-                },
-              }}
+      {isLoading ? (
+        <LinearProgress />
+      ) : (
+        <List sx={{ p: 0 }}>
+          {connections.map((connection: Connection) => (
+            <ConnectionCard
+              key={connection.id}
+              connection={connection}
+              onChatClick={handleChatClick}
+              onMenuClick={handleMenuClick}
             />
-            <Typography variant="caption" color="text.secondary">
-              Tu red social está creciendo de manera equilibrada
-            </Typography>
-          </Stack>
-        </CardContent>
-      </Card>
+          ))}
+        </List>
+      )}
 
-      {/* 🎛️ Controles y filtros */}
-      <Card>
-        <CardContent sx={{ pb: '16px !important' }}>
-          <Stack
-            direction="row"
-            justifyContent="space-between"
-            alignItems="center"
-            sx={{ mb: 2 }}
-          >
-            <Typography variant="h6" fontWeight="bold">
-              Red de Colaboración
-            </Typography>
-            <Stack direction="row" spacing={1}>
-              <IconButton size="small" onClick={onRefresh} disabled={isLoading}>
-                <Refresh />
-              </IconButton>
-              <Button startIcon={<PersonAdd />} size="small" variant="outlined">
-                Conectar
-              </Button>
-            </Stack>
-          </Stack>
-
-          {/* Filtros por tipo de conexión */}
-          <Stack direction="row" spacing={1} flexWrap="wrap">
-            <Chip
-              label="Todas"
-              color={filter === 'all' ? 'primary' : 'default'}
-              onClick={() => setFilter('all')}
-              size="small"
-            />
-            <Chip
-              label="Mentores"
-              color={filter === 'mentor' ? 'secondary' : 'default'}
-              onClick={() => setFilter('mentor')}
-              size="small"
-            />
-            <Chip
-              label="Colaboradores"
-              color={filter === 'collaborator' ? 'primary' : 'default'}
-              onClick={() => setFilter('collaborator')}
-              size="small"
-            />
-            <Chip
-              label="Pares"
-              color={filter === 'peer' ? 'success' : 'default'}
-              onClick={() => setFilter('peer')}
-              size="small"
-            />
-          </Stack>
-        </CardContent>
-      </Card>
-
-      {/* 📋 Lista de conexiones */}
-      <Card>
-        <CardContent>
-          {isLoading ? (
-            <Box sx={{ textAlign: 'center', py: 3 }}>
-              <LinearProgress sx={{ mb: 2 }} />
-              <Typography variant="body2" color="text.secondary">
-                Cargando conexiones...
-              </Typography>
-            </Box>
-          ) : filteredConnections.length === 0 ? (
-            <Box sx={{ textAlign: 'center', py: 4 }}>
-              <Group sx={{ fontSize: 48, color: 'text.secondary', mb: 2 }} />
-              <Typography variant="h6" color="text.secondary">
-                {filter === 'all'
-                  ? 'No tienes conexiones aún'
-                  : `No tienes ${filter}s en tu red`}
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                Comienza a construir tu red de colaboración CoomÜnity
-              </Typography>
-              <Button
-                startIcon={<PersonAdd />}
-                variant="contained"
-                sx={{ mt: 2, bgcolor: '#2196F3' }}
-              >
-                Buscar Conexiones
-              </Button>
-            </Box>
-          ) : (
-            <Box>
-              <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-                {filteredConnections.length}{' '}
-                {filter === 'all' ? 'conexiones' : `${filter}s`} en tu red
-              </Typography>
-              {filteredConnections.map((connection) => (
-                <ConnectionCard
-                  key={connection.id}
-                  connection={connection}
-                  onChatClick={handleChatClick}
-                  onMenuClick={handleMenuClick}
-                />
-              ))}
-            </Box>
-          )}
-        </CardContent>
-      </Card>
-
-      {/* 🎯 Sugerencias de conexión */}
-      <Card>
-        <CardContent>
-          <Typography variant="h6" fontWeight="bold" gutterBottom>
-            💡 Conexiones Sugeridas
-          </Typography>
-          <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-            Basadas en tus intereses y colaboraciones
-          </Typography>
-          <Stack spacing={1}>
-            <Paper sx={{ p: 2, bgcolor: alpha('#4CAF50', 0.05) }}>
-              <Stack direction="row" alignItems="center" spacing={2}>
-                <Avatar sx={{ bgcolor: '#4CAF50' }}>M</Avatar>
-                <Box sx={{ flexGrow: 1 }}>
-                  <Typography variant="subtitle2" fontWeight="bold">
-                    María González
-                  </Typography>
-                  <Typography variant="caption" color="text.secondary">
-                    Experta en economía circular • 3 conexiones mutuas
-                  </Typography>
-                </Box>
-                <Button size="small" startIcon={<PersonAdd />}>
-                  Conectar
-                </Button>
-              </Stack>
-            </Paper>
-          </Stack>
-        </CardContent>
-      </Card>
-
-      {/* 📱 Menú contextual */}
       <Menu
-        anchorEl={menuAnchor}
-        open={Boolean(menuAnchor)}
+        anchorEl={anchorEl}
+        open={Boolean(anchorEl)}
         onClose={handleMenuClose}
       >
-        <MenuItem onClick={handleMenuClose}>
-          <Psychology sx={{ mr: 1 }} />
-          Ver perfil completo
-        </MenuItem>
-        <MenuItem onClick={handleMenuClose}>
-          <Handshake sx={{ mr: 1 }} />
-          Proponer intercambio Reciprocidad
-        </MenuItem>
-        <MenuItem onClick={handleMenuClose}>
-          <Favorite sx={{ mr: 1 }} />
-          Recomendar a otros
-        </MenuItem>
-        <Divider />
-        <MenuItem onClick={handleMenuClose} sx={{ color: 'error.main' }}>
-          Desconectar
-        </MenuItem>
+        <MenuItem onClick={handleMenuClose}>Ver Perfil</MenuItem>
+        <MenuItem onClick={handleMenuClose}>Enviar Méritos</MenuItem>
+        <MenuItem onClick={handleMenuClose}>Eliminar Conexión</MenuItem>
       </Menu>
-    </Stack>
+    </Paper>
   );
 };

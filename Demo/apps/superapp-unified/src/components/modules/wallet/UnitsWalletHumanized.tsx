@@ -14,6 +14,10 @@ import {
   Fade,
   Grow,
   Zoom,
+  useTheme,
+  Grid,
+  Divider,
+  CircularProgress,
 } from '@mui/material';
 import {
   AccountBalance as WalletIcon,
@@ -26,7 +30,8 @@ import {
   Handshake as HandshakeIcon,
   EmojiEvents as AchievementIcon,
 } from '@mui/icons-material';
-import { useUnitsWallet, useReciprocidadBalance } from '../../../hooks/useLetsIntegration';
+import { useUnitsWallet } from '../../../hooks/useLetsIntegration';
+import { useAuth } from '../../../contexts/AuthContext';
 
 type UserExperience = 'newcomer' | 'beginner' | 'intermediate' | 'advanced';
 
@@ -121,13 +126,13 @@ const ProgressStoryBar: React.FC<{
 
   const getReciprocidadMessage = () => {
     const ratio = received > 0 ? given / received : given > 0 ? Infinity : 1;
-    
+
     if (userLevel === 'newcomer') {
       if (ratio > 1.2) return '¡Has dado mucho! Considera recibir más apoyo';
       if (ratio < 0.8) return '¡Estás creciendo! La comunidad te apoya';
       return '¡Equilibrio perfecto! Estás en armonía';
     }
-    
+
     if (ratio >= 0.8 && ratio <= 1.2) return 'Excelente balance Reciprocidad';
     if (ratio > 1.2) return 'Podrías recibir más de la comunidad';
     return 'Considera ofrecer más cuando puedas';
@@ -136,31 +141,31 @@ const ProgressStoryBar: React.FC<{
   return (
     <Box sx={{ mb: 2 }}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
-        <Typography variant="caption" color="success.main">
+        <Typography variant="caption" color="text.secondary">
           💝 Has dado: {given}h
         </Typography>
-        <Typography variant="caption" color="info.main">
+        <Typography variant="caption" color="text.secondary">
           🤲 Has recibido: {received}h
         </Typography>
       </Box>
-      
+
       <Box sx={{ display: 'flex', borderRadius: 2, overflow: 'hidden', height: 8 }}>
-        <Box 
-          sx={{ 
-            width: `${givePercentage}%`, 
-            bgcolor: 'success.light',
-            transition: 'width 1s ease-in-out'
-          }} 
+        <Box
+          sx={{
+            width: `${givePercentage}%`,
+            bgcolor: 'primary.light',
+            transition: 'width 1s ease-in-out',
+          }}
         />
-        <Box 
-          sx={{ 
-            width: `${receivePercentage}%`, 
-            bgcolor: 'info.light',
-            transition: 'width 1s ease-in-out'
-          }} 
+        <Box
+          sx={{
+            width: `${receivePercentage}%`,
+            bgcolor: 'secondary.light',
+            transition: 'width 1s ease-in-out',
+          }}
         />
       </Box>
-      
+
       <Typography variant="caption" color="text.secondary" sx={{ mt: 1, display: 'block' }}>
         {getReciprocidadMessage()}
       </Typography>
@@ -178,7 +183,7 @@ const TrustVisualization: React.FC<{
       if (trustScore >= 70) return 'Construyendo confianza sólida 🌱';
       return 'Cada buena acción aumenta tu confianza 👍';
     }
-    
+
     return `Nivel de confianza: ${trustScore}%`;
   };
 
@@ -191,7 +196,7 @@ const TrustVisualization: React.FC<{
           <StarIcon
             key={i}
             sx={{
-              color: i < getStarCount() ? 'warning.main' : 'grey.300',
+              color: i < getStarCount() ? 'primary.main' : 'grey.300',
               fontSize: 24,
               mx: 0.25,
             }}
@@ -215,32 +220,27 @@ const SimpleWalletView: React.FC<{
     if (wallet.balance === 0) {
       return HUMANIZED_MESSAGES.wallet.zeroBalance.newcomer;
     }
-    
+
     const balanceType = wallet.balance > 0 ? 'positiveBalance' : 'negativeBalance';
     return HUMANIZED_MESSAGES.wallet[balanceType][userLevel];
   };
 
   const message = getMessage();
-  const emotionColors = {
-    positive: 'success.main',
-    supportive: 'info.main',
-    encouraging: 'warning.main',
-    neutral: 'text.primary',
-  };
+  const theme = useTheme();
 
   return (
-    <Card 
-      sx={{ 
-        background: wallet.balance >= 0 
-          ? 'linear-gradient(135deg, #e8f5e8 0%, #c8e6c9 100%)'
-          : 'linear-gradient(135deg, #fff3e0 0%, #ffcc80 100%)',
-        border: `2px solid ${wallet.balance >= 0 ? '#4caf50' : '#ff9800'}`,
+    <Card
+      variant="outlined"
+      sx={{
+        background: theme.palette.background.paper,
+        border: `1px solid ${theme.palette.divider}`,
         borderRadius: 3,
+        p: 1,
       }}
     >
       <CardContent sx={{ p: 3 }}>
         <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-          <Avatar sx={{ bgcolor: emotionColors[message.emotion], mr: 2 }}>
+          <Avatar sx={{ bgcolor: 'primary.main', color: 'primary.contrastText', mr: 2 }}>
             {wallet.balance >= 0 ? '💝' : '🤝'}
           </Avatar>
           <Typography variant="h6" fontWeight="bold">
@@ -251,14 +251,14 @@ const SimpleWalletView: React.FC<{
         {/* Balance con explicación contextual */}
         <Box textAlign="center" mb={3}>
           <Zoom in timeout={1000}>
-            <Typography variant="h2" fontWeight="bold" color={emotionColors[message.emotion]}>
+            <Typography variant="h2" fontWeight="bold" color={theme.palette.text.primary}>
               {wallet.balance >= 0 ? '+' : ''}{wallet.balance.toFixed(0)}
             </Typography>
           </Zoom>
           <Typography variant="h6" color="text.secondary" gutterBottom>
             Ünits
           </Typography>
-          <Typography variant="body1" color={emotionColors[message.emotion]} fontWeight="medium">
+          <Typography variant="body1" color={theme.palette.text.primary} fontWeight="medium">
             {message.title}
           </Typography>
           <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
@@ -274,15 +274,15 @@ const SimpleWalletView: React.FC<{
         />
 
         {/* Confianza simplificada */}
-        <TrustVisualization 
-          trustScore={wallet.trustScore || 75} 
+        <TrustVisualization
+          trustScore={wallet.trustScore || 75}
           userLevel={userLevel}
         />
 
         {/* Consejo contextual */}
         {message.tip && (
-          <Alert 
-            severity={message.emotion === 'positive' ? 'success' : 'info'} 
+          <Alert
+            severity={message.emotion === 'positive' ? 'success' : 'info'}
             sx={{ mb: 2 }}
             icon={<TipIcon />}
           >
@@ -299,7 +299,7 @@ const SimpleWalletView: React.FC<{
           size="large"
           startIcon={<HandshakeIcon />}
           onClick={onExploreOpportunities}
-          sx={{ 
+          sx={{
             mt: 2,
             background: 'linear-gradient(45deg, #2196f3 30%, #21cbf3 90%)',
             '&:hover': {
@@ -319,75 +319,64 @@ const AdvancedWalletView: React.FC<{
   reciprocidadBalance: any;
   onExploreOpportunities?: () => void;
 }> = ({ wallet, reciprocidadBalance, onExploreOpportunities }) => {
+  const theme = useTheme();
+
   return (
-    <Card>
+    <Card variant="outlined" sx={{ borderRadius: 3, p: 2 }}>
       <CardContent>
-        <Typography variant="h6" gutterBottom>
-          Wallet LETS Avanzado
-        </Typography>
-        
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
-          <Box>
-            <Typography variant="h4" fontWeight="bold">
-              {wallet.balance >= 0 ? '+' : ''}{wallet.balance.toFixed(2)}
-            </Typography>
-            <Typography variant="caption" color="text.secondary">
-              Ünits disponibles
-            </Typography>
-          </Box>
-          
-          <Box textAlign="right">
-            <Typography variant="body2" color="text.secondary">
-              Límite de crédito: {wallet.creditLimit}
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              Crédito disponible: {wallet.creditLimit + wallet.balance}
-            </Typography>
-          </Box>
+        <Grid container spacing={4}>
+          <Grid item xs={12} md={6}>
+            <Box textAlign="center">
+              <Typography variant="overline" color="text.secondary">
+                Balance de Reciprocidad
+              </Typography>
+              <Typography variant="h3" fontWeight="bold" color="primary">
+                {wallet.balance > 0 && '+'}
+                {wallet.balance.toFixed(2)} Ü
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                {wallet.balance > 0
+                  ? 'Has contribuido más de lo que has recibido.'
+                  : 'La comunidad te apoya en tu crecimiento.'}
+              </Typography>
+            </Box>
+            <Box sx={{ mt: 3 }}>
+              <ProgressStoryBar
+                given={reciprocidadBalance?.given || 0}
+                received={reciprocidadBalance?.received || 0}
+                userLevel={'advanced'}
+              />
+            </Box>
+          </Grid>
+
+          <Grid item xs={12} md={6}>
+            <TrustVisualization
+              trustScore={wallet.trustScore * 100}
+              userLevel={'advanced'}
+            />
+            <Divider sx={{ my: 2 }} />
+            <Box textAlign="center">
+              <Typography variant="h6">Límite de Crédito Comunitario</Typography>
+              <Typography variant="h4" color="secondary" fontWeight="bold">
+                {wallet.creditLimit} Ü
+              </Typography>
+              <Typography variant="body2" sx={{ mt: 1 }}>
+                Este es el nivel de apoyo que la comunidad puede ofrecerte.
+              </Typography>
+            </Box>
+          </Grid>
+        </Grid>
+        <Divider sx={{ my: 3 }} />
+        <Box textAlign="center">
+          <Button
+            variant="contained"
+            size="large"
+            startIcon={<GrowthIcon />}
+            onClick={onExploreOpportunities}
+          >
+            Explorar Oportunidades de Intercambio
+          </Button>
         </Box>
-
-        <Box sx={{ mb: 2 }}>
-          <Typography variant="body2" gutterBottom>
-            Confianza Comunitaria: {wallet.trustScore}%
-          </Typography>
-          <LinearProgress 
-            variant="determinate" 
-            value={wallet.trustScore} 
-            sx={{ height: 8, borderRadius: 4 }}
-          />
-        </Box>
-
-        <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 2, mb: 2 }}>
-          <Box textAlign="center">
-            <Typography variant="h6" color="success.main">
-              +{reciprocidadBalance.given}
-            </Typography>
-            <Typography variant="caption">Has dado</Typography>
-          </Box>
-          <Box textAlign="center">
-            <Typography variant="h6" color="info.main">
-              -{reciprocidadBalance.received}
-            </Typography>
-            <Typography variant="caption">Has recibido</Typography>
-          </Box>
-        </Box>
-
-        <Alert 
-          severity={reciprocidadBalance.isBalanced ? 'success' : 'warning'}
-          sx={{ mb: 2 }}
-        >
-          <Typography variant="body2">
-            {reciprocidadBalance.recommendation}
-          </Typography>
-        </Alert>
-
-        <Button
-          fullWidth
-          variant="contained"
-          onClick={onExploreOpportunities}
-        >
-          Explorar oportunidades
-        </Button>
       </CardContent>
     </Card>
   );
@@ -400,110 +389,59 @@ export const UnitsWalletHumanized: React.FC<UnitsWalletHumanizedProps> = ({
   onExploreOpportunities,
   simplified = true,
 }) => {
-  const { data: wallet, isLoading, error } = useUnitsWallet(userId);
-  const reciprocidadBalance = useReciprocidadBalance(userId);
-  
-  const [showOnboardingPrompt, setShowOnboardingPrompt] = useState(false);
+  const { user } = useAuth();
+  const {
+    data: wallet,
+    isLoading: walletLoading,
+    error: walletError,
+  } = useUnitsWallet(userId);
+
+  const [message, setMessage] = useState<HumanizedMessage | null>(null);
 
   useEffect(() => {
-    // Mostrar onboarding si es newcomer y no tiene transacciones
-    if (userExperience === 'newcomer' && wallet && !wallet.hasTransactions) {
-      setShowOnboardingPrompt(true);
+    if (wallet) {
+      if (wallet.balance === 0) {
+        setMessage(HUMANIZED_MESSAGES.wallet.zeroBalance.newcomer);
+        return;
+      }
+      const balanceType = wallet.balance > 0 ? 'positiveBalance' : 'negativeBalance';
+      setMessage(HUMANIZED_MESSAGES.wallet[balanceType][userExperience]);
     }
-  }, [userExperience, wallet]);
+  }, [wallet, userExperience]);
 
-  if (isLoading) {
+  if (walletLoading) {
     return (
-      <Card>
-        <CardContent sx={{ textAlign: 'center', py: 4 }}>
-          <Typography variant="body1" color="text.secondary">
-            Conectando con tu historia de contribución... 🌟
-          </Typography>
-          <LinearProgress sx={{ mt: 2 }} />
-        </CardContent>
+      <Card variant="outlined" sx={{ p: 3, textAlign: 'center' }}>
+        <CircularProgress />
+        <Typography sx={{ mt: 2 }}>Cargando tu información de Billetera...</Typography>
       </Card>
     );
   }
 
-  if (error) {
-    return (
-      <Alert severity="error">
-        <Typography variant="body2">
-          No pudimos cargar tu wallet. Por favor intenta de nuevo.
-        </Typography>
-      </Alert>
-    );
+  if (walletError || !wallet) {
+    return <Alert severity="error">No se pudo cargar la información de la billetera.</Alert>;
   }
 
-  if (!wallet) {
+  const reciprocidadBalance = { given: 0, received: 0 }; // Mock data
+
+  if (simplified) {
     return (
-      <Card>
-        <CardContent sx={{ textAlign: 'center', py: 4 }}>
-          <WalletIcon sx={{ fontSize: 80, color: 'text.secondary', mb: 2 }} />
-          <Typography variant="h6" gutterBottom>
-            ¡Tu viaje LETS está por comenzar! 🚀
-          </Typography>
-          <Typography variant="body2" color="text.secondary" paragraph>
-            Cuando hagas tu primer intercambio, verás aquí tu impacto en la comunidad
-          </Typography>
-          {onStartOnboarding && (
-            <Button 
-              variant="contained" 
-              onClick={onStartOnboarding}
-              startIcon={<TipIcon />}
-            >
-              Comenzar introducción a LETS
-            </Button>
-          )}
-        </CardContent>
-      </Card>
+      <SimpleWalletView
+        wallet={wallet}
+        reciprocidadBalance={reciprocidadBalance}
+        userLevel={userExperience}
+        onExploreOpportunities={onExploreOpportunities}
+      />
     );
   }
-
-  // Decidir qué vista mostrar según el nivel de usuario
-  const shouldShowSimplified = simplified || ['newcomer', 'beginner'].includes(userExperience);
 
   return (
-    <Box>
-      {showOnboardingPrompt && onStartOnboarding && (
-        <Fade in>
-          <Alert 
-            severity="info" 
-            sx={{ mb: 2 }}
-            action={
-              <Button 
-                color="inherit" 
-                size="small" 
-                onClick={onStartOnboarding}
-              >
-                Empezar
-              </Button>
-            }
-            onClose={() => setShowOnboardingPrompt(false)}
-          >
-            <Typography variant="body2">
-              <strong>¿Nuevo en LETS?</strong> Te ayudamos a entender cómo funciona paso a paso.
-            </Typography>
-          </Alert>
-        </Fade>
-      )}
-
-      {shouldShowSimplified ? (
-        <SimpleWalletView
-          wallet={wallet}
-          reciprocidadBalance={reciprocidadBalance}
-          userLevel={userExperience}
-          onExploreOpportunities={onExploreOpportunities}
-        />
-      ) : (
-        <AdvancedWalletView
-          wallet={wallet}
-          reciprocidadBalance={reciprocidadBalance}
-          onExploreOpportunities={onExploreOpportunities}
-        />
-      )}
-    </Box>
+    <AdvancedWalletView
+      wallet={wallet}
+      reciprocidadBalance={reciprocidadBalance}
+      onExploreOpportunities={onExploreOpportunities}
+    />
   );
 };
 
-export default UnitsWalletHumanized; 
+export default UnitsWalletHumanized;

@@ -63,6 +63,7 @@ import {
   FavoriteRounded,
   Balance,
   WaterDrop,
+  Dashboard as DashboardIcon,
 } from '@mui/icons-material';
 import { useAuth } from '../../../contexts/AuthContext';
 import { ProductCard, ItemGrid } from './components';
@@ -564,6 +565,22 @@ const MarketplaceMain: React.FC = () => {
 
               {!isMobile && (
                 <Stack direction="row" spacing={1}>
+                  <Button
+                    variant="outlined"
+                    startIcon={<DashboardIcon />}
+                    onClick={() => navigate('/marketplace/dashboard')}
+                    sx={{
+                      textTransform: 'none',
+                      fontWeight: 500,
+                      borderColor: theme.palette.primary.main,
+                      color: theme.palette.primary.main,
+                      '&:hover': {
+                        bgcolor: alpha(theme.palette.primary.main, 0.1)
+                      }
+                    }}
+                  >
+                    Mi Dashboard
+                  </Button>
                   <Button
                     variant="contained"
                     startIcon={<AddIcon />}

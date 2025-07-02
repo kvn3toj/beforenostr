@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   Box,
   Stack,
@@ -10,8 +11,9 @@ import {
   Dialog,
   Slide,
   Container,
+  IconButton,
 } from '@mui/material';
-import { Add as AddIcon } from '@mui/icons-material';
+import { Add as AddIcon, Dashboard as DashboardIcon } from '@mui/icons-material';
 import { useMarketplaceData } from '../../../../hooks/useRealBackendData';
 import MarketplaceFilterBar from './MarketplaceFilterBar';
 import { ItemGrid } from './ItemGrid';
@@ -19,38 +21,18 @@ import { CreateItemModal } from './CreateItemModal';
 import { ConsciousLoadingState } from '../../../ui/enhanced/ConsciousLoadingState';
 import { impactCategories, getConsciousnessStyle } from '../marketplace.constants.tsx';
 import { QuickViewModal } from './QuickViewModal';
-import { SearchFilters } from '../MarketplaceMain';
+import type { MarketplaceItem } from '../../../../types/marketplace';
 
-interface MarketplaceItem {
-  id: string;
-  title: string;
-  description: string;
-  priceUSD: number;
-  lukas: number;
-  category: string;
-  images: string[];
-  seller: {
-    id: string;
-    name: string;
-    avatar: string;
-    isEmprendedorConfiable: boolean;
-    reciprocidadScore: number;
-    meritos: number;
-  };
-  stats: {
-    views: number;
-    likes: number;
-    rating: number;
-    reviewCount: number;
-    isPopular: boolean;
-    isSustainable: boolean;
-  };
-  type: 'product' | 'service';
-  tags: string[];
-  createdAt: string;
+interface SearchFilters {
+  query?: string;
+  category?: string;
+  priceRange?: [number, number];
   location?: string;
-  isFavorited?: boolean;
-  stock: number;
+  rating?: number;
+  verified?: boolean;
+  sortBy?: string;
+  tags?: string[];
+  hasDiscount?: boolean;
 }
 
 interface Category {
@@ -110,11 +92,13 @@ const mapItemToUIItem = (item: any): MarketplaceItem => {
     location: item.location || 'Online',
     isFavorited: item.isFavorited || false,
     stock: Math.floor(Math.random() * 50),
+    consciousnessLevel: item.consciousnessLevel || 'SEED',
   };
 };
 
 const MobileMarketplaceView: React.FC = () => {
   const theme = useTheme();
+  const navigate = useNavigate();
 
   const {
     data: marketplaceItemsResponse,
@@ -123,137 +107,135 @@ const MobileMarketplaceView: React.FC = () => {
   } = useMarketplaceData();
 
   const [items, setItems] = useState<MarketplaceItem[]>([]);
-  const [quickViewItem, setQuickViewItem] = useState<MarketplaceItem | null>(
-    null
-  );
+  const [quickViewItem, setQuickViewItem] = useState<MarketplaceItem | null>(null);
+  const [showCreateModal, setShowCreateModal] = useState(false);
   const [currentFilters, setCurrentFilters] = useState<SearchFilters>({
     query: '',
     category: 'all',
-    priceRange: [0, 5000],
-    location: 'any',
-    rating: 0,
-    verified: false,
-    sortBy: 'relevance',
-    tags: [],
-    hasDiscount: false,
   });
 
   useEffect(() => {
     if (marketplaceItemsResponse?.items) {
-      setItems(marketplaceItemsResponse.items.map(mapItemToUIItem));
+      setItems(marketplaceItemsResponse.items);
     }
   }, [marketplaceItemsResponse]);
 
   const handleToggleFavorite = (itemId: string) => {
-    setItems(prevItems =>
-      prevItems.map(item =>
+    setItems((prevItems) =>
+      prevItems.map((item) =>
         item.id === itemId ? { ...item, isFavorited: !item.isFavorited } : item
       )
     );
-     // TODO: API call to persist favorite status
+    // TODO: API call
   };
 
-  const handleQuickViewToggleFavorite = (itemId: string) => {
-    handleToggleFavorite(itemId);
-    setQuickViewItem(prev => (prev ? { ...prev, isFavorited: !prev.isFavorited } : null));
+  const handleAddToCart = (item: MarketplaceItem) => {
+    console.log(`Added ${item.title} to cart`);
+    // Lógica futura de añadir al carro
   };
 
-  const handleAddToCart = (itemId: string) => {
-    console.log(`Added ${itemId} to cart`);
-  };
-
-  const handleProductClick = (itemId: string) => {
-    const item = items.find(p => p.id === itemId);
-    if (item) {
-      setQuickViewItem(item);
-    }
+  const handleOpenChat = (item: MarketplaceItem) => {
+    console.log("Opening chat for:", item.title);
+    // Lógica para abrir modal de chat
   };
 
   const handleFiltersChange = (filters: Partial<SearchFilters>) => {
-    setCurrentFilters(prev => ({ ...prev, ...filters }));
+    setCurrentFilters((prev) => ({ ...prev, ...filters }));
   };
 
   const filteredItems = useMemo(() => {
     let results = items;
     if (currentFilters.query) {
-      results = results.filter(item =>
-        item.title.toLowerCase().includes(currentFilters.query.toLowerCase())
+      results = results.filter((item) =>
+        item.title.toLowerCase().includes(currentFilters.query!.toLowerCase())
       );
     }
     if (currentFilters.category && currentFilters.category !== 'all') {
       results = results.filter(
-        item => item.category === currentFilters.category
+        (item) => item.category === currentFilters.category
       );
     }
-    // ... otros filtros pueden ir aquí ...
     return results;
   }, [items, currentFilters]);
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%', bgcolor: 'background.default', p: 2 }}>
-      <Stack spacing={2} sx={{ flex: 1, overflowY: 'auto' }}>
-        <MarketplaceFilterBar
-          categories={impactCategories}
-          activeCategory={currentFilters.category}
-          onCategoryChange={category =>
-            handleFiltersChange({ category: category === 'all' ? '' : category })
-          }
-          onSearch={handleFiltersChange}
-          onOpenAdvancedFilters={() => {
-            /* Lógica para abrir filtros avanzados en móvil */
-          }}
-        />
-        <ItemGrid
-          items={filteredItems}
-          isLoading={isLoading}
-          onToggleFavorite={handleToggleFavorite}
-          onProductClick={(id) => {
-            const product = items.find((p: MarketplaceItem) => p.id === id);
-            if (product) handleProductClick(id);
-          }}
-          onAddToCart={handleAddToCart}
-          onShare={() => console.log('Share')}
-        />
-      </Stack>
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        height: '100vh',
+        bgcolor: 'background.paper',
+      }}
+    >
+      <Container sx={{ py: 2, flex: 1, overflowY: 'auto' }}>
+        <Stack spacing={2}>
+          <MarketplaceFilterBar
+            categories={impactCategories}
+            onSearch={handleFiltersChange}
+            onOpenAdvancedFilters={() => console.log('advanced filters')}
+          />
+
+          <ItemGrid
+            items={filteredItems}
+            isLoading={isLoading}
+            onToggleFavorite={handleToggleFavorite}
+            onShare={(id) => console.log('share', id)}
+            onAddToCart={(id) => console.log('add', id)}
+            onOpenChat={handleOpenChat}
+            viewMode="grid"
+          />
+        </Stack>
+      </Container>
 
       <Fab
-        color="primary"
-        aria-label="add"
-        sx={{ position: 'fixed', bottom: 80, right: 16 }}
-        onClick={() => {
-          /* Lógica para abrir el modal de creación de producto */
+        onClick={() => navigate('/marketplace/dashboard')}
+        sx={{
+          position: 'fixed',
+          bottom: 150,
+          right: 16,
+          bgcolor: 'secondary.main',
+          color: 'white',
+          '&:hover': {
+            bgcolor: 'secondary.dark',
+          },
+        }}
+        aria-label="dashboard"
+      >
+        <DashboardIcon />
+      </Fab>
+
+      <Fab
+        onClick={() => setShowCreateModal(true)}
+        sx={{
+          position: 'fixed',
+          bottom: 80,
+          right: 16,
+          bgcolor: 'primary.main',
+          color: 'white',
+          '&:hover': {
+            bgcolor: 'primary.dark',
+          },
         }}
       >
         <AddIcon />
       </Fab>
 
-      {/* --- Modals and Drawers --- */}
+      {quickViewItem && (
+        <QuickViewModal
+          item={quickViewItem}
+          open={!!quickViewItem}
+          onClose={() => setQuickViewItem(null)}
+          onToggleFavorite={handleToggleFavorite}
+          onAddToCart={() => handleAddToCart(quickViewItem)}
+        />
+      )}
       <CreateItemModal
-        open={false}
-        onClose={() => {
-          /* Lógica para cerrar el modal de creación de producto */
-        }}
+        open={showCreateModal}
+        onClose={() => setShowCreateModal(false)}
         onSuccess={() => {
-          /* Lógica para manejar el éxito de la creación de producto */
+          setShowCreateModal(false);
+          // podrías añadir un refetch de los datos aquí
         }}
-      />
-      <Drawer
-        anchor="right"
-        open={false}
-        onClose={() => {
-          /* Lógica para cerrar el drawer de filtros avanzados */
-        }}
-      >
-        <Box sx={{p: 2, width: 280}}>
-          <Typography variant="h6">Filtros Avanzados</Typography>
-        </Box>
-      </Drawer>
-      <QuickViewModal
-        open={!!quickViewItem}
-        onClose={() => setQuickViewItem(null)}
-        item={quickViewItem}
-        onAddToCart={handleAddToCart}
-        onToggleFavorite={handleQuickViewToggleFavorite}
       />
     </Box>
   );

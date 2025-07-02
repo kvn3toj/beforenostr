@@ -1,16 +1,15 @@
 import React from 'react';
 import { Box, Container, Grid, Typography, useTheme } from '@mui/material';
-import { WalletOverview } from './WalletOverview';
-import { WalletActions } from './WalletActions';
+import { useAuth } from '../../../contexts/AuthContext';
+import { UnitsWalletHumanized } from './UnitsWalletHumanized';
 import { TransactionHistory } from './TransactionHistory';
-import { useWalletData, useWalletTransactions } from '../../../hooks/useWalletIntegration';
+import { useWalletTransactions } from '../../../hooks/useWalletIntegration';
+import { WalletActions } from './WalletActions';
 
 const WalletMain: React.FC = () => {
   const theme = useTheme();
-  const { data: walletData, isLoading: isWalletLoading } = useWalletData();
+  const { user } = useAuth();
   const { data: transactions, isLoading: areTransactionsLoading } = useWalletTransactions();
-
-  const isLoading = isWalletLoading || areTransactionsLoading;
 
   return (
     <Box sx={{ py: 4, backgroundColor: theme.palette.background.paper, minHeight: '100vh' }}>
@@ -19,19 +18,18 @@ const WalletMain: React.FC = () => {
           Billetera Holística
         </Typography>
         <Grid container spacing={4}>
+          {user?.id && (
+            <Grid item xs={12}>
+              <UnitsWalletHumanized userId={user.id} />
+            </Grid>
+          )}
           <Grid item xs={12}>
-            <WalletOverview
-              walletData={walletData}
-              isLoading={isLoading}
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <WalletActions isLoading={isLoading} />
+            <WalletActions isLoading={areTransactionsLoading} />
           </Grid>
           <Grid item xs={12}>
             <TransactionHistory
               transactions={transactions || []}
-              isLoading={isLoading}
+              isLoading={areTransactionsLoading}
             />
           </Grid>
         </Grid>

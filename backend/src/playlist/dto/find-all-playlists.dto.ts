@@ -82,10 +82,10 @@ export class FindAllPlaylistsDto {
   orderDirection?: PlaylistOrderDirection = PlaylistOrderDirection.DESC;
 
   @ApiPropertyOptional({
-    description: 'Incluir los videoItems relacionados en la respuesta',
-    example: false,
+    description:
+      'Incluir los videoItems relacionados en la respuesta de cada playlist',
+    type: Boolean,
     default: false,
-    required: false,
   })
   @IsOptional()
   @IsBoolean()
@@ -136,4 +136,12 @@ export class FindAllPlaylistsDto {
   @Min(1)
   @Max(100) // Added a reasonable maximum
   limit?: number = 10; // Renamed from pageSize to limit for consistency with service
+
+  @ApiPropertyOptional({
+    description: 'ID externo del video (por ejemplo, de YouTube)',
+    example: 'ixBgrqho03E',
+  })
+  @IsOptional()
+  @IsString()
+  externalId?: string;
 }

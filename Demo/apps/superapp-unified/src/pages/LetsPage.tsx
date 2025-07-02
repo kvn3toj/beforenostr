@@ -26,7 +26,7 @@ import {
 } from '@mui/icons-material';
 import { useAuth } from '../contexts/AuthContext';
 import { useLetsEducation } from '../contexts/LetsEducationContext';
-import UnitsWallet from '../components/modules/marketplace/components/UnitsWallet';
+import { UnitsWalletHumanized } from '../components/modules/wallet/UnitsWalletHumanized';
 import { LetsListings } from '../components/modules/marketplace/components/LetsListings';
 import LetsDashboard from '../components/modules/marketplace/components/LetsDashboard';
 import LetsOnboardingWizard from '../components/modules/lets/LetsOnboardingWizard';
@@ -179,7 +179,7 @@ const LetsPage: React.FC = () => {
           <Box sx={{ mb: 4 }}>
             <Grid container spacing={3}>
               <Grid item xs={12} md={6}>
-                <UnitsWallet userId={user?.id || ''} />
+                <UnitsWalletHumanized userId={user?.id || ''} />
               </Grid>
               <Grid item xs={12} md={6}>
                 <Card sx={{ p: 3, height: '100%' }}>

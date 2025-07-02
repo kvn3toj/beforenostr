@@ -48,6 +48,15 @@ import { formatDistanceToNow } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { ReciprocidadSocialMetricsProps } from '@/types/reciprocidad.types';
 
+const UNIFIED_CARD_STYLE = {
+  p: { xs: 2, md: 3 },
+  borderRadius: 4,
+  height: '100%',
+  boxShadow: '0 4px 12px 0 rgba(0, 0, 0, 0.05)',
+  border: '1px solid rgba(0, 0, 0, 0.02)',
+  backgroundColor: 'background.paper',
+};
+
 // 🎨 Componente para elementos sociales
 const SocialElementIcon: React.FC<{
   element: string;
@@ -312,17 +321,7 @@ export const ReciprocidadSocialMetrics: React.FC<ReciprocidadSocialMetricsProps>
   return (
     <Stack spacing={3}>
       {/* 🧩 TARJETA DE PERFIL SOCIAL */}
-      <Paper
-        variant="outlined"
-        sx={{
-          p: 3,
-          borderRadius: 2,
-          backgroundColor: '#ffffff',
-          borderColor: alpha(theme.palette.primary.main, 0.1),
-          position: 'relative',
-          overflow: 'hidden'
-        }}
-      >
+      <Paper sx={UNIFIED_CARD_STYLE}>
         <Stack direction="row" spacing={2} alignItems="center">
           <UserAvatar />
           <Box sx={{ flexGrow: 1 }}>
@@ -352,112 +351,10 @@ export const ReciprocidadSocialMetrics: React.FC<ReciprocidadSocialMetricsProps>
             </Typography>
           </Box>
         </Stack>
-
-        {/* 🧩 MÉTRICAS CLAVE */}
-        <Grid container spacing={2} sx={{ mt: 2 }}>
-          <Grid item xs={6} sm={3}>
-            <Box sx={{ textAlign: 'center' }}>
-              <Typography variant="h5" fontWeight="bold" color="primary.main">
-                {safeUserStats.connectionsCount}
-              </Typography>
-              <Typography variant="caption" color="text.secondary">
-                Conexiones
-              </Typography>
-            </Box>
-          </Grid>
-          <Grid item xs={6} sm={3}>
-            <Box sx={{ textAlign: 'center' }}>
-              <Typography variant="h5" fontWeight="bold" color="secondary.main">
-                {safeUserStats.collaborationsCount}
-              </Typography>
-              <Typography variant="caption" color="text.secondary">
-                Colaboraciones
-              </Typography>
-            </Box>
-          </Grid>
-          <Grid item xs={6} sm={3}>
-            <Box sx={{ textAlign: 'center' }}>
-              <Typography variant="h5" fontWeight="bold" color="success.main">
-                {safeUserStats.bienComunContributions}
-              </Typography>
-              <Typography variant="caption" color="text.secondary">
-                Contribuciones
-              </Typography>
-            </Box>
-          </Grid>
-          <Grid item xs={6} sm={3}>
-            <Box sx={{ textAlign: 'center' }}>
-              <Typography variant="h5" fontWeight="bold" color="warning.main">
-                {safeUserStats.socialMeritos}
-              </Typography>
-              <Typography variant="caption" color="text.secondary">
-                Méritos
-              </Typography>
-            </Box>
-          </Grid>
-        </Grid>
-
-        {/* 🧩 ELEMENTOS SOCIALES */}
-        <Box sx={{ mt: 3 }}>
-          <Box
-            sx={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              mb: 2
-            }}
-          >
-            <Typography variant="subtitle2" fontWeight="bold">
-              Balance de Elementos Sociales
-            </Typography>
-            <IconButton
-              size="small"
-              onClick={() => handleToggleSection('elementos')}
-            >
-              {expandedSection === 'elementos' ? (
-                <ExpandLessIcon fontSize="small" />
-              ) : (
-                <ExpandMoreIcon fontSize="small" />
-              )}
-            </IconButton>
-          </Box>
-
-          <Collapse in={expandedSection === 'elementos' || !isMobile}>
-            <Grid container spacing={2} justifyContent="center">
-              {Object.entries(safeUserStats.elementos).map(([key, value]) => (
-                <Grid item key={key} xs={6} sm={3}>
-                  <SocialElementIcon
-                    element={key}
-                    value={value}
-                    color={
-                      key === 'comunicacion'
-                        ? theme.palette.info.main
-                        : key === 'empatia'
-                        ? theme.palette.primary.main
-                        : key === 'confianza'
-                        ? theme.palette.success.main
-                        : theme.palette.warning.main
-                    }
-                  />
-                </Grid>
-              ))}
-            </Grid>
-          </Collapse>
-        </Box>
       </Paper>
 
       {/* 🧩 MÉTRICAS DE LA COMUNIDAD */}
-      <Paper
-        variant="outlined"
-        sx={{
-          p: 3,
-          borderRadius: 2,
-          backgroundColor: '#ffffff',
-          borderColor: alpha(theme.palette.secondary.main, 0.1),
-          position: 'relative',
-          overflow: 'hidden'
-        }}
-      >
+      <Paper sx={UNIFIED_CARD_STYLE}>
         <Box
           sx={{
             display: 'flex',
@@ -469,69 +366,46 @@ export const ReciprocidadSocialMetrics: React.FC<ReciprocidadSocialMetricsProps>
           <Typography variant="subtitle2" fontWeight="bold">
             Métricas de la Comunidad
           </Typography>
-          <IconButton
-            size="small"
-            onClick={() => handleToggleSection('community')}
-          >
-            {expandedSection === 'community' ? (
-              <ExpandLessIcon fontSize="small" />
-            ) : (
-              <ExpandMoreIcon fontSize="small" />
-            )}
-          </IconButton>
         </Box>
-
-        <Collapse in={expandedSection === 'community' || !isMobile}>
-          <Grid container spacing={2}>
-            <Grid item xs={12} sm={6}>
-              <MetricCard
-                icon={<People />}
-                label="Conexiones Activas"
-                value={safeCommunityMetrics.activeConnections}
-                isLoading={isLoading}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <MetricCard
-                icon={<Group />}
-                label="Miembros Online"
-                value={safeCommunityMetrics.onlineMembers}
-                isLoading={isLoading}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <MetricCard
-                icon={<Handshake />}
-                label="Intercambios Reciprocidad"
-                value={safeCommunityMetrics.reciprocidadExchanges}
-                isLoading={isLoading}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <MetricCard
-                icon={<TrendingUp />}
-                label="Crecimiento Semanal"
-                value={`+${safeCommunityMetrics.weeklyGrowth}%`}
-                isLoading={isLoading}
-              />
-            </Grid>
+        <Grid container spacing={2}>
+          <Grid item xs={12} sm={6}>
+            <MetricCard
+              icon={<People />}
+              label="Conexiones Activas"
+              value={safeCommunityMetrics.activeConnections}
+              isLoading={isLoading}
+            />
           </Grid>
-        </Collapse>
+          <Grid item xs={12} sm={6}>
+            <MetricCard
+              icon={<Group />}
+              label="Miembros Online"
+              value={safeCommunityMetrics.onlineMembers}
+              isLoading={isLoading}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <MetricCard
+              icon={<Handshake />}
+              label="Intercambios Reciprocidad"
+              value={safeCommunityMetrics.reciprocidadExchanges}
+              isLoading={isLoading}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <MetricCard
+              icon={<TrendingUp />}
+              label="Crecimiento Semanal"
+              value={`+${safeCommunityMetrics.weeklyGrowth}%`}
+              isLoading={isLoading}
+            />
+          </Grid>
+        </Grid>
       </Paper>
 
       {/* 🧩 SECCIÓN DETALLADA (SOLO SI SE SOLICITA) */}
       {detailed && (
-        <Paper
-          variant="outlined"
-          sx={{
-            p: 3,
-            borderRadius: 2,
-            backgroundColor: '#ffffff',
-            borderColor: alpha(theme.palette.info.main, 0.1),
-            position: 'relative',
-            overflow: 'hidden'
-          }}
-        >
+        <Paper sx={{ ...UNIFIED_CARD_STYLE, mt: 3 }}>
           <Typography variant="subtitle2" fontWeight="bold" gutterBottom>
             Análisis Detallado de Reciprocidad
           </Typography>
@@ -539,66 +413,6 @@ export const ReciprocidadSocialMetrics: React.FC<ReciprocidadSocialMetricsProps>
             Tu índice de Reciprocidad Social muestra un balance entre dar y recibir que
             contribuye positivamente al ecosistema CoomÜnity.
           </Typography>
-
-          <Grid container spacing={2} sx={{ mt: 1 }}>
-            <Grid item xs={12} sm={6}>
-              <Box sx={{ mb: 2 }}>
-                <Typography variant="body2" fontWeight="medium" gutterBottom>
-                  Índice de Confianza
-                </Typography>
-                <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                  <Box sx={{ flexGrow: 1, mr: 1 }}>
-                    <LinearProgress
-                      variant="determinate"
-                      value={safeUserStats.trustScore * 20}
-                      sx={{
-                        height: 8,
-                        borderRadius: 4,
-                        backgroundColor: alpha(theme.palette.success.main, 0.1),
-                        '& .MuiLinearProgress-bar': {
-                          backgroundColor: theme.palette.success.main
-                        }
-                      }}
-                    />
-                  </Box>
-                  <Typography variant="body2" fontWeight="bold">
-                    {safeUserStats.trustScore}/5
-                  </Typography>
-                </Box>
-              </Box>
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <Box sx={{ mb: 2 }}>
-                <Typography variant="body2" fontWeight="medium" gutterBottom>
-                  Balance Reciprocidad
-                </Typography>
-                <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                  <Box sx={{ flexGrow: 1, mr: 1 }}>
-                    <LinearProgress
-                      variant="determinate"
-                      value={safeUserStats.reciprocidadBalance * 100}
-                      sx={{
-                        height: 8,
-                        borderRadius: 4,
-                        backgroundColor: alpha(
-                          getReciprocidadColor(safeUserStats.reciprocidadBalance),
-                          0.1
-                        ),
-                        '& .MuiLinearProgress-bar': {
-                          backgroundColor: getReciprocidadColor(
-                            safeUserStats.reciprocidadBalance
-                          )
-                        }
-                      }}
-                    />
-                  </Box>
-                  <Typography variant="body2" fontWeight="bold">
-                    {Math.round(safeUserStats.reciprocidadBalance * 100)}%
-                  </Typography>
-                </Box>
-              </Box>
-            </Grid>
-          </Grid>
         </Paper>
       )}
     </Stack>

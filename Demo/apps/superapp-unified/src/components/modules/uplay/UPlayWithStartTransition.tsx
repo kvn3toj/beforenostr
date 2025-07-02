@@ -43,9 +43,13 @@ import {
 // Cosmic Design System
 import { UniversalComponent } from '../../universal/UniversalComponent';
 
-// Components optimizados
+// Componentes optimizados
 import { OptimizedUPlayWizard } from './components/OptimizedUPlayWizard';
 import { OptimizedVideoTransitions } from './components/OptimizedVideoTransitions';
+import { UPlayGamifiedDashboard } from './UPlayGamifiedDashboard';
+import { UPlayInteractiveLibrary } from './UPlayInteractiveLibrary';
+import { UPlayAchievementSystem } from './UPlayAchievementSystem';
+import { UPlayStudyRooms } from './UPlayStudyRooms';
 
 // ===== 🎯 TIPOS Y INTERFACES ===== //
 interface UPlayTransitionState {
@@ -416,127 +420,58 @@ export const UPlayWithStartTransition: React.FC<UPlayEnhancedProps> = ({
 
   // 🎨 RENDERIZADO DE CONTENIDO POR TAB
   const renderTabContent = () => {
-    switch (currentTab) {
-      case 0:
-        return (
-          <Fade in={!transitionState.isTabChanging} timeout={400}>
-            <Box>
-              <OptimizedUPlayWizard
-                initialStep={0}
-                onStepComplete={(stepId) => {
-                  console.log(`✅ Paso completado: ${stepId}`);
-                  setPerformanceMetrics(prev => ({
-                    ...prev,
-                    userEngagement: Math.min(100, prev.userEngagement + 2),
-                  }));
-                }}
-                onWizardComplete={() => {
-                  console.log('🎉 Wizard completado!');
-                  onWizardComplete?.();
-                }}
-                showProgressIndicator={true}
-                enablePreloading={true}
-                cosmicEffects={cosmicEffects}
-              />
-            </Box>
+    return (
+      <Box sx={{ mt: 3, position: 'relative' }}>
+        <Box sx={{ display: currentTab === 0 ? 'block' : 'none' }}>
+          <Fade in={!transitionState.isTabChanging && currentTab === 0} timeout={400}>
+            <div>
+              <Suspense fallback={<UPlayContentSkeleton />}>
+                <UPlayGamifiedDashboard />
+              </Suspense>
+            </div>
           </Fade>
-        );
-
-      case 1:
-        return (
-          <Fade in={!transitionState.isTabChanging} timeout={400}>
-            <Box>
-              <OptimizedVideoTransitions
-                videoId={selectedVideoId}
-                onVideoComplete={(videoId) => {
-                  console.log(`🎬 Video completado: ${videoId}`);
-                  onVideoComplete?.(videoId);
-                  setPerformanceMetrics(prev => ({
-                    ...prev,
-                    userEngagement: Math.min(100, prev.userEngagement + 5),
-                  }));
-                }}
-                showTransitionIndicators={true}
-                enableSmartPreloading={true}
-                cosmicEffects={cosmicEffects}
-              />
-            </Box>
+        </Box>
+        <Box sx={{ display: currentTab === 1 ? 'block' : 'none' }}>
+          <Fade in={!transitionState.isTabChanging && currentTab === 1} timeout={400}>
+            <div>
+              <Suspense fallback={<UPlayContentSkeleton />}>
+                <UPlayInteractiveLibrary />
+              </Suspense>
+            </div>
           </Fade>
-        );
-
-      case 2:
-        return (
-          <Fade in={!transitionState.isTabChanging} timeout={400}>
-            <Box>
-              <UniversalComponent element="tierra" variant="card">
-                <Box sx={{ p: 3 }}>
-                  <Typography variant="h5" gutterBottom>
-                    📊 Análisis de Rendimiento Detallado
-                  </Typography>
-
-                  <Grid container spacing={3}>
-                    <Grid item xs={12} md={6}>
-                      <Typography variant="h6" gutterBottom>
-                        Beneficios de startTransition
-                      </Typography>
-                      <Box sx={{ mb: 2 }}>
-                        <Typography variant="body2" color="text.secondary" gutterBottom>
-                          ✅ UI responsiva durante cargas pesadas
-                        </Typography>
-                        <Typography variant="body2" color="text.secondary" gutterBottom>
-                          ✅ Transiciones fluidas entre estados
-                        </Typography>
-                        <Typography variant="body2" color="text.secondary" gutterBottom>
-                          ✅ Mejor experiencia de usuario percibida
-                        </Typography>
-                        <Typography variant="body2" color="text.secondary" gutterBottom>
-                          ✅ Prevención de bloqueos de interfaz
-                        </Typography>
-                      </Box>
-                    </Grid>
-
-                    <Grid item xs={12} md={6}>
-                      <Typography variant="h6" gutterBottom>
-                        Implementación en ÜPlay
-                      </Typography>
-                      <Box>
-                        <Chip
-                          icon={<School />}
-                          label="Navegación de Wizard"
-                          size="small"
-                          sx={{ m: 0.5 }}
-                        />
-                        <Chip
-                          icon={<VideoLibrary />}
-                          label="Carga de Videos"
-                          size="small"
-                          sx={{ m: 0.5 }}
-                        />
-                        <Chip
-                          icon={<TrendingUp />}
-                          label="Cambios de Calidad"
-                          size="small"
-                          sx={{ m: 0.5 }}
-                        />
-                        <Chip
-                          icon={<Timer />}
-                          label="Navegación Temporal"
-                          size="small"
-                          sx={{ m: 0.5 }}
-                        />
-                      </Box>
-                    </Grid>
-                  </Grid>
-                </Box>
-              </UniversalComponent>
-            </Box>
+        </Box>
+        <Box sx={{ display: currentTab === 2 ? 'block' : 'none' }}>
+          <Fade in={!transitionState.isTabChanging && currentTab === 2} timeout={400}>
+            <div>
+              <Suspense fallback={<UPlayContentSkeleton />}>
+                <UPlayAchievementSystem />
+              </Suspense>
+            </div>
           </Fade>
-        );
-
-      default:
-        return null;
-    }
+        </Box>
+        <Box sx={{ display: currentTab === 3 ? 'block' : 'none' }}>
+          <Fade in={!transitionState.isTabChanging && currentTab === 3} timeout={400}>
+            <div>
+              <Suspense fallback={<UPlayContentSkeleton />}>
+                <UPlayStudyRooms />
+              </Suspense>
+            </div>
+          </Fade>
+        </Box>
+      </Box>
+    );
   };
+
+  const UPlayContentSkeleton = () => (
+    <Box>
+      <Box sx={{ textAlign: 'center', py: 8 }}>
+        <CircularProgress size={60} />
+        <Typography variant="h6" sx={{ mt: 2 }}>
+          Cargando contenido optimizado...
+        </Typography>
+      </Box>
+    </Box>
+  );
 
   // 🎨 RENDERIZADO PRINCIPAL
   return (
@@ -609,18 +544,15 @@ export const UPlayWithStartTransition: React.FC<UPlayEnhancedProps> = ({
       </UniversalComponent>
 
       {/* Contenido del tab actual */}
-      <Suspense
-        fallback={
-          <Box sx={{ textAlign: 'center', py: 8 }}>
-            <CircularProgress size={60} />
-            <Typography variant="h6" sx={{ mt: 2 }}>
-              Cargando contenido optimizado...
-            </Typography>
-          </Box>
-        }
-      >
-        {renderTabContent()}
-      </Suspense>
+      {renderTabContent()}
+
+      {/* 🎬 Componente de Transiciones de Video Optimizado */}
+      <OptimizedVideoTransitions
+        videoId={selectedVideoId}
+        onVideoComplete={onVideoComplete}
+      />
+
+      {showPerformanceMetrics && <PerformanceMetricsPanel />}
     </Box>
   );
 };

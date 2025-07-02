@@ -44,6 +44,7 @@ const VideoPlayer = createLazyPage('VideoPlayer');
 // Rutas de Marketplace
 const MarketplaceTest = createLazyPage('MarketplaceTest');
 const ProductDetail = createLazyPage('ProductDetail');
+const MarketplaceDashboardPage = createLazyPage('MarketplaceDashboardPage');
 
 // Rutas Sociales
 const SocialChat = createLazyPage('SocialChat');
@@ -64,7 +65,7 @@ const NotFoundPage = createLazyPage('NotFoundPage');
 const OnboardingDemo = lazy(() => import('../components/onboarding/OnboardingDemo'));
 
 // [NUEVO] Portal del Viaje en UPlay
-const UPlayJourneyPortal = createLazyPage('UPlayJourneyPortal');
+const UPlayJourneyPortal = lazy(() => import('../components/modules/uplay/UPlayJourneyPortal'));
 const UPlayHarvestReflection = createLazyPage('UPlayHarvestReflection');
 
 // [ATLAS/ANA] Lazy loading: Asegurado que UPlayInteractiveLibrary y UPlayWithStartTransition usan React.lazy
@@ -120,6 +121,7 @@ export const LazyPages = {
   // Marketplace Routes
   MarketplaceTest,
   ProductDetail,
+  MarketplaceDashboardPage,
 
   // LETS Routes
   LetsPage,
@@ -183,6 +185,9 @@ export const preloadRouteComponents = (pathname: string) => {
       case '/marketplace':
         import('../pages/MarketplacePage.tsx');
         break;
+      case '/marketplace/dashboard':
+        import('../pages/MarketplaceDashboardPage.tsx');
+        break;
       case '/uplay':
         import('../pages/UPlay.tsx');
         break;
@@ -224,6 +229,9 @@ export const preloadRouteComponents = (pathname: string) => {
         } else if (pathname.startsWith('/video/')) {
           import('../pages/VideoPlayer.tsx');
           import('../pages/VideoHome.tsx');
+        } else if (pathname.startsWith('/marketplace/')) {
+          import('../pages/MarketplaceDashboardPage.tsx');
+          import('../pages/ProductDetail.tsx');
         }
         break;
     }
