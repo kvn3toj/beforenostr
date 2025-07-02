@@ -1,7 +1,7 @@
 import React from 'react';
 
 // 🌟 Debug temporal para verificar ThematicElement.ETHER
-import debugCosmicTypes from '../utils/cosmic-debug.ts';
+import debugCosmicTypes from '../utils/cosmic-debug';
 
 // Debug automático en desarrollo
 if (import.meta.env.DEV) {
