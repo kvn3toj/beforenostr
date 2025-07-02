@@ -30,7 +30,7 @@ dist-ssr
 *debug*.png
 *debug*.jpg
 *debug*.jpeg
-*debug*.ts
+# *debug*.ts
 *debug*.js
 *debug*.log
 *debug*.map
