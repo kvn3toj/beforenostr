@@ -18,7 +18,7 @@ services:
     plan: free
     runtime: docker
     repo: https://github.com/kvn3toj/beforenostr
-    branch: gamifier3.5
+    branch: main
     dockerfilePath: ./backend/Dockerfile
     healthCheckPath: /health
     dockerCommand: "npm run start:prod:migrate"
@@ -48,7 +48,7 @@ services:
     plan: free
     runtime: node
     repo: https://github.com/kvn3toj/beforenostr
-    branch: gamifier3.5
+    branch: main
     rootDir: Demo/apps/superapp-unified
     buildCommand: "npm install --legacy-peer-deps && npm run build"
     startCommand: "npx serve -s dist"
