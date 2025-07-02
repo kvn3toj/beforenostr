@@ -8,5 +8,5 @@ Variables de entorno mínimas:
 - DATABASE_URL=...
 - REDIS_URL=redis://red-d1fjqp2li9vc739kf560:6379
 - JWT_SECRET=...
-- (agrega las que tu backend requiera)
+
 
