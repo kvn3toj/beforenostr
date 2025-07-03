@@ -124,6 +124,6 @@
     }
   },
   "prisma": {
-    "seed": "ts-node src/prisma/seed.ts"
+    "seed": "node dist/prisma/seed.js"
   }
 }

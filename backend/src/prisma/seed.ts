@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from '../generated/prisma';
 import bcrypt from 'bcrypt';
 import dotenv from 'dotenv';
 
@@ -214,14 +214,24 @@ async function seedPermissionsAndRoles(prisma) {
       where: { name: { in: roleData.permissions } },
     });
 
-    await prisma.role.update({
-      where: { id: createdRole.id },
-      data: {
-        permissions: {
-          set: permissionRecords.map(p => ({ id: p.id })),
+    // ✨ TRANSMUTACIÓN CÓSMICA: Usar RolePermission (tabla intermedia) en lugar de relación directa
+    for (const permission of permissionRecords) {
+      await prisma.rolePermission.upsert({
+        where: {
+          roleId_permissionId: {
+            roleId: createdRole.id,
+            permissionId: permission.id,
+          },
         },
-      },
-    });
+        update: {}, // Si ya existe, no hacer nada
+        create: {
+          roleId: createdRole.id,
+          permissionId: permission.id,
+        },
+      });
+    }
+
+    console.log(`   - Assigned ${permissionRecords.length} permissions to role: ${roleData.name}`);
   }
   console.log('Permissions and roles seeded successfully.');
 }
