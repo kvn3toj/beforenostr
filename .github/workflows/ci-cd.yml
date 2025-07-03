@@ -79,6 +79,7 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
+          cache-dependency-path: package-lock.json
 
       - name: Cache npm dir
         uses: actions/cache@v4
@@ -124,6 +125,7 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
+          cache-dependency-path: package-lock.json
 
       - name: Backend Type Check
         run: npx tsc --noEmit -p tsconfig.backend.json
@@ -170,6 +172,7 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
+          cache-dependency-path: package-lock.json
 
       - name: Cache Turbo
         uses: actions/cache@v4
@@ -216,6 +219,7 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
+          cache-dependency-path: package-lock.json
 
       - name: Cache Turbo
         uses: actions/cache@v4
@@ -273,6 +277,7 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
+          cache-dependency-path: package-lock.json
 
       # ------------------------------------------------
       # 📦 Instalar TODAS las dependencias desde la raíz (lockfile raíz)
@@ -323,6 +328,7 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
+          cache-dependency-path: package-lock.json
 
       - name: Install dependencies
         run: npm install --legacy-peer-deps
@@ -398,6 +404,7 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
+          cache-dependency-path: package-lock.json
 
       - name: Install dependencies
         run: npm install --legacy-peer-deps
