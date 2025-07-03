@@ -39,6 +39,6 @@ COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
 ENV NODE_ENV=production
 
 # Railway inyecta DATABASE_URL y otras variables automáticamente
-CMD ["node", "dist/main.js"]
+CMD ["sh", "-c", "npx prisma migrate deploy && npm run db:seed && node dist/main.js"]
 
 # Trigger re-deploy v3
