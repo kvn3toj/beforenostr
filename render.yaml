@@ -14,7 +14,7 @@ services:
 
   # Backend - NestJS (Docker, recomendado)
   - type: web
-    name: coomunity-backend
+    name: god-backend
     plan: free
     runtime: docker
     repo: https://github.com/kvn3toj/beforenostr
