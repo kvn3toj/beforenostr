@@ -14,17 +14,17 @@ WORKDIR /app
 RUN apk add --no-cache openssl
 
 # Copia archivos de configuración
-COPY package.json package-lock.json ./
-COPY prisma ./prisma
+COPY backend/package.json backend/package-lock.json ./
+COPY backend/prisma ./prisma
 
 # Instala todas las dependencias (incluyendo dev para build)
 RUN npm ci
 
 # Copia el resto del código fuente
-COPY . .
+COPY backend/. .
 
 # Genera Prisma Client para Linux dentro del contenedor
-RUN npx prisma generate
+RUN npx prisma generate --schema=./prisma/schema.prisma
 
 # Compila la app (NestJS)
 RUN npm run build
@@ -39,11 +39,9 @@ WORKDIR /app
 # Instala openssl para Prisma
 RUN apk add --no-cache openssl
 
-# Copia package.json y instala solo dependencias de producción
-COPY package.json package-lock.json ./
-RUN npm ci --only=production && npm cache clean --force
-
-# Copia archivos compilados y configuración
+# Copia solo lo necesario desde la etapa de build
+COPY --from=builder /app/package.json ./
+COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/prisma ./prisma
 COPY --from=builder /app/src/generated/prisma ./src/generated/prisma
@@ -57,4 +55,4 @@ ENV PORT=3002
 EXPOSE 3002
 
 # Comando optimizado de inicio
-CMD ["sh", "-c", "npx prisma migrate deploy && npx prisma db seed && node dist/main.js"]
+CMD ["sh", "-c", "npx prisma migrate deploy && npm run db:seed && node dist/main.js"]
