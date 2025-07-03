@@ -22,7 +22,7 @@ services:
     dockerfilePath: ./backend/Dockerfile
     healthCheckPath: /health
     preDeployCommand: "npx prisma migrate deploy"
-    dockerCommand: 'sh -c "npx prisma migrate deploy && npm run db:seed && npm run start:prod"'
+    dockerCommand: 'sh -c "npx prisma db seed && npm run start:prod"'
     envVars:
       - key: PORT
         value: 3002
