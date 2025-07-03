@@ -57,11 +57,11 @@ services:
       - key: NODE_ENV
         value: production
       - key: VITE_API_BASE_URL
-        value: "https://coomunity-backend.onrender.com"
+        value: "https://god-backend-j4b6.onrender.com"
       - key: VITE_BASE_URL
         value: "https://coomunity-superapp.onrender.com"
       - key: VITE_NETWORK_API_URL
-        value: "https://coomunity-backend.onrender.com"
+        value: "https://god-backend-j4b6.onrender.com"
       - key: VITE_NETWORK_BASE_URL
         value: "https://coomunity-superapp.onrender.com"
       - key: VITE_ENABLE_MOCK_AUTH
