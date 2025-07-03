@@ -248,6 +248,7 @@ async function main() {
       roleNames: ['admin'],
       name: 'Admin',
       lastName: 'User',
+      username: 'admin',
       currentStage: 'PROMOTER',
     },
     {
@@ -256,6 +257,8 @@ async function main() {
       roleNames: ['user'],
       name: 'Regular',
       lastName: 'User',
+      username: 'user',
+      currentStage: 'SEEKER',
     },
     {
       email: 'premium@gamifier.com',
@@ -263,6 +266,8 @@ async function main() {
       roleNames: ['user', 'premium'],
       name: 'Premium',
       lastName: 'User',
+      username: 'premium',
+      currentStage: 'SOLVER',
     },
     {
       email: 'creator@gamifier.com',
@@ -270,6 +275,8 @@ async function main() {
       roleNames: ['user', 'creator'],
       name: 'Content',
       lastName: 'Creator',
+      username: 'creator',
+      currentStage: 'SOLVER',
     },
     {
       email: 'moderator@gamifier.com',
@@ -277,9 +284,10 @@ async function main() {
       roleNames: ['user', 'moderator'],
       name: 'Moderator',
       lastName: 'User',
+      username: 'moderator',
+      currentStage: 'PROMOTER',
     },
   ];
-
   console.log('Seeding users...');
   for (const userData of users) {
     const existingUser = await prisma.user.findUnique({
@@ -288,40 +296,40 @@ async function main() {
 
     if (!existingUser) {
       const hashedPassword = await bcrypt.hash(userData.password, 10);
+
       const createdUser = await prisma.user.create({
         data: {
           email: userData.email,
           password: hashedPassword,
           name: userData.name,
           lastName: userData.lastName,
-          currentStage: userData.currentStage || undefined,
+          username: userData.username,
+          currentStage: userData.currentStage,
         },
       });
-      console.log(`   - Created user: ${createdUser.email}`);
 
-      const userRoles = await prisma.role.findMany({
+      const roles = await prisma.role.findMany({
         where: { name: { in: userData.roleNames } },
       });
 
-      for (const role of userRoles) {
+      for (const role of roles) {
         await prisma.userRole.create({
           data: {
             userId: createdUser.id,
             roleId: role.id,
-          }
-        })
+          },
+        });
       }
-      console.log(`   - Assigned roles to user: ${createdUser.email}`);
-
+      console.log(`   - Created user: ${userData.email} with roles: ${userData.roleNames.join(', ')}`);
     } else {
-      console.log(`   - User already exists, skipping: ${userData.email}`);
+      console.log(`   - User ${userData.email} already exists, skipping.`);
     }
   }
   console.log('Users seeded successfully.');
 
   await seedUPlay(prisma);
 
-  console.log(`Seeding production data finished.`);
+  console.log(`Seeding finished.`);
 }
 
 main()

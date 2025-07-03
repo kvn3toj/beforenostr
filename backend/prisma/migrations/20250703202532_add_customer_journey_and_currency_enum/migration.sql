@@ -22,6 +22,9 @@ COMMIT;
 ALTER TABLE "marketplace_items" ALTER COLUMN "currency" SET DEFAULT 'UNITS';
 
 -- AlterTable
+ALTER TABLE "transactions" ADD COLUMN     "metadata" JSONB;
+
+-- AlterTable
 ALTER TABLE "users" ADD COLUMN     "currentStage" TEXT NOT NULL DEFAULT 'BUYER',
 ADD COLUMN     "stageCompletionData" JSONB,
 ADD COLUMN     "stageProgressedAt" TIMESTAMP(3),

@@ -20,3 +20,5 @@ export type {
   PhilosophyDashboardConfig,
   PhilosophyMetricsState
 } from './philosophy-metrics';
+
+export * from './task.dto';

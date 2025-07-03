@@ -14,7 +14,7 @@
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main.js",
-    "start:prod:migrate": "npx prisma migrate deploy && node dist/main",
+    "deploy": "npx prisma migrate deploy && npx prisma db seed",
     "lint": "eslint . --fix",
     "test": "jest",
     "test:transactions": "jest --testPathPattern=merits-and-wallet/transactions/transactions.spec.ts --forceExit",
@@ -25,7 +25,7 @@
     "db:generate": "prisma generate",
     "db:push": "prisma db push",
     "db:reset": "prisma migrate reset --force",
-    "db:seed": "npx prisma generate && node dist/prisma/seed.js",
+    "db:seed": "npx prisma db seed",
     "db:seed:dev": "ts-node prisma/seed-dev.ts",
     "db:studio": "prisma studio",
     "migration:generate": "npx prisma migrate dev",
@@ -124,6 +124,6 @@
     }
   },
   "prisma": {
-    "seed": "node dist/prisma/seed.js"
+    "seed": "ts-node src/prisma/seed.ts"
   }
 }

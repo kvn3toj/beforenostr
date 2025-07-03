@@ -162,6 +162,7 @@ model User {
   personalityId  String?
 
   // Customer Journey - Stage Progression System
+  // Forcing a re-evaluation for migration generation
   currentStage        String    @default("BUYER") // BUYER, SEEKER, SOLVER, PROMOTER
   stageProgressedAt   DateTime? // Timestamp of last stage progression
   stageStartedAt      DateTime  @default(now()) // When current stage was entered

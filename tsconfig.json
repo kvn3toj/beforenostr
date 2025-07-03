@@ -6,6 +6,8 @@
   "files": [],
   "references": [
     { "path": "./tsconfig.backend.json" },
-    { "path": "./Demo/apps/superapp-unified" }
+    { "path": "./Demo/apps/superapp-unified" },
+    { "path": "./packages/shared-types" },
+    { "path": "./packages/sync-engine" }
   ]
 }

@@ -156,3 +156,39 @@ npm run build              # Build completo
 npm run build:backend      # Build solo backend
 npm run start:backend:prod # Producción backend
 ```
+
+## 🔧 Configuración
+
+### Configuración del Monorepo TypeScript
+
+Este proyecto utiliza **TypeScript Project References** para gestionar eficientemente el monorepo. Esta estrategia permite una compilación incremental y una separación lógica entre los distintos paquetes y aplicaciones.
+
+**Punto Clave:** El archivo `tsconfig.json` ubicado en la raíz del proyecto es el **mapa maestro** que define las relaciones entre todos los sub-proyectos de TypeScript.
+
+Si añades un nuevo paquete o aplicación (en `packages/` o `apps/`) que deba ser reconocido por el compilador de TypeScript, **es obligatorio** que lo añadas al array `references` en el `tsconfig.json` raíz.
+
+**Ejemplo de Configuración Correcta (`tsconfig.json`):**
+
+```json
+{
+  "files": [],
+  "references": [
+    { "path": "./tsconfig.backend.json" },
+    { "path": "./Demo/apps/superapp-unified" },
+    { "path": "./packages/shared-types" },
+    { "path": "./packages/sync-engine" }
+  ]
+}
+```
+
+### Validación del Entorno
+
+Para verificar que la configuración de TypeScript y los permisos del sistema de archivos son correctos, puedes usar el script de validación del entorno:
+
+```bash
+npx ts-node check-env.ts
+```
+
+Este comando ejecutará una serie de pruebas, incluyendo importaciones cruzadas entre paquetes, y confirmará si el entorno está estable y listo para el desarrollo.
+
+## 📖 Documentación
