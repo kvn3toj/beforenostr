@@ -9,387 +9,36 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Mundo {
-  id          String     @id @default(uuid())
-  name        String
-  description String?
-  imageUrl    String?
-  isActive    Boolean    @default(true)
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
-  createdById String?
-  version     Int        @default(1)
-  playlists   Playlist[]
-  worlds      World[]
-
-  @@index([isActive])
-  @@index([createdById])
-  @@map("mundos")
-}
-
-model Playlist {
-  id                String             @id @default(uuid())
-  mundoId           String
-  name              String
-  description       String?
-  imageUrl          String?
-  orderInMundo      Int?               @default(0)
-  isActive          Boolean            @default(true)
-  createdAt         DateTime           @default(now())
-  updatedAt         DateTime           @updatedAt
-  createdById       String?
-  version           Int                @default(1)
-  contentItems      ContentItem[]
-  gamifiedPlaylists GamifiedPlaylist[]
-  mundo             Mundo              @relation(fields: [mundoId], references: [id])
-  videoItems        VideoItem[]
-
-  @@index([mundoId])
-  @@index([isActive])
-  @@index([createdById])
-  @@index([orderInMundo])
-  @@map("playlists")
-}
-
-model VideoItem {
-  id           Int               @id @default(autoincrement())
-  title        String
-  description  String?
-  content      String
-  url          String?
-  platform     String            @default("youtube")
-  externalId   String?
-  playlistId   String
-  itemTypeId   String
-  order        Int               @default(0)
-  isActive     Boolean           @default(true)
-  isDeleted    Boolean           @default(false)
-  deletedAt    DateTime?
-  createdAt    DateTime          @default(now())
-  updatedAt    DateTime          @updatedAt
-  duration     Int?
-  categories   String?
-  language     String?
-  quality      String?
-  tags         String?
-  thumbnailUrl String?
-  activities   Activity[]
-  questions    Question[]
-  subtitles    Subtitle[]
-  studyRooms   StudyRoom[]
-  playlist     Playlist          @relation(fields: [playlistId], references: [id])
-  permissions  VideoPermissions?
-
-  @@index([playlistId])
-  @@index([itemTypeId])
-  @@index([isDeleted])
-  @@index([platform])
-  @@index([externalId])
-  @@index([language])
-  @@map("video_items")
-}
-
-model Subtitle {
-  id           Int       @id @default(autoincrement())
-  videoItemId  Int
-  languageCode String
-  format       String    @default("srt")
-  content      String?
-  contentUrl   String?
-  isActive     Boolean   @default(true)
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
-  videoItem    VideoItem @relation(fields: [videoItemId], references: [id])
-
-  @@index([videoItemId])
-  @@map("subtitles")
-}
-
-model Question {
-  id            Int            @id @default(autoincrement())
-  videoItemId   Int
-  timestamp     Int
-  type          String
-  text          String
-  languageCode  String
-  isActive      Boolean        @default(true)
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @updatedAt
-  endTimestamp  Int?
-  answerOptions AnswerOption[]
-  videoItem     VideoItem      @relation(fields: [videoItemId], references: [id])
-  userAnswers   UserAnswer[]
-
-  @@index([videoItemId])
-  @@index([timestamp])
-  @@index([endTimestamp])
-  @@map("questions")
-}
-
-model AnswerOption {
-  id         Int      @id @default(autoincrement())
-  questionId Int
-  text       String
-  isCorrect  Boolean  @default(false)
-  order      Int      @default(0)
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-  question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
-
-  @@index([questionId])
-  @@map("answer_options")
-}
-
-model User {
-  id                         String                @id @default(uuid())
-  email                      String                @unique
-  password                   String
-  name                       String?
-  avatarUrl                  String?
-  isActive                   Boolean               @default(true)
-  createdAt                  DateTime              @default(now())
-  updatedAt                  DateTime              @updatedAt
-  username                   String?               @unique
-  firstName                  String?
-  lastName                   String?
-  documentType               String?
-  documentNumber             String?
-  phone                      String?
-  country                    String?
-  address                    String?
-  status                     String                @default("ACTIVE")
-  topUserCount               Int                   @default(0)
-  personalityId              String?
-  createdActivities          Activity[]            @relation("ActivityCreator")
-  comments                   Comment[]
-  likes                      Like[]
-  createdExperiences         Experience[]          @relation("ExperienceCreator")
-  invitationsSent            GiftCard[]            @relation("InviterUser")
-  ownedGroups                Group[]               @relation("GroupOwner")
-  createdInvitationTemplates InvitationTemplate[]  @relation("InvitationTemplateCreator")
-  merits                     Merit[]
-  notifications              Notification[]
-  publications               Publication[]
-  createdReports             Report[]              @relation("ReportCreator")
-  assignedPermissions        RolePermission[]      @relation("PermissionAssigner")
-  tokens                     Token[]
-  transactionsTo             Transaction[]         @relation("TransactionTo")
-  transactionsFrom           Transaction[]         @relation("TransactionFrom")
-  createdTemplates           UIComponentTemplate[] @relation("TemplateCreator")
-  userAnswers                UserAnswer[]
-  userChallenges             UserChallenge[]
-  userGroups                 UserGroup[]
-  invitationsReceived        UserInvitation[]
-  assignedRoles              UserRole[]            @relation("RoleAssigner")
-  userRoles                  UserRole[]
-  hostedStudyRooms           StudyRoom[]           @relation("StudyRoomHost")
-  studyRoomParticipants      StudyRoomParticipant[]
-  sentChatMessages           StudyRoomMessage[]
-  personality                Personality?          @relation(fields: [personalityId], references: [id])
-  videoPermissions           VideoPermissions[]
-  wallet                     Wallet?
-  createdWorlds              World[]               @relation("WorldCreator")
-  marketplaceItems           MarketplaceItem[]
-  feedbackReports            FeedbackReport[]
-  adminFeedbackResponses     FeedbackReport[]      @relation("AdminFeedbackResponses")
-
-  @@index([email])
-  @@index([isActive])
-  @@index([username])
-  @@index([status])
-  @@map("users")
-}
-
-model Role {
-  id              String           @id @default(uuid())
-  name            String           @unique
-  description     String?
-  createdAt       DateTime         @default(now())
-  updatedAt       DateTime         @updatedAt
-  rolePermissions RolePermission[]
-  userRoles       UserRole[]
-
-  @@map("roles")
-}
-
-model UserRole {
-  userId       String
-  roleId       String
-  assignedAt   DateTime @default(now())
-  assignedById String?
-  assignedBy   User?    @relation("RoleAssigner", fields: [assignedById], references: [id])
-  role         Role     @relation(fields: [roleId], references: [id], onDelete: Cascade)
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@id([userId, roleId])
-  @@index([userId])
-  @@index([roleId])
-  @@index([assignedById])
-  @@map("user_roles")
-}
-
-model Permission {
-  id              String           @id @default(uuid())
-  name            String           @unique
-  description     String?
-  createdAt       DateTime         @default(now())
-  updatedAt       DateTime         @updatedAt
-  rolePermissions RolePermission[]
-
-  @@map("permissions")
-}
-
-model VideoPermissions {
-  id                     String    @id @default(uuid())
-  videoItemId            Int       @unique
-  showWaveCount          Boolean   @default(true)
-  showVideos             Boolean   @default(true)
-  showVideoSubtitles     Boolean   @default(true)
-  showComments           Boolean   @default(true)
-  showPublishDate        Boolean   @default(true)
-  showVideoDuration      Boolean   @default(true)
-  showLikeButton         Boolean   @default(true)
-  allowRewindForward     Boolean   @default(false)
-  allowViewComments      Boolean   @default(true)
-  allowMakeComments      Boolean   @default(true)
-  showLikeComments       Boolean   @default(true)
-  sortCommentsByAffinity Boolean   @default(false)
-  showCommenterName      Boolean   @default(false)
-  playlistPosition       String    @default("position1")
-  isDraft                Boolean   @default(false)
-  createdAt              DateTime  @default(now())
-  updatedAt              DateTime  @updatedAt
-  createdById            String?
-  createdBy              User?     @relation(fields: [createdById], references: [id])
-  videoItem              VideoItem @relation(fields: [videoItemId], references: [id], onDelete: Cascade)
-
-  @@index([videoItemId])
-  @@index([isDraft])
-  @@index([createdById])
-  @@map("video_permissions")
-}
-
-model RolePermission {
-  roleId       String
-  permissionId String
-  assignedAt   DateTime   @default(now())
-  assignedById String?
-  assignedBy   User?      @relation("PermissionAssigner", fields: [assignedById], references: [id])
-  permission   Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
-  role         Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
-
-  @@id([roleId, permissionId])
-  @@index([roleId])
-  @@index([permissionId])
-  @@index([assignedById])
-  @@map("role_permissions")
-}
-
-model World {
-  id          String   @id @default(uuid())
-  name        String
-  description String?
-  type        String
-  creatorId   String
-  status      String   @default("ACTIVE")
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  mundoId     String?
-  stages      Stage[]
-  mundo       Mundo?   @relation(fields: [mundoId], references: [id])
-  creator     User     @relation("WorldCreator", fields: [creatorId], references: [id])
+model activities {
+  id                 String               @id
+  experienceId       String
+  title              String
+  description        String?
+  type               String
+  multimediaType     String?
+  contentUrl         String?
+  duration           Int?
+  order              Int                  @default(0)
+  status             String               @default("ACTIVE")
+  creatorId          String
+  createdAt          DateTime             @default(now())
+  updatedAt          DateTime
+  videoItemId        Int?
+  users              users                @relation(fields: [creatorId], references: [id])
+  experiences        experiences          @relation(fields: [experienceId], references: [id], onDelete: Cascade)
+  video_items        video_items?         @relation(fields: [videoItemId], references: [id])
+  activity_questions activity_questions[]
+  gamified_playlists gamified_playlists[]
 
   @@index([creatorId])
-  @@index([status])
-  @@index([mundoId])
-  @@map("worlds")
-}
-
-model Stage {
-  id          String       @id @default(uuid())
-  worldId     String
-  name        String
-  order       Int
-  description String?
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
-  experiences Experience[]
-  world       World        @relation(fields: [worldId], references: [id], onDelete: Cascade)
-
-  @@index([worldId])
-  @@index([order])
-  @@map("stages")
-}
-
-model Experience {
-  id                    String     @id @default(uuid())
-  stageId               String
-  title                 String
-  description           String?
-  type                  String
-  gamificationFramework String?    @default("Octalysis")
-  creatorId             String
-  createdAt             DateTime   @default(now())
-  updatedAt             DateTime   @updatedAt
-  activities            Activity[]
-  creator               User       @relation("ExperienceCreator", fields: [creatorId], references: [id])
-  stage                 Stage      @relation(fields: [stageId], references: [id], onDelete: Cascade)
-
-  @@index([stageId])
-  @@index([creatorId])
-  @@map("experiences")
-}
-
-model Activity {
-  id                String             @id @default(uuid())
-  experienceId      String
-  title             String
-  description       String?
-  type              String
-  multimediaType    String?
-  contentUrl        String?
-  duration          Int?
-  order             Int                @default(0)
-  status            String             @default("ACTIVE")
-  creatorId         String
-  createdAt         DateTime           @default(now())
-  updatedAt         DateTime           @updatedAt
-  videoItemId       Int?
-  videoItem         VideoItem?         @relation(fields: [videoItemId], references: [id])
-  creator           User               @relation("ActivityCreator", fields: [creatorId], references: [id])
-  experience        Experience         @relation(fields: [experienceId], references: [id], onDelete: Cascade)
-  questions         ActivityQuestion[]
-  gamifiedPlaylists GamifiedPlaylist[]
-
   @@index([experienceId])
-  @@index([creatorId])
   @@index([order])
   @@index([status])
   @@index([videoItemId])
-  @@map("activities")
 }
 
-model GamifiedPlaylist {
-  id           String    @id @default(uuid())
-  activityId   String?
-  playlistId   String?
-  name         String
-  type         String
-  sequenceType String
-  status       String    @default("ACTIVE")
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
-  playlist     Playlist? @relation(fields: [playlistId], references: [id])
-  activity     Activity? @relation(fields: [activityId], references: [id])
-
-  @@index([activityId])
-  @@index([playlistId])
-  @@index([status])
-  @@map("gamified_playlists")
-}
-
-model ActivityQuestion {
-  id                     String       @id @default(uuid())
+model activity_questions {
+  id                     String         @id
   activityId             String
   type                   String
   questionType           String
@@ -399,287 +48,15 @@ model ActivityQuestion {
   ondasList              String?
   displayTimeSeconds     Int?
   optionalDisplaySeconds Int?
-  createdAt              DateTime     @default(now())
-  activity               Activity     @relation(fields: [activityId], references: [id], onDelete: Cascade)
-  userAnswers            UserAnswer[]
+  createdAt              DateTime       @default(now())
+  activities             activities     @relation(fields: [activityId], references: [id], onDelete: Cascade)
+  user_answers           user_answers[]
 
   @@index([activityId])
-  @@map("activity_questions")
 }
 
-model UserAnswer {
-  id                 String            @id @default(uuid())
-  userId             String
-  questionId         Int?
-  activityQuestionId String?
-  answerGiven        String
-  isCorrect          Boolean?
-  ondasEarned        Int               @default(0)
-  createdAt          DateTime          @default(now())
-  activityQuestion   ActivityQuestion? @relation(fields: [activityQuestionId], references: [id])
-  question           Question?         @relation(fields: [questionId], references: [id])
-  user               User              @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@index([userId])
-  @@index([questionId])
-  @@index([activityQuestionId])
-  @@map("user_answers")
-}
-
-model Token {
-  id           String    @id @default(uuid())
-  userId       String
-  amount       Float
-  type         String
-  status       String    @default("ACTIVE")
-  caducityDate DateTime?
-  source       String
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
-  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@index([userId])
-  @@index([type])
-  @@index([status])
-  @@index([caducityDate])
-  @@map("tokens")
-}
-
-model Merit {
-  id              String   @id @default(uuid())
-  userId          String
-  amount          Float
-  type            String
-  source          String
-  relatedEntityId String?
-  createdAt       DateTime @default(now())
-  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@index([userId])
-  @@index([type])
-  @@index([source])
-  @@map("merits")
-}
-
-model Wallet {
-  id                String        @id @default(uuid())
-  userId            String        @unique
-  blockchainAddress String?       @unique
-  balanceUnits      Float         @default(0)
-  balanceToins      Float         @default(0)
-  status            String        @default("ACTIVE")
-  createdAt         DateTime      @default(now())
-  updatedAt         DateTime      @updatedAt
-  transactionsTo    Transaction[] @relation("TransactionTo")
-  transactionsFrom  Transaction[] @relation("TransactionFrom")
-  user              User          @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@index([userId])
-  @@index([blockchainAddress])
-  @@index([status])
-  @@map("wallets")
-}
-
-model Transaction {
-  id          String   @id @default(uuid())
-  fromUserId  String?
-  toUserId    String
-  amount      Float
-  tokenType   String
-  type        String
-  status      String   @default("PENDING")
-  description String?
-  createdAt   DateTime @default(now())
-  toWallet    Wallet   @relation("TransactionTo", fields: [toUserId], references: [userId], map: "transaction_to_wallet_fkey")
-  fromWallet  Wallet?  @relation("TransactionFrom", fields: [fromUserId], references: [userId], map: "transaction_from_wallet_fkey")
-  toUser      User     @relation("TransactionTo", fields: [toUserId], references: [id], map: "transaction_to_user_fkey")
-  fromUser    User?    @relation("TransactionFrom", fields: [fromUserId], references: [id], map: "transaction_from_user_fkey")
-
-  @@index([fromUserId])
-  @@index([toUserId])
-  @@index([type])
-  @@index([status])
-  @@map("transactions")
-}
-
-model Group {
-  id          String      @id @default(uuid())
-  name        String
-  description String?
-  ownerId     String
-  type        String
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
-  owner       User        @relation("GroupOwner", fields: [ownerId], references: [id])
-  userGroups  UserGroup[]
-
-  @@index([ownerId])
-  @@index([type])
-  @@map("groups")
-}
-
-model UserGroup {
-  userId      String
-  groupId     String
-  roleInGroup String   @default("MEMBER")
-  joinedAt    DateTime @default(now())
-  group       Group    @relation(fields: [groupId], references: [id], onDelete: Cascade)
-  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@id([userId, groupId])
-  @@index([userId])
-  @@index([groupId])
-  @@map("user_groups")
-}
-
-model Publication {
-  id        String    @id @default(uuid())
-  userId    String
-  content   String
-  type      String
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  comments  Comment[]
-  likes     Like[]
-  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@index([userId])
-  @@index([type])
-  @@map("publications")
-}
-
-model Comment {
-  id            String       @id @default(uuid())
-  userId        String
-  publicationId String?
-  activityId    String?
-  text          String
-  createdAt     DateTime     @default(now())
-  publication   Publication? @relation(fields: [publicationId], references: [id])
-  user          User         @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@index([userId])
-  @@index([publicationId])
-  @@index([activityId])
-  @@map("comments")
-}
-
-model Like {
-  id            String      @id @default(uuid())
-  userId        String
-  publicationId String
-  createdAt     DateTime    @default(now())
-  publication   Publication @relation(fields: [publicationId], references: [id], onDelete: Cascade)
-  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@unique([userId, publicationId]) // Un usuario solo puede dar un like por publicación
-  @@index([userId])
-  @@index([publicationId])
-  @@map("likes")
-}
-
-model Notification {
-  id        String   @id @default(uuid())
-  userId    String
-  type      String
-  message   String
-  read      Boolean  @default(false)
-  createdAt DateTime @default(now())
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@index([userId])
-  @@index([read])
-  @@index([type])
-  @@map("notifications")
-}
-
-model InvitationTemplate {
-  id        String   @id @default(uuid())
-  name      String
-  content   String
-  creatorId String
-  createdAt DateTime @default(now())
-  creator   User     @relation("InvitationTemplateCreator", fields: [creatorId], references: [id])
-
-  @@index([creatorId])
-  @@map("invitation_templates")
-}
-
-model GiftCard {
-  id              String           @id @default(uuid())
-  inviterId       String
-  invitedName     String
-  invitedEmail    String
-  token           String           @unique
-  unitsAmount     Float
-  suggestions     String?
-  status          String           @default("SENT")
-  createdAt       DateTime         @default(now())
-  inviter         User             @relation("InviterUser", fields: [inviterId], references: [id])
-  userInvitations UserInvitation[]
-
-  @@index([inviterId])
-  @@index([token])
-  @@index([status])
-  @@map("gift_cards")
-}
-
-model UserInvitation {
-  id            String   @id @default(uuid())
-  giftCardId    String
-  invitedUserId String?
-  status        String   @default("PENDING")
-  createdAt     DateTime @default(now())
-  invitedUser   User?    @relation(fields: [invitedUserId], references: [id])
-  giftCard      GiftCard @relation(fields: [giftCardId], references: [id])
-
-  @@index([giftCardId])
-  @@index([invitedUserId])
-  @@index([status])
-  @@map("user_invitations")
-}
-
-model Report {
-  id          String   @id @default(uuid())
-  name        String
-  type        String
-  parameters  String?
-  generatedAt DateTime @default(now())
-  data        String
-  creatorId   String
-  creator     User     @relation("ReportCreator", fields: [creatorId], references: [id])
-
-  @@index([creatorId])
-  @@index([type])
-  @@map("reports")
-}
-
-model Configuration {
-  id        String   @id @default(uuid())
-  key       String   @unique
-  value     String
-  type      String
-  updatedAt DateTime @updatedAt
-
-  @@index([type])
-  @@map("configurations")
-}
-
-model Log {
-  id        String   @id @default(uuid())
-  level     String
-  message   String
-  context   String?
-  timestamp DateTime @default(now())
-  metadata  String?
-
-  @@index([level])
-  @@index([timestamp])
-  @@map("logs")
-}
-
-model AnalyticsData {
-  id          String   @id @default(uuid())
+model analytics_data {
+  id          String   @id
   userId      String?
   eventType   String
   videoItemId String?
@@ -691,149 +68,932 @@ model AnalyticsData {
   timestamp   DateTime @default(now())
   createdAt   DateTime @default(now())
 
-  @@index([userId])
+  @@index([createdAt])
   @@index([eventType])
-  @@index([videoItemId])
   @@index([playlistId])
   @@index([sessionId])
   @@index([timestamp])
-  @@index([createdAt])
-  @@map("analytics_data")
+  @@index([userId])
+  @@index([videoItemId])
 }
 
-model Ranking {
-  id        String   @id @default(uuid())
+model answer_options {
+  id         Int       @id @default(autoincrement())
+  questionId Int
+  text       String
+  isCorrect  Boolean   @default(false)
+  order      Int       @default(0)
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime
+  questions  questions @relation(fields: [questionId], references: [id], onDelete: Cascade)
+
+  @@index([questionId])
+}
+
+model challenge_rewards {
+  id          String     @id
+  challengeId String
+  type        String
+  amount      Float?
+  description String?
+  metadata    String?
+  createdAt   DateTime   @default(now())
+  challenges  challenges @relation(fields: [challengeId], references: [id], onDelete: Cascade)
+
+  @@index([challengeId])
+  @@index([type])
+}
+
+model challenges {
+  id                String              @id
+  title             String
+  description       String?
+  type              String
+  status            String              @default("ACTIVE")
+  startDate         DateTime
+  endDate           DateTime
+  config            String              @default("{}")
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime
+  challenge_rewards challenge_rewards[]
+  user_challenges   user_challenges[]
+
+  @@index([endDate])
+  @@index([startDate])
+  @@index([status])
+  @@index([type])
+}
+
+model comments {
+  id            String        @id
+  userId        String
+  publicationId String?
+  activityId    String?
+  text          String
+  createdAt     DateTime      @default(now())
+  publications  publications? @relation(fields: [publicationId], references: [id])
+  users         users         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([activityId])
+  @@index([publicationId])
+  @@index([userId])
+}
+
+model configurations {
+  id        String   @id
+  key       String   @unique
+  value     String
+  type      String
+  updatedAt DateTime
+
+  @@index([type])
+}
+
+model content_items {
+  id          String     @id
+  title       String
+  description String?
+  content     String
+  playlistId  String
+  itemTypeId  String
+  order       Int        @default(0)
+  isActive    Boolean    @default(true)
+  isDeleted   Boolean    @default(false)
+  deletedAt   DateTime?
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime
+  item_types  item_types @relation(fields: [itemTypeId], references: [id])
+  playlists   playlists  @relation(fields: [playlistId], references: [id])
+
+  @@index([isDeleted])
+  @@index([itemTypeId])
+  @@index([playlistId])
+}
+
+model experiences {
+  id                    String       @id
+  stageId               String
+  title                 String
+  description           String?
+  type                  String
+  gamificationFramework String?      @default("Octalysis")
+  creatorId             String
+  createdAt             DateTime     @default(now())
+  updatedAt             DateTime
+  activities            activities[]
+  users                 users        @relation(fields: [creatorId], references: [id])
+  stages                stages       @relation(fields: [stageId], references: [id], onDelete: Cascade)
+
+  @@index([creatorId])
+  @@index([stageId])
+}
+
+model feedback_reports {
+  id                                        String           @id
+  userId                                    String
+  type                                      FeedbackType
+  title                                     String
+  description                               String
+  priority                                  FeedbackPriority @default(MEDIUM)
+  category                                  String
+  status                                    FeedbackStatus   @default(SUBMITTED)
+  elementContext                            Json
+  technicalContext                          Json
+  codeAnalysis                              Json?
+  aiSuggestions                             Json?
+  adminResponse                             String?
+  adminUserId                               String?
+  resolvedAt                                DateTime?
+  upvotes                                   Int              @default(0)
+  downvotes                                 Int              @default(0)
+  duplicateOf                               String?
+  createdAt                                 DateTime         @default(now())
+  updatedAt                                 DateTime
+  users_feedback_reports_adminUserIdTousers users?           @relation("feedback_reports_adminUserIdTousers", fields: [adminUserId], references: [id])
+  users_feedback_reports_userIdTousers      users            @relation("feedback_reports_userIdTousers", fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([createdAt])
+  @@index([priority])
+  @@index([status])
+  @@index([type])
+  @@index([userId])
+}
+
+model gamified_playlists {
+  id           String      @id
+  activityId   String?
+  playlistId   String?
+  name         String
+  type         String
+  sequenceType String
+  status       String      @default("ACTIVE")
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime
+  activities   activities? @relation(fields: [activityId], references: [id])
+  playlists    playlists?  @relation(fields: [playlistId], references: [id])
+
+  @@index([activityId])
+  @@index([playlistId])
+  @@index([status])
+}
+
+model gift_cards {
+  id               String             @id
+  inviterId        String
+  invitedName      String
+  invitedEmail     String
+  token            String             @unique
+  unitsAmount      Float
+  suggestions      String?
+  status           String             @default("SENT")
+  createdAt        DateTime           @default(now())
+  users            users              @relation(fields: [inviterId], references: [id])
+  user_invitations user_invitations[]
+
+  @@index([inviterId])
+  @@index([status])
+  @@index([token])
+}
+
+model groups {
+  id          String        @id
+  name        String
+  description String?
+  ownerId     String
+  type        String
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime
+  users       users         @relation(fields: [ownerId], references: [id])
+  user_groups user_groups[]
+
+  @@index([ownerId])
+  @@index([type])
+}
+
+model invitation_templates {
+  id        String   @id
+  name      String
+  content   String
+  creatorId String
+  createdAt DateTime @default(now())
+  users     users    @relation(fields: [creatorId], references: [id])
+
+  @@index([creatorId])
+}
+
+model item_types {
+  id            String          @id
+  name          String          @unique
+  description   String?
+  isActive      Boolean         @default(true)
+  isDeleted     Boolean         @default(false)
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime
+  content_items content_items[]
+
+  @@index([isActive])
+  @@index([isDeleted])
+}
+
+model likes {
+  id            String       @id
+  userId        String
+  publicationId String
+  createdAt     DateTime     @default(now())
+  publications  publications @relation(fields: [publicationId], references: [id], onDelete: Cascade)
+  users         users        @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, publicationId])
+  @@index([publicationId])
+  @@index([userId])
+}
+
+model logs {
+  id        String   @id
+  level     String
+  message   String
+  context   String?
+  timestamp DateTime @default(now())
+  metadata  String?
+
+  @@index([level])
+  @@index([timestamp])
+}
+
+model marketplace_items {
+  id                  String                @id
+  name                String
+  description         String?
+  fullDescription     String?
+  itemType            MarketplaceItemType   @default(SERVICE)
+  price               Float                 @default(0)
+  priceToins          Float                 @default(0)
+  currency            Currency              @default(LUKAS)
+  category            String?
+  tags                String[]
+  images              String[]
+  stock               Int                   @default(0)
+  rating              Float                 @default(0)
+  reviewCount         Int                   @default(0)
+  location            String?
+  status              MarketplaceItemStatus @default(ACTIVE)
+  isActive            Boolean               @default(true)
+  isDeleted           Boolean               @default(false)
+  deletedAt           DateTime?
+  createdAt           DateTime              @default(now())
+  updatedAt           DateTime
+  viewCount           Int                   @default(0)
+  favoriteCount       Int                   @default(0)
+  sellerId            String
+  metadata            String?
+  users               users                 @relation(fields: [sellerId], references: [id])
+  marketplace_matches marketplace_matches[]
+  reviews             reviews[]
+
+  @@index([category])
+  @@index([createdAt])
+  @@index([currency])
+  @@index([favoriteCount])
+  @@index([isActive])
+  @@index([isDeleted])
+  @@index([itemType])
+  @@index([location])
+  @@index([priceToins])
+  @@index([price])
+  @@index([sellerId])
+  @@index([status])
+  @@index([updatedAt])
+  @@index([viewCount])
+}
+
+model marketplace_matches {
+  id                                        String            @id
+  marketplaceItemId                         String
+  buyerId                                   String
+  sellerId                                  String
+  buyerConfirmed                            Boolean           @default(false)
+  sellerConfirmed                           Boolean           @default(false)
+  status                                    MatchStatus       @default(PENDING)
+  createdAt                                 DateTime          @default(now())
+  updatedAt                                 DateTime
+  users_marketplace_matches_buyerIdTousers  users             @relation("marketplace_matches_buyerIdTousers", fields: [buyerId], references: [id])
+  marketplace_items                         marketplace_items @relation(fields: [marketplaceItemId], references: [id])
+  users_marketplace_matches_sellerIdTousers users             @relation("marketplace_matches_sellerIdTousers", fields: [sellerId], references: [id])
+  match_messages                            match_messages[]
+
+  @@index([buyerId])
+  @@index([marketplaceItemId])
+  @@index([sellerId])
+}
+
+model match_messages {
+  id                  String              @id
+  matchId             String
+  senderId            String
+  content             String
+  createdAt           DateTime            @default(now())
+  marketplace_matches marketplace_matches @relation(fields: [matchId], references: [id])
+  users               users               @relation(fields: [senderId], references: [id])
+
+  @@index([matchId])
+  @@index([senderId])
+}
+
+model merits {
+  id              String   @id
+  userId          String
+  amount          Float
+  type            String
+  source          String
+  relatedEntityId String?
+  createdAt       DateTime @default(now())
+  users           users    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([source])
+  @@index([type])
+  @@index([userId])
+}
+
+model mundos {
+  id          String      @id
+  name        String
+  description String?
+  imageUrl    String?
+  isActive    Boolean     @default(true)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime
+  createdById String?
+  version     Int         @default(1)
+  playlists   playlists[]
+  worlds      worlds[]
+
+  @@index([createdById])
+  @@index([isActive])
+}
+
+model notifications {
+  id        String   @id
+  userId    String
+  type      String
+  message   String
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+  users     users    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([read])
+  @@index([type])
+  @@index([userId])
+}
+
+model permissions {
+  id               String             @id
+  name             String             @unique
+  description      String?
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime
+  role_permissions role_permissions[]
+}
+
+model personalities {
+  id          String   @id
+  name        String   @unique
+  description String?
+  traits      String
+  createdAt   DateTime @default(now())
+  users       users[]
+}
+
+model playlists {
+  id                 String               @id
+  mundoId            String
+  name               String
+  description        String?
+  imageUrl           String?
+  orderInMundo       Int?                 @default(0)
+  isActive           Boolean              @default(true)
+  createdAt          DateTime             @default(now())
+  updatedAt          DateTime
+  createdById        String?
+  version            Int                  @default(1)
+  content_items      content_items[]
+  gamified_playlists gamified_playlists[]
+  mundos             mundos               @relation(fields: [mundoId], references: [id])
+  video_items        video_items[]
+
+  @@index([createdById])
+  @@index([isActive])
+  @@index([mundoId])
+  @@index([orderInMundo])
+}
+
+model profiles {
+  id                     String   @id
+  userId                 String   @unique
+  bio                    String?
+  location               String?
+  website                String?
+  skills                 String[]
+  interests              String[]
+  isEmprendedorConfiable Boolean  @default(false)
+  socialLinks            Json?
+  createdAt              DateTime @default(now())
+  updatedAt              DateTime
+  avatar                 String?
+  users                  users    @relation(fields: [userId], references: [id])
+}
+
+model publications {
+  id        String     @id
+  userId    String
+  content   String
+  type      String
+  createdAt DateTime   @default(now())
+  updatedAt DateTime
+  comments  comments[]
+  likes     likes[]
+  users     users      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([type])
+  @@index([userId])
+}
+
+model questions {
+  id             Int              @id @default(autoincrement())
+  videoItemId    Int
+  timestamp      Int
+  type           String
+  text           String
+  languageCode   String
+  isActive       Boolean          @default(true)
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime
+  endTimestamp   Int?
+  answer_options answer_options[]
+  video_items    video_items      @relation(fields: [videoItemId], references: [id])
+  user_answers   user_answers[]
+
+  @@index([endTimestamp])
+  @@index([timestamp])
+  @@index([videoItemId])
+}
+
+model rankings {
+  id        String   @id
   name      String
   type      String
   period    String
   data      String
   createdAt DateTime @default(now())
 
-  @@index([type])
   @@index([period])
-  @@map("rankings")
+  @@index([type])
 }
 
-model Personality {
-  id          String   @id @default(uuid())
-  name        String   @unique
+model reports {
+  id          String   @id
+  name        String
+  type        String
+  parameters  String?
+  generatedAt DateTime @default(now())
+  data        String
+  creatorId   String
+  users       users    @relation(fields: [creatorId], references: [id])
+
+  @@index([creatorId])
+  @@index([type])
+}
+
+model reviews {
+  id                String            @id
+  marketplaceItemId String
+  userId            String
+  rating            Int
+  comment           String?
+  communication     Int?
+  quality           Int?
+  delivery          Int?
+  value             Int?
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime
+  marketplace_items marketplace_items @relation(fields: [marketplaceItemId], references: [id])
+  users             users             @relation(fields: [userId], references: [id])
+
+  @@index([marketplaceItemId])
+  @@index([userId])
+}
+
+model role_permissions {
+  roleId       String
+  permissionId String
+  assignedAt   DateTime    @default(now())
+  assignedById String?
+  users        users?      @relation(fields: [assignedById], references: [id])
+  permissions  permissions @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+  roles        roles       @relation(fields: [roleId], references: [id], onDelete: Cascade)
+
+  @@id([roleId, permissionId])
+  @@index([assignedById])
+  @@index([permissionId])
+  @@index([roleId])
+}
+
+model roles {
+  id               String             @id
+  name             String             @unique
+  description      String?
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime
+  role_permissions role_permissions[]
+  user_roles       user_roles[]
+}
+
+model stages {
+  id          String        @id
+  worldId     String
+  name        String
+  order       Int
   description String?
-  traits      String
-  createdAt   DateTime @default(now())
-  users       User[]
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime
+  experiences experiences[]
+  worlds      worlds        @relation(fields: [worldId], references: [id], onDelete: Cascade)
 
-  @@map("personalities")
+  @@index([order])
+  @@index([worldId])
 }
 
-model UIComponentTemplate {
-  id           String   @id @default(uuid())
+model study_room_messages {
+  id          String      @id
+  studyRoomId String
+  userId      String
+  message     String
+  messageType String      @default("CHAT")
+  metadata    String?
+  createdAt   DateTime    @default(now())
+  study_rooms study_rooms @relation(fields: [studyRoomId], references: [id], onDelete: Cascade)
+  users       users       @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([createdAt])
+  @@index([messageType])
+  @@index([studyRoomId])
+  @@index([userId])
+}
+
+model study_room_participants {
+  id          String      @id
+  studyRoomId String
+  userId      String
+  isHost      Boolean     @default(false)
+  joinedAt    DateTime    @default(now())
+  leftAt      DateTime?
+  isActive    Boolean     @default(true)
+  study_rooms study_rooms @relation(fields: [studyRoomId], references: [id], onDelete: Cascade)
+  users       users       @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([studyRoomId, userId])
+  @@index([isActive])
+  @@index([studyRoomId])
+  @@index([userId])
+}
+
+model study_rooms {
+  id                      String                    @id
+  name                    String
+  description             String?
+  videoId                 Int
+  hostId                  String
+  maxParticipants         Int                       @default(10)
+  status                  StudyRoomStatus           @default(ACTIVE)
+  currentTime             Float                     @default(0)
+  isPaused                Boolean                   @default(false)
+  isActive                Boolean                   @default(true)
+  createdAt               DateTime                  @default(now())
+  updatedAt               DateTime
+  study_room_messages     study_room_messages[]
+  study_room_participants study_room_participants[]
+  users                   users                     @relation(fields: [hostId], references: [id])
+  video_items             video_items               @relation(fields: [videoId], references: [id])
+
+  @@index([createdAt])
+  @@index([hostId])
+  @@index([isActive])
+  @@index([status])
+  @@index([videoId])
+}
+
+model subtitles {
+  id           Int         @id @default(autoincrement())
+  videoItemId  Int
+  languageCode String
+  format       String      @default("srt")
+  content      String?
+  contentUrl   String?
+  isActive     Boolean     @default(true)
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime
+  video_items  video_items @relation(fields: [videoItemId], references: [id])
+
+  @@index([videoItemId])
+}
+
+model tokens {
+  id           String    @id
+  userId       String
+  amount       Float
+  type         String
+  status       String    @default("ACTIVE")
+  caducityDate DateTime?
+  source       String
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime
+  users        users     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([caducityDate])
+  @@index([status])
+  @@index([type])
+  @@index([userId])
+}
+
+model transactions {
+  id                                       String   @id
+  fromUserId                               String?
+  toUserId                                 String
+  amount                                   Float
+  tokenType                                String
+  type                                     String
+  status                                   String   @default("PENDING")
+  description                              String?
+  createdAt                                DateTime @default(now())
+  metadata                                 Json?
+  users_transactions_fromUserIdTousers     users?   @relation("transactions_fromUserIdTousers", fields: [fromUserId], references: [id], map: "transaction_from_user_fkey")
+  wallets_transactions_fromUserIdTowallets wallets? @relation("transactions_fromUserIdTowallets", fields: [fromUserId], references: [userId], map: "transaction_from_wallet_fkey")
+  users_transactions_toUserIdTousers       users    @relation("transactions_toUserIdTousers", fields: [toUserId], references: [id], map: "transaction_to_user_fkey")
+  wallets_transactions_toUserIdTowallets   wallets  @relation("transactions_toUserIdTowallets", fields: [toUserId], references: [userId], map: "transaction_to_wallet_fkey")
+
+  @@index([fromUserId])
+  @@index([status])
+  @@index([toUserId])
+  @@index([type])
+}
+
+model ui_component_templates {
+  id           String   @id
   name         String
   type         String
   templateJson String
   creatorId    String
   createdAt    DateTime @default(now())
-  creator      User     @relation("TemplateCreator", fields: [creatorId], references: [id])
+  users        users    @relation(fields: [creatorId], references: [id])
 
   @@index([creatorId])
   @@index([type])
-  @@map("ui_component_templates")
 }
 
-model ItemType {
-  id           String        @id @default(uuid())
-  name         String        @unique
-  description  String?
-  isActive     Boolean       @default(true)
-  isDeleted    Boolean       @default(false)
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime      @updatedAt
-  contentItems ContentItem[]
+model user_answers {
+  id                 String              @id
+  userId             String
+  questionId         Int?
+  activityQuestionId String?
+  answerGiven        String
+  isCorrect          Boolean?
+  ondasEarned        Int                 @default(0)
+  createdAt          DateTime            @default(now())
+  activity_questions activity_questions? @relation(fields: [activityQuestionId], references: [id])
+  questions          questions?          @relation(fields: [questionId], references: [id])
+  users              users               @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@index([isActive])
-  @@index([isDeleted])
-  @@map("item_types")
+  @@index([activityQuestionId])
+  @@index([questionId])
+  @@index([userId])
 }
 
-model ContentItem {
-  id          String    @id @default(uuid())
-  title       String
-  description String?
-  content     String
-  playlistId  String
-  itemTypeId  String
-  order       Int       @default(0)
-  isActive    Boolean   @default(true)
-  isDeleted   Boolean   @default(false)
-  deletedAt   DateTime?
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  itemType    ItemType  @relation(fields: [itemTypeId], references: [id])
-  playlist    Playlist  @relation(fields: [playlistId], references: [id])
-
-  @@index([playlistId])
-  @@index([itemTypeId])
-  @@index([isDeleted])
-  @@map("content_items")
-}
-
-model Challenge {
-  id             String            @id @default(uuid())
-  title          String
-  description    String?
-  type           String
-  status         String            @default("ACTIVE")
-  startDate      DateTime
-  endDate        DateTime
-  config         String            @default("{}")
-  createdAt      DateTime          @default(now())
-  updatedAt      DateTime          @updatedAt
-  rewards        ChallengeReward[]
-  userChallenges UserChallenge[]
-
-  @@index([status])
-  @@index([type])
-  @@index([startDate])
-  @@index([endDate])
-  @@map("challenges")
-}
-
-model ChallengeReward {
-  id          String    @id @default(uuid())
-  challengeId String
-  type        String
-  amount      Float?
-  description String?
-  metadata    String?
-  createdAt   DateTime  @default(now())
-  challenge   Challenge @relation(fields: [challengeId], references: [id], onDelete: Cascade)
-
-  @@index([challengeId])
-  @@index([type])
-  @@map("challenge_rewards")
-}
-
-model UserChallenge {
-  id          String    @id @default(uuid())
+model user_challenges {
+  id          String     @id
   userId      String
   challengeId String
-  status      String    @default("ACTIVE")
-  progress    Float     @default(0)
-  startedAt   DateTime  @default(now())
+  status      String     @default("ACTIVE")
+  progress    Float      @default(0)
+  startedAt   DateTime   @default(now())
   completedAt DateTime?
   metadata    String?
-  challenge   Challenge @relation(fields: [challengeId], references: [id], onDelete: Cascade)
-  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  challenges  challenges @relation(fields: [challengeId], references: [id], onDelete: Cascade)
+  users       users      @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, challengeId])
-  @@index([userId])
   @@index([challengeId])
   @@index([status])
-  @@map("user_challenges")
+  @@index([userId])
 }
 
-// =====================================================================
-// MARKETPLACE MODULE MODELS
-// =====================================================================
+model user_groups {
+  userId      String
+  groupId     String
+  roleInGroup String   @default("MEMBER")
+  joinedAt    DateTime @default(now())
+  groups      groups   @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  users       users    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([userId, groupId])
+  @@index([groupId])
+  @@index([userId])
+}
+
+model user_invitations {
+  id            String     @id
+  giftCardId    String
+  invitedUserId String?
+  status        String     @default("PENDING")
+  createdAt     DateTime   @default(now())
+  gift_cards    gift_cards @relation(fields: [giftCardId], references: [id])
+  users         users?     @relation(fields: [invitedUserId], references: [id])
+
+  @@index([giftCardId])
+  @@index([invitedUserId])
+  @@index([status])
+}
+
+model user_roles {
+  userId                               String
+  roleId                               String
+  assignedAt                           DateTime @default(now())
+  assignedById                         String?
+  users_user_roles_assignedByIdTousers users?   @relation("user_roles_assignedByIdTousers", fields: [assignedById], references: [id])
+  roles                                roles    @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  users_user_roles_userIdTousers       users    @relation("user_roles_userIdTousers", fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([userId, roleId])
+  @@index([assignedById])
+  @@index([roleId])
+  @@index([userId])
+}
+
+model users {
+  id                                                      String                    @id
+  email                                                   String                    @unique
+  password                                                String
+  name                                                    String?
+  avatarUrl                                               String?
+  isActive                                                Boolean                   @default(true)
+  createdAt                                               DateTime                  @default(now())
+  updatedAt                                               DateTime
+  username                                                String?                   @unique
+  firstName                                               String?
+  lastName                                                String?
+  documentType                                            String?
+  documentNumber                                          String?
+  phone                                                   String?
+  country                                                 String?
+  address                                                 String?
+  status                                                  String                    @default("ACTIVE")
+  topUserCount                                            Int                       @default(0)
+  personalityId                                           String?
+  currentStage                                            String                    @default("BUYER")
+  activities                                              activities[]
+  comments                                                comments[]
+  experiences                                             experiences[]
+  feedback_reports_feedback_reports_adminUserIdTousers    feedback_reports[]        @relation("feedback_reports_adminUserIdTousers")
+  feedback_reports_feedback_reports_userIdTousers         feedback_reports[]        @relation("feedback_reports_userIdTousers")
+  gift_cards                                              gift_cards[]
+  groups                                                  groups[]
+  invitation_templates                                    invitation_templates[]
+  likes                                                   likes[]
+  marketplace_items                                       marketplace_items[]
+  marketplace_matches_marketplace_matches_buyerIdTousers  marketplace_matches[]     @relation("marketplace_matches_buyerIdTousers")
+  marketplace_matches_marketplace_matches_sellerIdTousers marketplace_matches[]     @relation("marketplace_matches_sellerIdTousers")
+  match_messages                                          match_messages[]
+  merits                                                  merits[]
+  notifications                                           notifications[]
+  profiles                                                profiles?
+  publications                                            publications[]
+  reports                                                 reports[]
+  reviews                                                 reviews[]
+  role_permissions                                        role_permissions[]
+  study_room_messages                                     study_room_messages[]
+  study_room_participants                                 study_room_participants[]
+  study_rooms                                             study_rooms[]
+  tokens                                                  tokens[]
+  transactions_transactions_fromUserIdTousers             transactions[]            @relation("transactions_fromUserIdTousers")
+  transactions_transactions_toUserIdTousers               transactions[]            @relation("transactions_toUserIdTousers")
+  ui_component_templates                                  ui_component_templates[]
+  user_answers                                            user_answers[]
+  user_challenges                                         user_challenges[]
+  user_groups                                             user_groups[]
+  user_invitations                                        user_invitations[]
+  user_roles_user_roles_assignedByIdTousers               user_roles[]              @relation("user_roles_assignedByIdTousers")
+  user_roles_user_roles_userIdTousers                     user_roles[]              @relation("user_roles_userIdTousers")
+  personalities                                           personalities?            @relation(fields: [personalityId], references: [id])
+  video_permissions                                       video_permissions[]
+  wallets                                                 wallets?
+  worlds                                                  worlds[]
+
+  @@index([email])
+  @@index([isActive])
+  @@index([status])
+  @@index([username])
+}
+
+model video_items {
+  id                Int                @id @default(autoincrement())
+  title             String
+  description       String?
+  content           String
+  url               String?
+  platform          String             @default("youtube")
+  externalId        String?
+  playlistId        String
+  itemTypeId        String
+  order             Int                @default(0)
+  isActive          Boolean            @default(true)
+  isDeleted         Boolean            @default(false)
+  deletedAt         DateTime?
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime
+  duration          Int?
+  categories        String?
+  language          String?
+  quality           String?
+  tags              String?
+  thumbnailUrl      String?
+  activities        activities[]
+  questions         questions[]
+  study_rooms       study_rooms[]
+  subtitles         subtitles[]
+  playlists         playlists          @relation(fields: [playlistId], references: [id])
+  video_permissions video_permissions?
+
+  @@index([externalId])
+  @@index([isDeleted])
+  @@index([itemTypeId])
+  @@index([language])
+  @@index([platform])
+  @@index([playlistId])
+}
+
+model video_permissions {
+  id                     String      @id
+  videoItemId            Int         @unique
+  showWaveCount          Boolean     @default(true)
+  showVideos             Boolean     @default(true)
+  showVideoSubtitles     Boolean     @default(true)
+  showComments           Boolean     @default(true)
+  showPublishDate        Boolean     @default(true)
+  showVideoDuration      Boolean     @default(true)
+  showLikeButton         Boolean     @default(true)
+  allowRewindForward     Boolean     @default(false)
+  allowViewComments      Boolean     @default(true)
+  allowMakeComments      Boolean     @default(true)
+  showLikeComments       Boolean     @default(true)
+  sortCommentsByAffinity Boolean     @default(false)
+  showCommenterName      Boolean     @default(false)
+  playlistPosition       String      @default("position1")
+  isDraft                Boolean     @default(false)
+  createdAt              DateTime    @default(now())
+  updatedAt              DateTime
+  createdById            String?
+  users                  users?      @relation(fields: [createdById], references: [id])
+  video_items            video_items @relation(fields: [videoItemId], references: [id], onDelete: Cascade)
+
+  @@index([createdById])
+  @@index([isDraft])
+  @@index([videoItemId])
+}
+
+model wallets {
+  id                                            String         @id
+  userId                                        String         @unique
+  blockchainAddress                             String?        @unique
+  balanceUnits                                  Float          @default(0)
+  balanceToins                                  Float          @default(0)
+  status                                        String         @default("ACTIVE")
+  createdAt                                     DateTime       @default(now())
+  updatedAt                                     DateTime
+  transactions_transactions_fromUserIdTowallets transactions[] @relation("transactions_fromUserIdTowallets")
+  transactions_transactions_toUserIdTowallets   transactions[] @relation("transactions_toUserIdTowallets")
+  users                                         users          @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([blockchainAddress])
+  @@index([status])
+  @@index([userId])
+}
+
+model worlds {
+  id          String   @id
+  name        String
+  description String?
+  type        String
+  creatorId   String
+  status      String   @default("ACTIVE")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime
+  mundoId     String?
+  stages      stages[]
+  users       users    @relation(fields: [creatorId], references: [id])
+  mundos      mundos?  @relation(fields: [mundoId], references: [id])
+
+  @@index([creatorId])
+  @@index([mundoId])
+  @@index([status])
+}
 
 enum Currency {
   LUKAS
@@ -841,207 +1001,6 @@ enum Currency {
   EUR
   BTC
   ETH
-}
-
-enum MarketplaceItemType {
-  PRODUCT
-  SERVICE
-  EXPERIENCE
-  SKILL_EXCHANGE
-  DIGITAL_CONTENT
-}
-
-enum MarketplaceItemStatus {
-  DRAFT
-  ACTIVE
-  INACTIVE
-  SOLD
-  EXPIRED
-  SUSPENDED
-}
-
-model MarketplaceItem {
-  id          String                @id @default(uuid())
-  name        String
-  description String                @db.Text
-  price       Float
-  currency    Currency              @default(LUKAS)
-  itemType    MarketplaceItemType   @default(SERVICE)
-  status      MarketplaceItemStatus @default(ACTIVE)
-
-  // Media and content
-  images      String[] // Array de URLs de imágenes
-  tags        String[]
-  location    String?
-
-  // Metadata específico del tipo de item
-  metadata    String?               @db.Text
-
-  // Pricing adicional (sistema dual)
-  priceToins  Float?                @default(0)
-
-  // Relaciones
-  seller      User                  @relation(fields: [sellerId], references: [id])
-  sellerId    String
-
-  // Timestamps
-  createdAt   DateTime              @default(now())
-  updatedAt   DateTime              @updatedAt
-
-  // Campos de gestión
-  isActive    Boolean               @default(true)
-  isDeleted   Boolean               @default(false)
-  deletedAt   DateTime?
-
-  // Estadísticas
-  viewCount   Int                   @default(0)
-  favoriteCount Int                 @default(0)
-
-  @@index([sellerId])
-  @@index([itemType])
-  @@index([status])
-  @@index([currency])
-  @@index([isActive])
-  @@index([isDeleted])
-  @@index([createdAt])
-  @@index([price])
-  @@index([location])
-  @@map("marketplace_items")
-}
-
-// =====================================================================
-// STUDY ROOMS MODULE MODELS - ÜPlay Social Collaboration
-// =====================================================================
-
-enum StudyRoomStatus {
-  ACTIVE
-  PAUSED
-  ENDED
-}
-
-model StudyRoom {
-  id                 String                  @id @default(uuid())
-  name               String
-  description        String?
-  videoId            Int
-  hostId             String
-  maxParticipants    Int                     @default(10)
-  status             StudyRoomStatus         @default(ACTIVE)
-  currentTime        Float                   @default(0)
-  isPaused           Boolean                 @default(false)
-  isActive           Boolean                 @default(true)
-  createdAt          DateTime                @default(now())
-  updatedAt          DateTime                @updatedAt
-
-  // Relaciones
-  video              VideoItem               @relation(fields: [videoId], references: [id])
-  host               User                    @relation("StudyRoomHost", fields: [hostId], references: [id])
-  participants       StudyRoomParticipant[]
-  messages           StudyRoomMessage[]
-
-  @@index([hostId])
-  @@index([videoId])
-  @@index([status])
-  @@index([isActive])
-  @@index([createdAt])
-  @@map("study_rooms")
-}
-
-model StudyRoomParticipant {
-  id              String    @id @default(uuid())
-  studyRoomId     String
-  userId          String
-  isHost          Boolean   @default(false)
-  joinedAt        DateTime  @default(now())
-  leftAt          DateTime?
-  isActive        Boolean   @default(true)
-
-  // Relaciones
-  studyRoom       StudyRoom @relation(fields: [studyRoomId], references: [id], onDelete: Cascade)
-  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@unique([studyRoomId, userId]) // Un usuario solo puede estar una vez en una sala
-  @@index([studyRoomId])
-  @@index([userId])
-  @@index([isActive])
-  @@map("study_room_participants")
-}
-
-model StudyRoomMessage {
-  id              String    @id @default(uuid())
-  studyRoomId     String
-  userId          String
-  message         String    @db.Text
-  messageType     String    @default("CHAT") // CHAT, SYSTEM, VIDEO_EVENT
-  metadata        String?   @db.Text
-  createdAt       DateTime  @default(now())
-
-  // Relaciones
-  studyRoom       StudyRoom @relation(fields: [studyRoomId], references: [id], onDelete: Cascade)
-  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@index([studyRoomId])
-  @@index([userId])
-  @@index([messageType])
-  @@index([createdAt])
-  @@map("study_room_messages")
-}
-
-// =====================================================================
-// FEEDBACK AGENT MODULE - Sistema de Recolección de Reportes
-// =====================================================================
-
-model FeedbackReport {
-  id              String                @id @default(uuid())
-  userId          String
-  type            FeedbackType
-  title           String
-  description     String
-  priority        FeedbackPriority      @default(MEDIUM)
-  category        String
-  status          FeedbackStatus        @default(SUBMITTED)
-
-  // Contexto del elemento UI seleccionado
-  elementContext  Json                  // Información del elemento seleccionado
-
-  // Contexto técnico de la sesión
-  technicalContext Json               // URL, userAgent, viewport, route, etc.
-
-  // Análisis automático de código (opcional)
-  codeAnalysis    Json?                // Resultados de scripts automatizados
-  aiSuggestions   Json?                // Sugerencias generadas por IA
-
-  // Respuesta del administrador
-  adminResponse   String?
-  adminUserId     String?
-  resolvedAt      DateTime?
-
-  // Métricas de utilidad
-  upvotes         Int                  @default(0)
-  downvotes       Int                  @default(0)
-  duplicateOf     String?              // ID de reporte principal si es duplicado
-
-  createdAt       DateTime             @default(now())
-  updatedAt       DateTime             @updatedAt
-
-  user            User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
-  adminUser       User?                @relation("AdminFeedbackResponses", fields: [adminUserId], references: [id])
-
-  @@index([userId])
-  @@index([type])
-  @@index([status])
-  @@index([priority])
-  @@index([createdAt])
-  @@map("feedback_reports")
-}
-
-enum FeedbackType {
-  BUG
-  IMPROVEMENT
-  MISSING_FEATURE
-  PERFORMANCE
-  UX_ISSUE
-  CODE_ANALYSIS
 }
 
 enum FeedbackPriority {
@@ -1058,4 +1017,43 @@ enum FeedbackStatus {
   RESOLVED
   REJECTED
   DUPLICATE
+}
+
+enum FeedbackType {
+  BUG
+  IMPROVEMENT
+  MISSING_FEATURE
+  PERFORMANCE
+  UX_ISSUE
+  CODE_ANALYSIS
+}
+
+enum MarketplaceItemStatus {
+  DRAFT
+  ACTIVE
+  INACTIVE
+  SOLD
+  EXPIRED
+  SUSPENDED
+}
+
+enum MarketplaceItemType {
+  PRODUCT
+  SERVICE
+  EXPERIENCE
+  SKILL_EXCHANGE
+  DIGITAL_CONTENT
+}
+
+enum MatchStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+  COMPLETED
+}
+
+enum StudyRoomStatus {
+  ACTIVE
+  PAUSED
+  ENDED
 }
