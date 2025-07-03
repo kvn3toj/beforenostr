@@ -64,13 +64,47 @@ jobs:
               - '.github/workflows/**'
 
   # ================================================================
+  # Central Dependency Setup (instalación única)
+  # ================================================================
+  setup-dependencies:
+    name: "📦 Setup Dependencies"
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Cache npm dir
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-npm-
+
+      - name: Install all dependencies (root)
+        run: npm install --legacy-peer-deps
+
+      - name: Cache node_modules
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-modules-${{ hashFiles('**/package-lock.json') }}
+
+  # ================================================================
   # Backend - Verificación independiente
   # ================================================================
   backend-check:
     name: "🔧 Backend Check"
     runs-on: ubuntu-latest
     timeout-minutes: 10
-    needs: detect-changes
+    needs: [detect-changes, setup-dependencies]
     if: needs.detect-changes.outputs.backend == 'true' || needs.detect-changes.outputs.ci == 'true'
 
     steps:
@@ -79,14 +113,17 @@ jobs:
         with:
           fetch-depth: 2
 
+      - name: Restore node_modules cache
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-modules-${{ hashFiles('**/package-lock.json') }}
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
-
-      - name: Install dependencies
-        run: npm install --legacy-peer-deps
 
       - name: Backend Type Check
         run: npx tsc --noEmit -p tsconfig.backend.json
@@ -114,13 +151,19 @@ jobs:
     name: "🔍 Quality & Security Check"
     runs-on: ubuntu-latest
     timeout-minutes: 15
-    needs: detect-changes
+    needs: [detect-changes, setup-dependencies]
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
           fetch-depth: 2
+
+      - name: Restore node_modules cache
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-modules-${{ hashFiles('**/package-lock.json') }}
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -135,9 +178,6 @@ jobs:
           key: ${{ runner.os }}-turbo-${{ github.sha }}
           restore-keys: |
             ${{ runner.os }}-turbo-
-
-      - name: Install dependencies
-        run: npm install --legacy-peer-deps
 
       - name: Lint & Type Check
         run: |
