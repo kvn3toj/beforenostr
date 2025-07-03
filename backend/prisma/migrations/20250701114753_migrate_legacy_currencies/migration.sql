@@ -3,6 +3,10 @@
 -- This prevents the "enum cast" error during deployment.
 
 -- Update 'LUKAS' to 'UNITS'
+-- Add new enum value so the UPDATE will succeed
+ALTER TYPE "Currency" ADD VALUE 'UNITS';
+
+-- Update 'LUKAS' to 'UNITS'
 UPDATE "marketplace_items" SET "currency" = 'UNITS' WHERE "currency" = 'LUKAS';
 
 -- Update other potential legacy currencies to 'UNITS' or handle as needed
