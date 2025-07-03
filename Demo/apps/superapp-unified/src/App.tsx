@@ -171,7 +171,8 @@ const AppRoutes: React.FC = () => {
 
         {/* 🧭 Pilgrim Journey - Experiencia de Descubrimiento Inicial */}
         <Route path="/pilgrim" element={<LazyPages.UPlay />} /> {/* Reutiliza UPlay como experiencia de descubrimiento */}
-
+        {/* 🛡️ Admin Panel - Solo accesible para administradores */}
+        <Route path="/admin" element={<LazyPages.CosmicAuditDemo />} />
         {/* ✨ Discovery Tutorials */}
         <Route path="/tutorials" element={<LazyPages.DiscoveryTutorialsPage />} />
 
