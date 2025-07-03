@@ -1,6 +1,5 @@
 import { PrismaClient } from '../src/generated/prisma';
 import bcrypt from 'bcrypt';
-import { faker } from '@faker-js/faker';
 import dotenv from 'dotenv';
 
 // Cargar variables de entorno del .env
@@ -178,322 +177,139 @@ async function seedUPlay(prisma) {
   console.log('UPlay data seeded successfully.');
 }
 
-async function seedMarketplace(prisma) {
-  console.log('Seeding Marketplace data...');
-
-  // Obtener usuarios existentes
-  const users = await prisma.user.findMany();
-  const premiumUser = await prisma.user.findFirst({ where: { email: 'premium@gamifier.com' } });
-  const creatorUser = await prisma.user.findFirst({ where: { email: 'creator@gamifier.com' } });
-  const regularUser = await prisma.user.findFirst({ where: { email: 'user@gamifier.com' } });
-
-  const marketplaceItems = [
-    {
-      name: 'Taller de Huerto Urbano Orgánico',
-      description: 'Aprende a cultivar tus propios alimentos en espacios pequeños usando principios de permacultura.',
-      itemType: 'SERVICE',
-      price: 35,
-      priceToins: 15,
-      currency: 'UNITS',
-      status: 'ACTIVE',
-      images: ['https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=600'],
-      tags: ['huerto', 'orgánico', 'taller', 'permacultura', 'sostenibilidad'],
-      location: 'Online + Kit presencial',
-      sellerId: creatorUser?.id || users[0]?.id,
-      metadata: JSON.stringify({
-        duration: '3 horas',
-        includes: ['Kit de semillas', 'Manual digital', 'Seguimiento 30 días'],
-        level: 'Principiante'
-      }),
-    },
-    {
-      name: 'Kombucha Artesanal de Jengibre y Cúrcuma',
-      description: 'Bebida probiótica fermentada artesanalmente con ingredientes 100% orgánicos y cultivados localmente.',
-      itemType: 'PRODUCT',
-      price: 15,
-      priceToins: 8,
-      currency: 'UNITS',
-      status: 'ACTIVE',
-      images: ['https://images.unsplash.com/photo-1559181567-c3190ca9959b?w=600'],
-      tags: ['kombucha', 'probiótico', 'orgánico', 'salud', 'fermentado'],
-      location: 'Medellín, Colombia',
-      sellerId: premiumUser?.id || users[0]?.id,
-      metadata: JSON.stringify({
-        volume: '500ml',
-        ingredients: ['Té verde orgánico', 'Jengibre fresco', 'Cúrcuma', 'SCOBY'],
-        shelfLife: '30 días refrigerado'
-      }),
-    },
-    {
-      name: 'Sesión de Sound Healing (Sanación con Sonido)',
-      description: 'Viaje sonoro de 60 minutos con cuencos tibetanos, gongs y campanas para equilibrar tu energía.',
-      itemType: 'SERVICE',
-      price: 60,
-      priceToins: 25,
-      currency: 'UNITS',
-      status: 'ACTIVE',
-      images: ['https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=600'],
-      tags: ['sound healing', 'meditación', 'bienestar', 'relajación', 'energía'],
-      location: 'Online via Zoom',
-      sellerId: regularUser?.id || users[0]?.id,
-      metadata: JSON.stringify({
-        duration: '60 minutos',
-        instruments: ['Cuencos tibetanos', 'Gongs', 'Campanas'],
-        benefits: ['Reducción del estrés', 'Mejora del sueño', 'Equilibrio energético']
-      }),
-    },
-    {
-      name: 'Kit de Limpieza Energética: Salvia y Palo Santo',
-      description: 'Set completo para rituales de limpieza energética con salvia blanca y palo santo de cultivo ético.',
-      itemType: 'PRODUCT',
-      price: 25,
-      priceToins: 12,
-      currency: 'UNITS',
-      status: 'ACTIVE',
-      images: ['https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600'],
-      tags: ['limpieza energética', 'salvia', 'palo santo', 'ritual', 'espiritual'],
-      location: 'Bogotá, Colombia',
-      sellerId: premiumUser?.id || users[0]?.id,
-      metadata: JSON.stringify({
-        contents: ['3 varas de salvia blanca', '2 palos de palo santo', 'Manual de uso'],
-        origin: 'Cultivo ético sostenible',
-        certification: 'Fair Trade'
-      }),
-    },
-    {
-      name: 'Intercambio: Clases de Guitarra por Diseño Gráfico',
-      description: 'Ofrezco clases de guitarra para principiantes a cambio de diseño de logo y material gráfico.',
-      itemType: 'SKILL_EXCHANGE',
-      price: 0,
-      priceToins: 0,
-      currency: 'UNITS',
-      status: 'ACTIVE',
-      images: ['https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=600'],
-      tags: ['intercambio', 'guitarra', 'música', 'diseño gráfico', 'ayni'],
-      location: 'Online',
-      sellerId: creatorUser?.id || users[0]?.id,
-      metadata: JSON.stringify({
-        offering: {
-          skill: 'Clases de Guitarra',
-          level: 'Principiante a Intermedio',
-          commitment: '2 horas semanales por 8 semanas'
-        },
-        seeking: {
-          skill: 'Diseño Gráfico',
-          needs: ['Logo personal', 'Material promocional', 'Identidad visual']
-        }
-      }),
-    },
-    {
-      name: 'Microdosis de Cacao Ceremonial',
-      description: 'Cacao puro ceremonial de Ecuador para ceremonias de apertura del corazón y conexión espiritual.',
-      itemType: 'PRODUCT',
-      price: 40,
-      priceToins: 20,
-      currency: 'UNITS',
-      status: 'ACTIVE',
-      images: ['https://images.unsplash.com/photo-1511381939415-e44015466834?w=600'],
-      tags: ['cacao ceremonial', 'medicina natural', 'ceremonia', 'conexión', 'Ecuador'],
-      location: 'Envío nacional',
-      sellerId: regularUser?.id || users[0]?.id,
-      metadata: JSON.stringify({
-        weight: '250g',
-        origin: 'Cacao ancestral de Ecuador',
-        preparation: 'Para 8-10 ceremonias',
-        includes: 'Guía de preparación'
-      }),
-    }
-  ];
-
-  for (const item of marketplaceItems) {
-    const existingItem = await prisma.marketplaceItem.findFirst({
-      where: { name: item.name }
-    });
-
-    if (!existingItem) {
-      await prisma.marketplaceItem.create({
-        data: item
-      });
-      console.log(`   - Created marketplace item: ${item.name}`);
-    } else {
-      console.log(`   - Marketplace item already exists: ${item.name}`);
-    }
-  }
-
-  console.log('Marketplace data seeded successfully.');
-}
-
 async function seedPermissionsAndRoles(prisma) {
   console.log('Seeding permissions and roles...');
-
   const permissions = [
-    // System & Analytics
-    { name: 'system:health', description: 'Access to system health metrics' },
-    { name: 'analytics:read', description: 'Access to all analytics dashboards' },
-    { name: 'dashboard:view', description: 'Can view the main admin dashboard' },
-
-    // User Management
-    { name: 'users:read', description: 'Read access to user data' },
-    { name: 'users:write', description: 'Write access to user data' },
-    { name: 'users:manage', description: 'Full access to manage users' },
-
-    // Content Management
-    { name: 'content:read', description: 'Read access to content' },
-    { name: 'content:write', description: 'Write access to content' },
-    { name: 'content:manage', description: 'Full access to manage content' },
-
-    // Gamification & Challenges
-    { name: 'gamification:manage', description: 'Manage gamification settings' },
-    { name: 'challenges:manage', description: 'Manage challenges' },
-
-    // Marketplace & Wallet
-    { name: 'marketplace:manage', description: 'Manage marketplace items' },
-    { name: 'wallet:manage', description: 'Manage user wallets and transactions' },
-
-    // RBAC
-    { name: 'roles:read', description: 'Read access to roles and permissions' },
-    { name: 'roles:write', description: 'Write access to roles and permissions' },
-
-    // Invitations
-    { name: 'invitations:send', description: 'Ability to send invitations' },
+    // ... (permission definitions)
+    'create:users', 'read:users', 'update:users', 'delete:users',
+    'create:roles', 'read:roles', 'update:roles', 'delete:roles',
+    'create:content', 'read:content', 'update:content', 'delete:content',
+    'manage:system'
   ];
 
-  for (const p of permissions) {
+  for (const name of permissions) {
     await prisma.permission.upsert({
-      where: { name: p.name },
+      where: { name },
       update: {},
-      create: p,
+      create: { name },
     });
   }
-  console.log('   - Upserted all application permissions.');
 
-  const allPermissions = await prisma.permission.findMany();
-
-  // Roles
   const roles = [
-    { name: 'admin', description: 'Administrator with all permissions' },
-    { name: 'user', description: 'Regular user with basic permissions' },
-    { name: 'premium', description: 'Premium user with extended permissions' },
-    { name: 'creator', description: 'Content creator' },
-    { name: 'moderator', description: 'Content and community moderator' },
+    { name: 'admin', permissions: permissions },
+    { name: 'user', permissions: ['read:content'] },
+    { name: 'creator', permissions: ['read:content', 'create:content', 'update:content'] },
+    { name: 'moderator', permissions: ['read:content', 'update:content', 'delete:content'] },
+    { name: 'premium', permissions: ['read:content'] }
   ];
 
-  for (const r of roles) {
-    await prisma.role.upsert({
-      where: { name: r.name },
+  for (const roleData of roles) {
+    const createdRole = await prisma.role.upsert({
+      where: { name: roleData.name },
       update: {},
-      create: r,
+      create: { name: roleData.name },
+    });
+
+    const permissionRecords = await prisma.permission.findMany({
+      where: { name: { in: roleData.permissions } },
+    });
+
+    await prisma.role.update({
+      where: { id: createdRole.id },
+      data: {
+        permissions: {
+          set: permissionRecords.map(p => ({ id: p.id })),
+        },
+      },
     });
   }
-  console.log('   - Upserted all application roles.');
-
-  const adminRole = await prisma.role.findUnique({ where: { name: 'admin' } });
-  const userRole = await prisma.role.findUnique({ where: { name: 'user' } });
-
-  if (adminRole) {
-    for (const permission of allPermissions) {
-      await prisma.rolePermission.upsert({
-        where: {
-          roleId_permissionId: {
-            roleId: adminRole.id,
-            permissionId: permission.id,
-          },
-        },
-        update: {},
-        create: {
-          roleId: adminRole.id,
-          permissionId: permission.id,
-        },
-      });
-    }
-    console.log('   - Assigned all permissions to "admin" role.');
-  }
-
-  // Assign basic permissions to 'user' role
-  const userPermissions = await prisma.permission.findMany({
-    where: {
-      name: { in: ['content:read', 'wallet:read'] },
-    },
-  });
-
-  if (userRole) {
-    for (const permission of userPermissions) {
-      await prisma.rolePermission.upsert({
-        where: {
-          roleId_permissionId: {
-            roleId: userRole.id,
-            permissionId: permission.id,
-          },
-        },
-        update: {},
-        create: {
-          roleId: userRole.id,
-          permissionId: permission.id,
-        },
-      });
-    }
-    console.log('   - Assigned basic permissions to "user" role.');
-  }
-
   console.log('Permissions and roles seeded successfully.');
 }
 
 async function main() {
-  console.log('Starting database seeding...');
+  console.log(`Start seeding production data...`);
 
-  // Seed Permissions and Roles first as other entities depend on them
   await seedPermissionsAndRoles(prisma);
 
-  // Then seed users, as they are needed by Marketplace and others
   const users = [
-    // ... (user creation logic remains the same)
-    { email: 'admin@gamifier.com', name: 'Admin', password: 'admin123', roles: ['admin'] },
-    { email: 'user@gamifier.com', name: 'User', password: '123456', roles: ['user'] },
-    { email: 'premium@gamifier.com', name: 'Premium User', password: '123456', roles: ['user', 'premium'] },
-    { email: 'creator@gamifier.com', name: 'Content Creator', password: '123456', roles: ['user', 'creator'] },
-    { email: 'moderator@gamifier.com', name: 'Moderator', password: '123456', roles: ['user', 'moderator'] },
+    {
+      email: 'admin@gamifier.com',
+      password: 'admin123',
+      roleNames: ['admin'],
+      name: 'Admin',
+      lastName: 'User',
+    },
+    {
+      email: 'user@gamifier.com',
+      password: '123456',
+      roleNames: ['user'],
+      name: 'Regular',
+      lastName: 'User',
+    },
+    {
+      email: 'premium@gamifier.com',
+      password: '123456',
+      roleNames: ['user', 'premium'],
+      name: 'Premium',
+      lastName: 'User',
+    },
+    {
+      email: 'creator@gamifier.com',
+      password: '123456',
+      roleNames: ['user', 'creator'],
+      name: 'Content',
+      lastName: 'Creator',
+    },
+    {
+      email: 'moderator@gamifier.com',
+      password: '123456',
+      roleNames: ['user', 'moderator'],
+      name: 'Moderator',
+      lastName: 'User',
+    },
   ];
 
-  const salt = await bcrypt.genSalt(12);
-
+  console.log('Seeding users...');
   for (const userData of users) {
-    const hashedPassword = await bcrypt.hash(userData.password, salt);
-    const user = await prisma.user.upsert({
+    const existingUser = await prisma.user.findUnique({
       where: { email: userData.email },
-      update: {},
-      create: {
-        email: userData.email,
-        name: userData.name,
-        password: hashedPassword,
-      },
     });
 
-    const userRoles = await prisma.role.findMany({
-      where: { name: { in: userData.roles } },
-    });
-
-    for (const role of userRoles) {
-      await prisma.userRole.upsert({
-        where: {
-          userId_roleId: {
-            userId: user.id,
-            roleId: role.id,
-          },
-        },
-        update: {},
-        create: {
-          userId: user.id,
-          roleId: role.id,
+    if (!existingUser) {
+      const hashedPassword = await bcrypt.hash(userData.password, 10);
+      const createdUser = await prisma.user.create({
+        data: {
+          email: userData.email,
+          password: hashedPassword,
+          name: userData.name,
+          lastName: userData.lastName,
         },
       });
+      console.log(`   - Created user: ${createdUser.email}`);
+
+      const userRoles = await prisma.role.findMany({
+        where: { name: { in: userData.roleNames } },
+      });
+
+      for (const role of userRoles) {
+        await prisma.userRole.create({
+          data: {
+            userId: createdUser.id,
+            roleId: role.id,
+          }
+        })
+      }
+      console.log(`   - Assigned roles to user: ${createdUser.email}`);
+
+    } else {
+      console.log(`   - User already exists, skipping: ${userData.email}`);
     }
-    console.log(`   - Upserted user: ${userData.email} with roles: ${userData.roles.join(', ')}`);
   }
+  console.log('Users seeded successfully.');
 
   await seedUPlay(prisma);
-  await seedMarketplace(prisma);
 
-  console.log('Database seeding finished.');
+  console.log(`Seeding production data finished.`);
 }
 
 main()
