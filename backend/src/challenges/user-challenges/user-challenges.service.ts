@@ -164,6 +164,8 @@ export class UserChallengesService {
       );
     }
 
+    // Prevent completing an already completed challenge
+    if (userChallenge.completedAt) {
       throw new ConflictException('Challenge is already completed.');
     }
 

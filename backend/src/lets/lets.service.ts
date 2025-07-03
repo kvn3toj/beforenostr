@@ -134,10 +134,11 @@ export class LetsService {
           fromUserId: dto.fromUserId,
           toUserId: dto.toUserId,
           amount: dto.amount,
+          currency: 'USD',
           type: 'EXCHANGE',
           description:
             dto.description || `Intercambio LETS de ${dto.amount} Ünits`,
-        },
+        } as any,
       });
 
       // 2. Actualizar balances en wallets
@@ -249,9 +250,10 @@ export class LetsService {
         data: {
           toUserId: dto.userId,
           amount: totalExpiredAmount,
+          currency: 'USD',
           type: 'RECEIVE', // Transacción negativa por caducidad
           description: `Caducidad automática de ${expiredTokens.length} tokens`,
-        },
+        } as any,
       });
     });
 
@@ -328,8 +330,7 @@ export class LetsService {
       ...(user.transactionsTo || []),
       ...(user.transactionsFrom || []),
     ];
-    const successfulTransactions = allTransactions.filter(
-    ).length;
+    const successfulTransactions = allTransactions.length;
 
     const isEligible = accountAge >= 30 && successfulTransactions >= 5;
     const maxNegativeBalance = isEligible ? -100 : 0; // Máximo -100 Ünits

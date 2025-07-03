@@ -38,9 +38,10 @@ export class TransactionsService {
           fromUserId: data.fromUserId,
           toUserId: data.toUserId,
           amount: data.amount,
+          currency: 'USD',
           type: data.type,
           description: data.description,
-        },
+        } as any,
       });
 
       // 2. Update the corresponding wallet balance if needed
@@ -132,9 +133,9 @@ export class TransactionsService {
     if (!senderWallet) {
       throw new NotFoundException('El emisor no tiene wallet.');
     }
-    
+
     const senderBalance = senderWallet.balance;
-    
+
     if (senderBalance < dto.amount) {
       // Ley de Reciprocidad Binaria: nunca permitir saldo negativo
       throw new ForbiddenException('Saldo insuficiente para completar la transacción.');

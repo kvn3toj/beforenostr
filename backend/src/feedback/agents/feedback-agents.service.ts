@@ -33,6 +33,7 @@ interface CollaborationTask {
   type: 'ANALYZE' | 'PRIORITIZE' | 'RESOLVE' | 'DISTRIBUTE';
   feedbackId: string;
   assignedAgents: string[];
+  status?: 'PENDING' | 'IN_PROGRESS' | 'COMPLETED';
   results: any;
   lukasGenerated: number;
 }
@@ -341,8 +342,7 @@ export class FeedbackAgentsService {
   private calculateReciprocidadBalance(tasks: CollaborationTask[]): number {
     // Cálculo del balance de Reciprocidad (reciprocidad)
     const totalTasks = tasks.length;
-    const completedTasks = tasks.filter(
-    ).length;
+    const completedTasks = tasks.filter((t) => t.status === 'COMPLETED').length;
     const lukasDistribution = tasks.map((task) => task.lukasGenerated);
     const variance = this.calculateVariance(lukasDistribution);
 

@@ -88,9 +88,10 @@ export class InvitationsService {
           fromUserId: dto.inviterId,
           toUserId: dto.inviterId, // Temporal, será actualizado cuando se canjee
           amount: dto.unitsAmount,
+          currency: 'USD',
           type: 'SEND',
           description: `Gift card creada para ${dto.invitedName} (${dto.invitedEmail})`,
-        },
+        } as any,
       });
 
       return card;
@@ -207,9 +208,10 @@ export class InvitationsService {
         data: {
           toUserId: newUser.id,
           amount: giftCardContent.unitsAmount,
+          currency: 'USD',
           type: 'RECEIVE',
           description: `Canje de gift card de bienvenida`,
-        },
+        } as any,
       });
 
       return { newUser, wallet };
@@ -422,9 +424,10 @@ export class InvitationsService {
         data: {
           toUserId: userId,
           amount: content.unitsAmount,
+          currency: 'USD',
           type: 'RECEIVE',
           description: `Devolución por cancelación de gift card`,
-        },
+        } as any,
       });
     });
 
