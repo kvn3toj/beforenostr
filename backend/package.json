@@ -8,9 +8,9 @@
   "main": "dist/main.js",
   "scripts": {
     "dev": "npm run start:dev",
-    "build": "prisma generate && nest build && tsc --project tsconfig.seed.json",
+    "build": "prisma generate && nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
-    "start": "node dist/main.js",
+    "start": "nest start",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "prisma migrate deploy && npm run db:seed && node dist/main.js",
