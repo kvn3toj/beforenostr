@@ -48,7 +48,6 @@ export class LetsBalanceDto {
 
   @IsOptional()
   @IsString()
-  tokenType?: string; // PROMOTIONAL_UNIT, SUBSCRIPTION_UNIT, CIRCULATING_UNIT
 }
 
 export class LetsExpiryCheckDto {

@@ -18,21 +18,18 @@ export class WalletsService {
   async updateWalletBalance(
     userId: string,
     amount: number,
-    type: 'units' | 'toins' = 'units'
+    currency: string = 'USD'
   ): Promise<Wallet> {
     // Find or create the wallet for the user
     const wallet = await this.prisma.wallet.upsert({
       where: { userId },
       update: {
-        ...(type === 'units'
-          ? { balanceUnits: { increment: amount } }
-          : { balanceToins: { increment: amount } }),
+        balance: { increment: amount },
       },
       create: {
         userId,
-        ...(type === 'units'
-          ? { balanceUnits: amount, balanceToins: 0 }
-          : { balanceUnits: 0, balanceToins: amount }),
+        balance: amount,
+        currency: currency,
       },
     });
     return wallet;
@@ -68,8 +65,8 @@ export class WalletsService {
       return this.prisma.wallet.create({
         data: {
           userId,
-          balanceUnits: 0,
-          balanceToins: 0,
+          balance: 0,
+          currency: 'USD',
         },
         include: {
           user: {
@@ -122,14 +119,14 @@ export class WalletsService {
   async updateBalance(
     userId: string,
     amount: number, // Amount to add/subtract
-    type: 'units' | 'toins' = 'units'
+    currency: string = 'USD'
     // user: AuthenticatedUser, // Decide if update needs ownership check or is purely internal/admin
   ) {
     // Wallet updates are typically triggered by internal logic (e.g., completing challenges) or admin actions.
     // Assuming this method is called internally or only by authorized services/controllers.
     // If exposed directly via a user endpoint, add ownership/permission checks.
 
-    return this.updateWalletBalance(userId, amount, type);
+    return this.updateWalletBalance(userId, amount, currency);
   }
 
   // Admin method to get wallet for any user (no ownership check)
@@ -153,8 +150,8 @@ export class WalletsService {
       return this.prisma.wallet.create({
         data: {
           userId,
-          balanceUnits: 0,
-          balanceToins: 0,
+          balance: 0,
+          currency: 'USD',
         },
         include: {
           user: {

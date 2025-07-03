@@ -27,9 +27,7 @@ export class TransactionsService {
     fromUserId?: string;
     toUserId: string;
     amount: number;
-    tokenType: string;
     type: string; // e.g., 'EARN', 'SPEND', 'ADJUST'
-    status?: string;
     description?: string;
   }): Promise<Transaction> {
     // Use a transaction to ensure atomicity
@@ -40,9 +38,7 @@ export class TransactionsService {
           fromUserId: data.fromUserId,
           toUserId: data.toUserId,
           amount: data.amount,
-          tokenType: data.tokenType,
           type: data.type,
-          status: data.status || 'PENDING',
           description: data.description,
         },
       });
@@ -136,15 +132,9 @@ export class TransactionsService {
     if (!senderWallet) {
       throw new NotFoundException('El emisor no tiene wallet.');
     }
-    let senderBalance = 0;
-    let balanceField: 'balanceUnits' | 'balanceToins';
-    if (dto.currency === TransactionCurrency.UNITS) {
-      senderBalance = senderWallet.balanceUnits;
-      balanceField = 'balanceUnits';
-    } else {
-      senderBalance = senderWallet.balanceToins;
-      balanceField = 'balanceToins';
-    }
+    
+    const senderBalance = senderWallet.balance;
+    
     if (senderBalance < dto.amount) {
       // Ley de Reciprocidad Binaria: nunca permitir saldo negativo
       throw new ForbiddenException('Saldo insuficiente para completar la transacción.');
@@ -156,16 +146,16 @@ export class TransactionsService {
       // Deducir saldo del emisor
       await prisma.wallet.update({
         where: { userId: senderId },
-        data: { [balanceField]: { decrement: dto.amount } },
+        data: { balance: { decrement: dto.amount } },
       });
       // Acreditar saldo al receptor (crear wallet si no existe)
       await prisma.wallet.upsert({
         where: { userId: dto.recipientId },
-        update: { [balanceField]: { increment: dto.amount } },
+        update: { balance: { increment: dto.amount } },
         create: {
           userId: dto.recipientId,
-          balanceUnits: balanceField === 'balanceUnits' ? dto.amount : 0,
-          balanceToins: balanceField === 'balanceToins' ? dto.amount : 0,
+          balance: dto.amount,
+          currency: dto.currency || 'USD',
         },
       });
       // Registrar la transacción con metadata filosófica
@@ -174,11 +164,9 @@ export class TransactionsService {
           fromUserId: senderId,
           toUserId: dto.recipientId,
           amount: dto.amount,
-          tokenType: dto.currency,
+          currency: dto.currency || 'USD',
           type: 'TRANSFER',
-          status: 'COMPLETED',
           description: dto.metadata?.purpose || 'Transferencia de valor',
-          metadata: dto.metadata || {},
         },
       });
       return transaction;

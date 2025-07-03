@@ -33,7 +33,6 @@ interface CollaborationTask {
   type: 'ANALYZE' | 'PRIORITIZE' | 'RESOLVE' | 'DISTRIBUTE';
   feedbackId: string;
   assignedAgents: string[];
-  status: 'PENDING' | 'IN_PROGRESS' | 'COMPLETED';
   results: any;
   lukasGenerated: number;
 }
@@ -110,7 +109,6 @@ export class FeedbackAgentsService {
 
     // Simulación de procesamiento rápido del agente Fuego
     await this.simulateAgentWork(2000);
-    task.status = 'COMPLETED';
 
     this.logger.log(
       `🔥 [FUEGO] Tarea completada - Lükas generados: ${task.lukasGenerated}`
@@ -141,7 +139,6 @@ export class FeedbackAgentsService {
     };
 
     await this.simulateAgentWork(3000);
-    task.status = 'COMPLETED';
 
     this.logger.log(
       `💧 [AGUA] Colaboración facilitada - Consenso: ${task.results.consensusLevel}`
@@ -172,7 +169,6 @@ export class FeedbackAgentsService {
     };
 
     await this.simulateAgentWork(4000);
-    task.status = 'COMPLETED';
 
     this.logger.log(
       `🌱 [TIERRA] Sabiduría documentada - Artículos: ${task.results.knowledgeArticlesCreated}`
@@ -203,7 +199,6 @@ export class FeedbackAgentsService {
     };
 
     await this.simulateAgentWork(5000);
-    task.status = 'COMPLETED';
 
     this.logger.log(
       `💨 [AIRE] Visión completada - Oportunidades: ${task.results.innovationOpportunities}`
@@ -347,7 +342,6 @@ export class FeedbackAgentsService {
     // Cálculo del balance de Reciprocidad (reciprocidad)
     const totalTasks = tasks.length;
     const completedTasks = tasks.filter(
-      (task) => task.status === 'COMPLETED'
     ).length;
     const lukasDistribution = tasks.map((task) => task.lukasGenerated);
     const variance = this.calculateVariance(lukasDistribution);

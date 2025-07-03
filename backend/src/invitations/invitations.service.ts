@@ -47,7 +47,7 @@ export class InvitationsService {
       throw new NotFoundException('Usuario invitador no encontrado');
     }
 
-    if (!inviter.wallet || inviter.wallet.balanceUnits < dto.unitsAmount) {
+    if (!inviter.wallet || inviter.wallet.balance < dto.unitsAmount) {
       throw new BadRequestException(
         'Balance insuficiente para crear la gift card'
       );
@@ -79,7 +79,7 @@ export class InvitationsService {
       // 2. Descontar Ünits del invitador
       await tx.wallet.update({
         where: { userId: dto.inviterId },
-        data: { balanceUnits: { decrement: dto.unitsAmount } },
+        data: { balance: { decrement: dto.unitsAmount } },
       });
 
       // 3. Crear transacción de registro
@@ -88,9 +88,7 @@ export class InvitationsService {
           fromUserId: dto.inviterId,
           toUserId: dto.inviterId, // Temporal, será actualizado cuando se canjee
           amount: dto.unitsAmount,
-          tokenType: 'CIRCULATING_UNIT',
           type: 'SEND',
-          status: 'COMPLETED',
           description: `Gift card creada para ${dto.invitedName} (${dto.invitedEmail})`,
         },
       });
@@ -175,8 +173,7 @@ export class InvitationsService {
       const wallet = await tx.wallet.create({
         data: {
           userId: newUser.id,
-          balanceUnits: giftCardContent.unitsAmount,
-          balanceToins: 0,
+          balance: giftCardContent.unitsAmount,
         },
       });
 
@@ -210,9 +207,7 @@ export class InvitationsService {
         data: {
           toUserId: newUser.id,
           amount: giftCardContent.unitsAmount,
-          tokenType: 'PROMOTIONAL_UNIT',
           type: 'RECEIVE',
-          status: 'COMPLETED',
           description: `Canje de gift card de bienvenida`,
         },
       });
@@ -240,8 +235,7 @@ export class InvitationsService {
         lastName: result.newUser.lastName,
       },
       wallet: {
-        balanceUnits: result.wallet.balanceUnits,
-        balanceToins: result.wallet.balanceToins,
+        balance: result.wallet.balance,
       },
       giftCardAmount: giftCardContent.unitsAmount,
     };
@@ -420,7 +414,7 @@ export class InvitationsService {
       // 2. Devolver Ünits al invitador
       await tx.wallet.update({
         where: { userId },
-        data: { balanceUnits: { increment: content.unitsAmount } },
+        data: { balance: { increment: content.unitsAmount } },
       });
 
       // 3. Crear transacción de devolución
@@ -428,9 +422,7 @@ export class InvitationsService {
         data: {
           toUserId: userId,
           amount: content.unitsAmount,
-          tokenType: 'CIRCULATING_UNIT',
           type: 'RECEIVE',
-          status: 'COMPLETED',
           description: `Devolución por cancelación de gift card`,
         },
       });

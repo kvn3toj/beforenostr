@@ -164,7 +164,6 @@ export class UserChallengesService {
       );
     }
 
-    if (userChallenge.status === 'COMPLETED') {
       throw new ConflictException('Challenge is already completed.');
     }
 
@@ -207,8 +206,6 @@ export class UserChallengesService {
           toUserId: userChallenge.userId,
           amount: reward.amount,
           type: 'RECEIVE',
-          tokenType: 'MERIT',
-          status: 'COMPLETED',
           description: `Reward for completing challenge "${challenge.title}": ${reward.description || ''}`,
         });
       }
@@ -218,7 +215,6 @@ export class UserChallengesService {
     const completedUserChallenge = await this.prisma.userChallenge.update({
       where: { id: userChallengeId },
       data: {
-        status: 'COMPLETED',
         completedAt: new Date(),
         progress,
       },

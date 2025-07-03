@@ -65,7 +65,6 @@ export interface CollaborationTask {
   type: 'ANALYZE' | 'PRIORITIZE' | 'RESOLVE' | 'DISTRIBUTE';
   feedbackId: string;
   assignedAgents: string[];
-  status: 'PENDING' | 'IN_PROGRESS' | 'COMPLETED';
   results: TaskResults;
   lukasGenerated: number;
 }

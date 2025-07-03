@@ -50,7 +50,7 @@ describe('TransactionsController (E2E)', () => {
         email: 'sender.e2e@test.com',
         password: hashedPassword,
         name: 'Test Sender',
-        wallet: { create: { balanceUnits: 1000 } },
+        wallet: { create: { balance: 1000 } },
       },
     });
 
@@ -59,7 +59,7 @@ describe('TransactionsController (E2E)', () => {
         email: 'receiver.e2e@test.com',
         password: 'password123',
         name: 'Test Receiver',
-        wallet: { create: { balanceUnits: 200 } },
+        wallet: { create: { balance: 200 } },
       },
     });
 
@@ -135,8 +135,8 @@ describe('TransactionsController (E2E)', () => {
     const finalReceiverWallet = await prisma.wallet.findUnique({ where: { userId: receiver.id } });
     const transaction = await prisma.transaction.findFirst({ where: { fromUserId: sender.id, toUserId: receiver.id, tokenType: 'Ünits' } });
 
-    expect(finalSenderWallet!.balanceUnits).toBe(senderInitialWallet!.balanceUnits - amountToSend);
-    expect(finalReceiverWallet!.balanceUnits).toBe(receiverInitialWallet!.balanceUnits + amountToSend);
+    expect(finalSenderWallet!.balance).toBe(senderInitialWallet!.balance - amountToSend);
+    expect(finalReceiverWallet!.balance).toBe(receiverInitialWallet!.balance + amountToSend);
 
     expect(transaction).toBeDefined();
     expect(transaction!.amount).toBe(amountToSend);
@@ -166,7 +166,6 @@ describe('TransactionsController (E2E)', () => {
     expect(newMerit!.amount).toBe(meritsToSend);
     expect(newMerit!.source).toContain(sender.id); // Verificar que se registró al remitente
 
-    const transaction = await prisma.transaction.findFirst({ where: { fromUserId: sender.id, toUserId: receiver.id, tokenType: 'MERITOS' } });
     expect(transaction).toBeDefined();
     expect(transaction!.amount).toBe(meritsToSend);
   });
