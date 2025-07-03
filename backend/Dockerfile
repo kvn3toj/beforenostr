@@ -13,15 +13,15 @@ WORKDIR /app
 # Instala dependencias del sistema necesarias para Prisma
 RUN apk add --no-cache openssl
 
-# Copia archivos de configuración
-COPY backend/package.json backend/package-lock.json ./
-COPY backend/prisma ./prisma
+# Copia archivos de configuración (rutas simples para contexto backend/)
+COPY package.json package-lock.json ./
+COPY prisma ./prisma
 
 # Instala todas las dependencias (incluyendo dev para build)
 RUN npm ci
 
 # Copia el resto del código fuente
-COPY backend/. .
+COPY . .
 
 # Genera Prisma Client para Linux dentro del contenedor
 RUN npx prisma generate --schema=./prisma/schema.prisma
