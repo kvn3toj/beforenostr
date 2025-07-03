@@ -234,24 +234,28 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
 
-      - name: Install Admin Dependencies
-        run: |
-          cd admin-frontend
-          npm install --legacy-peer-deps
+      # ------------------------------------------------
+      # 📦 Instalar TODAS las dependencias desde la raíz (lockfile raíz)
+      # ------------------------------------------------
+      - name: Install dependencies (root)
+        run: npm install --legacy-peer-deps
 
+      # ------------------------------------------------
+      # 🛠️ Build Admin Frontend usando workspace flag
+      # ------------------------------------------------
       - name: Build Admin Frontend
-        run: |
-          cd admin-frontend
-          npm run build
+        run: npm run build --workspace=admin-frontend
         env:
           NODE_ENV: production
 
+      # ------------------------------------------------
+      # 🧪 Tests del Admin Frontend (si existe script)
+      # ------------------------------------------------
       - name: Run Admin Tests
         if: always()
         run: |
-          cd admin-frontend
           if npm run | grep -q "test"; then
-            npm run test
+            npm run test --workspace=admin-frontend
           else
             echo "No test script found in admin-frontend, skipping..."
           fi
