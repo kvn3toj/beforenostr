@@ -248,6 +248,7 @@ async function main() {
       roleNames: ['admin'],
       name: 'Admin',
       lastName: 'User',
+      currentStage: 'PROMOTER',
     },
     {
       email: 'user@gamifier.com',
@@ -293,6 +294,7 @@ async function main() {
           password: hashedPassword,
           name: userData.name,
           lastName: userData.lastName,
+          currentStage: userData.currentStage || undefined,
         },
       });
       console.log(`   - Created user: ${createdUser.email}`);
