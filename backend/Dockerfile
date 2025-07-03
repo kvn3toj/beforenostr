@@ -18,7 +18,7 @@ COPY package.json package-lock.json ./
 COPY prisma ./prisma
 
 # Instala todas las dependencias (incluyendo dev para build)
-RUN npm ci
+RUN npm ci --legacy-peer-deps
 
 # Copia el resto del código fuente
 COPY . .

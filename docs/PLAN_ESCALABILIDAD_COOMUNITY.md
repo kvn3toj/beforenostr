@@ -39,8 +39,8 @@
 
 #### **🌐 URLs de Producción (ACTIVAS):**
 - **📱 SuperApp**: `https://coomunity-superapp.onrender.com`
-- **🖥️ Backend**: `https://coomunity-backend.onrender.com`
-- **⚙️ Admin**: `https://coomunity-admin.onrender.com`
+- **🖥️ Backend**: `https://god-backend-j4b6.onrender.com`
+- **🔧 Admin**: `https://gamifier-admin.onrender.com` (Ejemplo, si se despliega)
 
 #### **⚡ Optimizaciones PROMETHEUS Implementadas:**
 - ✅ Headers de seguridad enterprise
