@@ -5,27 +5,27 @@ name: CoomÜnity CI/CD Pipeline
 
 on:
   push:
-    branches: [ main, develop ]
+    branches: [main, develop]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   setup-dependencies:
-    name: "📦 Setup Dependencies"
+    name: '📦 Setup Dependencies'
     runs-on: ubuntu-latest
     outputs:
       cache-hit: ${{ steps.cache-nodemodules.outputs.cache-hit }}
     steps:
-      - name: "🔍 Checkout Repository"
+      - name: '🔍 Checkout Repository'
         uses: actions/checkout@v4
 
-      - name: "🔧 Setup Node.js"
+      - name: '🔧 Setup Node.js'
         uses: actions/setup-node@v4
         with:
           node-version: '18'
           cache: 'npm'
 
-      - name: "📥 Restore node_modules Cache"
+      - name: '📥 Restore node_modules Cache'
         id: cache-nodemodules
         uses: actions/cache@v4
         with:
@@ -36,32 +36,32 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-node-
 
-      - name: "📦 Install Dependencies"
+      - name: '📦 Install Dependencies'
         if: steps.cache-nodemodules.outputs.cache-hit != 'true'
         run: |
           npm ci --prefer-offline --no-audit
           echo "✅ Dependencies installed successfully"
 
-      - name: "🔍 Verify Installation"
+      - name: '🔍 Verify Installation'
         run: |
           echo "📊 Dependency verification:"
           npm list --depth=0 || echo "⚠️  Some peer dependencies missing (normal)"
           echo "✅ Setup completed"
 
   code-quality:
-    name: "🔍 Code Quality"
+    name: '🔍 Code Quality'
     runs-on: ubuntu-latest
     needs: setup-dependencies
     steps:
-      - name: "🔍 Checkout Repository"
+      - name: '🔍 Checkout Repository'
         uses: actions/checkout@v4
 
-      - name: "🔧 Setup Node.js"
+      - name: '🔧 Setup Node.js'
         uses: actions/setup-node@v4
         with:
           node-version: '18'
 
-      - name: "📥 Restore node_modules Cache"
+      - name: '📥 Restore node_modules Cache'
         uses: actions/cache@v4
         with:
           path: |
@@ -71,7 +71,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-node-
 
-      - name: "🧹 Run Linter"
+      - name: '🧹 Run Linter'
         run: |
           if [ -f "node_modules/.bin/eslint" ]; then
             npm run lint || echo "⚠️  Linting completed with warnings"
@@ -79,7 +79,7 @@ jobs:
             echo "⚠️  ESLint not found, skipping linting"
           fi
 
-      - name: "🎨 Check Code Formatting"
+      - name: '🎨 Check Code Formatting'
         run: |
           if [ -f "node_modules/.bin/prettier" ]; then
             npm run format:check || echo "⚠️  Formatting check completed"
@@ -88,19 +88,19 @@ jobs:
           fi
 
   build-test:
-    name: "🏗️ Build & Test"
+    name: '🏗️ Build & Test'
     runs-on: ubuntu-latest
     needs: setup-dependencies
     steps:
-      - name: "🔍 Checkout Repository"
+      - name: '🔍 Checkout Repository'
         uses: actions/checkout@v4
 
-      - name: "🔧 Setup Node.js"
+      - name: '🔧 Setup Node.js'
         uses: actions/setup-node@v4
         with:
           node-version: '18'
 
-      - name: "📥 Restore node_modules Cache"
+      - name: '📥 Restore node_modules Cache'
         uses: actions/cache@v4
         with:
           path: |
@@ -110,7 +110,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-node-
 
-      - name: "🏗️ Build Application"
+      - name: '🏗️ Build Application'
         run: |
           if npm run build; then
             echo "✅ Build completed successfully"
@@ -120,7 +120,7 @@ jobs:
             exit 1
           fi
 
-      - name: "🧪 Run Unit Tests"
+      - name: '🧪 Run Unit Tests'
         run: |
           if npm run test:unit 2>/dev/null || npm run test 2>/dev/null; then
             echo "✅ Unit tests passed"
@@ -128,7 +128,7 @@ jobs:
             echo "⚠️  Unit tests not configured or failed"
           fi
 
-      - name: "📊 Upload Build Artifacts"
+      - name: '📊 Upload Build Artifacts'
         uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -140,19 +140,19 @@ jobs:
           retention-days: 7
 
   integration-test:
-    name: "🔗 Integration Test"
+    name: '🔗 Integration Test'
     runs-on: ubuntu-latest
     needs: [setup-dependencies, build-test]
     steps:
-      - name: "🔍 Checkout Repository"
+      - name: '🔍 Checkout Repository'
         uses: actions/checkout@v4
 
-      - name: "🔧 Setup Node.js"
+      - name: '🔧 Setup Node.js'
         uses: actions/setup-node@v4
         with:
           node-version: '18'
 
-      - name: "📥 Restore node_modules Cache"
+      - name: '📥 Restore node_modules Cache'
         uses: actions/cache@v4
         with:
           path: |
@@ -162,7 +162,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-node-
 
-      - name: "🔗 Run Integration Tests"
+      - name: '🔗 Run Integration Tests'
         run: |
           if npm run test:integration 2>/dev/null; then
             echo "✅ Integration tests passed"
@@ -171,19 +171,19 @@ jobs:
           fi
 
   e2e-testing:
-    name: "🧪 E2E Testing"
+    name: '🧪 E2E Testing'
     runs-on: ubuntu-latest
     needs: [setup-dependencies, build-test]
     steps:
-      - name: "🔍 Checkout Repository"
+      - name: '🔍 Checkout Repository'
         uses: actions/checkout@v4
 
-      - name: "🔧 Setup Node.js"
+      - name: '🔧 Setup Node.js'
         uses: actions/setup-node@v4
         with:
           node-version: '18'
 
-      - name: "📥 Restore node_modules Cache"
+      - name: '📥 Restore node_modules Cache'
         uses: actions/cache@v4
         with:
           path: |
@@ -193,7 +193,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-node-
 
-      - name: "🎭 Install Playwright Browsers"
+      - name: '🎭 Install Playwright Browsers'
         run: |
           if [ -f "node_modules/.bin/playwright" ]; then
             npx playwright install --with-deps
@@ -202,7 +202,7 @@ jobs:
             echo "⚠️  Playwright not found, skipping browser installation"
           fi
 
-      - name: "🚀 Start Application"
+      - name: '🚀 Start Application'
         run: |
           if npm run dev > /dev/null 2>&1 & then
             echo "✅ Application started in background"
@@ -213,7 +213,7 @@ jobs:
             echo "⚠️  Could not start application"
           fi
 
-      - name: "🧪 Run E2E Tests"
+      - name: '🧪 Run E2E Tests'
         run: |
           if [ -f "node_modules/.bin/playwright" ]; then
             npm run test:e2e || echo "⚠️  E2E tests failed or not configured"
@@ -221,14 +221,14 @@ jobs:
             echo "⚠️  Playwright not found, skipping E2E tests"
           fi
 
-      - name: "🛑 Stop Application"
+      - name: '🛑 Stop Application'
         if: always()
         run: |
           if [ ! -z "$APP_PID" ]; then
             kill $APP_PID 2>/dev/null || echo "App already stopped"
           fi
 
-      - name: "📊 Upload Playwright Report"
+      - name: '📊 Upload Playwright Report'
         uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -241,19 +241,19 @@ jobs:
           retention-days: 30
 
   security-scan:
-    name: "🔒 Security Scan"
+    name: '🔒 Security Scan'
     runs-on: ubuntu-latest
     needs: setup-dependencies
     steps:
-      - name: "🔍 Checkout Repository"
+      - name: '🔍 Checkout Repository'
         uses: actions/checkout@v4
 
-      - name: "🔧 Setup Node.js"
+      - name: '🔧 Setup Node.js'
         uses: actions/setup-node@v4
         with:
           node-version: '18'
 
-      - name: "📥 Restore node_modules Cache"
+      - name: '📥 Restore node_modules Cache'
         uses: actions/cache@v4
         with:
           path: |
@@ -263,64 +263,65 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-node-
 
-      - name: "🔍 Run Security Audit"
+      - name: '🔍 Run Security Audit'
         run: |
           echo "🔍 Running security audit..."
           npm audit --audit-level=moderate || echo "⚠️  Security audit completed with warnings"
 
-      - name: "🔒 Check for Vulnerabilities"
+      - name: '🔒 Check for Vulnerabilities'
         run: |
           echo "🔒 Vulnerabilitéies check completed"
 
   deploy-staging:
-    name: "🚀 Deploy to Staging"
+    name: '🚀 Deploy to Staging'
     runs-on: ubuntu-latest
     needs: [code-quality, build-test, integration-test, security-scan]
     if: github.ref == 'refs/heads/develop'
     environment: staging
     steps:
-      - name: "🔍 Checkout Repository"
+      - name: '🔍 Checkout Repository'
         uses: actions/checkout@v4
 
-      - name: "📥 Download Build Artifacts"
+      - name: '📥 Download Build Artifacts'
         uses: actions/download-artifact@v4
         with:
           name: build-artifacts
           path: ./build
 
-      - name: "🚀 Deploy to Staging"
+      - name: '🚀 Deploy to Staging'
         run: |
           echo "🚀 Deploying to staging environment..."
           echo "✅ Staging deployment completed"
 
   deploy-production:
-    name: "🚀 Deploy to Production"
+    name: '🚀 Deploy to Production'
     runs-on: ubuntu-latest
-    needs: [code-quality, build-test, integration-test, e2e-testing, security-scan]
+    needs:
+      [code-quality, build-test, integration-test, e2e-testing, security-scan]
     if: github.ref == 'refs/heads/main'
     environment: production
     steps:
-      - name: "🔍 Checkout Repository"
+      - name: '🔍 Checkout Repository'
         uses: actions/checkout@v4
 
-      - name: "📥 Download Build Artifacts"
+      - name: '📥 Download Build Artifacts'
         uses: actions/download-artifact@v4
         with:
           name: build-artifacts
           path: ./build
 
-      - name: "🚀 Deploy to Production"
+      - name: '🚀 Deploy to Production'
         run: |
           echo "🚀 Deploying to production environment..."
           echo "✅ Production deployment completed"
 
   notification:
-    name: "📢 Notification"
+    name: '📢 Notification'
     runs-on: ubuntu-latest
     needs: [deploy-staging, deploy-production]
     if: always()
     steps:
-      - name: "📢 Send Notification"
+      - name: '📢 Send Notification'
         run: |
           if [ "${{ needs.deploy-production.result }}" == "success" ]; then
             echo "✅ Production deployment successful!"
@@ -328,4 +329,4 @@ jobs:
             echo "✅ Staging deployment successful!"
           else
             echo "⚠️  Deployment completed with warnings"
-          }
+          fi

@@ -91,7 +91,6 @@ vitest.config.ts
 vite.config.ts
 render.yaml
 railway.json
-
 # Test files and HTML demos
 *.html
 !index.html
