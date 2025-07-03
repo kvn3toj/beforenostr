@@ -4,29 +4,43 @@
 # ================================================================
 
 # ================================================================
-# Etapa 1: Builder - Construir la aplicación
+# Etapa 1: Builder - Construir la aplicación (usando lockfile raíz)
 # ================================================================
 FROM node:lts-alpine AS builder
 
+# El contexto de build será **la raíz del monorepo** y no backend/
+# Por eso, /app contendrá exclusivamente el código del backend
 WORKDIR /app
 
-# Instala dependencias del sistema necesarias para Prisma
+# Dependencias del sistema para Prisma
 RUN apk add --no-cache openssl
 
-# Copia archivos de configuración (rutas simples para contexto backend/)
-COPY package.json package-lock.json ./
-COPY prisma ./prisma
+# ------------------------------------------------
+# Paso 1 – Copiar package-lock.json raíz (monorepo)
+# ------------------------------------------------
+COPY package-lock.json ./
 
-# Instala todas las dependencias (incluyendo dev para build)
+# ------------------------------------------------
+# Paso 2 – Copiar el package.json del backend como principal
+# (se renombra para que npm ci lo detecte)
+# ------------------------------------------------
+COPY backend/package.json ./package.json
+
+# ------------------------------------------------
+# Paso 3 – Copiar prisma y resto de fuentes del backend
+# ------------------------------------------------
+COPY backend/prisma ./prisma
+
+# Instalación SOLO de dependencias requeridas por el backend
 RUN npm ci --legacy-peer-deps
 
-# Copia el resto del código fuente
-COPY . .
+# Copiar el resto del código fuente del backend
+COPY backend/. ./
 
-# Genera Prisma Client para Linux dentro del contenedor
+# Generar Prisma Client
 RUN npx prisma generate --schema=./prisma/schema.prisma
 
-# Compila la app (NestJS)
+# Compilar la app (NestJS)
 RUN npm run build
 
 # ================================================================

@@ -72,7 +72,7 @@ jobs:
     timeout-minutes: 10
     needs: detect-changes
     if: needs.detect-changes.outputs.backend == 'true' || needs.detect-changes.outputs.ci == 'true'
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -100,6 +100,13 @@ jobs:
             echo "No backend-specific lint config found, skipping..."
           fi
 
+      # ------------------------------------------------
+      # 🔨 Build Docker Image del Backend usando lockfile raíz
+      # ------------------------------------------------
+      - name: Build Backend Docker Image
+        run: |
+          docker build -f backend/Dockerfile -t coomunity-backend .
+
   # ================================================================
   # Quality Check - Linting y Type Checking
   # ================================================================
@@ -108,7 +115,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     needs: detect-changes
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -155,11 +162,11 @@ jobs:
     timeout-minutes: 20
     needs: [detect-changes, quality-check]
     if: needs.detect-changes.outputs.superapp == 'true' || needs.detect-changes.outputs.ci == 'true'
-    
+
     strategy:
       matrix:
         node-version: [18, 20]
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -216,7 +223,7 @@ jobs:
     timeout-minutes: 15
     needs: [detect-changes, quality-check]
     if: needs.detect-changes.outputs.admin == 'true' || needs.detect-changes.outputs.ci == 'true'
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -259,7 +266,7 @@ jobs:
     timeout-minutes: 30
     needs: [build-test-superapp]
     if: |
-      always() && 
+      always() &&
       (needs.detect-changes.outputs.superapp == 'true' || needs.detect-changes.outputs.ci == 'true') &&
       (github.event.inputs.run_e2e == 'true' || github.event.inputs.run_e2e == null)
 
@@ -332,9 +339,9 @@ jobs:
     timeout-minutes: 25
     needs: [build-test-superapp, build-test-admin, backend-check]
     if: |
-      always() && 
-      (needs.detect-changes.outputs.superapp == 'true' || 
-       needs.detect-changes.outputs.backend == 'true' || 
+      always() &&
+      (needs.detect-changes.outputs.superapp == 'true' ||
+       needs.detect-changes.outputs.backend == 'true' ||
        needs.detect-changes.outputs.admin == 'true' ||
        needs.detect-changes.outputs.ci == 'true')
 
@@ -375,9 +382,9 @@ jobs:
     timeout-minutes: 10
     needs: [build-test-superapp, e2e-testing]
     if: |
-      github.event_name == 'pull_request' && 
+      github.event_name == 'pull_request' &&
       (needs.build-test-superapp.result == 'success' || needs.build-test-superapp.result == 'skipped')
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -393,7 +400,7 @@ jobs:
           echo "🚀 Creating deployment preview for PR #${{ github.event.number }}"
           echo "📦 Build artifacts ready for deployment"
           echo "🔗 Preview URL would be: https://pr-${{ github.event.number }}.coomunity.preview.dev"
-          
+
           # Aquí iría la lógica real de deployment a entorno de preview
           # Por ejemplo: Vercel, Netlify, AWS S3, etc.
 
@@ -421,7 +428,7 @@ jobs:
     timeout-minutes: 5
     needs: [detect-changes, quality-check, build-test-superapp, build-test-admin, backend-check, e2e-testing, integration-test]
     if: always()
-    
+
     steps:
       - name: Generate Summary
         run: |
@@ -442,4 +449,4 @@ jobs:
           echo "- Backend: ${{ needs.detect-changes.outputs.backend }}" >> $GITHUB_STEP_SUMMARY
           echo "- Admin: ${{ needs.detect-changes.outputs.admin }}" >> $GITHUB_STEP_SUMMARY
           echo "- Shared: ${{ needs.detect-changes.outputs.shared }}" >> $GITHUB_STEP_SUMMARY
-          echo "- CI: ${{ needs.detect-changes.outputs.ci }}" >> $GITHUB_STEP_SUMMARY 
+          echo "- CI: ${{ needs.detect-changes.outputs.ci }}" >> $GITHUB_STEP_SUMMARY
