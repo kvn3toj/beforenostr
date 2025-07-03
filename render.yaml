@@ -21,7 +21,7 @@ services:
     branch: main
     dockerfilePath: ./backend/Dockerfile
     healthCheckPath: /health
-    preDeployCommand: "npx prisma migrate deploy"
+    preDeployCommand: "npx prisma migrate deploy && npm run db:seed"
     dockerCommand: "npm run start:prod"
     envVars:
       - key: PORT
