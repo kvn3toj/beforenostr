@@ -33,7 +33,12 @@
     "migration:deploy": "npx prisma migrate deploy",
     "postinstall": "prisma generate",
     "prestart:dev": "cp .env.local .env",
-    "prestart:prod": "[ -f .env.production ] && cp .env.production .env || echo 'Using environment variables from platform (Render/Production)'"
+    "prestart:prod": "[ -f .env.production ] && cp .env.production .env || echo 'Using environment variables from platform (Render/Production)'",
+    "test:critical": "DATABASE_URL=\"postgresql://test:test@localhost:5432/coomunitest?schema=test\" jest --testNamePattern=\"CRITICAL\" --verbose",
+    "test:integration": "jest --testPathPattern=\"integration\" --runInBand",
+    "test:reciprocity": "jest --testNamePattern=\"transactions-send\" --verbose",
+    "test:watch:critical": "jest --testNamePattern=\"CRITICAL\" --watch",
+    "test:coverage:critical": "jest --testNamePattern=\"CRITICAL\" --coverage"
   },
   "dependencies": {
     "@google/generative-ai": "^0.24.1",
@@ -102,7 +107,12 @@
     "supertest": "^7.0.0",
     "ts-jest": "^29.2.5",
     "ts-loader": "^9.5.1",
-    "tsconfig-paths": "^4.2.0"
+    "tsconfig-paths": "^4.2.0",
+    "@nestjs/testing": "^10.0.0",
+    "supertest": "^6.3.3",
+    "@types/supertest": "^2.0.12",
+    "@types/jest": "^29.0.0",
+    "ts-jest": "^29.0.0"
   },
   "jest": {
     "moduleFileExtensions": [
@@ -121,7 +131,7 @@
     "coverageDirectory": "../coverage",
     "testEnvironment": "node",
     "moduleNameMapper": {
-      "@/(.*)": "<rootDir>/$1"
+      "^@/(.*)$": "<rootDir>/$1"
     }
   },
   "prisma": {

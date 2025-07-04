@@ -168,7 +168,7 @@ export class TransactionsService {
   async sendTransaction(
     senderId: string,
     dto: SendTransactionDto
-  ): Promise<Transaction> {
+  ): Promise<any> {
     const { recipientId, amount, currency, description, metadata } = dto;
     if (recipientId === senderId) {
       throw new ForbiddenException(
@@ -194,7 +194,7 @@ export class TransactionsService {
         'Fondos insuficientes. La reciprocidad requiere un balance para poder dar.'
       );
     }
-    return this.prisma.$transaction(async (prisma) => {
+    const newTransaction = await this.prisma.$transaction(async (prisma) => {
       const [senderWallet, recipientWallet] = await Promise.all([
         this.walletsService.getWalletForUserAdmin(senderId),
         this.walletsService.getWalletForUserAdmin(recipientId),
@@ -230,7 +230,7 @@ export class TransactionsService {
         update: updateRecipientData,
         create: createRecipientData,
       });
-      const newTransaction = await prisma.transaction.create({
+      const transaction = await prisma.transaction.create({
         data: {
           fromUserId: senderId,
           toUserId: recipientId,
@@ -242,8 +242,13 @@ export class TransactionsService {
           metadata: metadata ? JSON.stringify(metadata) : undefined,
         },
       });
-      return newTransaction;
+      return transaction;
     });
+    return {
+      transactionId: newTransaction.id,
+      success: true,
+      ...newTransaction,
+    };
   }
 
   /**
