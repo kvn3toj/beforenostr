@@ -281,8 +281,16 @@ export class CosmicKanbanService {
     try {
       // Invalidar caché de estadísticas usando el patrón del CacheService
       if (this.cache && typeof this.cache['client'] !== 'undefined') {
-        // Acceso al cliente Redis interno del CacheService
-        const redisClient = (this.cache as unknown as { client?: any }).client;
+        // Acceso al cliente Redis interno del CacheService - SAGE purification: tipo específico para Redis
+        const redisClient = (
+          this.cache as unknown as {
+            client?: {
+              isReady: boolean;
+              del: (key: string | string[]) => Promise<number>;
+              keys: (pattern: string) => Promise<string[]>;
+            };
+          }
+        ).client;
         if (redisClient?.isReady) {
           await redisClient.del('cosmic:stats');
 

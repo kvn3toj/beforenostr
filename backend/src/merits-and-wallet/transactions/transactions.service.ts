@@ -12,6 +12,7 @@ import {
   TransactionCurrency,
 } from './dto/send-transaction.dto';
 import { Merit } from '../../generated/prisma';
+import { Prisma } from '@prisma/client';
 
 // Define a basic type for the authenticated user passed from the controller
 type AuthenticatedUser = { id: string; roles: string[] /* other properties */ };
@@ -35,16 +36,20 @@ export class TransactionsService {
   }): Promise<Transaction> {
     // Use a transaction to ensure atomicity
     const transaction = await this.prisma.$transaction(async (prisma) => {
-      // 1. Create the transaction record
+      // 1. Create the transaction record with specific typed data
+      const transactionData: Prisma.TransactionCreateInput = {
+        fromUser: data.fromUserId
+          ? { connect: { id: data.fromUserId } }
+          : undefined,
+        toUser: { connect: { id: data.toUserId } },
+        amount: data.amount,
+        currency: 'USD',
+        type: data.type,
+        description: data.description,
+      };
+
       const newTransaction = await prisma.transaction.create({
-        data: {
-          fromUserId: data.fromUserId,
-          toUserId: data.toUserId,
-          amount: data.amount,
-          currency: 'USD',
-          type: data.type,
-          description: data.description,
-        } as any,
+        data: transactionData,
       });
 
       // 2. Update the corresponding wallet balance if needed

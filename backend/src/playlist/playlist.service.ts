@@ -3,6 +3,12 @@ import { PrismaService } from '../prisma/prisma.service';
 import { CreatePlaylistDto } from './dto/create-playlist.dto';
 import { UpdatePlaylistDto } from './dto/update-playlist.dto';
 import { FindAllPlaylistsDto } from './dto/find-all-playlists.dto';
+import { Prisma } from '../generated/prisma';
+
+// Tipos específicos para la purificación alquímica de playlists
+type PlaylistWhereInput = Prisma.PlaylistWhereInput;
+type PlaylistInclude = Prisma.PlaylistInclude;
+type PlaylistOrderByInput = Prisma.PlaylistOrderByWithRelationInput;
 
 @Injectable()
 export class PlaylistService {
@@ -56,14 +62,14 @@ export class PlaylistService {
 
     const skip = (page - 1) * limit;
 
-    const where: any = {};
+    const where: PlaylistWhereInput = {};
     if (mundoId) where.mundoId = mundoId;
     if (typeof isActive === 'boolean') where.isActive = isActive;
     if (name) where.name = { contains: name, mode: 'insensitive' };
     if (description)
       where.description = { contains: description, mode: 'insensitive' };
 
-    const include: any = {};
+    const include: PlaylistInclude = {};
     if (includeMundo) include.mundo = true;
     if (includeItems) {
       include.videoItems = {
@@ -101,7 +107,7 @@ export class PlaylistService {
       };
     }
 
-    const orderByClause: any = {
+    const orderByClause: PlaylistOrderByInput = {
       [orderBy]: orderDirection,
     };
 

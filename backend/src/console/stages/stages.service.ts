@@ -20,6 +20,29 @@ import { CustomerJourneyStage } from '../../../src/generated/prisma';
 // Re-export for controller use
 export { CustomerJourneyStage };
 
+// Tipos específicos para la purificación alquímica
+interface UserWithProgress {
+  id: string;
+  stageStartedAt?: Date;
+  merits?: MeritAmount[];
+  transactionsFrom?: unknown[];
+  transactionsTo?: unknown[];
+}
+
+interface MeritAmount {
+  amount: number;
+}
+
+interface StageDataResult {
+  id: CustomerJourneyStage;
+  metrics: StageMetrics;
+  name: string;
+  description: string;
+  icon: string;
+  color: string;
+  philosophyAlignment: 'reciprocidad' | 'bien_comun' | 'metanoia';
+}
+
 export interface StageMetrics {
   totalUsers: number;
   newThisWeek: number;
@@ -479,7 +502,7 @@ export class StagesService {
   /**
    * 🔄 Calculate user progress for all metrics
    */
-  private async calculateUserProgress(user: any) {
+  private async calculateUserProgress(user: UserWithProgress) {
     const daysSinceStageStart = user.stageStartedAt
       ? Math.floor(
           (Date.now() - user.stageStartedAt.getTime()) / (1000 * 60 * 60 * 24)
@@ -489,7 +512,7 @@ export class StagesService {
     return {
       meritos:
         user.merits?.reduce(
-          (sum: number, merit: any) => sum + merit.amount,
+          (sum: number, merit: MeritAmount) => sum + merit.amount,
           0
         ) || 0,
       ondas: 0, // Calculate from user data when available
@@ -951,7 +974,7 @@ export class StagesService {
   /**
    * 📊 Calculate conversion funnel
    */
-  private calculateConversionFunnel(stages: any[]) {
+  private calculateConversionFunnel(stages: StageDataResult[]) {
     return stages.map((stage, index) => ({
       stage: stage.id,
       users: stage.metrics.totalUsers,
@@ -962,7 +985,7 @@ export class StagesService {
   /**
    * 📈 Calculate stage progression overview
    */
-  private calculateStageProgression(stages: any[]) {
+  private calculateStageProgression(stages: StageDataResult[]) {
     const totalUsers = stages.reduce(
       (sum, stage) => sum + stage.metrics.totalUsers,
       0

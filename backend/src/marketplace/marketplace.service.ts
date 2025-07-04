@@ -29,6 +29,27 @@ interface MarketplaceMetrics {
   cacheHit?: boolean;
 }
 
+// Tipos específicos para la purificación alquímica del marketplace
+interface MarketplaceItemData {
+  id: string;
+  name: string;
+  description: string;
+  itemType: string;
+  price: number;
+  priceToins?: number;
+  currency: string;
+  tags: string[];
+  images: string[];
+  location?: string;
+  status: string;
+  metadata?: string;
+  seller: unknown;
+  createdAt: Date;
+  updatedAt: Date;
+  viewCount?: number;
+  favoriteCount?: number;
+}
+
 // 🔹 COSMOS: Integrated Cache Keys
 const CACHE_KEYS = {
   ALL_ITEMS: 'marketplace:all_items',
@@ -71,7 +92,7 @@ export class MarketplaceService {
   }
 
   // 🔹 COSMOS: Unified item transformation
-  private transformMarketplaceItem(item: any) {
+  private transformMarketplaceItem(item: MarketplaceItemData) {
     return {
       id: item.id,
       title: item.name,
@@ -98,7 +119,7 @@ export class MarketplaceService {
   }
 
   // 🌟 COSMOS: Calculate Reciprocidad (reciprocity) score
-  private calculateReciprocidadScore(item: any): number {
+  private calculateReciprocidadScore(item: MarketplaceItemData): number {
     let score = 0;
 
     // Base score for active participation
@@ -128,7 +149,7 @@ export class MarketplaceService {
 
   // 🌟 COSMOS: Calculate consciousness level
   private calculateConsciousnessLevel(
-    item: any
+    item: MarketplaceItemData
   ): 'SEED' | 'GROWING' | 'FLOURISHING' | 'TRANSCENDENT' {
     const reciprocidadScore = this.calculateReciprocidadScore(item);
 

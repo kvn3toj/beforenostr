@@ -16,6 +16,7 @@ import {
   CreateBulkNotificationDto,
   UpdateNotificationDto,
   NotificationFilterDto,
+  NotificationType,
 } from './dto/notifications.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '@/rbac/guards/roles.guard';
@@ -66,7 +67,7 @@ export class NotificationsController {
     //     console.log('>>> NotificationsController.getUserNotifications: Getting notifications for user', userId);
 
     const filters: NotificationFilterDto = {
-      type: type as any,
+      type: type as NotificationType,
       read: read ? read === 'true' : undefined,
       limit,
       offset,

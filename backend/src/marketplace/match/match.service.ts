@@ -6,6 +6,14 @@ import {
 import { PrismaService } from '@/prisma/prisma.service';
 import { MatchStatus } from '../../generated/prisma';
 
+// Tipos específicos para la purificación alquímica del marketplace
+interface ReviewSubmissionData {
+  rating: number;
+  comment?: string;
+  tags?: string[];
+  isRecommended?: boolean;
+}
+
 @Injectable()
 export class MatchService {
   constructor(private readonly prisma: PrismaService) {}
@@ -72,7 +80,7 @@ export class MatchService {
     });
   }
 
-  async submitReview(matchId: string, userId: string, reviewDto: any) {
+  async submitReview(matchId: string, userId: string, reviewDto: ReviewSubmissionData) {
     const match = await this.assertParticipant(matchId, userId);
     const existing = await this.prisma.review.findFirst({
       where: { marketplaceItemId: match.itemId, userId },

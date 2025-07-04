@@ -62,7 +62,7 @@ export class VideoItemsService {
   private async fetch(
     url: string,
     options: Record<string, unknown> = {}
-  ): Promise<any> {
+  ): Promise<import('node-fetch').Response> {
     const { default: fetch } = await import('node-fetch');
     return fetch(url, options);
   }
@@ -182,7 +182,7 @@ export class VideoItemsService {
     //     console.log(`>>> VideoItemsService.update: Updating video item with ID: ${id}`);
 
     // Convertir DTO a formato compatible con Prisma
-    const updateData: any = {};
+    const updateData: Partial<UpdateVideoItemDto> = {};
 
     if (data.title !== undefined) updateData.title = data.title;
     if (data.description !== undefined)
@@ -876,7 +876,7 @@ export class VideoItemsService {
    */
   async updateVideoMetadata(
     id: number
-  ): Promise<{ metadata: VideoMetadata; [key: string]: any }> {
+  ): Promise<{ metadata: VideoMetadata; [key: string]: unknown }> {
     // this.logger.log(`Updating metadata for video item ${id}`);
     const videoItem = await this.prisma.videoItem.findUnique({ where: { id } });
 

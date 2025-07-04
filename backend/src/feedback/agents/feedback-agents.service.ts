@@ -28,13 +28,32 @@ interface FeedbackAnalysis {
   lukasReward: number;
 }
 
+interface TaskResults {
+  priority?: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
+  estimatedResolution?: string;
+  resourcesNeeded?: string[];
+  reciprocidadImpact?: 'LOW' | 'MEDIUM' | 'HIGH';
+  stakeholdersNotified?: string[];
+  collaborationChannels?: string[];
+  consensusLevel?: number;
+  reciprocidadFlow?: 'BLOCKED' | 'SLOW' | 'BALANCED' | 'FLOWING';
+  knowledgeArticlesCreated?: number;
+  bestPracticesUpdated?: string[];
+  wisdomScore?: number;
+  foundationStrength?: 'WEAK' | 'STABLE' | 'SOLID' | 'DIAMOND';
+  trendsIdentified?: string[];
+  innovationOpportunities?: number;
+  futureImpactScore?: number;
+  visionClarity?: 'CLOUDY' | 'CLEAR' | 'CRYSTAL_CLEAR';
+}
+
 interface CollaborationTask {
   id: string;
   type: 'ANALYZE' | 'PRIORITIZE' | 'RESOLVE' | 'DISTRIBUTE';
   feedbackId: string;
   assignedAgents: string[];
   status?: 'PENDING' | 'IN_PROGRESS' | 'COMPLETED';
-  results: any;
+  results: TaskResults;
   lukasGenerated: number;
 }
 

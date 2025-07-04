@@ -9,6 +9,11 @@ import {
 } from 'class-validator';
 
 /**
+ * Tipos específicos para metadata de transacciones alquímicamente purificada
+ */
+type MetadataValue = string | number | boolean | null;
+
+/**
  * SendTransactionDto asegura la claridad y la intención en el intercambio de valor,
  * fundamento de la Reciprocidad en CoomÜnity. Cada campo es validado para proteger
  * la integridad del flujo económico y la confianza entre los jugadores.
@@ -37,5 +42,5 @@ export class SendTransactionDto {
 
   @IsOptional()
   @IsObject()
-  metadata?: Record<string, any>; // Metadata filosófica opcional
+  metadata?: Record<string, MetadataValue>; // Metadata filosófica opcional con tipos específicos
 }

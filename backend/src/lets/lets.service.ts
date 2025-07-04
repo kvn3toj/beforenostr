@@ -138,7 +138,7 @@ export class LetsService {
           type: 'EXCHANGE',
           description:
             dto.description || `Intercambio LETS de ${dto.amount} Ünits`,
-        } as any,
+        },
       });
 
       // 2. Actualizar balances en wallets
@@ -253,7 +253,7 @@ export class LetsService {
           currency: 'USD',
           type: 'RECEIVE', // Transacción negativa por caducidad
           description: `Caducidad automática de ${expiredTokens.length} tokens`,
-        } as any,
+        },
       });
     });
 
