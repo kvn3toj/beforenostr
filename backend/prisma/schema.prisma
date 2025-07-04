@@ -501,6 +501,7 @@ model Transaction {
   fromUser        User?    @relation("TransactionFrom", fields: [fromUserId], references: [id], map: "transaction_from_user_fkey")
   toUser          User     @relation("TransactionTo", fields: [toUserId], references: [id], map: "transaction_to_user_fkey")
   type            String?
+  metadata        Json?
 
   @@index([fromUserId], map: "transaction_from_user_id_idx")
   @@index([toUserId], map: "transaction_to_user_id_idx")

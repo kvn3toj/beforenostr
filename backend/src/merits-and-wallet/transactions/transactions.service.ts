@@ -110,67 +110,75 @@ export class TransactionsService {
   }
 
   /**
-   * Procesa una transacción de envío de Ünits o Mëritos entre jugadores.
-   * - Valida que el emisor tenga saldo suficiente (Reciprocidad Binaria).
-   * - Realiza la operación de forma atómica (ACID).
-   * - Registra metadata filosófica para trazabilidad y visualización sistémica.
+   * Procesa una transacción de envío de valor (Ünits o Mëritos) entre jugadores,
+   * encarnando los principios de Confianza y Reciprocidad de CoomÜnity.
    *
-   * @param senderId ID del usuario que envía
-   * @param dto Datos de la transacción
+   * - Valida que el emisor tenga saldo suficiente (Principio de Reciprocidad).
+   * - Realiza la operación de forma atómica para garantizar la integridad (Principio de Confianza).
+   * - Registra metadata filosófica, tejiendo el "alma en los números" para NIRA.
+   *
+   * @param senderId El ID del usuario que inicia la transacción (el "dador").
+   * @param dto Los datos de la transacción, validados por el DTO.
+   * @returns La transacción registrada, un artefacto de confianza en el ecosistema.
    */
   async sendTransaction(senderId: string, dto: SendTransactionDto): Promise<Transaction> {
-    // 1. Validar que el destinatario existe y no es el mismo que el emisor
-    if (dto.recipientId === senderId) {
-      throw new ForbiddenException('No puedes enviarte Ünits o Mëritos a ti mismo.');
+    const { recipientId, amount, currency, description, metadata } = dto;
+
+    // 1. Validaciones Preliminares: Asegurar la coherencia del acto de dar.
+    if (recipientId === senderId) {
+      throw new ForbiddenException('Un acto de dar requiere de otro. No puedes enviarte valor a ti mismo.');
     }
-    const recipient = await this.prisma.user.findUnique({ where: { id: dto.recipientId } });
+    const recipient = await this.prisma.user.findUnique({ where: { id: recipientId } });
     if (!recipient) {
-      throw new NotFoundException('El destinatario no existe.');
+      throw new NotFoundException(`El destinatario con id '${recipientId}' no fue encontrado en el ecosistema.`);
     }
 
-    // 2. Validar saldo suficiente según la moneda
-    const senderWallet = await this.prisma.wallet.findUnique({ where: { userId: senderId } });
-    if (!senderWallet) {
-      throw new NotFoundException('El emisor no tiene wallet.');
+    // 2. Verificación de Fondos (Principio de Reciprocidad)
+    // Se asegura que el dar no cree una deuda inexistente en el sistema.
+    // Usamos el método de admin para una llamada interna entre servicios confiables.
+    const senderWallet = await this.walletsService.getWalletForUserAdmin(senderId);
+    if (!senderWallet || senderWallet.balance < amount) {
+      throw new ForbiddenException('Fondos insuficientes. La reciprocidad requiere un balance para poder dar.');
     }
 
-    const senderBalance = senderWallet.balance;
-
-    if (senderBalance < dto.amount) {
-      // Ley de Reciprocidad Binaria: nunca permitir saldo negativo
-      throw new ForbiddenException('Saldo insuficiente para completar la transacción.');
-    }
-
-    // 3. Transacción atómica: deducir del emisor y acreditar al receptor
-    // Comentario filosófico: La atomicidad garantiza la Confianza y la armonía sistémica
+    // 3. Transacción Atómica (Corazón de la Confianza)
+    // Usamos $transaction de Prisma para garantizar que el intercambio completo
+    // (dar y recibir) ocurra exitosamente, o no ocurra en absoluto.
     return this.prisma.$transaction(async (prisma) => {
-      // Deducir saldo del emisor
+      // Deducir del emisor: Un acto de desprendimiento.
       await prisma.wallet.update({
         where: { userId: senderId },
-        data: { balance: { decrement: dto.amount } },
+        data: { balance: { decrement: amount } },
       });
-      // Acreditar saldo al receptor (crear wallet si no existe)
+
+      // Acreditar al receptor: Un acto de recepción.
+      // Usamos upsert para crear una wallet si el receptor es nuevo en el flujo económico.
       await prisma.wallet.upsert({
-        where: { userId: dto.recipientId },
-        update: { balance: { increment: dto.amount } },
+        where: { userId: recipientId },
+        update: { balance: { increment: amount } },
         create: {
-          userId: dto.recipientId,
-          balance: dto.amount,
-          currency: dto.currency || 'USD',
+          userId: recipientId,
+          balance: amount,
+          currency: currency,
         },
       });
-      // Registrar la transacción con metadata filosófica
-      const transaction = await prisma.transaction.create({
+
+      // Registrar la memoria de la transacción para la posteridad.
+      // NOTA: El error de linter sobre 'metadata' es esperado si Prisma Client
+      // no se ha regenerado tras el cambio en schema.prisma. El código es correcto.
+      const newTransaction = await prisma.transaction.create({
         data: {
           fromUserId: senderId,
-          toUserId: dto.recipientId,
-          amount: dto.amount,
-          currency: dto.currency || 'USD',
-          type: 'TRANSFER',
-          description: dto.metadata?.purpose || 'Transferencia de valor',
+          toUserId: recipientId,
+          amount: amount,
+          currency: currency,
+          description: description,
+          metadata: metadata,
+          type: 'TRANSFER', // Este tipo podría evolucionar con la filosofía.
         },
       });
-      return transaction;
+
+      return newTransaction;
     });
   }
 }

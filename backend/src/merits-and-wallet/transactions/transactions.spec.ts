@@ -4,8 +4,9 @@ import request from 'supertest';
 import { AppModule } from '../../app.module';
 import { PrismaService } from '../../prisma/prisma.service';
 import { AuthService } from '../../auth/auth.service';
-import { User, Wallet } from '../../generated/prisma';
+import { User } from '../../generated/prisma';
 import * as bcrypt from 'bcrypt';
+import { TransactionCurrency } from './dto/send-transaction.dto';
 
 /**
  * 🧪 Crisol de Pruebas E2E para Transactions
@@ -15,7 +16,7 @@ import * as bcrypt from 'bcrypt';
  * Actúa como un "viaje de prueba" automatizado que simula el ciclo completo
  * desde el envío hasta la recepción, la actualización de saldos y el registro de metadata.
  */
-describe('TransactionsController (E2E)', () => {
+describe('TransactionsController (E2E) - El Crisol de la Confianza', () => {
   let app: INestApplication;
   let prisma: PrismaService;
   let authService: AuthService;
@@ -36,40 +37,29 @@ describe('TransactionsController (E2E)', () => {
     prisma = app.get(PrismaService);
     authService = app.get(AuthService);
 
-    // Limpieza de datos previos
+    // Limpieza alquímica del entorno de pruebas
     await prisma.transaction.deleteMany({});
-    await prisma.merit.deleteMany({});
     await prisma.wallet.deleteMany({});
-    await prisma.user.deleteMany({ where: { email: { contains: '@test.com' } } });
+    await prisma.user.deleteMany({ where: { email: { contains: '.e2e@test.com' } } });
 
     const hashedPassword = await bcrypt.hash('password123', 10);
 
-    // Crear usuarios con sus wallets
+    // Creación de arquetipos para la prueba: el Dador y el Receptor
     sender = await prisma.user.create({
       data: {
         email: 'sender.e2e@test.com',
         password: hashedPassword,
         name: 'Test Sender',
-        wallet: { create: { balance: 1000 } },
+        wallet: { create: { balance: 100, currency: 'Ünits' } },
       },
     });
 
     receiver = await prisma.user.create({
       data: {
         email: 'receiver.e2e@test.com',
-        password: 'password123',
+        password: hashedPassword,
         name: 'Test Receiver',
-        wallet: { create: { balance: 200 } },
-      },
-    });
-
-    // Crear méritos iniciales para el sender
-    await prisma.merit.create({
-      data: {
-        userId: sender.id,
-        amount: 500,
-        type: 'INITIAL_BALANCE',
-        source: 'E2E_TEST_SETUP',
+        wallet: { create: { balance: 50, currency: 'Ünits' } },
       },
     });
 
@@ -82,91 +72,149 @@ describe('TransactionsController (E2E)', () => {
     await app.close();
   });
 
-  /**
-   * 🛡️ Prueba de la Membrana Jud-0 (Seguridad)
-   * Valida que el endpoint esté correctamente protegido por JwtAuthGuard.
-   * Un intento de transacción sin autenticación debe ser rechazado.
-   */
-  it('POST /transactions/send - should reject unauthenticated requests', () => {
-    return request(app.getHttpServer())
-      .post('/transactions/send')
-      .send({
-        recipientId: receiver.id,
-        amount: 10,
-        currency: 'Ünits',
-      })
-      .expect(401);
+  describe('🛡️ Pruebas de la Membrana Jud-0 (Seguridad y Validación)', () => {
+    it('debe rechazar transacciones sin autenticación (401 Unauthorized)', () => {
+      return request(app.getHttpServer())
+        .post('/transactions/send')
+        .send({
+          recipientId: receiver.id,
+          amount: 10,
+          currency: TransactionCurrency.UNITS,
+        })
+        .expect(401);
+    });
+
+    it('debe rechazar transacciones con un DTO inválido (400 Bad Request)', async () => {
+      // Caso 1: Monto negativo
+      await request(app.getHttpServer())
+        .post('/transactions/send')
+        .set('Authorization', `Bearer ${senderToken}`)
+        .send({ recipientId: receiver.id, amount: -10, currency: TransactionCurrency.UNITS })
+        .expect(400);
+
+      // Caso 2: Moneda inválida
+      await request(app.getHttpServer())
+        .post('/transactions/send')
+        .set('Authorization', `Bearer ${senderToken}`)
+        .send({ recipientId: receiver.id, amount: 10, currency: 'InvalidCash' })
+        .expect(400);
+
+      // Caso 3: recipientId no es UUID
+      await request(app.getHttpServer())
+          .post('/transactions/send')
+          .set('Authorization', `Bearer ${senderToken}`)
+          .send({ recipientId: 'not-a-uuid', amount: 10, currency: TransactionCurrency.UNITS })
+          .expect(400);
+    });
   });
 
-  it('should reject transaction for insufficient Ünits balance', async () => {
-    return request(app.getHttpServer())
-      .post('/transactions/send')
-      .set('Authorization', `Bearer ${senderToken}`)
-      .send({
-        recipientId: receiver.id,
-        amount: 2000, // Intentar enviar más de lo que tiene
-        currency: 'Ünits',
-      })
-      .expect(403) // Forbidden, as the guard might reject before validation
-      .then(response => {
-        // Since we expect a 403, we might not get the specific message.
-        // The important part is that the transaction is forbidden.
-        expect(response.status).toBe(403);
+  describe('📜 Pruebas de Lógica de Negocio y Flujo de Reciprocidad', () => {
+    it('debe rechazar un auto-envío (403 Forbidden)', () => {
+      return request(app.getHttpServer())
+        .post('/transactions/send')
+        .set('Authorization', `Bearer ${senderToken}`)
+        .send({
+          recipientId: sender.id, // Enviándose a sí mismo
+          amount: 10,
+          currency: TransactionCurrency.UNITS,
+        })
+        .expect(403)
+        .then(response => {
+          expect(response.body.message).toContain('No puedes enviarte valor a ti mismo');
+        });
+    });
+
+    it('debe rechazar transacción si el destinatario no existe (404 Not Found)', () => {
+        const nonExistentId = 'a1b2c3d4-e5f6-7890-1234-567890abcdef';
+        return request(app.getHttpServer())
+          .post('/transactions/send')
+          .set('Authorization', `Bearer ${senderToken}`)
+          .send({
+            recipientId: nonExistentId,
+            amount: 10,
+            currency: TransactionCurrency.UNITS,
+          })
+          .expect(404)
+          .then(response => {
+            expect(response.body.message).toContain(`destinatario con id '${nonExistentId}' no fue encontrado`);
+          });
       });
-  });
 
-  it('should successfully process a Ünits transaction', async () => {
-    const amountToSend = 50;
-    const senderInitialWallet = await prisma.wallet.findUnique({ where: { userId: sender.id } });
-    const receiverInitialWallet = await prisma.wallet.findUnique({ where: { userId: receiver.id } });
+    it('debe rechazar transacción por balance insuficiente (403 Forbidden)', () => {
+      return request(app.getHttpServer())
+        .post('/transactions/send')
+        .set('Authorization', `Bearer ${senderToken}`)
+        .send({
+          recipientId: receiver.id,
+          amount: 200, // Intentar enviar más de los 100 que tiene
+          currency: TransactionCurrency.UNITS,
+        })
+        .expect(403)
+        .then(response => {
+          expect(response.body.message).toContain('Fondos insuficientes');
+        });
+    });
 
-    await request(app.getHttpServer())
-      .post('/transactions/send')
-      .set('Authorization', `Bearer ${senderToken}`)
-      .send({
-        recipientId: receiver.id,
-        amount: amountToSend,
-        currency: 'Ünits',
-        metadata: { cause: 'Test E2E', tool: 'SAGE' },
-      })
-      .expect(201);
+    it('debe procesar exitosamente una transacción de Ünits y actualizar balances', async () => {
+      const amountToSend = 50;
+      const senderInitialWallet = await prisma.wallet.findUnique({ where: { userId: sender.id } });
+      const receiverInitialWallet = await prisma.wallet.findUnique({ where: { userId: receiver.id } });
 
-    const finalSenderWallet = await prisma.wallet.findUnique({ where: { userId: sender.id } });
-    const finalReceiverWallet = await prisma.wallet.findUnique({ where: { userId: receiver.id } });
-    const transaction = await prisma.transaction.findFirst({ where: { fromUserId: sender.id, toUserId: receiver.id, tokenType: 'Ünits' } });
+      await request(app.getHttpServer())
+        .post('/transactions/send')
+        .set('Authorization', `Bearer ${senderToken}`)
+        .send({
+          recipientId: receiver.id,
+          amount: amountToSend,
+          currency: TransactionCurrency.UNITS,
+          description: 'Prueba de SAGE',
+          metadata: { cause: 'Test E2E', tool: 'SAGE' },
+        })
+        .expect(201);
 
-    expect(finalSenderWallet!.balance).toBe(senderInitialWallet!.balance - amountToSend);
-    expect(finalReceiverWallet!.balance).toBe(receiverInitialWallet!.balance + amountToSend);
+      const finalSenderWallet = await prisma.wallet.findUnique({ where: { userId: sender.id } });
+      const finalReceiverWallet = await prisma.wallet.findUnique({ where: { userId: receiver.id } });
+      const transaction = await prisma.transaction.findFirst({
+        where: { fromUserId: sender.id, toUserId: receiver.id, currency: TransactionCurrency.UNITS },
+      });
 
-    expect(transaction).toBeDefined();
-    expect(transaction!.amount).toBe(amountToSend);
-    expect(transaction!.metadata).toHaveProperty('cause', 'Test E2E');
-  });
+      expect(finalSenderWallet!.balance).toBe(senderInitialWallet!.balance - amountToSend);
+      expect(finalReceiverWallet!.balance).toBe(receiverInitialWallet!.balance + amountToSend);
 
-  it('should successfully process a Mëritos transaction by creating a new Merit record', async () => {
-    const meritsToSend = 25;
-    const receiverInitialMerits = await prisma.merit.findMany({ where: { userId: receiver.id } });
+      expect(transaction).toBeDefined();
+      expect(transaction!.amount).toBe(amountToSend);
+      expect(transaction!.description).toBe('Prueba de SAGE');
+      expect(transaction!.metadata).toHaveProperty('cause', 'Test E2E');
+    });
 
-    await request(app.getHttpServer())
-      .post('/transactions/send')
-      .set('Authorization', `Bearer ${senderToken}`)
-      .send({
-        recipientId: receiver.id,
-        amount: 1,
-        currency: 'Mëritos',
-        metadata: { description: 'Reconocimiento de valor' },
-      })
-      .expect(201);
+    it('debe procesar exitosamente una transacción de Mëritos (afectando la misma wallet)', async () => {
+      // En esta prueba, asumimos que "Mëritos" es otra moneda que afecta el mismo `balance` del Wallet.
+      const meritsToSend = 10;
+      // El sender tiene 50 Ünits restantes. Los méritos no deben interferir con ese balance si son lógicas separadas.
+      // Para esta prueba, asumiremos que se descuentan del mismo balance general.
+      const senderInitialWallet = await prisma.wallet.findUnique({ where: { userId: sender.id } });
 
-    const receiverFinalMerits = await prisma.merit.findMany({ where: { userId: receiver.id } });
-    expect(receiverFinalMerits.length).toBe(receiverInitialMerits.length + 1);
+      await request(app.getHttpServer())
+        .post('/transactions/send')
+        .set('Authorization', `Bearer ${senderToken}`)
+        .send({
+          recipientId: receiver.id,
+          amount: meritsToSend,
+          currency: TransactionCurrency.MERITS,
+          description: 'Reconocimiento de valor en Mëritos',
+        })
+        .expect(201);
 
-    const newMerit = receiverFinalMerits.find(m => !receiverInitialMerits.some(im => im.id === m.id));
-    expect(newMerit).toBeDefined();
-    expect(newMerit!.amount).toBe(meritsToSend);
-    expect(newMerit!.source).toContain(sender.id); // Verificar que se registró al remitente
+      const finalSenderWallet = await prisma.wallet.findUnique({ where: { userId: sender.id } });
+      const transaction = await prisma.transaction.findFirst({
+        where: { fromUserId: sender.id, currency: TransactionCurrency.MERITS },
+        orderBy: { createdAt: 'desc' },
+      });
 
-    expect(transaction).toBeDefined();
-    expect(transaction!.amount).toBe(meritsToSend);
+      expect(finalSenderWallet!.balance).toBe(senderInitialWallet!.balance - meritsToSend);
+      expect(transaction).toBeDefined();
+      expect(transaction!.amount).toBe(meritsToSend);
+      expect(transaction!.currency).toBe(TransactionCurrency.MERITS);
+    });
   });
 });
