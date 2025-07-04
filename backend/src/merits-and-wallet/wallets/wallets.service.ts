@@ -6,6 +6,7 @@ import {
 } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { Wallet, Currency } from '../../generated/prisma';
+import Decimal from 'decimal.js';
 
 // Define a basic type for the authenticated user passed from the controller
 type AuthenticatedUser = { id: string; roles: string[] /* other properties */ };
@@ -38,12 +39,6 @@ export class WalletsService {
         updateData.balanceToins = { increment: amount };
         createData.balanceToins = amount;
         createData.balanceUnits = 0;
-        break;
-      case Currency.ONDAS:
-      case Currency.MERITOS:
-        updateData.balanceUnits = { increment: amount };
-        createData.balanceUnits = amount;
-        createData.balanceToins = 0;
         break;
       default:
         throw new Error(`Moneda no soportada: ${currency}`);
@@ -227,11 +222,9 @@ export class WalletsService {
     }
     switch (currency) {
       case Currency.UNITS:
-      case Currency.ONDAS:
-      case Currency.MERITOS:
-        return wallet.balanceUnits >= amount;
+        return new Decimal(wallet.balanceUnits).gte(amount);
       case Currency.TOINS:
-        return wallet.balanceToins >= amount;
+        return new Decimal(wallet.balanceToins).gte(amount);
       default:
         return false;
     }
@@ -249,11 +242,9 @@ export class WalletsService {
     }
     switch (currency) {
       case Currency.UNITS:
-      case Currency.ONDAS:
-      case Currency.MERITOS:
-        return wallet.balanceUnits;
+        return new Decimal(wallet.balanceUnits).toNumber();
       case Currency.TOINS:
-        return wallet.balanceToins;
+        return new Decimal(wallet.balanceToins).toNumber();
       default:
         return 0;
     }

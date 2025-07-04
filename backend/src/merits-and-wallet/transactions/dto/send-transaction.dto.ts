@@ -22,12 +22,10 @@ type MetadataValue = string | number | boolean | null;
  */
 export enum TransactionCurrency {
   UNITS = 'Ünits',
-  MERITS = 'Mëritos',
 }
 
 export const TRANSACTION_CURRENCY_TO_CURRENCY_MAP: Record<TransactionCurrency, Currency> = {
   [TransactionCurrency.UNITS]: Currency.UNITS,
-  [TransactionCurrency.MERITS]: Currency.MERITOS,
 };
 
 export class SendTransactionDto {
@@ -39,7 +37,7 @@ export class SendTransactionDto {
   amount: number;
 
   @IsEnum(TransactionCurrency, {
-    message: 'La moneda debe ser Ünits o Mëritos.',
+    message: 'La moneda debe ser Ünits.',
   })
   currency: TransactionCurrency;
 

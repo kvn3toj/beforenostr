@@ -7,6 +7,7 @@ import { AuthService } from '../../auth/auth.service';
 import { User, Currency } from '../../generated/prisma';
 import * as bcrypt from 'bcrypt';
 import { TransactionCurrency } from './dto/send-transaction.dto';
+import Decimal from 'decimal.js';
 
 /**
  * 🧪 Crisol de Pruebas E2E para Transactions
@@ -226,12 +227,12 @@ describe('TransactionsController (E2E) - El Crisol de la Confianza', () => {
         ? JSON.parse(transaction.metadata)
         : transaction.metadata;
 
-      expect(finalSenderWallet.balanceUnits).toBe(
-        senderInitialWallet.balanceUnits - amountToSend
-      );
-      expect(finalReceiverWallet.balanceUnits).toBe(
-        receiverInitialWallet.balanceUnits + amountToSend
-      );
+      expect(new Decimal(finalSenderWallet.balanceUnits).equals(
+        new Decimal(senderInitialWallet.balanceUnits).minus(amountToSend)
+      )).toBe(true);
+      expect(new Decimal(finalReceiverWallet.balanceUnits).equals(
+        new Decimal(receiverInitialWallet.balanceUnits).plus(amountToSend)
+      )).toBe(true);
       expect(transaction).toBeDefined();
       expect(transaction.currency).toBe(Currency.UNITS);
       expect(transaction.description).toBe('Prueba de SAGE');
@@ -253,7 +254,7 @@ describe('TransactionsController (E2E) - El Crisol de la Confianza', () => {
         .send({
           recipientId: receiver.id,
           amount: meritsToSend,
-          currency: TransactionCurrency.MERITS,
+          currency: TransactionCurrency.UNITS,
           description: 'Reconocimiento de valor en Mëritos',
         })
         .expect(201);
@@ -262,16 +263,16 @@ describe('TransactionsController (E2E) - El Crisol de la Confianza', () => {
         where: { userId: sender.id },
       });
       const transaction = await prisma.transaction.findFirst({
-        where: { fromUserId: sender.id, currency: Currency.MERITOS },
+        where: { fromUserId: sender.id, currency: Currency.UNITS },
         orderBy: { createdAt: 'desc' },
       });
 
-      expect(finalSenderWallet!.balanceUnits).toBe(
-        senderInitialWallet!.balanceUnits - meritsToSend
-      );
+      expect(new Decimal(finalSenderWallet!.balanceUnits).equals(
+        new Decimal(senderInitialWallet!.balanceUnits).minus(meritsToSend)
+      )).toBe(true);
       expect(transaction).toBeDefined();
       expect(transaction!.amount).toBe(meritsToSend);
-      expect(transaction!.currency).toBe(Currency.MERITOS);
+      expect(transaction!.currency).toBe(Currency.UNITS);
     });
   });
 });

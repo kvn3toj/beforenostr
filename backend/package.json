@@ -125,6 +125,6 @@
     }
   },
   "prisma": {
-    "seed": "ts-node src/prisma/seed.ts"
+    "seed": "ts-node prisma/seed-dev.ts"
   }
 }

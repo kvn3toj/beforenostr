@@ -13,6 +13,7 @@ import {
 } from './dto/send-transaction.dto';
 import { Merit } from '../../generated/prisma';
 import { Prisma } from '../../generated/prisma';
+import Decimal from 'decimal.js';
 
 // Define a basic type for the authenticated user passed from the controller
 type AuthenticatedUser = { id: string; roles: string[] /* other properties */ };
@@ -147,8 +148,6 @@ export class TransactionsService {
     switch (transactionCurrency) {
       case TransactionCurrency.UNITS:
         return Currency.UNITS;
-      case TransactionCurrency.MERITS:
-        return Currency.MERITOS;
       default:
         throw new Error(`Moneda no soportada: ${transactionCurrency}`);
     }
@@ -208,8 +207,6 @@ export class TransactionsService {
       };
       switch (prismaCurrency) {
         case Currency.UNITS:
-        case Currency.ONDAS:
-        case Currency.MERITOS:
           updateSenderData.balanceUnits = { decrement: amount };
           updateRecipientData.balanceUnits = { increment: amount };
           createRecipientData.balanceUnits = amount;
@@ -221,6 +218,8 @@ export class TransactionsService {
           createRecipientData.balanceToins = amount;
           createRecipientData.balanceUnits = 0;
           break;
+        default:
+          throw new Error(`Moneda no soportada: ${prismaCurrency}`);
       }
       await prisma.wallet.update({
         where: { userId: senderId },
@@ -260,28 +259,36 @@ export class TransactionsService {
         OR: [{ fromUserId: userId }, { toUserId: userId }],
       },
     });
-    let totalSent = 0;
-    let totalReceived = 0;
-    let transactionCount = transactions.length;
-    const currencyBreakdown: Record<string, { sent: number; received: number }> = {};
+    let totalSent = new Decimal(0);
+    let totalReceived = new Decimal(0);
+    const transactionCount = transactions.length;
+    const currencyBreakdown: Record<string, { sent: Decimal; received: Decimal }> = {};
     for (const tx of transactions) {
       if (!currencyBreakdown[tx.currency]) {
-        currencyBreakdown[tx.currency] = { sent: 0, received: 0 };
+        currencyBreakdown[tx.currency] = { sent: new Decimal(0), received: new Decimal(0) };
       }
       if (tx.fromUserId === userId) {
-        totalSent += tx.amount;
-        currencyBreakdown[tx.currency].sent += tx.amount;
+        totalSent = totalSent.plus(tx.amount);
+        currencyBreakdown[tx.currency].sent = currencyBreakdown[tx.currency].sent.plus(tx.amount);
       }
       if (tx.toUserId === userId) {
-        totalReceived += tx.amount;
-        currencyBreakdown[tx.currency].received += tx.amount;
+        totalReceived = totalReceived.plus(tx.amount);
+        currencyBreakdown[tx.currency].received = currencyBreakdown[tx.currency].received.plus(tx.amount);
       }
     }
+    // Convertir a number para la respuesta final
+    const breakdownAsNumber: Record<string, { sent: number; received: number }> = {};
+    for (const [currency, values] of Object.entries(currencyBreakdown)) {
+      breakdownAsNumber[currency] = {
+        sent: values.sent.toNumber(),
+        received: values.received.toNumber(),
+      };
+    }
     return {
-      totalSent,
-      totalReceived,
+      totalSent: totalSent.toNumber(),
+      totalReceived: totalReceived.toNumber(),
       transactionCount,
-      currencyBreakdown,
+      currencyBreakdown: breakdownAsNumber,
     };
   }
 }

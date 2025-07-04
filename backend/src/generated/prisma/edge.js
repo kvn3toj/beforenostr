@@ -943,7 +943,7 @@ const config = {
   },
   "relativeEnvPaths": {
     "rootEnvPath": null,
-    "schemaEnvPath": "../../../.env"
+    "schemaEnvPath": "../../../../.env"
   },
   "relativePath": "../../../prisma",
   "clientVersion": "6.11.1",
@@ -952,7 +952,6 @@ const config = {
     "db"
   ],
   "activeProvider": "postgresql",
-  "postinstall": false,
   "inlineDatasources": {
     "db": {
       "url": {
