@@ -1,4 +1,14 @@
-import { IsString, IsEnum, IsNumber, IsArray, IsDateString, IsOptional, IsInt, Min, Max } from 'class-validator';
+import {
+  IsString,
+  IsEnum,
+  IsNumber,
+  IsArray,
+  IsDateString,
+  IsOptional,
+  IsInt,
+  Min,
+  Max,
+} from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export enum ThematicElement {
@@ -6,7 +16,7 @@ export enum ThematicElement {
   WATER = 'Agua',
   AIR = 'Aire',
   EARTH = 'Tierra',
-  ETHER = 'Éter'
+  ETHER = 'Éter',
 }
 
 export enum GuardianRole {
@@ -21,46 +31,47 @@ export enum GuardianRole {
   MAYA = 'MAYA',
   ZARA = 'ZARA',
   THOR = 'THOR',
-  NOVA = 'NOVA'
+  NOVA = 'NOVA',
 }
 
 export enum HambrELevel {
   NURTURES_CURIOSITY = 1,
   ACTIVATES_CONTRIBUTION = 2,
-  IMPULSES_TRANSFORMATION = 3
+  IMPULSES_TRANSFORMATION = 3,
 }
 
 export enum ColumnStatus {
   BACKLOG = 'Backlog Cósmico',
   ALCHEMICAL = 'En Proceso de Alquimia',
   QUALITY = 'En Revisión de Calidad',
-  MANIFESTED = 'Manifestado'
+  MANIFESTED = 'Manifestado',
 }
 
 export enum TaskPriority {
   CRITICAL = 'Critical',
   HIGH = 'High',
   MEDIUM = 'Medium',
-  LOW = 'Low'
+  LOW = 'Low',
 }
 
 export enum PhilosophicalKpi {
   IER = 'IER',
   VIC = 'VIC',
-  GS = 'GS'
+  GS = 'GS',
 }
 
 export class CreateCosmicTaskDto {
   @ApiProperty({
     description: 'Título de la tarea cósmica',
-    example: 'Encender la Puerta al Viaje del Peregrino'
+    example: 'Encender la Puerta al Viaje del Peregrino',
   })
   @IsString()
   title: string;
 
   @ApiProperty({
     description: 'Descripción detallada de la tarea',
-    example: 'Transformar la experiencia de onboarding inicial para nuevos Jugadores'
+    example:
+      'Transformar la experiencia de onboarding inicial para nuevos Jugadores',
   })
   @IsString()
   description: string;
@@ -68,7 +79,7 @@ export class CreateCosmicTaskDto {
   @ApiProperty({
     description: 'Elemento temático cósmico asociado',
     enum: ThematicElement,
-    example: ThematicElement.ETHER
+    example: ThematicElement.ETHER,
   })
   @IsEnum(ThematicElement)
   element: ThematicElement;
@@ -76,15 +87,16 @@ export class CreateCosmicTaskDto {
   @ApiProperty({
     description: 'Guardián digital responsable',
     enum: GuardianRole,
-    example: GuardianRole.ANA
+    example: GuardianRole.ANA,
   })
   @IsEnum(GuardianRole)
   guardian: GuardianRole;
 
   @ApiProperty({
-    description: 'Nivel de HambrE (Hunger for Action, Motivation, Responsibility, Excellence)',
+    description:
+      'Nivel de HambrE (Hunger for Action, Motivation, Responsibility, Excellence)',
     enum: HambrELevel,
-    example: HambrELevel.IMPULSES_TRANSFORMATION
+    example: HambrELevel.IMPULSES_TRANSFORMATION,
   })
   @IsEnum(HambrELevel)
   hambreLevel: HambrELevel;
@@ -92,7 +104,7 @@ export class CreateCosmicTaskDto {
   @ApiProperty({
     description: 'Prioridad de la tarea',
     enum: TaskPriority,
-    example: TaskPriority.CRITICAL
+    example: TaskPriority.CRITICAL,
   })
   @IsEnum(TaskPriority)
   priority: TaskPriority;
@@ -101,7 +113,7 @@ export class CreateCosmicTaskDto {
     description: 'Fase del proyecto (1, 2, o 3)',
     minimum: 1,
     maximum: 3,
-    example: 1
+    example: 1,
   })
   @IsInt()
   @Min(1)
@@ -111,7 +123,7 @@ export class CreateCosmicTaskDto {
   @ApiProperty({
     description: 'Horas estimadas para completar la tarea',
     minimum: 0,
-    example: 8
+    example: 8,
   })
   @IsNumber()
   @Min(0)
@@ -120,7 +132,7 @@ export class CreateCosmicTaskDto {
   @ApiProperty({
     description: 'KPI filosófico principal',
     enum: PhilosophicalKpi,
-    example: PhilosophicalKpi.VIC
+    example: PhilosophicalKpi.VIC,
   })
   @IsEnum(PhilosophicalKpi)
   philosophicalKpi: PhilosophicalKpi;
@@ -128,7 +140,7 @@ export class CreateCosmicTaskDto {
   @ApiProperty({
     description: 'Etiquetas para categorización',
     type: [String],
-    example: ['Onboarding', 'PilgrimJourney', 'CosmicDesign']
+    example: ['Onboarding', 'PilgrimJourney', 'CosmicDesign'],
   })
   @IsArray()
   @IsString({ each: true })
@@ -137,7 +149,7 @@ export class CreateCosmicTaskDto {
   @ApiProperty({
     description: 'Estado actual de la tarea',
     enum: ColumnStatus,
-    example: ColumnStatus.BACKLOG
+    example: ColumnStatus.BACKLOG,
   })
   @IsEnum(ColumnStatus)
   status: ColumnStatus;
@@ -145,7 +157,7 @@ export class CreateCosmicTaskDto {
   @ApiProperty({
     description: 'Persona asignada (opcional)',
     required: false,
-    example: 'ANA (Chief Innovation Officer)'
+    example: 'ANA (Chief Innovation Officer)',
   })
   @IsOptional()
   @IsString()
@@ -155,7 +167,7 @@ export class CreateCosmicTaskDto {
     description: 'Horas reales trabajadas (opcional)',
     required: false,
     minimum: 0,
-    example: 6.5
+    example: 6.5,
   })
   @IsOptional()
   @IsNumber()
@@ -165,7 +177,7 @@ export class CreateCosmicTaskDto {
   @ApiProperty({
     description: 'Fecha de finalización (opcional)',
     required: false,
-    example: '2025-01-15T10:30:00Z'
+    example: '2025-01-15T10:30:00Z',
   })
   @IsOptional()
   @IsDateString()
@@ -174,7 +186,7 @@ export class CreateCosmicTaskDto {
   @ApiProperty({
     description: 'Metadatos adicionales en formato JSON (opcional)',
     required: false,
-    example: { projectType: 'infrastructure', realWorldImpact: 'high' }
+    example: { projectType: 'infrastructure', realWorldImpact: 'high' },
   })
   @IsOptional()
   metadata?: any;

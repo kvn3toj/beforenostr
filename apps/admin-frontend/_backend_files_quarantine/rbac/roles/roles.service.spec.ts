@@ -88,7 +88,7 @@ describe('RolesService', () => {
     it('should assign a role to a user', async () => {
       const userId = 'user-id';
       const roleId = 'role-id';
-      const updatedUser = { id: userId, roleId: roleId };
+      const updatedUser = { id: userId, roleId };
 
       jest.spyOn(prisma.user, 'update').mockResolvedValue(updatedUser as any);
 
@@ -97,7 +97,7 @@ describe('RolesService', () => {
       expect(result).toEqual(updatedUser);
       expect(prisma.user.update).toHaveBeenCalledWith({
         where: { id: userId },
-        data: { roleId: roleId },
+        data: { roleId },
       });
     });
 
@@ -110,7 +110,7 @@ describe('RolesService', () => {
         await expect(service.assignRoleToUser(userId, roleId)).rejects.toThrow('User not found');
         expect(prisma.user.update).toHaveBeenCalledWith({
           where: { id: userId },
-          data: { roleId: roleId },
+          data: { roleId },
         });
     });
 

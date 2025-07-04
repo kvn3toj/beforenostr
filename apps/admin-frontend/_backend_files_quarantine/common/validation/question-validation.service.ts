@@ -56,7 +56,7 @@ export class QuestionValidationService {
       // Validar preguntas de VideoItem (tabla questions)
       const videoQuestions = await this.prisma.question.findMany({
         where: { 
-          videoItemId: videoItemId,
+          videoItemId,
           isActive: true 
         },
         orderBy: { timestamp: 'asc' }
@@ -75,7 +75,7 @@ export class QuestionValidationService {
 
       // Validar preguntas de Activity que referencian este video
       const activities = await this.prisma.activity.findMany({
-        where: { videoItemId: videoItemId },
+        where: { videoItemId },
         include: { questions: true }
       });
 

@@ -75,157 +75,147 @@ export class AuthService {
   async login(dto: LoginDto) {
     // //     console.log('>>> AuthService login called with:', dto.email);
 
-    try {
-      const user = await this.validateUser(dto.email, dto.password);
-      if (!user) {
-        throw new UnauthorizedException('Invalid credentials');
-      }
+    const user = await this.validateUser(dto.email, dto.password);
+    if (!user) {
+      throw new UnauthorizedException('Invalid credentials');
+    }
 
-      // Extract roles and permissions from user data
-      const roles = user.userRoles?.map((userRole) => userRole.role.name) || [];
-      const permissions =
-        user.userRoles?.flatMap(
-          (userRole) =>
-            userRole.role.rolePermissions?.map(
-              (rolePermission) => rolePermission.permission.name
-            ) || []
-        ) || [];
+    // Extract roles and permissions from user data
+    const roles = user.userRoles?.map((userRole) => userRole.role.name) || [];
+    const permissions =
+      user.userRoles?.flatMap(
+        (userRole) =>
+          userRole.role.rolePermissions?.map(
+            (rolePermission) => rolePermission.permission.name
+          ) || []
+      ) || [];
 
-      // //       console.log('>>> AuthService login: User roles:', roles);
-      // //       console.log('>>> AuthService login: User permissions:', permissions);
+    // //       console.log('>>> AuthService login: User roles:', roles);
+    // //       console.log('>>> AuthService login: User permissions:', permissions);
 
-      // Create JWT payload
-      const payload = {
-        sub: user.id,
+    // Create JWT payload
+    const payload = {
+      sub: user.id,
+      email: user.email,
+      name: user.name,
+      roles,
+      permissions,
+      iat: Math.floor(Date.now() / 1000),
+    };
+
+    // //       console.log('>>> AuthService login: Creating JWT with payload:', payload);
+
+    const access_token = this.jwtService.sign(payload);
+
+    // //       console.log('>>> AuthService login: JWT created successfully');
+
+    // Log audit entry - TEMPORARILY DISABLED FOR TESTING
+    // await this.auditLogsService.createLog({
+    //   action: 'LOGIN',
+    //   entityType: 'User',
+    //   entityId: user.id,
+    //   userId: user.id,
+    //   details: { email: user.email },
+    // });
+
+    return {
+      access_token,
+      user: {
+        id: user.id,
         email: user.email,
         name: user.name,
+        avatarUrl: user.avatarUrl,
         roles,
         permissions,
-        iat: Math.floor(Date.now() / 1000),
-      };
-
-      // //       console.log('>>> AuthService login: Creating JWT with payload:', payload);
-
-      const access_token = this.jwtService.sign(payload);
-
-      // //       console.log('>>> AuthService login: JWT created successfully');
-
-      // Log audit entry - TEMPORARILY DISABLED FOR TESTING
-      // await this.auditLogsService.createLog({
-      //   action: 'LOGIN',
-      //   entityType: 'User',
-      //   entityId: user.id,
-      //   userId: user.id,
-      //   details: { email: user.email },
-      // });
-
-      return {
-        access_token,
-        user: {
-          id: user.id,
-          email: user.email,
-          name: user.name,
-          avatarUrl: user.avatarUrl,
-          roles,
-          permissions,
-        },
-      };
-    } catch (error) {
-      //       console.error('>>> AuthService login error:', error);
-      throw error;
-    }
+      },
+    };
   }
 
   async register(dto: RegisterDto) {
     //     console.log('>>> AuthService register called with:', dto.email);
 
-    try {
-      // Check if user already exists
-      const existingUser = await this.prisma.user.findUnique({
-        where: { email: dto.email },
-      });
+    // Check if user already exists
+    const existingUser = await this.prisma.user.findUnique({
+      where: { email: dto.email },
+    });
 
-      if (existingUser) {
-        throw new ConflictException('User with this email already exists');
-      }
+    if (existingUser) {
+      throw new ConflictException('User with this email already exists');
+    }
 
-      // Hash password with bcrypt
-      const hashedPassword = await bcrypt.hash(dto.password, 12);
+    // Hash password with bcrypt
+    const hashedPassword = await bcrypt.hash(dto.password, 12);
 
-      // Create user in database
-      const user = await this.prisma.user.create({
-        data: {
-          email: dto.email,
-          name: dto.name || dto.email.split('@')[0],
-          password: hashedPassword,
-          avatarUrl: null,
-        },
-        include: {
-          userRoles: {
-            include: {
-              role: {
-                include: {
-                  rolePermissions: {
-                    include: {
-                      permission: true,
-                    },
+    // Create user in database
+    const user = await this.prisma.user.create({
+      data: {
+        email: dto.email,
+        name: dto.name || dto.email.split('@')[0],
+        password: hashedPassword,
+        avatarUrl: null,
+      },
+      include: {
+        userRoles: {
+          include: {
+            role: {
+              include: {
+                rolePermissions: {
+                  include: {
+                    permission: true,
                   },
                 },
               },
             },
           },
         },
-      });
+      },
+    });
 
-      // Extract roles and permissions from user data
-      const roles = user.userRoles?.map((userRole) => userRole.role.name) || [];
-      const permissions =
-        user.userRoles?.flatMap(
-          (userRole) =>
-            userRole.role.rolePermissions?.map(
-              (rolePermission) => rolePermission.permission.name
-            ) || []
-        ) || [];
+    // Extract roles and permissions from user data
+    const roles = user.userRoles?.map((userRole) => userRole.role.name) || [];
+    const permissions =
+      user.userRoles?.flatMap(
+        (userRole) =>
+          userRole.role.rolePermissions?.map(
+            (rolePermission) => rolePermission.permission.name
+          ) || []
+      ) || [];
 
-      //       console.log('>>> AuthService register: User roles:', roles);
-      //       console.log('>>> AuthService register: User permissions:', permissions);
+    //       console.log('>>> AuthService register: User roles:', roles);
+    //       console.log('>>> AuthService register: User permissions:', permissions);
 
-      // Create JWT payload
-      const payload = {
-        sub: user.id,
+    // Create JWT payload
+    const payload = {
+      sub: user.id,
+      email: user.email,
+      name: user.name,
+      roles,
+      permissions,
+      iat: Math.floor(Date.now() / 1000),
+    };
+
+    const access_token = this.jwtService.sign(payload);
+
+    // Log audit entry - TEMPORARILY DISABLED FOR TESTING
+    // await this.auditLogsService.createLog({
+    //   action: 'REGISTER',
+    //   entityType: 'User',
+    //   entityId: user.id,
+    //   userId: user.id,
+    //   details: { email: user.email },
+    // });
+
+    return {
+      access_token,
+      user: {
+        id: user.id,
         email: user.email,
         name: user.name,
+        avatarUrl: user.avatarUrl,
         roles,
         permissions,
-        iat: Math.floor(Date.now() / 1000),
-      };
-
-      const access_token = this.jwtService.sign(payload);
-
-      // Log audit entry - TEMPORARILY DISABLED FOR TESTING
-      // await this.auditLogsService.createLog({
-      //   action: 'REGISTER',
-      //   entityType: 'User',
-      //   entityId: user.id,
-      //   userId: user.id,
-      //   details: { email: user.email },
-      // });
-
-      return {
-        access_token,
-        user: {
-          id: user.id,
-          email: user.email,
-          name: user.name,
-          avatarUrl: user.avatarUrl,
-          roles,
-          permissions,
-        },
-      };
-    } catch (error) {
-      //       console.error('>>> AuthService register error:', error);
-      throw error;
-    }
+      },
+    };
   }
 
   async getCurrentUser() {

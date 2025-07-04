@@ -215,7 +215,7 @@ class AnalyticsService {
   trackBetaFeedbackSubmission(feedbackType: string, rating: number) {
     this.trackBetaEvent('feedback_submitted', {
       feedback_type: feedbackType,
-      rating: rating,
+      rating,
       feedback_positive: rating >= 4
     });
   }
@@ -253,7 +253,7 @@ class AnalyticsService {
     if (window.gtag) {
       window.gtag('event', 'conversion', {
         send_to: this.gaTrackingId,
-        value: value,
+        value,
         currency: 'USD',
         event_category: 'Beta Conversion',
         event_label: goalName

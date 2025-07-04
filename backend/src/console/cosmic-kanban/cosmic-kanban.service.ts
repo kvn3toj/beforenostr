@@ -7,7 +7,14 @@
 import { Injectable, NotFoundException, Inject } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { CacheService } from '../../cache/cache.service';
-import { CreateCosmicTaskDto, ThematicElement, GuardianRole, ColumnStatus, TaskPriority, PhilosophicalKpi } from './dto/create-cosmic-task.dto';
+import {
+  CreateCosmicTaskDto,
+  ThematicElement,
+  GuardianRole,
+  ColumnStatus,
+  TaskPriority,
+  PhilosophicalKpi,
+} from './dto/create-cosmic-task.dto';
 import { UpdateCosmicTaskDto } from './dto/update-cosmic-task.dto';
 import { CosmicTaskResponseDto } from './dto/cosmic-task.response.dto';
 
@@ -21,18 +28,20 @@ export interface CosmicTaskFilter {
 @Injectable()
 export class CosmicKanbanService {
   // Propiedad para almacenar el ID del intervalo de sincronización automática
-  private autoSyncInterval: NodeJS.Timeout | null = null;
+  private autoSyncInterval: ReturnType<typeof setInterval> | null = null;
 
   constructor(
     @Inject(PrismaService) private readonly prisma: PrismaService,
-    @Inject(CacheService) private readonly cache: CacheService,
+    @Inject(CacheService) private readonly cache: CacheService
   ) {}
 
   /**
    * 🌟 Manifestar nueva tarea cósmica
    * Crear un high-value meme siguiendo los principios del Ayni
    */
-  async createTask(createTaskDto: CreateCosmicTaskDto): Promise<CosmicTaskResponseDto> {
+  async createTask(
+    createTaskDto: CreateCosmicTaskDto
+  ): Promise<CosmicTaskResponseDto> {
     try {
       // Por ahora, usaremos el modelo Challenge como base
       // TODO: Crear modelo CosmicTask específico en el futuro
@@ -74,7 +83,9 @@ export class CosmicKanbanService {
    * 🔍 Acceder a la sabiduría del Portal Kanban Cósmico
    * Obtener todas las tareas con filtros opcionales
    */
-  async getAllTasks(filters: CosmicTaskFilter = {}): Promise<CosmicTaskResponseDto[]> {
+  async getAllTasks(
+    filters: CosmicTaskFilter = {}
+  ): Promise<CosmicTaskResponseDto[]> {
     try {
       const cacheKey = `cosmic:tasks:${JSON.stringify(filters)}`;
       const cached = await this.cache.get(cacheKey);
@@ -87,33 +98,34 @@ export class CosmicKanbanService {
         where: {
           type: 'COSMIC_TASK',
         },
-        orderBy: [
-          { updatedAt: 'desc' },
-          { createdAt: 'desc' },
-        ],
+        orderBy: [{ updatedAt: 'desc' }, { createdAt: 'desc' }],
       });
 
       // Aplicar filtros de status después si es necesario
       let filteredByStatus = cosmicTasks;
       if (filters.status) {
-        filteredByStatus = cosmicTasks.filter(task => task.status === filters.status);
+        filteredByStatus = cosmicTasks.filter(
+          (task) => task.status === filters.status
+        );
       }
 
       // Filtros adicionales basados en config
       let filteredTasks = filteredByStatus;
       if (filters.guardian || filters.element || filters.phase) {
-        filteredTasks = filteredByStatus.filter(task => {
+        filteredTasks = filteredByStatus.filter((task) => {
           const config = JSON.parse(task.config || '{}');
 
-          if (filters.guardian && config.guardian !== filters.guardian) return false;
-          if (filters.element && config.element !== filters.element) return false;
+          if (filters.guardian && config.guardian !== filters.guardian)
+            return false;
+          if (filters.element && config.element !== filters.element)
+            return false;
           if (filters.phase && config.phase !== filters.phase) return false;
 
           return true;
         });
       }
 
-      const result = filteredTasks.map(task => this.mapToResponseDto(task));
+      const result = filteredTasks.map((task) => this.mapToResponseDto(task));
 
       // Cachear por 5 minutos
       await this.cache.set(cacheKey, JSON.stringify(result), 300);
@@ -137,7 +149,9 @@ export class CosmicKanbanService {
       });
 
       if (!cosmicTask) {
-        throw new NotFoundException('Tarea cósmica no encontrada en el Portal Kanban');
+        throw new NotFoundException(
+          'Tarea cósmica no encontrada en el Portal Kanban'
+        );
       }
 
       return this.mapToResponseDto(cosmicTask);
@@ -153,7 +167,10 @@ export class CosmicKanbanService {
    * 🔄 Evolucionar tarea cósmica
    * Actualizar siguiendo los principios de la Metanöia
    */
-  async updateTask(id: string, updateTaskDto: UpdateCosmicTaskDto): Promise<CosmicTaskResponseDto> {
+  async updateTask(
+    id: string,
+    updateTaskDto: UpdateCosmicTaskDto
+  ): Promise<CosmicTaskResponseDto> {
     try {
       const existingTask = await this.prisma.challenge.findUnique({
         where: {
@@ -163,15 +180,22 @@ export class CosmicKanbanService {
       });
 
       if (!existingTask) {
-        throw new NotFoundException('Tarea cósmica no encontrada para evolución');
+        throw new NotFoundException(
+          'Tarea cósmica no encontrada para evolución'
+        );
       }
 
       const existingConfig = JSON.parse(existingTask.config || '{}');
       const updatedConfig = { ...existingConfig };
 
       // Actualizar campos en config si están presentes en el DTO
-      Object.keys(updateTaskDto).forEach(key => {
-        if (updateTaskDto[key] !== undefined && key !== 'title' && key !== 'description' && key !== 'status') {
+      Object.keys(updateTaskDto).forEach((key) => {
+        if (
+          updateTaskDto[key] !== undefined &&
+          key !== 'title' &&
+          key !== 'description' &&
+          key !== 'status'
+        ) {
           updatedConfig[key] = updateTaskDto[key];
         }
       });
@@ -180,7 +204,9 @@ export class CosmicKanbanService {
         where: { id },
         data: {
           ...(updateTaskDto.title && { title: updateTaskDto.title }),
-          ...(updateTaskDto.description && { description: updateTaskDto.description }),
+          ...(updateTaskDto.description && {
+            description: updateTaskDto.description,
+          }),
           ...(updateTaskDto.status && { status: updateTaskDto.status }),
           config: JSON.stringify(updatedConfig),
         },
@@ -212,7 +238,9 @@ export class CosmicKanbanService {
       });
 
       if (!existingTask) {
-        throw new NotFoundException('Tarea cósmica no encontrada para transmutación');
+        throw new NotFoundException(
+          'Tarea cósmica no encontrada para transmutación'
+        );
       }
 
       await this.prisma.challenge.delete({
@@ -284,17 +312,19 @@ export class CosmicKanbanService {
         totalActualHours: 0,
       };
 
-      allTasks.forEach(task => {
+      allTasks.forEach((task) => {
         const config = JSON.parse(task.config || '{}');
 
         // Estadísticas por Guardián
         if (config.guardian) {
-          stats.byGuardian[config.guardian] = (stats.byGuardian[config.guardian] || 0) + 1;
+          stats.byGuardian[config.guardian] =
+            (stats.byGuardian[config.guardian] || 0) + 1;
         }
 
         // Estadísticas por Elemento
         if (config.element) {
-          stats.byElement[config.element] = (stats.byElement[config.element] || 0) + 1;
+          stats.byElement[config.element] =
+            (stats.byElement[config.element] || 0) + 1;
         }
 
         // Estadísticas por Estado
@@ -319,11 +349,13 @@ export class CosmicKanbanService {
 
       return stats;
     } catch (error) {
-      throw new Error(`Error al obtener estadísticas cósmicas: ${error.message}`);
+      throw new Error(
+        `Error al obtener estadísticas cósmicas: ${error.message}`
+      );
     }
   }
 
-    /**
+  /**
    * 🔍 DEBUG: Ver todas las challenges en la BD
    */
   async debugAllChallenges() {
@@ -381,7 +413,8 @@ export class CosmicKanbanService {
         integration: {
           status: integrationStatus,
           completionPercentage: 90,
-          nextSteps: 'Finalizar integración de módulos SuperApp con Backend NestJS',
+          nextSteps:
+            'Finalizar integración de módulos SuperApp con Backend NestJS',
         },
         infrastructure: {
           status: 'Estable',
@@ -416,18 +449,24 @@ export class CosmicKanbanService {
 
       // Crear tareas para SuperApp
       if (projectStatus.superApp.completionPercentage < 100) {
-        const superAppTasks = await this.generateTasksForSuperApp(projectStatus.superApp);
+        const superAppTasks = await this.generateTasksForSuperApp(
+          projectStatus.superApp
+        );
         createdTasks.push(...superAppTasks);
       }
 
       // Crear tareas para integración
       if (projectStatus.integration.completionPercentage < 100) {
-        const integrationTasks = await this.generateTasksForIntegration(projectStatus.integration);
+        const integrationTasks = await this.generateTasksForIntegration(
+          projectStatus.integration
+        );
         createdTasks.push(...integrationTasks);
       }
 
       // Crear tareas para infraestructura
-      const infrastructureTasks = await this.generateTasksForInfrastructure(projectStatus.infrastructure);
+      const infrastructureTasks = await this.generateTasksForInfrastructure(
+        projectStatus.infrastructure
+      );
       createdTasks.push(...infrastructureTasks);
 
       // Invalidar caché
@@ -439,7 +478,9 @@ export class CosmicKanbanService {
         tasks: createdTasks,
       };
     } catch (error) {
-      throw new Error(`Error al sincronizar estado del proyecto: ${error.message}`);
+      throw new Error(
+        `Error al sincronizar estado del proyecto: ${error.message}`
+      );
     }
   }
 
@@ -453,24 +494,24 @@ export class CosmicKanbanService {
       superApp: {
         'UPlay (GPL)': 95,
         'Marketplace (GMP)': 90,
-        'Social': 98,
-        'UStats': 92,
-        'Wallet': 95,
+        Social: 98,
+        UStats: 92,
+        Wallet: 95,
       },
       gamifierAdmin: {
         'Consola de Experiencias': 100,
-        'Desafíos': 100,
+        Desafíos: 100,
         'Marketplace Admin': 100,
         'Portal Kanban Cósmico': 100,
       },
       backend: {
-        'Auth': 100,
-        'Users': 100,
-        'Challenges': 100,
-        'Merits': 100,
-        'Marketplace': 100,
-        'Social': 100,
-        'Analytics': 100,
+        Auth: 100,
+        Users: 100,
+        Challenges: 100,
+        Merits: 100,
+        Marketplace: 100,
+        Social: 100,
+        Analytics: 100,
       },
     };
   }
@@ -503,17 +544,17 @@ export class CosmicKanbanService {
       },
     });
 
-    const superAppTasks = tasks.filter(task => {
+    const superAppTasks = tasks.filter((task) => {
       const config = JSON.parse(task.config || '{}');
       return config.tags?.includes('SuperApp');
     }).length;
 
-    const gamifierAdminTasks = tasks.filter(task => {
+    const gamifierAdminTasks = tasks.filter((task) => {
       const config = JSON.parse(task.config || '{}');
       return config.tags?.includes('GamifierAdmin');
     }).length;
 
-    const backendTasks = tasks.filter(task => {
+    const backendTasks = tasks.filter((task) => {
       const config = JSON.parse(task.config || '{}');
       return config.tags?.includes('Backend');
     }).length;
@@ -594,7 +635,10 @@ export class CosmicKanbanService {
         const task = await this.createTask(taskDto);
         createdTasks.push(task);
       } catch (error) {
-        console.error(`Error al crear tarea para integración ${integration}:`, error);
+        console.error(
+          `Error al crear tarea para integración ${integration}:`,
+          error
+        );
       }
     }
 
@@ -613,7 +657,10 @@ export class CosmicKanbanService {
       let taskDto: CreateCosmicTaskDto;
 
       // Asignación fractal correcta según la naturaleza de la tarea
-      if (recommendation.includes('monitoreo') || recommendation.includes('Prometheus')) {
+      if (
+        recommendation.includes('monitoreo') ||
+        recommendation.includes('Prometheus')
+      ) {
         // NIRA: La Vidente de Patrones - Métricas e infraestructura analítica
         taskDto = {
           title: recommendation,
@@ -625,10 +672,19 @@ export class CosmicKanbanService {
           phase: 3,
           estimatedHours: 12,
           philosophicalKpi: PhilosophicalKpi.IER,
-          tags: ['Infrastructure', 'Analytics', 'Metrics', 'Prometheus', 'NIRA'],
+          tags: [
+            'Infrastructure',
+            'Analytics',
+            'Metrics',
+            'Prometheus',
+            'NIRA',
+          ],
           status: ColumnStatus.BACKLOG,
         };
-      } else if (recommendation.includes('alertas') || recommendation.includes('endpoints críticos')) {
+      } else if (
+        recommendation.includes('alertas') ||
+        recommendation.includes('endpoints críticos')
+      ) {
         // NIRA + COSMOS: Alertas como oráculos predictivos + observabilidad sistémica
         taskDto = {
           title: recommendation,
@@ -643,7 +699,10 @@ export class CosmicKanbanService {
           tags: ['Infrastructure', 'Alerts', 'Monitoring', 'NIRA', 'COSMOS'],
           status: ColumnStatus.BACKLOG,
         };
-      } else if (recommendation.includes('Redis') || recommendation.includes('caché')) {
+      } else if (
+        recommendation.includes('Redis') ||
+        recommendation.includes('caché')
+      ) {
         // COSMOS + PHOENIX: Tejedor de sistemas + optimización de rendimiento
         taskDto = {
           title: recommendation,
@@ -655,10 +714,21 @@ export class CosmicKanbanService {
           phase: 3,
           estimatedHours: 8,
           philosophicalKpi: PhilosophicalKpi.GS,
-          tags: ['Infrastructure', 'Cache', 'Redis', 'Performance', 'COSMOS', 'PHOENIX'],
+          tags: [
+            'Infrastructure',
+            'Cache',
+            'Redis',
+            'Performance',
+            'COSMOS',
+            'PHOENIX',
+          ],
           status: ColumnStatus.BACKLOG,
         };
-      } else if (recommendation.includes('seguridad') || recommendation.includes('HMAC') || recommendation.includes('validación')) {
+      } else if (
+        recommendation.includes('seguridad') ||
+        recommendation.includes('HMAC') ||
+        recommendation.includes('validación')
+      ) {
         // COSMOS: Tejedor de Sistemas - Seguridad y protección sistémica
         taskDto = {
           title: recommendation,
@@ -722,7 +792,9 @@ export class CosmicKanbanService {
       status: task.status || ColumnStatus.BACKLOG,
       assignee: config.assignee,
       actualHours: config.actualHours,
-      completionDate: config.completionDate ? new Date(config.completionDate) : undefined,
+      completionDate: config.completionDate
+        ? new Date(config.completionDate)
+        : undefined,
       metadata: config.metadata,
       createdAt: task.createdAt,
       updatedAt: task.updatedAt,
@@ -740,17 +812,29 @@ export class CosmicKanbanService {
     }
 
     // Configurar nuevo intervalo
-    this.autoSyncInterval = setInterval(async () => {
-      try {
-        console.log(`[CosmicKanban] Ejecutando sincronización automática programada`);
-        await this.syncProjectStatus();
-        console.log(`[CosmicKanban] Sincronización automática completada con éxito`);
-      } catch (error) {
-        console.error(`[CosmicKanban] Error en sincronización automática:`, error);
-      }
-    }, intervalMinutes * 60 * 1000);
+    this.autoSyncInterval = setInterval(
+      async () => {
+        try {
+          console.log(
+            `[CosmicKanban] Ejecutando sincronización automática programada`
+          );
+          await this.syncProjectStatus();
+          console.log(
+            `[CosmicKanban] Sincronización automática completada con éxito`
+          );
+        } catch (error) {
+          console.error(
+            `[CosmicKanban] Error en sincronización automática:`,
+            error
+          );
+        }
+      },
+      intervalMinutes * 60 * 1000
+    );
 
-    console.log(`[CosmicKanban] Sincronización automática programada cada ${intervalMinutes} minutos`);
+    console.log(
+      `[CosmicKanban] Sincronización automática programada cada ${intervalMinutes} minutos`
+    );
   }
 
   /**
@@ -762,7 +846,9 @@ export class CosmicKanbanService {
     errors: string[];
     summary: Record<string, number>;
   }> {
-    console.log('🌟 [PURIFICACIÓN CÓSMICA] Iniciando migración masiva de tareas THOR Legacy...');
+    console.log(
+      '🌟 [PURIFICACIÓN CÓSMICA] Iniciando migración masiva de tareas THOR Legacy...'
+    );
 
     try {
       // Obtener todas las tareas COSMIC_TASK y filtrar por THOR después
@@ -773,17 +859,19 @@ export class CosmicKanbanService {
       });
 
       // Filtrar tareas THOR Legacy
-      const thorTasks = allCosmicTasks.filter(task => {
+      const thorTasks = allCosmicTasks.filter((task) => {
         const config = JSON.parse(task.config || '{}');
         return config.guardian === 'THOR';
       });
 
-      console.log(`🔍 [PURIFICACIÓN] Encontradas ${thorTasks.length} tareas THOR Legacy`);
+      console.log(
+        `🔍 [PURIFICACIÓN] Encontradas ${thorTasks.length} tareas THOR Legacy`
+      );
 
       const migrationResults = {
         migrated: 0,
         errors: [] as string[],
-        summary: {} as Record<string, number>
+        summary: {} as Record<string, number>,
       };
 
       // Procesar cada tarea individualmente
@@ -795,22 +883,47 @@ export class CosmicKanbanService {
           let newTags: string[] = config.tags || [];
 
           // Determinar el Guardián correcto según el título/descripción
-          if (task.title.includes('monitoreo') || task.title.includes('Prometheus')) {
+          if (
+            task.title.includes('monitoreo') ||
+            task.title.includes('Prometheus')
+          ) {
             // NIRA: La Vidente de Patrones - Métricas e infraestructura analítica
             newGuardian = GuardianRole.NIRA;
             newElement = ThematicElement.ETHER;
-            newTags = ['Infrastructure', 'Analytics', 'Metrics', 'Prometheus', 'NIRA'];
-          } else if (task.title.includes('alertas') || task.title.includes('endpoints críticos')) {
+            newTags = [
+              'Infrastructure',
+              'Analytics',
+              'Metrics',
+              'Prometheus',
+              'NIRA',
+            ];
+          } else if (
+            task.title.includes('alertas') ||
+            task.title.includes('endpoints críticos')
+          ) {
             // NIRA: Oráculo Predictivo - Sistema de alertas inteligentes
             newGuardian = GuardianRole.NIRA;
             newElement = ThematicElement.ETHER;
             newTags = ['Infrastructure', 'Alerts', 'Monitoring', 'NIRA'];
-          } else if (task.title.includes('Redis') || task.title.includes('caché')) {
+          } else if (
+            task.title.includes('Redis') ||
+            task.title.includes('caché')
+          ) {
             // COSMOS: Tejedor de Sistemas - Infraestructura de caché y rendimiento
             newGuardian = GuardianRole.COSMOS;
             newElement = ThematicElement.EARTH;
-            newTags = ['Infrastructure', 'Cache', 'Redis', 'Performance', 'COSMOS'];
-          } else if (task.title.includes('seguridad') || task.title.includes('HMAC') || task.title.includes('validación')) {
+            newTags = [
+              'Infrastructure',
+              'Cache',
+              'Redis',
+              'Performance',
+              'COSMOS',
+            ];
+          } else if (
+            task.title.includes('seguridad') ||
+            task.title.includes('HMAC') ||
+            task.title.includes('validación')
+          ) {
             // COSMOS: Tejedor de Sistemas - Seguridad sistémica
             newGuardian = GuardianRole.COSMOS;
             newElement = ThematicElement.EARTH;
@@ -829,7 +942,7 @@ export class CosmicKanbanService {
             element: newElement,
             tags: newTags,
             migrationNote: `Migrado de THOR Legacy el ${new Date().toISOString()}`,
-            purificationCosmic: true
+            purificationCosmic: true,
           };
 
           // Actualizar la tarea en la base de datos (tabla challenge)
@@ -837,16 +950,18 @@ export class CosmicKanbanService {
             where: { id: task.id },
             data: {
               config: JSON.stringify(updatedConfig),
-              updatedAt: new Date()
-            }
+              updatedAt: new Date(),
+            },
           });
 
           // Contabilizar la migración
           migrationResults.migrated++;
-          migrationResults.summary[newGuardian] = (migrationResults.summary[newGuardian] || 0) + 1;
+          migrationResults.summary[newGuardian] =
+            (migrationResults.summary[newGuardian] || 0) + 1;
 
-          console.log(`✅ [PURIFICACIÓN] Tarea "${task.title}" migrada de THOR → ${newGuardian}`);
-
+          console.log(
+            `✅ [PURIFICACIÓN] Tarea "${task.title}" migrada de THOR → ${newGuardian}`
+          );
         } catch (error) {
           const errorMsg = `Error migrando tarea ${task.id}: ${error.message}`;
           migrationResults.errors.push(errorMsg);
@@ -866,10 +981,11 @@ export class CosmicKanbanService {
       }
 
       return migrationResults;
-
     } catch (error) {
       console.error('❌ [PURIFICACIÓN CÓSMICA] Error crítico:', error);
-      throw new Error(`Error en la Gran Purificación Cósmica: ${error.message}`);
+      throw new Error(
+        `Error en la Gran Purificación Cósmica: ${error.message}`
+      );
     }
   }
 }

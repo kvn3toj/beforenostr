@@ -4,6 +4,11 @@ import { ExtractJwt, Strategy } from 'passport-jwt';
 import { PrismaService } from '../../prisma/prisma.service';
 import { AuthenticatedUser } from '../types/authenticated-user.interface';
 
+interface JwtPayload {
+  sub: string;
+  // Agrega aquí otros campos que esperas en el payload si los hubiera, ej: iat, exp
+}
+
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
   constructor(@Inject(PrismaService) private readonly prisma: PrismaService) {
@@ -16,7 +21,7 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
     // //     console.log('>>> JwtStrategy CONSTRUCTOR: JWT_SECRET IS', process.env.JWT_SECRET ? 'DEFINED' : 'USING_DEFAULT');
   }
 
-  async validate(payload: any): Promise<AuthenticatedUser | null> {
+  async validate(payload: JwtPayload): Promise<AuthenticatedUser | null> {
     // //     console.log('>>> JwtStrategy VALIDATE: Payload received:', payload);
 
     if (!payload || !payload.sub) {

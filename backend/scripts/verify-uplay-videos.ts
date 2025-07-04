@@ -8,7 +8,7 @@ async function verifyUplayVideos() {
 
     // Get UPLAY mundo
     const uplayMundo = await prisma.mundo.findFirst({
-      where: { nombre: 'UPlay' }
+      where: { nombre: 'UPlay' },
     });
 
     if (!uplayMundo) {
@@ -23,23 +23,25 @@ async function verifyUplayVideos() {
       where: { mundoId: uplayMundo.id },
       include: {
         _count: {
-          select: { videoItems: true }
-        }
-      }
+          select: { videoItems: true },
+        },
+      },
     });
 
     console.log('\n📋 Playlists:');
     for (const playlist of playlists) {
-      console.log(`  - ${playlist.nombre}: ${playlist._count.videoItems} videos`);
+      console.log(
+        `  - ${playlist.nombre}: ${playlist._count.videoItems} videos`
+      );
     }
 
     // Get total video count
     const totalVideos = await prisma.videoItem.count({
       where: {
         playlist: {
-          mundoId: uplayMundo.id
-        }
-      }
+          mundoId: uplayMundo.id,
+        },
+      },
     });
 
     console.log(`\n📊 Total videos: ${totalVideos}`);
@@ -49,12 +51,12 @@ async function verifyUplayVideos() {
       by: ['categoria'],
       where: {
         playlist: {
-          mundoId: uplayMundo.id
-        }
+          mundoId: uplayMundo.id,
+        },
       },
       _count: {
-        _all: true
-      }
+        _all: true,
+      },
     });
 
     console.log('\n🏷️  Videos by category:');
@@ -66,20 +68,21 @@ async function verifyUplayVideos() {
     const sampleVideos = await prisma.videoItem.findMany({
       where: {
         playlist: {
-          mundoId: uplayMundo.id
-        }
+          mundoId: uplayMundo.id,
+        },
       },
       take: 5,
       include: {
-        playlist: true
-      }
+        playlist: true,
+      },
     });
 
     console.log('\n📹 Sample videos:');
     for (const video of sampleVideos) {
-      console.log(`  - "${video.titulo}" (${video.playlist.nombre}) - ${video.meritos} merits`);
+      console.log(
+        `  - "${video.titulo}" (${video.playlist.nombre}) - ${video.meritos} merits`
+      );
     }
-
   } catch (error) {
     console.error('Error:', error);
   } finally {

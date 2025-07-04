@@ -167,7 +167,7 @@ export class VideoItemsService {
       categories: data.categories,
       quality: data.quality,
       // Set playlistId directly as foreign key
-      playlistId: data.playlistId
+      playlistId: data.playlistId,
     };
 
     return this.prisma.videoItem.create({
@@ -185,13 +185,15 @@ export class VideoItemsService {
     const updateData: any = {};
 
     if (data.title !== undefined) updateData.title = data.title;
-    if (data.description !== undefined) updateData.description = data.description;
+    if (data.description !== undefined)
+      updateData.description = data.description;
     if (data.content !== undefined) updateData.content = data.content;
     if (data.url !== undefined) updateData.url = data.url;
     if (data.platform !== undefined) updateData.platform = data.platform;
     if (data.externalId !== undefined) updateData.externalId = data.externalId;
     if (data.duration !== undefined) updateData.duration = data.duration;
-    if (data.thumbnailUrl !== undefined) updateData.thumbnailUrl = data.thumbnailUrl;
+    if (data.thumbnailUrl !== undefined)
+      updateData.thumbnailUrl = data.thumbnailUrl;
     if (data.itemTypeId !== undefined) updateData.itemTypeId = data.itemTypeId;
     if (data.tags !== undefined) updateData.tags = data.tags;
     if (data.categories !== undefined) updateData.categories = data.categories;

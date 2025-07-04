@@ -67,7 +67,7 @@ export const PhilosophyDashboard: React.FC = () => {
   } = usePhilosophyMetrics({
     enableAutoRefresh: autoRefresh,
     refreshInterval: 30000, // 30 segundos
-    useMockData: useMockData // 🔄 Usar estado dinámico
+    useMockData // 🔄 Usar estado dinámico
   });
 
   // Manejar actualización de HambrE

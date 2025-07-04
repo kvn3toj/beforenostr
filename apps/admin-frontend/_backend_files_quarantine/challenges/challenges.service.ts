@@ -132,8 +132,8 @@ export class ChallengesService {
         actionType: 'challenge:updated',
         entityType: 'Challenge',
         entityId: updatedChallenge.id,
-        oldValue: oldValue,
-        newValue: newValue,
+        oldValue,
+        newValue,
         // TODO: Add ipAddress, userAgent if available from request context
     });
 
@@ -164,7 +164,7 @@ export class ChallengesService {
         actionType: 'challenge:deleted',
         entityType: 'Challenge',
         entityId: deletedChallenge.id,
-        oldValue: oldValue, // Show the state before deletion
+        oldValue, // Show the state before deletion
         // TODO: Add ipAddress, userAgent if available from request context
     });
 
@@ -175,7 +175,7 @@ export class ChallengesService {
       return this.prisma.challengeReward.create({
           data: {
               ...createChallengeRewardDto,
-              challengeId: challengeId,
+              challengeId,
           }
       });
   }

@@ -32,19 +32,22 @@ const categoryMap = {
   8: 'creatividad',
   9: 'ludica',
   10: 'discernimiento',
-  11: 'trascendencia'
+  11: 'trascendencia',
 };
 
 // Map video types to item types
 const videoTypeMap: Record<string, string> = {
   'Documentales y Películas': 'documentary',
   'Clips cortos': 'short_clip',
-  'LifeHacks': 'lifehack',
-  'Charlas Ted': 'ted_talk'
+  LifeHacks: 'lifehack',
+  'Charlas Ted': 'ted_talk',
 };
 
 async function parseHTMLFile(): Promise<VideoData[]> {
-  const htmlPath = path.join(__dirname, '../../Demo/apps/superapp-unified/Playlist Gamificadas®.html');
+  const htmlPath = path.join(
+    __dirname,
+    '../../Demo/apps/superapp-unified/Playlist Gamificadas®.html'
+  );
   const htmlContent = fs.readFileSync(htmlPath, 'utf-8');
 
   const dom = new JSDOM(htmlContent);
@@ -67,7 +70,8 @@ async function parseHTMLFile(): Promise<VideoData[]> {
     const meritCell = cells[12];
 
     // Skip empty rows
-    if (!typeCell.textContent?.trim() || !titleCell.textContent?.trim()) continue;
+    if (!typeCell.textContent?.trim() || !titleCell.textContent?.trim())
+      continue;
 
     const video: VideoData = {
       type: typeCell.textContent.trim(),
@@ -80,9 +84,9 @@ async function parseHTMLFile(): Promise<VideoData[]> {
         creatividad: false,
         ludica: false,
         discernimiento: false,
-        trascendencia: false
+        trascendencia: false,
       },
-      merits: parseInt(meritCell.textContent?.trim() || '0') || 0
+      merits: parseInt(meritCell.textContent?.trim() || '0') || 0,
     };
 
     // Extract URLs from anchor tags
@@ -103,7 +107,8 @@ async function parseHTMLFile(): Promise<VideoData[]> {
       if (categoryCell.textContent?.trim().toLowerCase() === 'x') {
         const categoryName = categoryMap[col as keyof typeof categoryMap];
         if (categoryName) {
-          video.categories[categoryName as keyof typeof video.categories] = true;
+          video.categories[categoryName as keyof typeof video.categories] =
+            true;
         }
       }
     }
@@ -119,7 +124,7 @@ function extractYouTubeId(url: string): string | null {
 
   const patterns = [
     /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([^&\n?#]+)/,
-    /youtube\.com\/watch\?.*v=([^&\n?#]+)/
+    /youtube\.com\/watch\?.*v=([^&\n?#]+)/,
   ];
 
   for (const pattern of patterns) {
@@ -138,7 +143,7 @@ export async function seedUplayVideos() {
   try {
     // First, ensure we have a UPLAY mundo
     let uplayMundo = await prisma.mundo.findFirst({
-      where: { name: 'UPLAY' }
+      where: { name: 'UPLAY' },
     });
 
     if (!uplayMundo) {
@@ -148,8 +153,8 @@ export async function seedUplayVideos() {
           name: 'UPLAY',
           description: 'Universo de contenido multimedia gamificado',
           imageUrl: '/images/mundos/uplay.jpg',
-          isActive: true
-        }
+          isActive: true,
+        },
       });
     }
 
@@ -160,8 +165,8 @@ export async function seedUplayVideos() {
       let playlist = await prisma.playlist.findFirst({
         where: {
           mundoId: uplayMundo.id,
-          name: typeName
-        }
+          name: typeName,
+        },
       });
 
       if (!playlist) {
@@ -172,8 +177,8 @@ export async function seedUplayVideos() {
             name: typeName,
             description: `Colección de ${typeName.toLowerCase()}`,
             isActive: true,
-            orderInMundo: Object.keys(videoTypeMap).indexOf(typeName)
-          }
+            orderInMundo: Object.keys(videoTypeMap).indexOf(typeName),
+          },
         });
       }
 
@@ -209,11 +214,8 @@ export async function seedUplayVideos() {
       // Check if video already exists
       const existingVideo = await prisma.videoItem.findFirst({
         where: {
-          OR: [
-            { title: video.title },
-            { externalId: youtubeId || undefined }
-          ]
-        }
+          OR: [{ title: video.title }, { externalId: youtubeId || undefined }],
+        },
       });
 
       if (existingVideo) {
@@ -236,23 +238,25 @@ export async function seedUplayVideos() {
             trailerUrl: video.trailerUrl,
             completeUrl: video.completeUrl,
             merits: video.merits,
-            categories: video.categories
+            categories: video.categories,
           }),
           url: primaryUrl,
           platform: 'youtube',
           externalId: youtubeId,
-          playlistId: playlistId,
+          playlistId,
           itemTypeId: videoTypeMap[video.type] || 'video',
           order: successCount,
           isActive: true,
           categories: categories.join(','),
-          thumbnailUrl: youtubeId ? `https://img.youtube.com/vi/${youtubeId}/maxresdefault.jpg` : undefined,
+          thumbnailUrl: youtubeId
+            ? `https://img.youtube.com/vi/${youtubeId}/maxresdefault.jpg`
+            : undefined,
           tags: JSON.stringify({
             type: video.type,
             merits: video.merits,
-            ...video.categories
-          })
-        }
+            ...video.categories,
+          }),
+        },
       });
 
       console.log(`✅ Created video: ${video.title}`);
@@ -263,7 +267,6 @@ export async function seedUplayVideos() {
     console.log(`   - Videos created: ${successCount}`);
     console.log(`   - Videos skipped: ${skipCount}`);
     console.log(`   - Total videos: ${videos.length}`);
-
   } catch (error) {
     console.error('Error seeding UPLAY videos:', error);
     throw error;

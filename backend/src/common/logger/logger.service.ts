@@ -13,7 +13,7 @@ export interface LogContext {
   method?: string;
   userId?: string;
   requestId?: string;
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 type LoggableData = Record<string, unknown> | string | number | boolean | null;
@@ -140,7 +140,10 @@ export class CoomUnityLoggerService implements LoggerService {
   }
 
   reciprocidad(message: string, context?: LogContext) {
-    this.info(`🌿 RECIPROCIDAD: ${message}`, { module: 'ReciprocidadService', ...context });
+    this.info(`🌿 RECIPROCIDAD: ${message}`, {
+      module: 'ReciprocidadService',
+      ...context,
+    });
   }
 
   /**

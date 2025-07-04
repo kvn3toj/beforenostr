@@ -89,8 +89,8 @@ export class AuthService {
         sub: user.id,
         email: user.email,
         name: user.name,
-        roles: roles,
-        permissions: permissions,
+        roles,
+        permissions,
         iat: Math.floor(Date.now() / 1000)
       };
       
@@ -116,8 +116,8 @@ export class AuthService {
           email: user.email, 
           name: user.name, 
           avatarUrl: user.avatarUrl,
-          roles: roles,
-          permissions: permissions
+          roles,
+          permissions
         },
       };
     } catch (error) {
@@ -181,8 +181,8 @@ export class AuthService {
         sub: user.id,
         email: user.email,
         name: user.name,
-        roles: roles,
-        permissions: permissions,
+        roles,
+        permissions,
         iat: Math.floor(Date.now() / 1000)
       };
       
@@ -204,8 +204,8 @@ export class AuthService {
           email: user.email, 
           name: user.name, 
           avatarUrl: user.avatarUrl,
-          roles: roles,
-          permissions: permissions
+          roles,
+          permissions
         },
       };
     } catch (error) {

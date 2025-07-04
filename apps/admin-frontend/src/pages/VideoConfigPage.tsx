@@ -327,7 +327,7 @@ export const VideoConfigPage = () => {
       // Para solucionar esto, si 'error' REALMENTE no se usa aquí:
       // 1. Se puede añadir un log: console.error("Una o más operaciones de guardado fallaron:", error);
       // 2. O, si intencionalmente no se usa, deshabilitar la regla del linter para esta línea:
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+       
     }
   };
   

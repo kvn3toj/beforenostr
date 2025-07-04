@@ -63,15 +63,44 @@ export class PrismaService extends PrismaClient implements OnModuleInit {
       { name: 'moderator', description: 'Moderator role' },
     ];
     for (const role of rolesData) {
-      await this.role.upsert({ where: { name: role.name }, update: {}, create: role });
+      await this.role.upsert({
+        where: { name: role.name },
+        update: {},
+        create: role,
+      });
     }
 
     const usersData = [
-      { email: 'admin@gamifier.com', password: adminPassword, name: 'Admin User', roles: ['admin'] },
-      { email: 'user@gamifier.com', password: userPassword, name: 'Regular User', roles: ['user'] },
-      { email: 'premium@gamifier.com', password: userPassword, name: 'Premium User', roles: ['user', 'premium'] },
-      { email: 'creator@gamifier.com', password: userPassword, name: 'Content Creator', roles: ['user', 'creator'] },
-      { email: 'moderator@gamifier.com', password: userPassword, name: 'Moderator', roles: ['user', 'moderator'] },
+      {
+        email: 'admin@gamifier.com',
+        password: adminPassword,
+        name: 'Admin User',
+        roles: ['admin'],
+      },
+      {
+        email: 'user@gamifier.com',
+        password: userPassword,
+        name: 'Regular User',
+        roles: ['user'],
+      },
+      {
+        email: 'premium@gamifier.com',
+        password: userPassword,
+        name: 'Premium User',
+        roles: ['user', 'premium'],
+      },
+      {
+        email: 'creator@gamifier.com',
+        password: userPassword,
+        name: 'Content Creator',
+        roles: ['user', 'creator'],
+      },
+      {
+        email: 'moderator@gamifier.com',
+        password: userPassword,
+        name: 'Moderator',
+        roles: ['user', 'moderator'],
+      },
     ];
 
     for (const u of usersData) {
@@ -83,7 +112,9 @@ export class PrismaService extends PrismaClient implements OnModuleInit {
       for (const roleName of u.roles) {
         const role = await this.role.findUnique({ where: { name: roleName } });
         if (role) {
-          await this.userRole.create({ data: { userId: user.id, roleId: role.id } });
+          await this.userRole.create({
+            data: { userId: user.id, roleId: role.id },
+          });
         }
       }
     }
@@ -98,14 +129,14 @@ export class PrismaService extends PrismaClient implements OnModuleInit {
       },
     });
     await this.profile.upsert({
-        where: { userId: sellerUser1.id },
-        update: {},
-        create: {
-            userId: sellerUser1.id,
-            bio: 'Apasionada por la permacultura y la vida sostenible. Creo en el poder de la comunidad para regenerar nuestro planeta.',
-            isEmprendedorConfiable: true,
-            avatar: 'https://source.unsplash.com/500x500/?woman,nature',
-        }
+      where: { userId: sellerUser1.id },
+      update: {},
+      create: {
+        userId: sellerUser1.id,
+        bio: 'Apasionada por la permacultura y la vida sostenible. Creo en el poder de la comunidad para regenerar nuestro planeta.',
+        isEmprendedorConfiable: true,
+        avatar: 'https://source.unsplash.com/500x500/?woman,nature',
+      },
     });
 
     const sellerUser2 = await this.user.upsert({
@@ -118,72 +149,112 @@ export class PrismaService extends PrismaClient implements OnModuleInit {
       },
     });
     await this.profile.upsert({
-        where: { userId: sellerUser2.id },
-        update: {},
-        create: {
-            userId: sellerUser2.id,
-            bio: 'Artista y terapeuta de sonido. Mi misión es crear herramientas y experiencias que ayuden a las personas a conectar con su interior.',
-            isEmprendedorConfiable: true,
-            avatar: 'https://source.unsplash.com/500x500/?man,craft',
-        }
+      where: { userId: sellerUser2.id },
+      update: {},
+      create: {
+        userId: sellerUser2.id,
+        bio: 'Artista y terapeuta de sonido. Mi misión es crear herramientas y experiencias que ayuden a las personas a conectar con su interior.',
+        isEmprendedorConfiable: true,
+        avatar: 'https://source.unsplash.com/500x500/?man,craft',
+      },
     });
 
     const marketplaceItemsData = [
-       {
+      {
         name: 'Taller de Huerto Urbano Orgánico',
-        description: 'Aprende a cultivar tus propios alimentos en espacios pequeños.',
-        fullDescription: 'Este taller intensivo cubre todo lo que necesitas para iniciar tu propio huerto orgánico en casa.',
+        description:
+          'Aprende a cultivar tus propios alimentos en espacios pequeños.',
+        fullDescription:
+          'Este taller intensivo cubre todo lo que necesitas para iniciar tu propio huerto orgánico en casa.',
         itemType: MarketplaceItemType.SERVICE,
         price: 35,
         category: 'Sostenibilidad',
         tags: ['huerto', 'orgánico', 'taller', 'diy', 'sostenibilidad'],
-        images: ['https://source.unsplash.com/800x600/?urban,garden', 'https://source.unsplash.com/800x600/?seedlings'],
-        stock: 15, sellerId: sellerUser1.id, rating: 4.8, reviewCount: 2,
+        images: [
+          'https://source.unsplash.com/800x600/?urban,garden',
+          'https://source.unsplash.com/800x600/?seedlings',
+        ],
+        stock: 15,
+        sellerId: sellerUser1.id,
+        rating: 4.8,
+        reviewCount: 2,
       },
       {
         name: 'Kombucha Artesanal de Jengibre y Cúrcuma',
-        description: 'Bebida probiótica fermentada artesanalmente con ingredientes 100% orgánicos.',
-        fullDescription: 'Nuestra kombucha es un elixir vivo, fermentado en pequeños lotes para garantizar su máxima calidad.',
+        description:
+          'Bebida probiótica fermentada artesanalmente con ingredientes 100% orgánicos.',
+        fullDescription:
+          'Nuestra kombucha es un elixir vivo, fermentado en pequeños lotes para garantizar su máxima calidad.',
         itemType: MarketplaceItemType.PRODUCT,
         price: 15,
         category: 'Salud & Bienestar',
         tags: ['kombucha', 'probiótico', 'orgánico', 'salud'],
-        images: ['https://source.unsplash.com/800x600/?kombucha', 'https://source.unsplash.com/800x600/?ginger,turmeric'],
-        stock: 50, sellerId: sellerUser1.id, rating: 5, reviewCount: 1,
+        images: [
+          'https://source.unsplash.com/800x600/?kombucha',
+          'https://source.unsplash.com/800x600/?ginger,turmeric',
+        ],
+        stock: 50,
+        sellerId: sellerUser1.id,
+        rating: 5,
+        reviewCount: 1,
       },
       {
         name: 'Sesión de Terapia de Sonido (Sound Healing)',
-        description: 'Viaje sonoro de 60 minutos con cuencos tibetanos y gongs.',
-        fullDescription: 'Permítete un reseteo completo del sistema nervioso a través de las vibraciones sanadoras.',
+        description:
+          'Viaje sonoro de 60 minutos con cuencos tibetanos y gongs.',
+        fullDescription:
+          'Permítete un reseteo completo del sistema nervioso a través de las vibraciones sanadoras.',
         itemType: MarketplaceItemType.SERVICE,
         price: 60,
         category: 'Salud & Bienestar',
         tags: ['sonoterapia', 'meditación', 'bienestar', 'relajación'],
-        images: ['https://source.unsplash.com/800x600/?sound,healing', 'https://source.unsplash.com/800x600/?singing,bowl'],
-        stock: 10, sellerId: sellerUser2.id, rating: 4.9, reviewCount: 1,
+        images: [
+          'https://source.unsplash.com/800x600/?sound,healing',
+          'https://source.unsplash.com/800x600/?singing,bowl',
+        ],
+        stock: 10,
+        sellerId: sellerUser2.id,
+        rating: 4.9,
+        reviewCount: 1,
       },
       {
         name: 'Kit de Sahumerios de Limpieza Energética',
-        description: 'Atado de salvia blanca de cultivo ético y palo santo sostenible.',
-        fullDescription: 'Este kit contiene todo lo necesario para realizar rituales de limpieza energética.',
+        description:
+          'Atado de salvia blanca de cultivo ético y palo santo sostenible.',
+        fullDescription:
+          'Este kit contiene todo lo necesario para realizar rituales de limpieza energética.',
         itemType: MarketplaceItemType.PRODUCT,
         price: 25,
         category: 'Desarrollo Consciente',
         tags: ['sahumerio', 'limpieza', 'ritual', 'espiritual'],
-        images: ['https://source.unsplash.com/800x600/?smudge,stick', 'https://source.unsplash.com/800x600/?palo,santo'],
-        stock: 40, sellerId: sellerUser2.id, rating: 0, reviewCount: 0,
+        images: [
+          'https://source.unsplash.com/800x600/?smudge,stick',
+          'https://source.unsplash.com/800x600/?palo,santo',
+        ],
+        stock: 40,
+        sellerId: sellerUser2.id,
+        rating: 0,
+        reviewCount: 0,
       },
-       {
+      {
         name: 'Intercambio: Clases de Guitarra por Diseño Gráfico',
-        description: 'Ofrezco clases de guitarra para principiantes a cambio de ayuda con el diseño de un logo.',
-        fullDescription: 'Soy músico con 15 años de experiencia y estoy lanzando mi proyecto como solista. Necesito una identidad visual potente.',
+        description:
+          'Ofrezco clases de guitarra para principiantes a cambio de ayuda con el diseño de un logo.',
+        fullDescription:
+          'Soy músico con 15 años de experiencia y estoy lanzando mi proyecto como solista. Necesito una identidad visual potente.',
         itemType: MarketplaceItemType.SERVICE,
         price: 0,
         category: 'Educación',
         tags: ['trueque', 'música', 'diseño', 'reciprocidad'],
-        images: ['https://source.unsplash.com/800x600/?guitar,lesson', 'https://source.unsplash.com/800x600/?graphic,design'],
-        stock: 1, sellerId: sellerUser2.id, rating: 0, reviewCount: 0,
-      }
+        images: [
+          'https://source.unsplash.com/800x600/?guitar,lesson',
+          'https://source.unsplash.com/800x600/?graphic,design',
+        ],
+        stock: 1,
+        sellerId: sellerUser2.id,
+        rating: 0,
+        reviewCount: 0,
+      },
     ];
 
     for (const item of marketplaceItemsData) {
@@ -191,21 +262,64 @@ export class PrismaService extends PrismaClient implements OnModuleInit {
     }
 
     const itemsToReview = {
-      huerto: await this.marketplaceItem.findFirst({ where: { name: { contains: 'Huerto' } } }),
-      kombucha: await this.marketplaceItem.findFirst({ where: { name: { contains: 'Kombucha' } } }),
-      sonido: await this.marketplaceItem.findFirst({ where: { name: { contains: 'Sonido' } } }),
+      huerto: await this.marketplaceItem.findFirst({
+        where: { name: { contains: 'Huerto' } },
+      }),
+      kombucha: await this.marketplaceItem.findFirst({
+        where: { name: { contains: 'Kombucha' } },
+      }),
+      sonido: await this.marketplaceItem.findFirst({
+        where: { name: { contains: 'Sonido' } },
+      }),
     };
 
-    const regularUser = await this.user.findUnique({where: {email: 'user@gamifier.com'}});
+    const regularUser = await this.user.findUnique({
+      where: { email: 'user@gamifier.com' },
+    });
 
-    if (itemsToReview.huerto && itemsToReview.kombucha && itemsToReview.sonido && regularUser) {
-        await this.review.createMany({
-            data: [
-                { rating: 5, comment: '¡Increíble taller! Elena es una maestra maravillosa, explica con una claridad y una pasión que contagian.', marketplaceItemId: itemsToReview.huerto.id, userId: regularUser.id, communication: 5, quality: 5, delivery: 5, value: 5 },
-                { rating: 5, comment: 'La mejor kombucha que he probado, se nota que está hecha con amor y con ingredientes de primera.', marketplaceItemId: itemsToReview.kombucha.id, userId: regularUser.id, communication: 5, quality: 5, delivery: 5, value: 5 },
-                { rating: 5, comment: 'La sesión con Marco fue mágica. Sentí una paz profunda y una claridad que no había experimentado antes.', marketplaceItemId: itemsToReview.sonido.id, userId: regularUser.id, communication: 5, quality: 5, delivery: 5, value: 5 },
-            ]
-        });
+    if (
+      itemsToReview.huerto &&
+      itemsToReview.kombucha &&
+      itemsToReview.sonido &&
+      regularUser
+    ) {
+      await this.review.createMany({
+        data: [
+          {
+            rating: 5,
+            comment:
+              '¡Increíble taller! Elena es una maestra maravillosa, explica con una claridad y una pasión que contagian.',
+            marketplaceItemId: itemsToReview.huerto.id,
+            userId: regularUser.id,
+            communication: 5,
+            quality: 5,
+            delivery: 5,
+            value: 5,
+          },
+          {
+            rating: 5,
+            comment:
+              'La mejor kombucha que he probado, se nota que está hecha con amor y con ingredientes de primera.',
+            marketplaceItemId: itemsToReview.kombucha.id,
+            userId: regularUser.id,
+            communication: 5,
+            quality: 5,
+            delivery: 5,
+            value: 5,
+          },
+          {
+            rating: 5,
+            comment:
+              'La sesión con Marco fue mágica. Sentí una paz profunda y una claridad que no había experimentado antes.',
+            marketplaceItemId: itemsToReview.sonido.id,
+            userId: regularUser.id,
+            communication: 5,
+            quality: 5,
+            delivery: 5,
+            value: 5,
+          },
+        ],
+      });
     }
 
     console.log('Database seeding completed successfully.');

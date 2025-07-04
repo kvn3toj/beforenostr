@@ -35,9 +35,11 @@ export class PhilosophyService {
   constructor(
     @Inject(PrismaService) private readonly prisma: PrismaService,
     @Inject(CacheService) private readonly cache: CacheService,
-    @Inject(MetricsService) private readonly metricsService: MetricsService,
+    @Inject(MetricsService) private readonly metricsService: MetricsService
   ) {
-    this.logger.log('🌌 PhilosophyService inicializado - Métricas filosóficas activas');
+    this.logger.log(
+      '🌌 PhilosophyService inicializado - Métricas filosóficas activas'
+    );
   }
 
   /**
@@ -53,9 +55,14 @@ export class PhilosophyService {
       const cachedData = await this.cache.get(this.CACHE_KEYS.METRICS);
 
       if (cachedData) {
-        const cachedMetrics = JSON.parse(cachedData as string) as PhilosophyMetricsResponseDto;
+        const cachedMetrics = JSON.parse(
+          cachedData as string
+        ) as PhilosophyMetricsResponseDto;
         this.logger.log('✅ Métricas filosóficas obtenidas del cache');
-        this.metricsService.cacheOperationsTotal.inc({ operation: 'get', result: 'hit' });
+        this.metricsService.cacheOperationsTotal.inc({
+          operation: 'get',
+          result: 'hit',
+        });
         return cachedMetrics;
       }
 
@@ -72,8 +79,15 @@ export class PhilosophyService {
       };
 
       // Guardar en cache
-      await this.cache.set(this.CACHE_KEYS.METRICS, JSON.stringify(metrics), this.CACHE_TTL);
-      this.metricsService.cacheOperationsTotal.inc({ operation: 'set', result: 'success' });
+      await this.cache.set(
+        this.CACHE_KEYS.METRICS,
+        JSON.stringify(metrics),
+        this.CACHE_TTL
+      );
+      this.metricsService.cacheOperationsTotal.inc({
+        operation: 'set',
+        result: 'success',
+      });
 
       const duration = (Date.now() - startTime) / 1000;
       this.logger.log(`✅ Métricas filosóficas obtenidas en ${duration}s`);
@@ -83,7 +97,7 @@ export class PhilosophyService {
       this.logger.error('❌ Error obteniendo métricas filosóficas:', error);
       this.metricsService.apiErrorsTotal.inc({
         error_type: 'philosophy_metrics_error',
-        endpoint: '/philosophy/metrics'
+        endpoint: '/philosophy/metrics',
       });
       throw error;
     }
@@ -107,9 +121,15 @@ export class PhilosophyService {
       const hambreData = await this.calculateHambreFromEcosystem();
 
       // Guardar en cache
-      await this.cache.set(this.CACHE_KEYS.HAMBRE, JSON.stringify(hambreData), this.CACHE_TTL);
+      await this.cache.set(
+        this.CACHE_KEYS.HAMBRE,
+        JSON.stringify(hambreData),
+        this.CACHE_TTL
+      );
 
-      this.logger.log(`✅ HambrE calculado: ${hambreData.level} (${hambreData.value})`);
+      this.logger.log(
+        `✅ HambrE calculado: ${hambreData.level} (${hambreData.value})`
+      );
       return hambreData;
     } catch (error) {
       this.logger.error('❌ Error obteniendo métricas de HambrE:', error);
@@ -121,7 +141,9 @@ export class PhilosophyService {
    * 🔄 Actualizar métricas de HambrE (para Gamifier Admin)
    */
   async updateHambre(updateData: UpdateHambreDto): Promise<HambreMetricDto> {
-    this.logger.log(`🔄 Actualizando HambrE: ${updateData.level || 'same'} (${updateData.value || 'same'})`);
+    this.logger.log(
+      `🔄 Actualizando HambrE: ${updateData.level || 'same'} (${updateData.value || 'same'})`
+    );
 
     try {
       // Obtener datos actuales
@@ -146,7 +168,11 @@ export class PhilosophyService {
       await this.invalidateAllCaches();
 
       // Guardar nuevo valor en cache
-      await this.cache.set(this.CACHE_KEYS.HAMBRE, JSON.stringify(updatedHambre), this.CACHE_TTL);
+      await this.cache.set(
+        this.CACHE_KEYS.HAMBRE,
+        JSON.stringify(updatedHambre),
+        this.CACHE_TTL
+      );
 
       this.logger.log('✅ HambrE actualizado exitosamente');
       return updatedHambre;
@@ -173,7 +199,11 @@ export class PhilosophyService {
       const ieaData = await this.calculateIEAFromEcosystem();
 
       // Guardar en cache
-      await this.cache.set(this.CACHE_KEYS.IEA, JSON.stringify(ieaData), this.CACHE_TTL);
+      await this.cache.set(
+        this.CACHE_KEYS.IEA,
+        JSON.stringify(ieaData),
+        this.CACHE_TTL
+      );
 
       this.logger.log(`✅ IEA calculado: ${ieaData.ponderacion}`);
       return ieaData;
@@ -233,11 +263,21 @@ export class PhilosophyService {
       updatedAt: new Date().toISOString(),
       metadata: {
         period: 'weekly',
-        periodStart: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
+        periodStart: new Date(
+          Date.now() - 7 * 24 * 60 * 60 * 1000
+        ).toISOString(),
         periodEnd: new Date().toISOString(),
         calculationDetails: {
-          darComponents: ['content_creation', 'peer_help', 'challenges_created'],
-          recibirComponents: ['content_consumption', 'help_received', 'challenges_completed'],
+          darComponents: [
+            'content_creation',
+            'peer_help',
+            'challenges_created',
+          ],
+          recibirComponents: [
+            'content_consumption',
+            'help_received',
+            'challenges_completed',
+          ],
           algorithm: 'weighted_reciprocity_index_v1',
         },
       },
@@ -265,7 +305,11 @@ export class PhilosophyService {
   /**
    * 🏥 Health check del servicio
    */
-  async getHealthStatus(): Promise<{ status: string; message: string; timestamp: string }> {
+  async getHealthStatus(): Promise<{
+    status: string;
+    message: string;
+    timestamp: string;
+  }> {
     try {
       // Verificar si podemos obtener métricas básicas
       await this.calculateHambreFromEcosystem();
@@ -294,7 +338,9 @@ export class PhilosophyService {
       // Nota: CacheService no tiene método delete genérico,
       // pero podemos usar deleteDuration como patrón
       // o simplemente esperar que el TTL expire los datos
-      this.logger.log('🗑️ Invalidación de cache solicitada - datos expirarán según TTL');
+      this.logger.log(
+        '🗑️ Invalidación de cache solicitada - datos expirarán según TTL'
+      );
     } catch (error) {
       this.logger.error('❌ Error invalidando caches:', error);
     }

@@ -131,11 +131,14 @@ export class TransactionsController {
   @ApiResponse({ status: 404, description: 'Recipient or sender not found.' })
   async sendTransaction(
     @Req() req: AuthenticatedRequest,
-    @Body() sendTransactionDto: SendTransactionDto,
+    @Body() sendTransactionDto: SendTransactionDto
   ) {
     // El senderId se obtiene del usuario autenticado a través del token JWT
     const senderId = req.user.id;
-    return this.transactionsService.sendTransaction(senderId, sendTransactionDto);
+    return this.transactionsService.sendTransaction(
+      senderId,
+      sendTransactionDto
+    );
   }
 
   // Create transaction endpoint would typically be internal or triggered by other modules (e.g., challenges)

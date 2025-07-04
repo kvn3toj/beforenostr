@@ -1,5 +1,4 @@
 import {
-
   Injectable,
   NotFoundException,
   BadRequestException,
@@ -55,7 +54,7 @@ export class ChallengesService {
       where: {
         status: 'ACTIVE',
         startDate: { lte: new Date() },
-        endDate: { gte: new Date() }
+        endDate: { gte: new Date() },
       },
       include: { rewards: true },
     });

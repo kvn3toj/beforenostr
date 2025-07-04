@@ -57,7 +57,7 @@ export const softDeleteFolder = async (id: string): Promise<void> => {
 export const updateFolderName = async (id: string, name: string): Promise<PlaylistFolder> => {
   try {
     return await apiService.put(`/folders/${id}`, {
-      name: name,
+      name,
       updated_at: new Date().toISOString()
     });
   } catch (error) {

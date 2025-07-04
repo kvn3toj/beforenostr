@@ -29,7 +29,7 @@ export class PlaylistsController {
   @ApiResponse({ status: 404, description: 'Playlist not found' })
   findOne(@Param('id') id: string) {
     return {
-      id: id,
+      id,
       mundoId: '1',
       name: 'Playlist de prueba',
       description: 'Una playlist de prueba',

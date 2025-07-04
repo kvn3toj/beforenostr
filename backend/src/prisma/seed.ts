@@ -65,7 +65,10 @@ const testQuestions = [
     type: 'multiple-choice',
     options: [
       { text: 'Una técnica para crear videojuegos', isCorrect: false },
-      { text: 'El uso de elementos de juego en contextos no lúdicos', isCorrect: true },
+      {
+        text: 'El uso de elementos de juego en contextos no lúdicos',
+        isCorrect: true,
+      },
       { text: 'Una forma de marketing digital', isCorrect: false },
       { text: 'Una metodología para enseñar a programar', isCorrect: false },
     ],
@@ -97,7 +100,9 @@ async function seedUPlay(prisma) {
     console.log('   - Created Mundo: UPlay Zone');
   }
 
-  let playlist = await prisma.playlist.findFirst({ where: { name: 'Videos Principales UPlay' } });
+  let playlist = await prisma.playlist.findFirst({
+    where: { name: 'Videos Principales UPlay' },
+  });
   if (!playlist) {
     playlist = await prisma.playlist.create({
       data: {
@@ -167,9 +172,10 @@ async function seedUPlay(prisma) {
             })),
           });
         }
-        console.log(`   - Successfully added ${testQuestions.length} questions.`);
+        console.log(
+          `   - Successfully added ${testQuestions.length} questions.`
+        );
       }
-
     } else {
       console.log(`   - Video already exists, skipping: ${video.title}`);
     }
@@ -181,10 +187,19 @@ async function seedPermissionsAndRoles(prisma) {
   console.log('Seeding permissions and roles...');
   const permissions = [
     // ... (permission definitions)
-    'create:users', 'read:users', 'update:users', 'delete:users',
-    'create:roles', 'read:roles', 'update:roles', 'delete:roles',
-    'create:content', 'read:content', 'update:content', 'delete:content',
-    'manage:system'
+    'create:users',
+    'read:users',
+    'update:users',
+    'delete:users',
+    'create:roles',
+    'read:roles',
+    'update:roles',
+    'delete:roles',
+    'create:content',
+    'read:content',
+    'update:content',
+    'delete:content',
+    'manage:system',
   ];
 
   for (const name of permissions) {
@@ -196,11 +211,17 @@ async function seedPermissionsAndRoles(prisma) {
   }
 
   const roles = [
-    { name: 'admin', permissions: permissions },
+    { name: 'admin', permissions },
     { name: 'user', permissions: ['read:content'] },
-    { name: 'creator', permissions: ['read:content', 'create:content', 'update:content'] },
-    { name: 'moderator', permissions: ['read:content', 'update:content', 'delete:content'] },
-    { name: 'premium', permissions: ['read:content'] }
+    {
+      name: 'creator',
+      permissions: ['read:content', 'create:content', 'update:content'],
+    },
+    {
+      name: 'moderator',
+      permissions: ['read:content', 'update:content', 'delete:content'],
+    },
+    { name: 'premium', permissions: ['read:content'] },
   ];
 
   for (const roleData of roles) {
@@ -231,7 +252,9 @@ async function seedPermissionsAndRoles(prisma) {
       });
     }
 
-    console.log(`   - Assigned ${permissionRecords.length} permissions to role: ${roleData.name}`);
+    console.log(
+      `   - Assigned ${permissionRecords.length} permissions to role: ${roleData.name}`
+    );
   }
   console.log('Permissions and roles seeded successfully.');
 }
@@ -320,7 +343,9 @@ async function main() {
           },
         });
       }
-      console.log(`   - Created user: ${userData.email} with roles: ${userData.roleNames.join(', ')}`);
+      console.log(
+        `   - Created user: ${userData.email} with roles: ${userData.roleNames.join(', ')}`
+      );
     } else {
       console.log(`   - User ${userData.email} already exists, skipping.`);
     }

@@ -7,7 +7,10 @@ import {
 import { PrismaService } from '../../prisma/prisma.service';
 import { WalletsService } from '../wallets/wallets.service';
 import { Transaction } from '../../generated/prisma';
-import { SendTransactionDto, TransactionCurrency } from './dto/send-transaction.dto';
+import {
+  SendTransactionDto,
+  TransactionCurrency,
+} from './dto/send-transaction.dto';
 import { Merit } from '../../generated/prisma';
 
 // Define a basic type for the authenticated user passed from the controller
@@ -121,24 +124,36 @@ export class TransactionsService {
    * @param dto Los datos de la transacción, validados por el DTO.
    * @returns La transacción registrada, un artefacto de confianza en el ecosistema.
    */
-  async sendTransaction(senderId: string, dto: SendTransactionDto): Promise<Transaction> {
+  async sendTransaction(
+    senderId: string,
+    dto: SendTransactionDto
+  ): Promise<Transaction> {
     const { recipientId, amount, currency, description, metadata } = dto;
 
     // 1. Validaciones Preliminares: Asegurar la coherencia del acto de dar.
     if (recipientId === senderId) {
-      throw new ForbiddenException('Un acto de dar requiere de otro. No puedes enviarte valor a ti mismo.');
+      throw new ForbiddenException(
+        'Un acto de dar requiere de otro. No puedes enviarte valor a ti mismo.'
+      );
     }
-    const recipient = await this.prisma.user.findUnique({ where: { id: recipientId } });
+    const recipient = await this.prisma.user.findUnique({
+      where: { id: recipientId },
+    });
     if (!recipient) {
-      throw new NotFoundException(`El destinatario con id '${recipientId}' no fue encontrado en el ecosistema.`);
+      throw new NotFoundException(
+        `El destinatario con id '${recipientId}' no fue encontrado en el ecosistema.`
+      );
     }
 
     // 2. Verificación de Fondos (Principio de Reciprocidad)
     // Se asegura que el dar no cree una deuda inexistente en el sistema.
     // Usamos el método de admin para una llamada interna entre servicios confiables.
-    const senderWallet = await this.walletsService.getWalletForUserAdmin(senderId);
+    const senderWallet =
+      await this.walletsService.getWalletForUserAdmin(senderId);
     if (!senderWallet || senderWallet.balance < amount) {
-      throw new ForbiddenException('Fondos insuficientes. La reciprocidad requiere un balance para poder dar.');
+      throw new ForbiddenException(
+        'Fondos insuficientes. La reciprocidad requiere un balance para poder dar.'
+      );
     }
 
     // 3. Transacción Atómica (Corazón de la Confianza)
@@ -159,7 +174,7 @@ export class TransactionsService {
         create: {
           userId: recipientId,
           balance: amount,
-          currency: currency,
+          currency,
         },
       });
 
@@ -170,10 +185,10 @@ export class TransactionsService {
         data: {
           fromUserId: senderId,
           toUserId: recipientId,
-          amount: amount,
-          currency: currency,
-          description: description,
-          metadata: metadata,
+          amount,
+          currency,
+          description,
+          metadata,
           type: 'TRANSFER', // Este tipo podría evolucionar con la filosofía.
         },
       });

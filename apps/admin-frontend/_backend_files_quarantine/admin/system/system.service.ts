@@ -51,7 +51,7 @@ export class SystemService {
           used: this.formatBytes(usedMemory),
           processUsage: processMemory // Provide detailed process memory usage
         },
-        cpuLoad: cpuLoad,
+        cpuLoad,
       },
       timestamp: new Date().toISOString(),
     };

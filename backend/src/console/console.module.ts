@@ -33,11 +33,7 @@ import { CacheModule } from '../cache/cache.module';
 import { CosmicKanbanModule } from './cosmic-kanban/cosmic-kanban.module';
 
 @Module({
-  imports: [
-    PrismaModule,
-    CacheModule,
-    CosmicKanbanModule,
-  ],
+  imports: [PrismaModule, CacheModule, CosmicKanbanModule],
   controllers: [
     ConsoleController,
     StagesController,

@@ -150,7 +150,7 @@ describe('QuestionManager', () => {
     mockUseQuestionsQuery.mockReturnValue({
       data: undefined,
       isLoading: false,
-      error: error
+      error
     });
 
     render(<QuestionManager videoItemId={123} />);

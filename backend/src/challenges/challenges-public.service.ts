@@ -2,6 +2,12 @@ import { Injectable, Inject } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { Challenge } from '../generated/prisma';
 
+interface TestConnectionResponse {
+  success?: boolean;
+  challengeCount?: number;
+  error?: string;
+}
+
 @Injectable()
 export class ChallengesPublicService {
   constructor(@Inject(PrismaService) private readonly prisma: PrismaService) {
@@ -24,7 +30,7 @@ export class ChallengesPublicService {
     }
   }
 
-  async testConnection(): Promise<any> {
+  async testConnection(): Promise<TestConnectionResponse> {
     console.log('[ChallengesPublicService] Testing connection...');
     console.log('[ChallengesPublicService] this.prisma:', !!this.prisma);
     console.log(

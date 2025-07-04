@@ -23,8 +23,8 @@ export class UserChallengesService {
     const existingUserChallenge = await this.prisma.userChallenge.findUnique({
       where: {
         userId_challengeId: {
-          userId: userId,
-          challengeId: challengeId,
+          userId,
+          challengeId,
         },
       },
     });
@@ -46,8 +46,8 @@ export class UserChallengesService {
 
     const newUserChallenge = await this.prisma.userChallenge.create({
       data: {
-        userId: userId,
-        challengeId: challengeId,
+        userId,
+        challengeId,
         status: UserChallengeStatus.STARTED,
         progress: {} as any,
       },
@@ -200,7 +200,7 @@ export class UserChallengesService {
       data: {
         status: UserChallengeStatus.COMPLETED,
         completedAt: new Date(),
-        progress: progress,
+        progress,
       },
       include: {
         challenge: {
@@ -226,8 +226,8 @@ export class UserChallengesService {
     // This method already filters by userId, so it's safe for non-admin users
     return this.prisma.userChallenge.findMany({
       where: {
-        userId: userId,
-        status: status,
+        userId,
+        status,
       },
       include: { challenge: true },
     });
@@ -258,7 +258,7 @@ export class UserChallengesService {
   async findAllUserChallengesAdmin(status?: UserChallengeStatus): Promise<UserChallenge[]> {
       return this.prisma.userChallenge.findMany({
           where: {
-              status: status
+              status
           },
           include: { challenge: true, user: true }
       });

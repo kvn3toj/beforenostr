@@ -485,7 +485,11 @@ export class LetsService {
           teacherName: 'María González',
           copId: filters.copId || 'cop1',
           sessionType: 'workshop',
-          knowledgeAreas: ['reciprocidad', 'economia_colaborativa', 'intercambios'],
+          knowledgeAreas: [
+            'reciprocidad',
+            'economia_colaborativa',
+            'intercambios',
+          ],
           unitsCost: 25,
           durationHours: 2,
           maxParticipants: 10,
@@ -769,7 +773,8 @@ export class LetsService {
           id: 'notif3',
           type: 'knowledge_exchange',
           title: 'Recordatorio de Sesión',
-          message: 'Tu sesión "Principios de Reciprocidad" comienza en 24 horas',
+          message:
+            'Tu sesión "Principios de Reciprocidad" comienza en 24 horas',
           timestamp: new Date(Date.now() - 12 * 60 * 60 * 1000).toISOString(), // Hace 12 horas
           read: true,
           metadata: {

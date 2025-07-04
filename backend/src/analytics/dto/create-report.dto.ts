@@ -24,7 +24,7 @@ export class CreateReportDto {
     },
   })
   @IsObject()
-  data: Record<string, any>;
+  data: Record<string, unknown>;
 
   @ApiProperty({
     description: 'ID del usuario que generó el reporte',

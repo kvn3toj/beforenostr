@@ -91,8 +91,8 @@ export class ConfigService {
         actionType: 'config:updated',
         entityType: 'AppConfig',
         entityId: updatedConfig.id,
-        oldValue: oldValue,
-        newValue: newValue,
+        oldValue,
+        newValue,
         // TODO: Add ipAddress, userAgent if available from request context
     });
 
@@ -121,7 +121,7 @@ export class ConfigService {
         actionType: 'config:deleted',
         entityType: 'AppConfig',
         entityId: deletedConfig.id,
-        oldValue: oldValue, // Show the state before deletion
+        oldValue, // Show the state before deletion
         // TODO: Add ipAddress, userAgent if available from request context
     });
 

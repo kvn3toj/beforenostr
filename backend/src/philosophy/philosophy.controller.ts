@@ -46,9 +46,12 @@ export class PhilosophyController {
   private readonly logger = new Logger(PhilosophyController.name);
 
   constructor(
-    @Inject(PhilosophyService) private readonly philosophyService: PhilosophyService
+    @Inject(PhilosophyService)
+    private readonly philosophyService: PhilosophyService
   ) {
-    this.logger.log('🌌 PhilosophyController CONSTRUCTOR: Activando endpoints de la Consola de Experiencias...');
+    this.logger.log(
+      '🌌 PhilosophyController CONSTRUCTOR: Activando endpoints de la Consola de Experiencias...'
+    );
   }
 
   /**
@@ -59,7 +62,8 @@ export class PhilosophyController {
   @Roles('admin', 'moderator')
   @ApiOperation({
     summary: 'Obtener métricas filosóficas completas',
-    description: 'Endpoint principal para la Consola de Experiencias del Gamifier Admin. Retorna HambrE e IEA de Reciprocidad.',
+    description:
+      'Endpoint principal para la Consola de Experiencias del Gamifier Admin. Retorna HambrE e IEA de Reciprocidad.',
   })
   @ApiResponse({
     status: HttpStatus.OK,
@@ -75,7 +79,9 @@ export class PhilosophyController {
     description: 'Permisos insuficientes (requiere admin o moderator)',
   })
   async getPhilosophyMetrics(): Promise<PhilosophyMetricsResponseDto> {
-    this.logger.log('📊 GET /philosophy/metrics - Solicitando métricas completas...');
+    this.logger.log(
+      '📊 GET /philosophy/metrics - Solicitando métricas completas...'
+    );
 
     try {
       const metrics = await this.philosophyService.getPhilosophyMetrics();
@@ -95,7 +101,8 @@ export class PhilosophyController {
   @Roles('admin', 'moderator', 'user')
   @ApiOperation({
     summary: 'Obtener métricas de HambrE',
-    description: 'Retorna el estado actual del HambrE (impulso evolutivo) del ecosistema.',
+    description:
+      'Retorna el estado actual del HambrE (impulso evolutivo) del ecosistema.',
   })
   @ApiResponse({
     status: HttpStatus.OK,
@@ -103,7 +110,9 @@ export class PhilosophyController {
     type: HambreMetricDto,
   })
   async getHambreMetrics(): Promise<HambreMetricDto> {
-    this.logger.log('🔥 GET /philosophy/hambre - Solicitando métricas de HambrE...');
+    this.logger.log(
+      '🔥 GET /philosophy/hambre - Solicitando métricas de HambrE...'
+    );
 
     try {
       const hambre = await this.philosophyService.getHambreMetrics();
@@ -123,7 +132,8 @@ export class PhilosophyController {
   @Roles('admin')
   @ApiOperation({
     summary: 'Actualizar métricas de HambrE',
-    description: 'Permite a los administradores actualizar manualmente el nivel de HambrE del ecosistema.',
+    description:
+      'Permite a los administradores actualizar manualmente el nivel de HambrE del ecosistema.',
   })
   @ApiBody({
     type: UpdateHambreDto,
@@ -138,11 +148,16 @@ export class PhilosophyController {
     status: HttpStatus.FORBIDDEN,
     description: 'Solo administradores pueden actualizar HambrE',
   })
-  async updateHambre(@Body() updateData: UpdateHambreDto): Promise<HambreMetricDto> {
-    this.logger.log(`🔄 POST /philosophy/hambre - Actualizando HambrE: ${updateData.level} (${updateData.value})`);
+  async updateHambre(
+    @Body() updateData: UpdateHambreDto
+  ): Promise<HambreMetricDto> {
+    this.logger.log(
+      `🔄 POST /philosophy/hambre - Actualizando HambrE: ${updateData.level} (${updateData.value})`
+    );
 
     try {
-      const updatedHambre = await this.philosophyService.updateHambre(updateData);
+      const updatedHambre =
+        await this.philosophyService.updateHambre(updateData);
 
       this.logger.log('✅ HambrE actualizado por administrador');
       return updatedHambre;
@@ -159,7 +174,8 @@ export class PhilosophyController {
   @Roles('admin', 'moderator', 'user')
   @ApiOperation({
     summary: 'Obtener métricas de IEA de Reciprocidad',
-    description: 'Retorna el Índice de Equilibrio de Reciprocidad del ecosistema (balance dar/recibir).',
+    description:
+      'Retorna el Índice de Equilibrio de Reciprocidad del ecosistema (balance dar/recibir).',
   })
   @ApiResponse({
     status: HttpStatus.OK,
@@ -187,7 +203,8 @@ export class PhilosophyController {
   @Roles('admin')
   @ApiOperation({
     summary: 'Invalidar cache de métricas filosóficas',
-    description: 'Útil para desarrollo y depuración. Fuerza recálculo de métricas en próxima solicitud.',
+    description:
+      'Útil para desarrollo y depuración. Fuerza recálculo de métricas en próxima solicitud.',
   })
   @ApiResponse({
     status: HttpStatus.OK,
@@ -231,7 +248,11 @@ export class PhilosophyController {
     status: HttpStatus.OK,
     description: 'Módulo de filosofía operativo',
   })
-  async healthCheck(): Promise<{ status: string; module: string; timestamp: string }> {
+  async healthCheck(): Promise<{
+    status: string;
+    module: string;
+    timestamp: string;
+  }> {
     this.logger.log('🏥 GET /philosophy/health - Health check...');
 
     return {

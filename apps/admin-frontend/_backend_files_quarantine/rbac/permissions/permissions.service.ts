@@ -108,8 +108,8 @@ export class PermissionsService {
             actionType: 'permission:updated',
             entityType: 'Permission',
             entityId: updatedPermission.id,
-            oldValue: oldValue,
-            newValue: newValue,
+            oldValue,
+            newValue,
         });
         console.log('>>> PermissionsService.update: Audit log created successfully');
       }
@@ -147,7 +147,7 @@ export class PermissionsService {
             actionType: 'permission:deleted',
             entityType: 'Permission',
             entityId: deletedPermission.id,
-            oldValue: oldValue,
+            oldValue,
         });
         console.log('>>> PermissionsService.remove: Audit log created successfully');
       }

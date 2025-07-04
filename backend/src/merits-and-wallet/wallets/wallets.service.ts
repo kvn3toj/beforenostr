@@ -29,7 +29,7 @@ export class WalletsService {
       create: {
         userId,
         balance: amount,
-        currency: currency,
+        currency,
       },
     });
     return wallet;

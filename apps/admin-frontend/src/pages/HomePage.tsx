@@ -81,7 +81,7 @@ const MinimalMetricCard: React.FC<MetricCardProps> = ({
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              color: color,
+              color,
             }}
           >
             {icon}
@@ -146,7 +146,7 @@ const MinimalActionCard: React.FC<QuickActionProps> = ({
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              color: color,
+              color,
             }}
           >
             {icon}

@@ -39,7 +39,7 @@ export class AnalyticsService {
     return this.prisma.userEngagement.create({
       data: {
         ...data,
-        userId: userId,
+        userId,
       },
     });
   }

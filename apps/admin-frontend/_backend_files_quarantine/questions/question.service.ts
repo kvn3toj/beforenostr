@@ -87,7 +87,7 @@ export class QuestionService {
       // Note: In a real app, you might want pagination here
       const result = await this.prisma.question.findMany({
         where: {
-          videoItemId: videoItemId,
+          videoItemId,
           ...(findAllDto.languageCode && { languageCode: findAllDto.languageCode }),
           ...(findAllDto.type && { type: findAllDto.type }),
           ...(findAllDto.isActive !== undefined && { isActive: findAllDto.isActive }),

@@ -622,7 +622,7 @@ export class VideoItemsService {
     const externalId = this.extractPlatformId(content, platform);
     
     const metadata: VideoMetadata = {
-      platform: platform,
+      platform,
       externalId: externalId || undefined,
       url: content,
     };
@@ -909,7 +909,7 @@ export class VideoItemsService {
               id: video.id,
               title: video.title,
               duration: video.duration,
-              calculatedDuration: calculatedDuration,
+              calculatedDuration,
               status: 'verified',
               message: `Duration within acceptable range (±10s) - no change needed`
             });
@@ -946,7 +946,7 @@ export class VideoItemsService {
                 id: video.id,
                 title: video.title,
                 currentDuration: video.duration,
-                calculatedDuration: calculatedDuration,
+                calculatedDuration,
                 status: 'protected',
                 message: 'Current duration seems more reliable - protected from overwrite'
               });

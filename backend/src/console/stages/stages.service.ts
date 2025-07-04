@@ -7,7 +7,12 @@
  * 🔄 ENHANCED VERSION - Real Database Integration + Advanced Analytics
  */
 
-import { Injectable, NotFoundException, BadRequestException, Logger } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  BadRequestException,
+  Logger,
+} from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { UpdateStageDto } from './dto/update-stage.dto';
 import { CustomerJourneyStage } from '../../../src/generated/prisma';
@@ -107,12 +112,13 @@ export class StagesService {
     this.logger.log(`Fetching comprehensive data for stage: ${stage}`);
 
     try {
-      const [metrics, requirements, activities, progressions] = await Promise.all([
-        this.calculateRealStageMetrics(stage),
-        this.getStageRequirements(stage),
-        this.getStageActivities(stage),
-        this.getActiveProgressions(stage),
-      ]);
+      const [metrics, requirements, activities, progressions] =
+        await Promise.all([
+          this.calculateRealStageMetrics(stage),
+          this.getStageRequirements(stage),
+          this.getStageActivities(stage),
+          this.getActiveProgressions(stage),
+        ]);
 
       const nextStage = this.getNextStage(stage);
       const rewards = this.getStageRewards(stage);
@@ -146,13 +152,15 @@ export class StagesService {
   /**
    * 📈 Calculate real metrics for a stage using database queries
    */
-  private async calculateRealStageMetrics(stage: CustomerJourneyStage): Promise<StageMetrics> {
+  private async calculateRealStageMetrics(
+    stage: CustomerJourneyStage
+  ): Promise<StageMetrics> {
     this.logger.log(`Calculating real metrics for stage: ${stage}`);
 
     try {
       // Get users currently in this stage
       const currentUsers = await this.prisma.user.count({
-        where: { currentStage: stage }
+        where: { currentStage: stage },
       });
 
       // Get users who progressed to this stage in the last week
@@ -160,43 +168,47 @@ export class StagesService {
       const newThisWeek = await this.prisma.user.count({
         where: {
           currentStage: stage,
-          stageStartedAt: { gte: oneWeekAgo }
-        }
+          stageStartedAt: { gte: oneWeekAgo },
+        },
       });
 
       // Get active stage progressions
       const activeProgressions = await this.prisma.stageProgression.count({
         where: {
           stage,
-          isActive: true
-        }
+          isActive: true,
+        },
       });
 
       // Calculate average time in stage
-      const completedProgressions = await this.prisma.stageProgression.findMany({
-        where: {
-          stage,
-          completedAt: { not: null }
-        },
-        select: {
-          startedAt: true,
-          completedAt: true
+      const completedProgressions = await this.prisma.stageProgression.findMany(
+        {
+          where: {
+            stage,
+            completedAt: { not: null },
+          },
+          select: {
+            startedAt: true,
+            completedAt: true,
+          },
         }
-      });
+      );
 
-      const averageTimeInStage = completedProgressions.length > 0
-        ? completedProgressions.reduce((sum, p) => {
-            const duration = p.completedAt!.getTime() - p.startedAt.getTime();
-            return sum + (duration / (1000 * 60 * 60 * 24)); // Convert to days
-          }, 0) / completedProgressions.length
-        : 0;
+      const averageTimeInStage =
+        completedProgressions.length > 0
+          ? completedProgressions.reduce((sum, p) => {
+              const duration = p.completedAt!.getTime() - p.startedAt.getTime();
+              return sum + duration / (1000 * 60 * 60 * 24); // Convert to days
+            }, 0) / completedProgressions.length
+          : 0;
 
       // Calculate completion rate
       const totalAttempts = await this.prisma.stageProgression.count({
-        where: { stage }
+        where: { stage },
       });
       const completions = completedProgressions.length;
-      const completionRate = totalAttempts > 0 ? (completions / totalAttempts) * 100 : 0;
+      const completionRate =
+        totalAttempts > 0 ? (completions / totalAttempts) * 100 : 0;
 
       // Calculate conversion rate to next stage
       const nextStage = this.getNextStage(stage);
@@ -204,9 +216,12 @@ export class StagesService {
 
       if (nextStage) {
         const progressedToNext = await this.prisma.user.count({
-          where: { currentStage: nextStage }
+          where: { currentStage: nextStage },
         });
-        conversionRate = currentUsers > 0 ? (progressedToNext / (currentUsers + progressedToNext)) * 100 : 0;
+        conversionRate =
+          currentUsers > 0
+            ? (progressedToNext / (currentUsers + progressedToNext)) * 100
+            : 0;
       }
 
       // Calculate weekly growth
@@ -216,14 +231,20 @@ export class StagesService {
           currentStage: stage,
           stageStartedAt: {
             gte: twoWeeksAgo,
-            lt: oneWeekAgo
-          }
-        }
+            lt: oneWeekAgo,
+          },
+        },
       });
-      const weeklyGrowth = previousWeekUsers > 0 ? ((newThisWeek - previousWeekUsers) / previousWeekUsers) * 100 : 0;
+      const weeklyGrowth =
+        previousWeekUsers > 0
+          ? ((newThisWeek - previousWeekUsers) / previousWeekUsers) * 100
+          : 0;
 
       // Calculate engagement score (mock for now - can be enhanced)
-      const engagementScore = Math.min(100, (completionRate + conversionRate) / 2);
+      const engagementScore = Math.min(
+        100,
+        (completionRate + conversionRate) / 2
+      );
 
       // Calculate dropoff rate
       const dropoffRate = Math.max(0, 100 - completionRate);
@@ -261,7 +282,7 @@ export class StagesService {
           merits: true,
           transactionsFrom: true,
           transactionsTo: true,
-        }
+        },
       });
 
       if (!user) {
@@ -284,9 +305,15 @@ export class StagesService {
 
       const requirements = this.getStageRequirements(nextStage);
       const currentProgress = await this.calculateUserProgress(user);
-      const missingRequirements = this.checkMissingRequirements(requirements, currentProgress);
+      const missingRequirements = this.checkMissingRequirements(
+        requirements,
+        currentProgress
+      );
 
-      const completionPercentage = this.calculateCompletionPercentage(requirements, currentProgress);
+      const completionPercentage = this.calculateCompletionPercentage(
+        requirements,
+        currentProgress
+      );
       const canProgress = missingRequirements.length === 0;
 
       return {
@@ -295,11 +322,20 @@ export class StagesService {
         missingRequirements,
         currentProgress,
         completionPercentage,
-        estimatedTimeToProgression: this.estimateTimeToProgression(missingRequirements, currentProgress),
-        recommendations: this.generateProgressionRecommendations(missingRequirements, currentStage),
+        estimatedTimeToProgression: this.estimateTimeToProgression(
+          missingRequirements,
+          currentProgress
+        ),
+        recommendations: this.generateProgressionRecommendations(
+          missingRequirements,
+          currentStage
+        ),
       };
     } catch (error) {
-      this.logger.error(`Error checking progression for user ${userId}:`, error);
+      this.logger.error(
+        `Error checking progression for user ${userId}:`,
+        error
+      );
       throw new BadRequestException('Failed to check user progression');
     }
   }
@@ -339,7 +375,7 @@ export class StagesService {
           currentStage: newStage,
           stageProgressedAt: new Date(),
           stageStartedAt: new Date(),
-        }
+        },
       });
 
       // Create stage progression record
@@ -350,7 +386,7 @@ export class StagesService {
           requirements: {},
           metrics: {},
           isActive: true,
-        }
+        },
       });
 
       // Complete previous stage progression
@@ -363,7 +399,7 @@ export class StagesService {
         data: {
           completedAt: new Date(),
           isActive: false,
-        }
+        },
       });
 
       const rewards = this.getStageRewards(newStage);
@@ -389,7 +425,9 @@ export class StagesService {
   /**
    * 📊 Get detailed stage analytics
    */
-  async getDetailedStageAnalytics(stage: CustomerJourneyStage): Promise<StageAnalytics> {
+  async getDetailedStageAnalytics(
+    stage: CustomerJourneyStage
+  ): Promise<StageAnalytics> {
     this.logger.log(`Generating detailed analytics for stage: ${stage}`);
 
     try {
@@ -404,11 +442,19 @@ export class StagesService {
         progressionTrends,
         topExitPoints: await this.getTopExitPoints(stage),
         successFactors: this.getSuccessFactors(stage),
-        optimizationSuggestions: this.getOptimizationSuggestions(stage, metrics),
+        optimizationSuggestions: this.getOptimizationSuggestions(
+          stage,
+          metrics
+        ),
       };
     } catch (error) {
-      this.logger.error(`Error generating analytics for stage ${stage}:`, error);
-      throw new BadRequestException(`Failed to generate analytics for stage ${stage}`);
+      this.logger.error(
+        `Error generating analytics for stage ${stage}:`,
+        error
+      );
+      throw new BadRequestException(
+        `Failed to generate analytics for stage ${stage}`
+      );
     }
   }
 
@@ -416,8 +462,12 @@ export class StagesService {
    * 📊 Calculate overall system metrics
    */
   private async calculateOverallMetrics() {
-    const totalUsers = await this.prisma.user.count({ where: { isActive: true } });
-    const activeProgressions = await this.prisma.stageProgression.count({ where: { isActive: true } });
+    const totalUsers = await this.prisma.user.count({
+      where: { isActive: true },
+    });
+    const activeProgressions = await this.prisma.stageProgression.count({
+      where: { isActive: true },
+    });
 
     return {
       totalUsers,
@@ -431,13 +481,20 @@ export class StagesService {
    */
   private async calculateUserProgress(user: any) {
     const daysSinceStageStart = user.stageStartedAt
-      ? Math.floor((Date.now() - user.stageStartedAt.getTime()) / (1000 * 60 * 60 * 24))
+      ? Math.floor(
+          (Date.now() - user.stageStartedAt.getTime()) / (1000 * 60 * 60 * 24)
+        )
       : 0;
 
     return {
-      meritos: user.merits?.reduce((sum: number, merit: any) => sum + merit.amount, 0) || 0,
+      meritos:
+        user.merits?.reduce(
+          (sum: number, merit: any) => sum + merit.amount,
+          0
+        ) || 0,
       ondas: 0, // Calculate from user data when available
-      transactions: user.transactionsFrom?.length + user.transactionsTo?.length || 0,
+      transactions:
+        user.transactionsFrom?.length + user.transactionsTo?.length || 0,
       timeInStage: daysSinceStageStart,
       sessions: 0, // Calculate from session tracking when available
     };
@@ -446,20 +503,41 @@ export class StagesService {
   /**
    * ✅ Check missing requirements for progression
    */
-  private checkMissingRequirements(requirements: StageRequirements, progress: Record<string, number>): string[] {
+  private checkMissingRequirements(
+    requirements: StageRequirements,
+    progress: Record<string, number>
+  ): string[] {
     const missing: string[] = [];
 
-    if (requirements.minimumMeritos && progress.meritos < requirements.minimumMeritos) {
-      missing.push(`${requirements.minimumMeritos - progress.meritos} Mëritos más`);
+    if (
+      requirements.minimumMeritos &&
+      progress.meritos < requirements.minimumMeritos
+    ) {
+      missing.push(
+        `${requirements.minimumMeritos - progress.meritos} Mëritos más`
+      );
     }
-    if (requirements.minimumOndas && progress.ondas < requirements.minimumOndas) {
+    if (
+      requirements.minimumOndas &&
+      progress.ondas < requirements.minimumOndas
+    ) {
       missing.push(`${requirements.minimumOndas - progress.ondas} Öndas más`);
     }
-    if (requirements.minimumTransactions && progress.transactions < requirements.minimumTransactions) {
-      missing.push(`${requirements.minimumTransactions - progress.transactions} transacciones más`);
+    if (
+      requirements.minimumTransactions &&
+      progress.transactions < requirements.minimumTransactions
+    ) {
+      missing.push(
+        `${requirements.minimumTransactions - progress.transactions} transacciones más`
+      );
     }
-    if (requirements.timeInCurrentStage && progress.timeInStage < requirements.timeInCurrentStage) {
-      missing.push(`${requirements.timeInCurrentStage - progress.timeInStage} días más en el stage`);
+    if (
+      requirements.timeInCurrentStage &&
+      progress.timeInStage < requirements.timeInCurrentStage
+    ) {
+      missing.push(
+        `${requirements.timeInCurrentStage - progress.timeInStage} días más en el stage`
+      );
     }
 
     return missing;
@@ -468,29 +546,53 @@ export class StagesService {
   /**
    * 📊 Calculate completion percentage
    */
-  private calculateCompletionPercentage(requirements: StageRequirements, progress: Record<string, number>): number {
+  private calculateCompletionPercentage(
+    requirements: StageRequirements,
+    progress: Record<string, number>
+  ): number {
     const checks = [];
 
     if (requirements.minimumMeritos) {
-      checks.push(Math.min(100, (progress.meritos / requirements.minimumMeritos) * 100));
+      checks.push(
+        Math.min(100, (progress.meritos / requirements.minimumMeritos) * 100)
+      );
     }
     if (requirements.minimumOndas) {
-      checks.push(Math.min(100, (progress.ondas / requirements.minimumOndas) * 100));
+      checks.push(
+        Math.min(100, (progress.ondas / requirements.minimumOndas) * 100)
+      );
     }
     if (requirements.minimumTransactions) {
-      checks.push(Math.min(100, (progress.transactions / requirements.minimumTransactions) * 100));
+      checks.push(
+        Math.min(
+          100,
+          (progress.transactions / requirements.minimumTransactions) * 100
+        )
+      );
     }
     if (requirements.timeInCurrentStage) {
-      checks.push(Math.min(100, (progress.timeInStage / requirements.timeInCurrentStage) * 100));
+      checks.push(
+        Math.min(
+          100,
+          (progress.timeInStage / requirements.timeInCurrentStage) * 100
+        )
+      );
     }
 
-    return checks.length > 0 ? Math.round(checks.reduce((sum, check) => sum + check, 0) / checks.length) : 100;
+    return checks.length > 0
+      ? Math.round(
+          checks.reduce((sum, check) => sum + check, 0) / checks.length
+        )
+      : 100;
   }
 
   /**
    * ⏱️ Estimate time to progression
    */
-  private estimateTimeToProgression(missingRequirements: string[], currentProgress: Record<string, number>): number {
+  private estimateTimeToProgression(
+    missingRequirements: string[],
+    currentProgress: Record<string, number>
+  ): number {
     // Simplified estimation - can be enhanced with ML models
     return missingRequirements.length * 3; // 3 days per missing requirement
   }
@@ -498,7 +600,10 @@ export class StagesService {
   /**
    * 💡 Generate progression recommendations
    */
-  private generateProgressionRecommendations(missingRequirements: string[], currentStage: CustomerJourneyStage): string[] {
+  private generateProgressionRecommendations(
+    missingRequirements: string[],
+    currentStage: CustomerJourneyStage
+  ): string[] {
     const recommendations: string[] = [];
 
     if (missingRequirements.length === 0) {
@@ -552,35 +657,81 @@ export class StagesService {
   private getMockStageMetrics(stage: CustomerJourneyStage): StageMetrics {
     const mockMetrics: Record<CustomerJourneyStage, StageMetrics> = {
       BUYER: {
-        totalUsers: 150, newThisWeek: 25, conversionRate: 15.5, averageTimeInStage: 7,
-        topActivities: ['Explorar Marketplace', 'Ver Videos Introductorios', 'Completar Perfil'],
-        completionRate: 78, activeProgressions: 23, averageCompletionTime: 7,
-        dropoffRate: 22, weeklyGrowth: 12, engagementScore: 85
+        totalUsers: 150,
+        newThisWeek: 25,
+        conversionRate: 15.5,
+        averageTimeInStage: 7,
+        topActivities: [
+          'Explorar Marketplace',
+          'Ver Videos Introductorios',
+          'Completar Perfil',
+        ],
+        completionRate: 78,
+        activeProgressions: 23,
+        averageCompletionTime: 7,
+        dropoffRate: 22,
+        weeklyGrowth: 12,
+        engagementScore: 85,
       },
       SEEKER: {
-        totalUsers: 89, newThisWeek: 12, conversionRate: 22.3, averageTimeInStage: 14,
-        topActivities: ['Participar en COPs', 'Realizar Primera Transacción', 'Conectar con Mentores'],
-        completionRate: 65, activeProgressions: 18, averageCompletionTime: 14,
-        dropoffRate: 35, weeklyGrowth: 8, engagementScore: 72
+        totalUsers: 89,
+        newThisWeek: 12,
+        conversionRate: 22.3,
+        averageTimeInStage: 14,
+        topActivities: [
+          'Participar en COPs',
+          'Realizar Primera Transacción',
+          'Conectar con Mentores',
+        ],
+        completionRate: 65,
+        activeProgressions: 18,
+        averageCompletionTime: 14,
+        dropoffRate: 35,
+        weeklyGrowth: 8,
+        engagementScore: 72,
       },
       SOLVER: {
-        totalUsers: 45, newThisWeek: 8, conversionRate: 31.1, averageTimeInStage: 28,
-        topActivities: ['Ofrecer Servicios', 'Completar Retos', 'Contribuir Conocimiento'],
-        completionRate: 42, activeProgressions: 12, averageCompletionTime: 28,
-        dropoffRate: 58, weeklyGrowth: 15, engagementScore: 68
+        totalUsers: 45,
+        newThisWeek: 8,
+        conversionRate: 31.1,
+        averageTimeInStage: 28,
+        topActivities: [
+          'Ofrecer Servicios',
+          'Completar Retos',
+          'Contribuir Conocimiento',
+        ],
+        completionRate: 42,
+        activeProgressions: 12,
+        averageCompletionTime: 28,
+        dropoffRate: 58,
+        weeklyGrowth: 15,
+        engagementScore: 68,
       },
       PROMOTER: {
-        totalUsers: 23, newThisWeek: 3, conversionRate: 100, averageTimeInStage: 60,
-        topActivities: ['Liderar COPs', 'Mentorar Nuevos Usuarios', 'Crear Contenido'],
-        completionRate: 28, activeProgressions: 8, averageCompletionTime: 60,
-        dropoffRate: 72, weeklyGrowth: 5, engagementScore: 92
-      }
+        totalUsers: 23,
+        newThisWeek: 3,
+        conversionRate: 100,
+        averageTimeInStage: 60,
+        topActivities: [
+          'Liderar COPs',
+          'Mentorar Nuevos Usuarios',
+          'Crear Contenido',
+        ],
+        completionRate: 28,
+        activeProgressions: 8,
+        averageCompletionTime: 60,
+        dropoffRate: 72,
+        weeklyGrowth: 5,
+        engagementScore: 92,
+      },
     };
 
     return mockMetrics[stage];
   }
 
-  private async getTopActivitiesForStage(stage: CustomerJourneyStage): Promise<string[]> {
+  private async getTopActivitiesForStage(
+    stage: CustomerJourneyStage
+  ): Promise<string[]> {
     // Mock implementation - replace with real activity tracking
     return this.getMockStageMetrics(stage).topActivities;
   }
@@ -615,23 +766,48 @@ export class StagesService {
     return last30Days;
   }
 
-  private async getTopExitPoints(stage: CustomerJourneyStage): Promise<string[]> {
+  private async getTopExitPoints(
+    stage: CustomerJourneyStage
+  ): Promise<string[]> {
     // Mock implementation
-    return ['Configuración de perfil', 'Primera transacción', 'Validación por mentores'];
+    return [
+      'Configuración de perfil',
+      'Primera transacción',
+      'Validación por mentores',
+    ];
   }
 
   private getSuccessFactors(stage: CustomerJourneyStage): string[] {
     const factors: Record<CustomerJourneyStage, string[]> = {
-      BUYER: ['Completar onboarding rápido', 'Activar gift card', 'Explorar marketplace'],
-      SEEKER: ['Participar en comunidad', 'Realizar transacciones', 'Construir reputación'],
-      SOLVER: ['Ofrecer servicios de calidad', 'Mantener buenas calificaciones', 'Ser consistente'],
-      PROMOTER: ['Liderar con ejemplo', 'Mentorar efectivamente', 'Contribuir valor'],
+      BUYER: [
+        'Completar onboarding rápido',
+        'Activar gift card',
+        'Explorar marketplace',
+      ],
+      SEEKER: [
+        'Participar en comunidad',
+        'Realizar transacciones',
+        'Construir reputación',
+      ],
+      SOLVER: [
+        'Ofrecer servicios de calidad',
+        'Mantener buenas calificaciones',
+        'Ser consistente',
+      ],
+      PROMOTER: [
+        'Liderar con ejemplo',
+        'Mentorar efectivamente',
+        'Contribuir valor',
+      ],
     };
 
     return factors[stage] || [];
   }
 
-  private getOptimizationSuggestions(stage: CustomerJourneyStage, metrics: StageMetrics): string[] {
+  private getOptimizationSuggestions(
+    stage: CustomerJourneyStage,
+    metrics: StageMetrics
+  ): string[] {
     const suggestions: string[] = [];
 
     if (metrics.dropoffRate > 50) {
@@ -650,8 +826,13 @@ export class StagesService {
   /**
    * 🔄 Get next stage in progression
    */
-  private getNextStage(currentStage: CustomerJourneyStage): CustomerJourneyStage | null {
-    const progression: Record<CustomerJourneyStage, CustomerJourneyStage | null> = {
+  private getNextStage(
+    currentStage: CustomerJourneyStage
+  ): CustomerJourneyStage | null {
+    const progression: Record<
+      CustomerJourneyStage,
+      CustomerJourneyStage | null
+    > = {
       BUYER: 'SEEKER',
       SEEKER: 'SOLVER',
       SOLVER: 'PROMOTER',
@@ -680,10 +861,13 @@ export class StagesService {
    */
   private getStageDescription(stage: CustomerJourneyStage): string {
     const descriptions: Record<CustomerJourneyStage, string> = {
-      BUYER: 'Descubre CoomÜnity y experimenta tus primeras transacciones conscientes',
-      SEEKER: 'Explora oportunidades, construye confianza y conecta con la comunidad',
+      BUYER:
+        'Descubre CoomÜnity y experimenta tus primeras transacciones conscientes',
+      SEEKER:
+        'Explora oportunidades, construye confianza y conecta con la comunidad',
       SOLVER: 'Crea valor ofreciendo servicios y soluciones innovadoras',
-      PROMOTER: 'Lidera la comunidad, mentora nuevos usuarios y expande el ecosistema',
+      PROMOTER:
+        'Lidera la comunidad, mentora nuevos usuarios y expande el ecosistema',
     };
 
     return descriptions[stage];
@@ -720,8 +904,13 @@ export class StagesService {
   /**
    * 🧠 Get philosophy alignment
    */
-  private getPhilosophyAlignment(stage: CustomerJourneyStage): 'reciprocidad' | 'bien_comun' | 'metanoia' {
-    const alignments: Record<CustomerJourneyStage, 'reciprocidad' | 'bien_comun' | 'metanoia'> = {
+  private getPhilosophyAlignment(
+    stage: CustomerJourneyStage
+  ): 'reciprocidad' | 'bien_comun' | 'metanoia' {
+    const alignments: Record<
+      CustomerJourneyStage,
+      'reciprocidad' | 'bien_comun' | 'metanoia'
+    > = {
       BUYER: 'reciprocidad',
       SEEKER: 'bien_comun',
       SOLVER: 'metanoia',
@@ -774,11 +963,17 @@ export class StagesService {
    * 📈 Calculate stage progression overview
    */
   private calculateStageProgression(stages: any[]) {
-    const totalUsers = stages.reduce((sum, stage) => sum + stage.metrics.totalUsers, 0);
+    const totalUsers = stages.reduce(
+      (sum, stage) => sum + stage.metrics.totalUsers,
+      0
+    );
 
-    return stages.map(stage => ({
+    return stages.map((stage) => ({
       stage: stage.id,
-      percentage: totalUsers > 0 ? Math.round((stage.metrics.totalUsers / totalUsers) * 100) : 0,
+      percentage:
+        totalUsers > 0
+          ? Math.round((stage.metrics.totalUsers / totalUsers) * 100)
+          : 0,
       users: stage.metrics.totalUsers,
     }));
   }
@@ -787,22 +982,29 @@ export class StagesService {
    * 🎁 Get stage rewards
    */
   private getStageRewards(stage: CustomerJourneyStage) {
-    const rewards: Record<CustomerJourneyStage, Array<{ type: string; amount: number; description: string }>> = {
+    const rewards: Record<
+      CustomerJourneyStage,
+      Array<{ type: string; amount: number; description: string }>
+    > = {
       BUYER: [
-        { type: 'ÜNITS', amount: 25, description: 'Bienvenida a CoomÜnity' }
+        { type: 'ÜNITS', amount: 25, description: 'Bienvenida a CoomÜnity' },
       ],
       SEEKER: [
         { type: 'ÜNITS', amount: 50, description: 'Recompensa de Buscador' },
-        { type: 'MERITOS', amount: 25, description: 'Mëritos de iniciación' }
+        { type: 'MERITOS', amount: 25, description: 'Mëritos de iniciación' },
       ],
       SOLVER: [
-        { type: 'ÜNITS', amount: 200, description: 'Recompensa de Solucionador' },
-        { type: 'ONDAS', amount: 100, description: 'Öndas de sabiduría' }
+        {
+          type: 'ÜNITS',
+          amount: 200,
+          description: 'Recompensa de Solucionador',
+        },
+        { type: 'ONDAS', amount: 100, description: 'Öndas de sabiduría' },
       ],
       PROMOTER: [
         { type: 'ÜNITS', amount: 1000, description: 'Premio al Promotor' },
         { type: 'ONDAS', amount: 500, description: 'Öndas de liderazgo' },
-        { type: 'MERITOS', amount: 200, description: 'Mëritos de excelencia' }
+        { type: 'MERITOS', amount: 200, description: 'Mëritos de excelencia' },
       ],
     };
 
@@ -814,7 +1016,10 @@ export class StagesService {
    */
   private async getStageActivities(stage: CustomerJourneyStage) {
     // Mock implementation - replace with real activity tracking
-    const activities: Record<CustomerJourneyStage, Array<{ name: string; completion: number; impact: number }>> = {
+    const activities: Record<
+      CustomerJourneyStage,
+      Array<{ name: string; completion: number; impact: number }>
+    > = {
       BUYER: [
         { name: 'Activar Gift Card', completion: 85, impact: 9 },
         { name: 'Completar Perfil', completion: 70, impact: 7 },

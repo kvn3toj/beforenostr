@@ -16,5 +16,5 @@ export class CreateUserEngagementDto {
 
   @IsObject()
   @IsOptional()
-  eventData?: any; // Use 'any' or a more specific interface/class if available
+  eventData?: Record<string, unknown>; // Use 'any' or a more specific interface/class if available
 }

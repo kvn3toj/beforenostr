@@ -1,4 +1,13 @@
-import { Controller, Get, Patch, Post, Body, Param, UseGuards, Req } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Patch,
+  Post,
+  Body,
+  Param,
+  UseGuards,
+  Req,
+} from '@nestjs/common';
 import { JwtAuthGuard } from '@/auth/guards/jwt-auth.guard';
 import { RolesGuard } from '@/rbac/guards/roles.guard';
 import { Roles } from '@/rbac/decorators/roles.decorator';
@@ -47,7 +56,10 @@ export class MatchController {
   }
 
   @Get(':matchId/messages')
-  async getMessages(@Param('matchId') matchId: string, @Req() req: AuthRequest) {
+  async getMessages(
+    @Param('matchId') matchId: string,
+    @Req() req: AuthRequest
+  ) {
     return this.matchService.getMessages(matchId, req.user!.id);
   }
 

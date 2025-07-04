@@ -94,7 +94,7 @@ export class UsersTestController {
       user: req.user,
       userRoles: req.user?.roles,
       guardExists: !!guard,
-      requiredRoles: requiredRoles,
+      requiredRoles,
       timestamp: new Date().toISOString() 
     };
   }

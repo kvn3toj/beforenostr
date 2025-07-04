@@ -39,7 +39,10 @@ export class CacheService implements OnModuleInit, OnModuleDestroy {
     try {
       // Verificar si ya está conectado antes de intentar conectar
       if (this.client?.isReady) {
-        this.logger.log('Redis already connected, skipping connection attempt', 'CacheService');
+        this.logger.log(
+          'Redis already connected, skipping connection attempt',
+          'CacheService'
+        );
         return;
       }
 
@@ -258,14 +261,15 @@ export class CacheService implements OnModuleInit, OnModuleDestroy {
   // ===== MÉTODOS DE CACHÉ PARA METADATOS (Fase 4.2) =====
 
   /**
-   * Almacena metadatos de video en caché
+   * Almacena metadatos de un video en el caché.
+   * La función es genérica para aceptar cualquier tipo de objeto como metadatos.
    * @param videoId ID del video
-   * @param metadata Metadatos del video
-   * @param ttl TTL en segundos (opcional, usa defaultTTL si no se especifica)
+   * @param metadata Objeto con los metadatos a almacenar
+   * @param ttl Tiempo de vida en segundos (opcional)
    */
-  async setMetadata(
+  async setMetadata<T extends object>(
     videoId: string,
-    metadata: any,
+    metadata: T,
     ttl?: number
   ): Promise<void> {
     try {
@@ -291,26 +295,20 @@ export class CacheService implements OnModuleInit, OnModuleDestroy {
   }
 
   /**
-   * Obtiene metadatos de video desde caché
+   * Obtiene metadatos de un video desde el caché.
+   * La función es genérica para castear el resultado al tipo esperado.
    * @param videoId ID del video
-   * @returns Metadatos del video o null si no existe
+   * @returns Objeto con los metadatos o null si no se encuentra
    */
-  async getMetadata(videoId: string): Promise<any | null> {
+  async getMetadata<T extends object>(videoId: string): Promise<T | null> {
     try {
       const key = this.generateMetadataCacheKey(videoId);
-      const value = await this.client?.get(key);
+      const cachedValue = await this.client?.get(key);
 
-      if (value && typeof value === 'string') {
+      if (cachedValue) {
         this.cacheStats.hits++;
         this.metricsService.incrementCacheOperations('get', 'hit');
-
-        const metadata = JSON.parse(value);
-        this.logger.log(
-          `Metadata cache hit for video ${videoId}`,
-          'CacheService',
-          { key }
-        );
-        return metadata;
+        return JSON.parse(cachedValue) as T;
       } else {
         this.cacheStats.misses++;
         this.metricsService.incrementCacheOperations('get', 'miss');
@@ -392,28 +390,20 @@ export class CacheService implements OnModuleInit, OnModuleDestroy {
   /**
    * Obtiene estadísticas del caché incluyendo metadatos
    */
-  async getCacheStatsWithMetadata(): Promise<any> {
-    try {
-      const basicStats = await this.getCacheStats();
+  async getCacheStatsWithMetadata(): Promise<CacheStatsWithMetadata> {
+    const [durationKeys, metadataKeys] = await Promise.all([
+      this.client.keys(this.generateCacheKey('*')),
+      this.client.keys(this.generateMetadataCacheKey('*')),
+    ]);
 
-      // Contar claves de metadatos
-      const metadataKeys = await this.client?.keys('gamifier:video:metadata:*');
-      const durationKeys = await this.client?.keys('gamifier:video:duration:*');
+    const basicStats = await this.getCacheStats();
 
-      return {
-        ...basicStats,
-        metadataKeys: metadataKeys?.length || 0,
-        durationKeys: durationKeys?.length || 0,
-        totalVideoKeys: (metadataKeys?.length || 0) + (durationKeys?.length || 0),
-      };
-    } catch (error) {
-      this.logger.error(
-        'Error getting cache stats with metadata:',
-        error,
-        'CacheService'
-      );
-      return this.getCacheStats();
-    }
+    return {
+      totalKeys: durationKeys.length + metadataKeys.length,
+      durationKeys: durationKeys.length,
+      metadataKeys: metadataKeys.length,
+      memoryUsage: basicStats.memoryUsage,
+    };
   }
 
   async get(key: string) {
@@ -434,4 +424,11 @@ export class CacheService implements OnModuleInit, OnModuleDestroy {
       await this.cacheManager.set(key, value, ttl ? ttl * 1000 : undefined);
     }
   }
+}
+
+interface CacheStatsWithMetadata {
+  totalKeys: number;
+  durationKeys: number;
+  metadataKeys: number;
+  memoryUsage: string;
 }

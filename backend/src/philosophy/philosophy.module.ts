@@ -14,6 +14,8 @@ import { LoggerModule } from '../common/logger/logger.module';
 })
 export class PhilosophyModule {
   constructor() {
-    console.log('🌌 PhilosophyModule CONSTRUCTOR: Activando la Consola de Experiencias del corazón filosófico...');
+    console.log(
+      '🌌 PhilosophyModule CONSTRUCTOR: Activando la Consola de Experiencias del corazón filosófico...'
+    );
   }
 }

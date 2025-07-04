@@ -48,7 +48,7 @@ test('Simular autenticación completa y verificar menú', async ({ page }) => {
 
     console.log('Token y usuario guardados en localStorage:', {
       token: authToken,
-      user: user
+      user
     });
   }, { authToken: token, user: userData });
 

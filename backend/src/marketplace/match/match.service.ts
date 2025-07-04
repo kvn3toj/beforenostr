@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  ForbiddenException,
+} from '@nestjs/common';
 import { PrismaService } from '@/prisma/prisma.service';
 import { MatchStatus } from '../../generated/prisma';
 
@@ -21,14 +25,23 @@ export class MatchService {
     return this.assertParticipant(matchId, userId);
   }
 
-  async confirmMatch(matchId: string, userId: string, role: 'buyer' | 'seller') {
+  async confirmMatch(
+    matchId: string,
+    userId: string,
+    role: 'buyer' | 'seller'
+  ) {
     await this.assertParticipant(matchId, userId);
-    const data = role === 'buyer' ? { buyerConfirmed: true } : { sellerConfirmed: true };
+    const data =
+      role === 'buyer' ? { buyerConfirmed: true } : { sellerConfirmed: true };
     const updated = await this.prisma.marketplaceMatch.update({
       where: { id: matchId },
       data,
     });
-    if (updated.buyerConfirmed && updated.sellerConfirmed && updated.status !== MatchStatus.CONFIRMED) {
+    if (
+      updated.buyerConfirmed &&
+      updated.sellerConfirmed &&
+      updated.status !== MatchStatus.CONFIRMED
+    ) {
       return this.prisma.marketplaceMatch.update({
         where: { id: matchId },
         data: { status: MatchStatus.CONFIRMED },

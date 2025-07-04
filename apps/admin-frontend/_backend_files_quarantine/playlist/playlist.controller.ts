@@ -376,7 +376,7 @@ export class PlaylistController {
   // @ApiBearerAuth()
   findOne(@Param('id') id: string) {
     return {
-      id: id,
+      id,
       mundo_id: '1',
       name: 'Playlist de prueba',
       description: 'Una playlist de prueba',

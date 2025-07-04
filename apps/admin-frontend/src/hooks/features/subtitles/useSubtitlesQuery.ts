@@ -10,6 +10,6 @@ export const useSubtitlesQuery = (findAllDto: FindAllSubtitlesDto) => {
   return useQuery<Subtitle[], Error>({
     queryKey: ['subtitles', findAllDto],
     queryFn: () => subtitleService.findAll(findAllDto),
-    enabled: enabled,
+    enabled,
   });
 }; 

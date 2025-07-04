@@ -68,7 +68,7 @@ export class PlaylistDirectController {
       console.log('>>> Prisma query result:', result);
       return {
         success: true,
-        result: result,
+        result,
         message: 'Database connection successful'
       };
     } catch (error) {

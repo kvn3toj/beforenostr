@@ -31,7 +31,9 @@ describe('TransactionsController (E2E) - El Crisol de la Confianza', () => {
     }).compile();
 
     app = moduleFixture.createNestApplication();
-    app.useGlobalPipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }));
+    app.useGlobalPipes(
+      new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true })
+    );
     await app.init();
 
     prisma = app.get(PrismaService);
@@ -40,7 +42,9 @@ describe('TransactionsController (E2E) - El Crisol de la Confianza', () => {
     // Limpieza alquímica del entorno de pruebas
     await prisma.transaction.deleteMany({});
     await prisma.wallet.deleteMany({});
-    await prisma.user.deleteMany({ where: { email: { contains: '.e2e@test.com' } } });
+    await prisma.user.deleteMany({
+      where: { email: { contains: '.e2e@test.com' } },
+    });
 
     const hashedPassword = await bcrypt.hash('password123', 10);
 
@@ -63,7 +67,10 @@ describe('TransactionsController (E2E) - El Crisol de la Confianza', () => {
       },
     });
 
-    const loginResponse = await authService.login({ email: sender.email, password: 'password123' });
+    const loginResponse = await authService.login({
+      email: sender.email,
+      password: 'password123',
+    });
     senderToken = loginResponse.access_token;
   });
 
@@ -89,7 +96,11 @@ describe('TransactionsController (E2E) - El Crisol de la Confianza', () => {
       await request(app.getHttpServer())
         .post('/transactions/send')
         .set('Authorization', `Bearer ${senderToken}`)
-        .send({ recipientId: receiver.id, amount: -10, currency: TransactionCurrency.UNITS })
+        .send({
+          recipientId: receiver.id,
+          amount: -10,
+          currency: TransactionCurrency.UNITS,
+        })
         .expect(400);
 
       // Caso 2: Moneda inválida
@@ -101,10 +112,14 @@ describe('TransactionsController (E2E) - El Crisol de la Confianza', () => {
 
       // Caso 3: recipientId no es UUID
       await request(app.getHttpServer())
-          .post('/transactions/send')
-          .set('Authorization', `Bearer ${senderToken}`)
-          .send({ recipientId: 'not-a-uuid', amount: 10, currency: TransactionCurrency.UNITS })
-          .expect(400);
+        .post('/transactions/send')
+        .set('Authorization', `Bearer ${senderToken}`)
+        .send({
+          recipientId: 'not-a-uuid',
+          amount: 10,
+          currency: TransactionCurrency.UNITS,
+        })
+        .expect(400);
     });
   });
 
@@ -119,26 +134,30 @@ describe('TransactionsController (E2E) - El Crisol de la Confianza', () => {
           currency: TransactionCurrency.UNITS,
         })
         .expect(403)
-        .then(response => {
-          expect(response.body.message).toContain('No puedes enviarte valor a ti mismo');
+        .then((response) => {
+          expect(response.body.message).toContain(
+            'No puedes enviarte valor a ti mismo'
+          );
         });
     });
 
     it('debe rechazar transacción si el destinatario no existe (404 Not Found)', () => {
-        const nonExistentId = 'a1b2c3d4-e5f6-7890-1234-567890abcdef';
-        return request(app.getHttpServer())
-          .post('/transactions/send')
-          .set('Authorization', `Bearer ${senderToken}`)
-          .send({
-            recipientId: nonExistentId,
-            amount: 10,
-            currency: TransactionCurrency.UNITS,
-          })
-          .expect(404)
-          .then(response => {
-            expect(response.body.message).toContain(`destinatario con id '${nonExistentId}' no fue encontrado`);
-          });
-      });
+      const nonExistentId = 'a1b2c3d4-e5f6-7890-1234-567890abcdef';
+      return request(app.getHttpServer())
+        .post('/transactions/send')
+        .set('Authorization', `Bearer ${senderToken}`)
+        .send({
+          recipientId: nonExistentId,
+          amount: 10,
+          currency: TransactionCurrency.UNITS,
+        })
+        .expect(404)
+        .then((response) => {
+          expect(response.body.message).toContain(
+            `destinatario con id '${nonExistentId}' no fue encontrado`
+          );
+        });
+    });
 
     it('debe rechazar transacción por balance insuficiente (403 Forbidden)', () => {
       return request(app.getHttpServer())
@@ -150,15 +169,19 @@ describe('TransactionsController (E2E) - El Crisol de la Confianza', () => {
           currency: TransactionCurrency.UNITS,
         })
         .expect(403)
-        .then(response => {
+        .then((response) => {
           expect(response.body.message).toContain('Fondos insuficientes');
         });
     });
 
     it('debe procesar exitosamente una transacción de Ünits y actualizar balances', async () => {
       const amountToSend = 50;
-      const senderInitialWallet = await prisma.wallet.findUnique({ where: { userId: sender.id } });
-      const receiverInitialWallet = await prisma.wallet.findUnique({ where: { userId: receiver.id } });
+      const senderInitialWallet = await prisma.wallet.findUnique({
+        where: { userId: sender.id },
+      });
+      const receiverInitialWallet = await prisma.wallet.findUnique({
+        where: { userId: receiver.id },
+      });
 
       await request(app.getHttpServer())
         .post('/transactions/send')
@@ -172,14 +195,26 @@ describe('TransactionsController (E2E) - El Crisol de la Confianza', () => {
         })
         .expect(201);
 
-      const finalSenderWallet = await prisma.wallet.findUnique({ where: { userId: sender.id } });
-      const finalReceiverWallet = await prisma.wallet.findUnique({ where: { userId: receiver.id } });
+      const finalSenderWallet = await prisma.wallet.findUnique({
+        where: { userId: sender.id },
+      });
+      const finalReceiverWallet = await prisma.wallet.findUnique({
+        where: { userId: receiver.id },
+      });
       const transaction = await prisma.transaction.findFirst({
-        where: { fromUserId: sender.id, toUserId: receiver.id, currency: TransactionCurrency.UNITS },
+        where: {
+          fromUserId: sender.id,
+          toUserId: receiver.id,
+          currency: TransactionCurrency.UNITS,
+        },
       });
 
-      expect(finalSenderWallet!.balance).toBe(senderInitialWallet!.balance - amountToSend);
-      expect(finalReceiverWallet!.balance).toBe(receiverInitialWallet!.balance + amountToSend);
+      expect(finalSenderWallet!.balance).toBe(
+        senderInitialWallet!.balance - amountToSend
+      );
+      expect(finalReceiverWallet!.balance).toBe(
+        receiverInitialWallet!.balance + amountToSend
+      );
 
       expect(transaction).toBeDefined();
       expect(transaction!.amount).toBe(amountToSend);
@@ -192,7 +227,9 @@ describe('TransactionsController (E2E) - El Crisol de la Confianza', () => {
       const meritsToSend = 10;
       // El sender tiene 50 Ünits restantes. Los méritos no deben interferir con ese balance si son lógicas separadas.
       // Para esta prueba, asumiremos que se descuentan del mismo balance general.
-      const senderInitialWallet = await prisma.wallet.findUnique({ where: { userId: sender.id } });
+      const senderInitialWallet = await prisma.wallet.findUnique({
+        where: { userId: sender.id },
+      });
 
       await request(app.getHttpServer())
         .post('/transactions/send')
@@ -205,13 +242,17 @@ describe('TransactionsController (E2E) - El Crisol de la Confianza', () => {
         })
         .expect(201);
 
-      const finalSenderWallet = await prisma.wallet.findUnique({ where: { userId: sender.id } });
+      const finalSenderWallet = await prisma.wallet.findUnique({
+        where: { userId: sender.id },
+      });
       const transaction = await prisma.transaction.findFirst({
         where: { fromUserId: sender.id, currency: TransactionCurrency.MERITS },
         orderBy: { createdAt: 'desc' },
       });
 
-      expect(finalSenderWallet!.balance).toBe(senderInitialWallet!.balance - meritsToSend);
+      expect(finalSenderWallet!.balance).toBe(
+        senderInitialWallet!.balance - meritsToSend
+      );
       expect(transaction).toBeDefined();
       expect(transaction!.amount).toBe(meritsToSend);
       expect(transaction!.currency).toBe(TransactionCurrency.MERITS);

@@ -32,7 +32,11 @@ export class VideoItemsController {
 
   @Get()
   @ApiOperation({ summary: 'Get all video items' })
-  @ApiResponse({ status: 200, description: 'List of video items', type: [VideoItemResponseDto] })
+  @ApiResponse({
+    status: 200,
+    description: 'List of video items',
+    type: [VideoItemResponseDto],
+  })
   async findAll() {
     //     console.log('>>> VideoItemsController.findAll: Starting...');
     //     console.log('>>> VideoItemsController.findAll: this.prisma IS', this.prisma ? 'DEFINED' : 'UNDEFINED');
@@ -57,7 +61,7 @@ export class VideoItemsController {
       });
 
       // Mapear externalId a youtubeId y exponer thumbnailUrl
-      return videoItems.map(item => ({
+      return videoItems.map((item) => ({
         ...item,
         youtubeId: item.externalId,
         thumbnailUrl: item.thumbnailUrl,
@@ -70,7 +74,11 @@ export class VideoItemsController {
 
   @Get(':id')
   @ApiOperation({ summary: 'Get a video item by ID' })
-  @ApiResponse({ status: 200, description: 'Video item found', type: VideoItemResponseDto })
+  @ApiResponse({
+    status: 200,
+    description: 'Video item found',
+    type: VideoItemResponseDto,
+  })
   @ApiResponse({ status: 404, description: 'Video item not found' })
   async findOne(@Param('id') id: string) {
     //     console.log('>>> VideoItemsController.findOne: Starting with id:', id);

@@ -90,11 +90,11 @@ export class PlaylistService {
                   id: true,
                   text: true,
                   isCorrect: true,
-                  order: true
-                }
-              }
-            }
-          }
+                  order: true,
+                },
+              },
+            },
+          },
         },
         where: { isActive: true },
         orderBy: { order: 'asc' },

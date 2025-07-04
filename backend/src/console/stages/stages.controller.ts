@@ -5,7 +5,16 @@
  * (BUYER → SEEKER → SOLVER → PROMOTER)
  */
 
-import { Controller, Get, Put, Post, Param, Body, UseGuards, Request } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Put,
+  Post,
+  Param,
+  Body,
+  UseGuards,
+  Request,
+} from '@nestjs/common';
 import { StagesService } from './stages.service';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '@/rbac/guards/roles.guard';

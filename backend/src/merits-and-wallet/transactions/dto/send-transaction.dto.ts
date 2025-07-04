@@ -1,4 +1,12 @@
-import { IsUUID, IsNumber, IsPositive, IsEnum, IsOptional, IsObject, IsString } from 'class-validator';
+import {
+  IsUUID,
+  IsNumber,
+  IsPositive,
+  IsEnum,
+  IsOptional,
+  IsObject,
+  IsString,
+} from 'class-validator';
 
 /**
  * SendTransactionDto asegura la claridad y la intención en el intercambio de valor,
@@ -18,7 +26,9 @@ export class SendTransactionDto {
   @IsPositive({ message: 'El monto debe ser mayor a 0.' })
   amount: number;
 
-  @IsEnum(TransactionCurrency, { message: 'La moneda debe ser Ünits o Mëritos.' })
+  @IsEnum(TransactionCurrency, {
+    message: 'La moneda debe ser Ünits o Mëritos.',
+  })
   currency: TransactionCurrency;
 
   @IsOptional()

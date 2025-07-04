@@ -114,7 +114,7 @@ describe('RolesController', () => {
     it('should call RolesService.assignRoleToUser', async () => {
       const userId = 'user-id';
       const roleId = 'role-id';
-      const expectedResult = { id: userId, roleId: roleId };
+      const expectedResult = { id: userId, roleId };
       jest.spyOn(service, 'assignRoleToUser').mockResolvedValue(expectedResult as any);
 
       const result = await controller.assignRoleToUser({ userId, roleId } as any);

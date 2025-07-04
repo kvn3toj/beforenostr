@@ -69,7 +69,7 @@ vi.mock('../hooks/features/questions/useDeleteQuestionMutation', () => ({
 
 // Mock components - Create a dynamic mock that responds to hook states
 let mockSubtitleManagerContent: React.ReactNode = null;
-let mockQuestionManagerContent: React.ReactNode = null;
+const mockQuestionManagerContent: React.ReactNode = null;
 
 vi.mock('../components/features/subtitles/SubtitleManager', () => ({
   SubtitleManager: vi.fn(({ videoItemId }) => {

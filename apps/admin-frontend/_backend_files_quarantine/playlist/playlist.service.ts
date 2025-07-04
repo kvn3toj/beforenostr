@@ -52,7 +52,7 @@ export class PlaylistService {
           name: createPlaylistDto.name,
           description: createPlaylistDto.description,
           imageUrl: createPlaylistDto.imageUrl,
-          orderInMundo: orderInMundo,
+          orderInMundo,
           isActive: createPlaylistDto.isActive ?? true,
           // createdById se puede agregar cuando tengamos autenticación
         },

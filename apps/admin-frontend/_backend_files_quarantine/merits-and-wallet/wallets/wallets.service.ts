@@ -41,8 +41,8 @@ export class WalletsService {
     const wallet = await this.prisma.wallet.findUnique({
       where: {
         userId_meritSlug: {
-          userId: userId,
-          meritSlug: meritSlug,
+          userId,
+          meritSlug,
         },
       },
     });
@@ -62,7 +62,7 @@ export class WalletsService {
     }
 
     return this.prisma.wallet.findMany({
-      where: { userId: userId },
+      where: { userId },
       include: { merit: true }, // Include merit details
     });
   }
@@ -80,8 +80,8 @@ export class WalletsService {
     const wallet = await this.prisma.wallet.findUnique({
          where: {
              userId_meritSlug: {
-                 userId: userId,
-                 meritSlug: meritSlug,
+                 userId,
+                 meritSlug,
              },
          },
      });
@@ -90,8 +90,8 @@ export class WalletsService {
           // If wallet doesn't exist, create it with the initial amount
            return this.prisma.wallet.create({
                data: {
-                   userId: userId,
-                   meritSlug: meritSlug,
+                   userId,
+                   meritSlug,
                    balance: amount,
                }
            });
@@ -115,8 +115,8 @@ export class WalletsService {
          const wallet = await this.prisma.wallet.findUnique({
              where: {
                  userId_meritSlug: {
-                     userId: userId,
-                     meritSlug: meritSlug,
+                     userId,
+                     meritSlug,
                  },
              },
          });
@@ -128,7 +128,7 @@ export class WalletsService {
         userId: string,
     ) {
         return this.prisma.wallet.findMany({
-            where: { userId: userId },
+            where: { userId },
             include: { merit: true },
         });
     }

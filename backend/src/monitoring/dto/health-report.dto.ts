@@ -60,7 +60,7 @@ export class HealthReportDto {
   @ApiProperty({
     description: 'Overall health status of the system',
     example: 'healthy',
-    enum: ['healthy', 'warning', 'critical']
+    enum: ['healthy', 'warning', 'critical'],
   })
   status: 'healthy' | 'warning' | 'critical';
 

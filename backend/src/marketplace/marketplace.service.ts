@@ -45,7 +45,9 @@ export class MarketplaceService {
   private readonly logger = new Logger(MarketplaceService.name);
 
   constructor(@Inject(PrismaService) private readonly prisma: PrismaService) {
-    this.logger.log('🏪⚜️ Marketplace Service initialized with consciousness integration');
+    this.logger.log(
+      '🏪⚜️ Marketplace Service initialized with consciousness integration'
+    );
   }
 
   // 🔹 ATLAS: Performance monitoring helper
@@ -56,7 +58,10 @@ export class MarketplaceService {
     };
   }
 
-  private endMetrics(metrics: MarketplaceMetrics, additionalData?: Partial<MarketplaceMetrics>) {
+  private endMetrics(
+    metrics: MarketplaceMetrics,
+    additionalData?: Partial<MarketplaceMetrics>
+  ) {
     const duration = Date.now() - metrics.startTime;
     this.logger.log(`📊 ${metrics.operation} completed in ${duration}ms`, {
       duration,
@@ -115,13 +120,16 @@ export class MarketplaceService {
     if (item.price < 100) score += 10;
 
     // Bonus for service/experience offerings (knowledge sharing)
-    if (item.itemType === 'SERVICE' || item.itemType === 'EXPERIENCE') score += 20;
+    if (item.itemType === 'SERVICE' || item.itemType === 'EXPERIENCE')
+      score += 20;
 
     return Math.min(score, 100);
   }
 
   // 🌟 COSMOS: Calculate consciousness level
-  private calculateConsciousnessLevel(item: any): 'SEED' | 'GROWING' | 'FLOURISHING' | 'TRANSCENDENT' {
+  private calculateConsciousnessLevel(
+    item: any
+  ): 'SEED' | 'GROWING' | 'FLOURISHING' | 'TRANSCENDENT' {
     const reciprocidadScore = this.calculateReciprocidadScore(item);
 
     if (reciprocidadScore >= 80) return 'TRANSCENDENT';
@@ -182,7 +190,10 @@ export class MarketplaceService {
       this.endMetrics(metrics);
       return this.transformMarketplaceItem(item);
     } catch (error) {
-      this.logger.error(`❌ Error creating marketplace item: ${error.message}`, error.stack);
+      this.logger.error(
+        `❌ Error creating marketplace item: ${error.message}`,
+        error.stack
+      );
       throw error;
     }
   }
@@ -220,7 +231,7 @@ export class MarketplaceService {
           },
           orderBy: [
             { favoriteCount: 'desc' }, // 🌟 Prioritize popular items
-            { createdAt: 'desc' }
+            { createdAt: 'desc' },
           ],
           take: limit,
           skip: offset,
@@ -228,7 +239,9 @@ export class MarketplaceService {
         this.prisma.marketplaceItem.count({ where }),
       ]);
 
-      const processedItems = items.map(item => this.transformMarketplaceItem(item));
+      const processedItems = items.map((item) =>
+        this.transformMarketplaceItem(item)
+      );
 
       this.endMetrics(metrics, { itemCount: items.length, cacheHit: false });
 
@@ -240,18 +253,35 @@ export class MarketplaceService {
         hasMore: offset + limit < total,
         // 🌟 COSMOS: Consciousness insights
         consciousnessMetrics: {
-          averageReciprocidadScore: processedItems.reduce((sum, item) => sum + item.reciprocidadScore, 0) / processedItems.length,
-          transcendentItems: processedItems.filter(item => item.consciousnessLevel === 'TRANSCENDENT').length,
+          averageReciprocidadScore:
+            processedItems.reduce(
+              (sum, item) => sum + item.reciprocidadScore,
+              0
+            ) / processedItems.length,
+          transcendentItems: processedItems.filter(
+            (item) => item.consciousnessLevel === 'TRANSCENDENT'
+          ).length,
           totalConsciousnessDistribution: {
-            SEED: processedItems.filter(item => item.consciousnessLevel === 'SEED').length,
-            GROWING: processedItems.filter(item => item.consciousnessLevel === 'GROWING').length,
-            FLOURISHING: processedItems.filter(item => item.consciousnessLevel === 'FLOURISHING').length,
-            TRANSCENDENT: processedItems.filter(item => item.consciousnessLevel === 'TRANSCENDENT').length,
-          }
-        }
+            SEED: processedItems.filter(
+              (item) => item.consciousnessLevel === 'SEED'
+            ).length,
+            GROWING: processedItems.filter(
+              (item) => item.consciousnessLevel === 'GROWING'
+            ).length,
+            FLOURISHING: processedItems.filter(
+              (item) => item.consciousnessLevel === 'FLOURISHING'
+            ).length,
+            TRANSCENDENT: processedItems.filter(
+              (item) => item.consciousnessLevel === 'TRANSCENDENT'
+            ).length,
+          },
+        },
       };
     } catch (error) {
-      this.logger.error(`❌ Error finding active items: ${error.message}`, error.stack);
+      this.logger.error(
+        `❌ Error finding active items: ${error.message}`,
+        error.stack
+      );
       throw error;
     }
   }

@@ -44,5 +44,5 @@ export class CreateAnalyticsDataDto {
   })
   @IsOptional()
   @IsObject()
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }

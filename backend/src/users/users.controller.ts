@@ -209,8 +209,14 @@ export class UsersController {
       properties: {
         ondas: { type: 'number', description: 'Öndas acumuladas del usuario' },
         meritos: { type: 'number', description: 'Mëritos ganados' },
-        balanceReciprocidad: { type: 'number', description: 'Balance Reciprocidad (0-1)' },
-        reciprocidadLevel: { type: 'string', description: 'Nivel actual de Reciprocidad' },
+        balanceReciprocidad: {
+          type: 'number',
+          description: 'Balance Reciprocidad (0-1)',
+        },
+        reciprocidadLevel: {
+          type: 'string',
+          description: 'Nivel actual de Reciprocidad',
+        },
         nextLevel: { type: 'string', description: 'Próximo nivel' },
         reciprocidadProgress: {
           type: 'number',

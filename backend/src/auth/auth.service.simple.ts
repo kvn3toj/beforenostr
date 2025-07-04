@@ -1,4 +1,6 @@
 import { Injectable } from '@nestjs/common';
+import { LoginDto } from './dto/login.dto';
+import { RegisterDto } from './dto/register.dto';
 
 @Injectable()
 export class SimpleAuthService {
@@ -11,7 +13,7 @@ export class SimpleAuthService {
     return { message: 'Simple auth service working' };
   }
 
-  async login(dto: any) {
+  async login(dto: LoginDto) {
     console.log('[SimpleAuthService] Login called');
     return {
       access_token: 'fake_token',
@@ -19,7 +21,7 @@ export class SimpleAuthService {
     };
   }
 
-  async register(dto: any) {
+  async register(dto: RegisterDto) {
     console.log('[SimpleAuthService] Register called');
     return {
       access_token: 'fake_token',

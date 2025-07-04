@@ -24,5 +24,5 @@ export class UpdateUserChallengeDto {
   })
   @IsJSON()
   @IsOptional()
-  progress?: any;
+  progress?: Record<string, unknown>;
 }

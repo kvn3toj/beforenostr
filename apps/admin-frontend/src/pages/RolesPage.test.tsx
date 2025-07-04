@@ -461,7 +461,7 @@ describe('RolesPage', () => {
         status: 'success',
         fetchStatus: 'idle',
         refetch: vi.fn(),
-        page: page, // Keep original page parameter logic if needed
+        page, // Keep original page parameter logic if needed
         isPending: false,
         isSuccess: true,
         isFetched: true,

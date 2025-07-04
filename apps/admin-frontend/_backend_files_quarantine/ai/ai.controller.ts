@@ -54,7 +54,7 @@ export class AiController {
         success: true,
         message: `Generated ${questions.length} questions successfully${body.autoSave ? ' and saved to database' : ''}`,
         questions: body.autoSave ? savedQuestions : questions,
-        config: config,
+        config,
         metadata: {
           videoItemId: parseInt(body.videoItemId),
           generatedAt: new Date().toISOString(),
@@ -90,7 +90,7 @@ export class AiController {
       return {
         success: true,
         message: `Saved ${savedQuestions.length} questions successfully`,
-        savedQuestions: savedQuestions
+        savedQuestions
       };
 
     } catch (error) {

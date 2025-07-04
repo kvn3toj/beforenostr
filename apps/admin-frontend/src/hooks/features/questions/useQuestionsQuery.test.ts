@@ -109,7 +109,7 @@ describe('useQuestionsQuery', () => {
     
     vi.mocked(useQuery).mockReturnValue(createQueryResultMock({
       isError: true,
-      error: error
+      error
     }));
 
     const { result } = renderHook(() => useQuestionsQuery(validFindAllDto));

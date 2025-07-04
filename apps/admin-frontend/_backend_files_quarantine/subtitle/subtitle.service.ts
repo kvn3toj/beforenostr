@@ -65,7 +65,7 @@ export class SubtitleService {
       console.log('>>> SubtitleService.findAll: About to call prisma.subtitle.findMany with videoItemId:', videoItemId);
       const result = await this.prisma.subtitle.findMany({
         where: {
-          videoItemId: videoItemId,
+          videoItemId,
           ...(findAllDto.languageCode && { languageCode: findAllDto.languageCode }),
           ...(findAllDto.format && { format: findAllDto.format }),
           ...(findAllDto.isActive !== undefined && { isActive: findAllDto.isActive }),

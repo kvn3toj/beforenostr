@@ -193,8 +193,8 @@ export class SocialService {
       // Buscar si ya existe un like para esta publicación y usuario
       const existingLike = await this.prisma.like.findFirst({
         where: {
-          publicationId: publicationId,
-          userId: userId
+          publicationId,
+          userId
         }
       });
 
@@ -211,8 +211,8 @@ export class SocialService {
         // Si no existe el like, crearlo
         await this.prisma.like.create({
           data: {
-            publicationId: publicationId,
-            userId: userId
+            publicationId,
+            userId
           }
         });
         liked = true;
@@ -221,7 +221,7 @@ export class SocialService {
 
       // Obtener el conteo actualizado de likes
       const likesCount = await this.prisma.like.count({
-        where: { publicationId: publicationId }
+        where: { publicationId }
       });
 
       const result = { liked, likesCount };
@@ -249,8 +249,8 @@ export class SocialService {
       const comment = await this.prisma.comment.create({
         data: {
           text: dto.content,
-          publicationId: publicationId,
-          userId: userId,
+          publicationId,
+          userId,
         },
         include: {
           user: { 
