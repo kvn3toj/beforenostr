@@ -475,8 +475,9 @@ model Wallet {
   id                String   @id @default(uuid())
   userId            String   @unique
   blockchainAddress String?
-  balanceUnits      Float    @default(0)
-  balanceToins      Float    @default(0)
+  balanceUnits      Decimal  @default(0)
+  balanceToins      Decimal  @default(0)
+  currency          Currency @default(UNITS)
   status            String   @default("ACTIVE")
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
@@ -490,7 +491,7 @@ model Wallet {
 
 model Transaction {
   id              String    @id @default(uuid()) @map("_id")
-  amount          Int
+  amount          Decimal
   currency        Currency
   description     String?
   fromUserId      String
@@ -1085,8 +1086,6 @@ model MatchMessage {
 enum Currency {
   UNITS
   TOINS
-  ONDAS
-  MERITOS
 }
 
 enum CustomerJourneyStage {

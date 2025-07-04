@@ -400,6 +400,7 @@ exports.Prisma.WalletScalarFieldEnum = {
   blockchainAddress: 'blockchainAddress',
   balanceUnits: 'balanceUnits',
   balanceToins: 'balanceToins',
+  currency: 'currency',
   status: 'status',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
@@ -814,9 +815,7 @@ exports.Prisma.JsonNullValueFilter = {
 };
 exports.Currency = exports.$Enums.Currency = {
   UNITS: 'UNITS',
-  TOINS: 'TOINS',
-  ONDAS: 'ONDAS',
-  MERITOS: 'MERITOS'
+  TOINS: 'TOINS'
 };
 
 exports.CustomerJourneyStage = exports.$Enums.CustomerJourneyStage = {

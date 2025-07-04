@@ -8,6 +8,7 @@ import {
   IsString,
 } from 'class-validator';
 import { Currency } from '../../../generated/prisma';
+import { Transform } from 'class-transformer';
 
 /**
  * Tipos específicos para metadata de transacciones alquímicamente purificada
@@ -58,6 +59,17 @@ export class TransactionResponseDto {
   amount: number;
   currency: Currency;
   description?: string;
+  @Transform(({ value }) => {
+    if (!value) return value;
+    if (typeof value === 'string') {
+      try {
+        return JSON.parse(value);
+      } catch {
+        return value;
+      }
+    }
+    return value;
+  })
   metadata?: Record<string, MetadataValue>;
   createdAt: Date;
   updatedAt: Date;

@@ -135,10 +135,15 @@ export class TransactionsController {
   ) {
     // El senderId se obtiene del usuario autenticado a través del token JWT
     const senderId = req.user.id;
-    return this.transactionsService.sendTransaction(
+    const tx = await this.transactionsService.sendTransaction(
       senderId,
       sendTransactionDto
     );
+    // Deserializar metadata si es string
+    return {
+      ...tx,
+      metadata: tx.metadata && typeof tx.metadata === 'string' ? JSON.parse(tx.metadata) : tx.metadata,
+    };
   }
 
   @Get('/user/:userId/stats')

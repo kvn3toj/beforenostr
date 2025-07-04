@@ -12,6 +12,7 @@ import {
   Challenge,
   ChallengeReward,
   UserChallenge,
+  Currency,
 } from '../../generated/prisma';
 import { UpdateUserChallengeDto } from './dto/update-user-challenge.dto';
 import { ChallengeConfig } from '../types/challenge-config.interface';
@@ -207,7 +208,7 @@ export class UserChallengesService {
         await this.transactionsService.createTransaction({
           toUserId: userChallenge.userId,
           amount: reward.amount,
-          type: 'RECEIVE',
+          currency: Currency.UNITS,
           description: `Reward for completing challenge "${challenge.title}": ${reward.description || ''}`,
         });
       }

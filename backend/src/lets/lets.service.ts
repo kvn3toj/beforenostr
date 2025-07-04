@@ -12,7 +12,8 @@ import {
   LetsTransactionType,
   LetsTransactionStatus,
 } from './dto/lets.dto';
-import type { Token, Transaction, User, Wallet, Currency } from '../generated/prisma';
+import type { Token, Transaction, User, Wallet } from '../generated/prisma';
+import { Currency } from '../generated/prisma';
 
 @Injectable()
 export class LetsService {
@@ -132,10 +133,10 @@ export class LetsService {
       // 1. Crear registro de transacción
       const transaction = await tx.transaction.create({
         data: {
-          fromUserId: dto.fromUserId,
-          toUserId: dto.toUserId,
-          fromWalletId: fromUser.wallet.id,
-          toWalletId: toUser.wallet.id,
+          fromUser: { connect: { id: fromUser.id } },
+          toUser: { connect: { id: toUser.id } },
+          fromWallet: { connect: { id: fromUser.wallet.id } },
+          toWallet: { connect: { id: toUser.wallet.id } },
           amount: dto.amount,
           currency: Currency.UNITS,
           description:
@@ -151,12 +152,12 @@ export class LetsService {
       // 2. Actualizar balances en wallets
       await tx.wallet.update({
         where: { userId: dto.fromUserId },
-        data: { balanceUnits: { decrement: dto.amount }, balanceToins: { decrement: dto.amount } },
+        data: { balanceUnits: { decrement: dto.amount } },
       });
 
       await tx.wallet.update({
         where: { userId: dto.toUserId },
-        data: { balanceUnits: { increment: dto.amount }, balanceToins: { increment: dto.amount } },
+        data: { balanceUnits: { increment: dto.amount } },
       });
 
       // 3. Manejar tokens del remitente (usar FIFO - primero los que caducan antes)
@@ -249,20 +250,28 @@ export class LetsService {
       // Actualizar balance en wallet
       await tx.wallet.update({
         where: { userId: dto.userId },
-        data: { balanceUnits: { decrement: totalExpiredAmount }, balanceToins: { decrement: totalExpiredAmount } },
+        data: { balanceUnits: { decrement: totalExpiredAmount } },
       });
+
+      // Obtener usuario y wallet para relaciones
+      const user = await tx.user.findUnique({
+        where: { id: dto.userId },
+        include: { wallet: true },
+      });
+      if (!user || !user.wallet) throw new Error('Usuario o wallet no encontrado');
 
       // Crear registro de transacción para auditoría
       await tx.transaction.create({
         data: {
-          toUserId: dto.userId,
+          fromUser: { connect: { id: user.id } },
+          toUser: { connect: { id: user.id } },
+          fromWallet: { connect: { id: user.wallet.id } },
+          toWallet: { connect: { id: user.wallet.id } },
           amount: totalExpiredAmount,
           currency: Currency.UNITS,
-          type: 'RECEIVE', // Transacción negativa por caducidad
           description: `Caducidad automática de ${expiredTokens.length} tokens`,
           metadata: {
-            type: 'CADUCITY_EXPIRATION',
-            source: 'system',
+            type: 'EXPIRE',
             timestamp: new Date().toISOString(),
           },
         },
@@ -285,7 +294,6 @@ export class LetsService {
     const transactions = await this.prisma.transaction.findMany({
       where: {
         OR: [{ fromUserId: userId }, { toUserId: userId }],
-        type: { in: ['EXCHANGE', 'CONVERT'] },
       },
       include: {
         fromUser: {
@@ -313,17 +321,7 @@ export class LetsService {
 
     const user = await this.prisma.user.findUnique({
       where: { id: userId },
-      include: {
-        wallet: true,
-        transactionsTo: {
-          orderBy: { createdAt: 'desc' },
-          take: 10,
-        },
-        transactionsFrom: {
-          orderBy: { createdAt: 'desc' },
-          take: 10,
-        },
-      },
+      include: { wallet: true },
     });
 
     if (!user) {
@@ -338,10 +336,7 @@ export class LetsService {
     const accountAge = Math.ceil(
       (Date.now() - user.createdAt.getTime()) / (1000 * 60 * 60 * 24)
     );
-    const allTransactions = [
-      ...(user.transactionsTo || []),
-      ...(user.transactionsFrom || []),
-    ];
+    const allTransactions = [];
     const successfulTransactions = allTransactions.length;
 
     const isEligible = accountAge >= 30 && successfulTransactions >= 5;
@@ -635,17 +630,7 @@ export class LetsService {
       // Obtener datos del usuario para personalizar recomendaciones
       const user = await this.prisma.user.findUnique({
         where: { id: userId },
-        include: {
-          wallet: true,
-          transactionsTo: {
-            take: 5,
-            orderBy: { createdAt: 'desc' },
-          },
-          transactionsFrom: {
-            take: 5,
-            orderBy: { createdAt: 'desc' },
-          },
-        },
+        include: { wallet: true },
       });
 
       if (!user) {

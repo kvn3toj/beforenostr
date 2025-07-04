@@ -25,8 +25,8 @@ interface UserWithProgress {
   id: string;
   stageStartedAt?: Date;
   merits?: MeritAmount[];
-  transactionsFrom?: unknown[];
-  transactionsTo?: unknown[];
+  sentTransactions?: unknown[];
+  receivedTransactions?: unknown[];
 }
 
 interface MeritAmount {
@@ -303,8 +303,8 @@ export class StagesService {
         where: { id: userId },
         include: {
           merits: true,
-          transactionsFrom: true,
-          transactionsTo: true,
+          sentTransactions: true,
+          receivedTransactions: true,
         },
       });
 
@@ -517,7 +517,7 @@ export class StagesService {
         ) || 0,
       ondas: 0, // Calculate from user data when available
       transactions:
-        user.transactionsFrom?.length + user.transactionsTo?.length || 0,
+        user.sentTransactions?.length + user.receivedTransactions?.length || 0,
       timeInStage: daysSinceStageStart,
       sessions: 0, // Calculate from session tracking when available
     };

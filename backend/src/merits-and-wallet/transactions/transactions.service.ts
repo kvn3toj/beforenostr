@@ -38,6 +38,10 @@ export class TransactionsService {
     if (data.amount <= 0) {
       throw new Error('El monto debe ser mayor a 0');
     }
+    const recipient = await this.prisma.user.findUnique({ where: { id: data.toUserId } });
+    if (!recipient) {
+      throw new NotFoundException(`El destinatario con id '${data.toUserId}' no fue encontrado en el ecosistema.`);
+    }
     const [fromWallet, toWallet] = await Promise.all([
       data.fromUserId
         ? this.walletsService.getWalletForUserAdmin(data.fromUserId)
@@ -72,7 +76,12 @@ export class TransactionsService {
         data.amount,
         data.currency
       );
-      return newTransaction;
+      return {
+        ...newTransaction,
+        metadata: newTransaction.metadata && typeof newTransaction.metadata === 'string'
+          ? JSON.parse(newTransaction.metadata)
+          : newTransaction.metadata,
+      };
     });
     return transaction;
   }
@@ -236,5 +245,43 @@ export class TransactionsService {
       });
       return newTransaction;
     });
+  }
+
+  /**
+   * Devuelve estadísticas de transacciones para un usuario:
+   * - total enviado
+   * - total recibido
+   * - número de transacciones
+   * - desglose por moneda
+   */
+  async getUserTransactionStats(userId: string) {
+    const transactions = await this.prisma.transaction.findMany({
+      where: {
+        OR: [{ fromUserId: userId }, { toUserId: userId }],
+      },
+    });
+    let totalSent = 0;
+    let totalReceived = 0;
+    let transactionCount = transactions.length;
+    const currencyBreakdown: Record<string, { sent: number; received: number }> = {};
+    for (const tx of transactions) {
+      if (!currencyBreakdown[tx.currency]) {
+        currencyBreakdown[tx.currency] = { sent: 0, received: 0 };
+      }
+      if (tx.fromUserId === userId) {
+        totalSent += tx.amount;
+        currencyBreakdown[tx.currency].sent += tx.amount;
+      }
+      if (tx.toUserId === userId) {
+        totalReceived += tx.amount;
+        currencyBreakdown[tx.currency].received += tx.amount;
+      }
+    }
+    return {
+      totalSent,
+      totalReceived,
+      transactionCount,
+      currencyBreakdown,
+    };
   }
 }

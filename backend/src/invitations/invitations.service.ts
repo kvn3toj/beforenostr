@@ -19,6 +19,7 @@ import {
 } from './dto/invitations.dto';
 import * as crypto from 'crypto';
 import * as bcrypt from 'bcryptjs';
+import { Currency } from '../generated/prisma';
 
 @Injectable()
 export class InvitationsService {
@@ -47,7 +48,7 @@ export class InvitationsService {
       throw new NotFoundException('Usuario invitador no encontrado');
     }
 
-    if (!inviter.wallet || inviter.wallet.balance < dto.unitsAmount) {
+    if (!inviter.wallet || inviter.wallet.balanceUnits < dto.unitsAmount) {
       throw new BadRequestException(
         'Balance insuficiente para crear la gift card'
       );
@@ -79,17 +80,20 @@ export class InvitationsService {
       // 2. Descontar Ünits del invitador
       await tx.wallet.update({
         where: { userId: dto.inviterId },
-        data: { balance: { decrement: dto.unitsAmount } },
+        data: { balanceUnits: { decrement: dto.unitsAmount } },
       });
 
       // 3. Crear transacción de registro
+      const inviterWallet = await tx.wallet.findUnique({ where: { userId: dto.inviterId } });
+      if (!inviterWallet) throw new NotFoundException('Wallet del invitador no encontrada');
       await tx.transaction.create({
         data: {
-          fromUserId: dto.inviterId,
-          toUserId: dto.inviterId, // Temporal, será actualizado cuando se canjee
+          fromUser: { connect: { id: dto.inviterId } },
+          toUser: { connect: { id: dto.inviterId } },
+          fromWallet: { connect: { id: inviterWallet.id } },
+          toWallet: { connect: { id: inviterWallet.id } },
           amount: dto.unitsAmount,
-          currency: 'USD',
-          type: 'SEND',
+          currency: Currency.UNITS,
           description: `Gift card creada para ${dto.invitedName} (${dto.invitedEmail})`,
         },
       });
@@ -174,7 +178,7 @@ export class InvitationsService {
       const wallet = await tx.wallet.create({
         data: {
           userId: newUser.id,
-          balance: giftCardContent.unitsAmount,
+          balanceUnits: giftCardContent.unitsAmount,
         },
       });
 
@@ -204,12 +208,16 @@ export class InvitationsService {
       });
 
       // 5. Crear transacción de canje
+      const newUserWallet = await tx.wallet.findUnique({ where: { userId: newUser.id } });
+      if (!newUserWallet) throw new NotFoundException('Wallet del nuevo usuario no encontrada');
       await tx.transaction.create({
         data: {
-          toUserId: newUser.id,
+          fromUser: { connect: { id: newUser.id } },
+          toUser: { connect: { id: newUser.id } },
+          fromWallet: { connect: { id: newUserWallet.id } },
+          toWallet: { connect: { id: newUserWallet.id } },
           amount: giftCardContent.unitsAmount,
-          currency: 'USD',
-          type: 'RECEIVE',
+          currency: Currency.UNITS,
           description: `Canje de gift card de bienvenida`,
         },
       });
@@ -237,7 +245,7 @@ export class InvitationsService {
         lastName: result.newUser.lastName,
       },
       wallet: {
-        balance: result.wallet.balance,
+        balanceUnits: result.wallet.balanceUnits,
       },
       giftCardAmount: giftCardContent.unitsAmount,
     };
@@ -423,16 +431,20 @@ export class InvitationsService {
       // 2. Devolver Ünits al invitador
       await tx.wallet.update({
         where: { userId },
-        data: { balance: { increment: content.unitsAmount } },
+        data: { balanceUnits: { increment: content.unitsAmount } },
       });
 
       // 3. Crear transacción de devolución
+      const inviterWallet = await tx.wallet.findUnique({ where: { userId } });
+      if (!inviterWallet) throw new NotFoundException('Wallet del invitador no encontrada');
       await tx.transaction.create({
         data: {
-          toUserId: userId,
+          fromUser: { connect: { id: userId } },
+          toUser: { connect: { id: userId } },
+          fromWallet: { connect: { id: inviterWallet.id } },
+          toWallet: { connect: { id: inviterWallet.id } },
           amount: content.unitsAmount,
-          currency: 'USD',
-          type: 'RECEIVE',
+          currency: Currency.UNITS,
           description: `Devolución por cancelación de gift card`,
         },
       });

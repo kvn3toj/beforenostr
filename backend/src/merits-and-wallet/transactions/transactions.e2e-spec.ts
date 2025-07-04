@@ -221,6 +221,11 @@ describe('TransactionsController (E2E) - El Crisol de la Confianza', () => {
         },
       });
 
+      // Parsear metadata si es string
+      const parsedMetadata = typeof transaction.metadata === 'string'
+        ? JSON.parse(transaction.metadata)
+        : transaction.metadata;
+
       expect(finalSenderWallet.balanceUnits).toBe(
         senderInitialWallet.balanceUnits - amountToSend
       );
@@ -230,7 +235,7 @@ describe('TransactionsController (E2E) - El Crisol de la Confianza', () => {
       expect(transaction).toBeDefined();
       expect(transaction.currency).toBe(Currency.UNITS);
       expect(transaction.description).toBe('Prueba de SAGE');
-      expect(transaction.metadata).toEqual({ cause: 'Test E2E', tool: 'SAGE' });
+      expect(parsedMetadata).toEqual({ cause: 'Test E2E', tool: 'SAGE' });
     });
 
     it('debe procesar exitosamente una transacción de Mëritos (afectando la misma wallet)', async () => {
