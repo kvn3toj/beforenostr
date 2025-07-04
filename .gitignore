@@ -68,6 +68,7 @@ tmp-*.png
 # Exceptions for essential root files
 !README.md
 !package.json
+!package-lock.json
 !turbo.json
 !tsconfig.json
 !PROJECT_STRUCTURE.md
