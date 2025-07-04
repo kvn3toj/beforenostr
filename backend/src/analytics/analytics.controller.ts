@@ -353,4 +353,55 @@ export class AnalyticsController {
   async getSystemHealth() {
     return this.analyticsService.getSystemHealth();
   }
+
+  @Get('/modular-review')
+  @UseGuards(RolesGuard)
+  @Roles('admin')
+  @ApiOperation({
+    summary: 'Get modular review data for code quality dashboard',
+    description: 'Returns structured data for the modular review dashboard including modules and their quality metrics'
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Modular review data retrieved successfully',
+    schema: {
+      type: 'object',
+      properties: {
+        results: {
+          type: 'array',
+          items: {
+            type: 'object',
+            properties: {
+              module: { type: 'string' },
+              score: { type: 'number' },
+              issues: { type: 'number' },
+              files: { type: 'number' },
+              results: {
+                type: 'array',
+                items: {
+                  type: 'object',
+                  properties: {
+                    file: { type: 'string' },
+                    issues: { type: 'array' },
+                    score: { type: 'number' }
+                  }
+                }
+              }
+            }
+          }
+        },
+        metadata: {
+          type: 'object',
+          properties: {
+            generatedAt: { type: 'string' },
+            totalModules: { type: 'number' },
+            totalIssues: { type: 'number' }
+          }
+        }
+      }
+    }
+  })
+  async getModularReviewData() {
+    return this.analyticsService.getModularReviewData();
+  }
 }

@@ -128,8 +128,8 @@ export class UserChallengesService {
       actionType: 'user_challenge:progress_updated',
       entityType: 'UserChallenge',
       entityId: updatedUserChallenge.id,
-      oldValue: oldProgress,
-      newValue: newProgress,
+      oldValue: { progress: oldProgress },
+      newValue: { progress: newProgress },
       // TODO: Add ipAddress, userAgent if available from request context
     });
 

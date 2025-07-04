@@ -1,0 +1,1427 @@
+{
+  "timestamp": "2025-07-04T04:17:55.085Z",
+  "period": {
+    "start": "2025-06-04T04:17:55.086Z",
+    "end": "2025-07-04T04:17:55.086Z"
+  },
+  "trends": {
+    "totalIssues": [
+      {
+        "date": "2025-06-05",
+        "value": 85
+      },
+      {
+        "date": "2025-06-06",
+        "value": 89
+      },
+      {
+        "date": "2025-06-07",
+        "value": 106
+      },
+      {
+        "date": "2025-06-08",
+        "value": 92
+      },
+      {
+        "date": "2025-06-09",
+        "value": 85
+      },
+      {
+        "date": "2025-06-10",
+        "value": 86
+      },
+      {
+        "date": "2025-06-11",
+        "value": 95
+      },
+      {
+        "date": "2025-06-12",
+        "value": 84
+      },
+      {
+        "date": "2025-06-13",
+        "value": 87
+      },
+      {
+        "date": "2025-06-14",
+        "value": 93
+      },
+      {
+        "date": "2025-06-15",
+        "value": 76
+      },
+      {
+        "date": "2025-06-16",
+        "value": 67
+      },
+      {
+        "date": "2025-06-17",
+        "value": 94
+      },
+      {
+        "date": "2025-06-18",
+        "value": 65
+      },
+      {
+        "date": "2025-06-19",
+        "value": 89
+      },
+      {
+        "date": "2025-06-20",
+        "value": 87
+      },
+      {
+        "date": "2025-06-21",
+        "value": 71
+      },
+      {
+        "date": "2025-06-22",
+        "value": 83
+      },
+      {
+        "date": "2025-06-23",
+        "value": 71
+      },
+      {
+        "date": "2025-06-24",
+        "value": 60
+      },
+      {
+        "date": "2025-06-25",
+        "value": 69
+      },
+      {
+        "date": "2025-06-26",
+        "value": 79
+      },
+      {
+        "date": "2025-06-27",
+        "value": 78
+      },
+      {
+        "date": "2025-06-28",
+        "value": 68
+      },
+      {
+        "date": "2025-06-29",
+        "value": 55
+      },
+      {
+        "date": "2025-06-30",
+        "value": 73
+      },
+      {
+        "date": "2025-07-01",
+        "value": 65
+      },
+      {
+        "date": "2025-07-02",
+        "value": 63
+      },
+      {
+        "date": "2025-07-03",
+        "value": 57
+      },
+      {
+        "date": "2025-07-04",
+        "value": 54
+      }
+    ],
+    "criticalIssues": [
+      {
+        "date": "2025-06-05",
+        "value": 12
+      },
+      {
+        "date": "2025-06-06",
+        "value": 12
+      },
+      {
+        "date": "2025-06-07",
+        "value": 15
+      },
+      {
+        "date": "2025-06-08",
+        "value": 13
+      },
+      {
+        "date": "2025-06-09",
+        "value": 12
+      },
+      {
+        "date": "2025-06-10",
+        "value": 12
+      },
+      {
+        "date": "2025-06-11",
+        "value": 13
+      },
+      {
+        "date": "2025-06-12",
+        "value": 12
+      },
+      {
+        "date": "2025-06-13",
+        "value": 12
+      },
+      {
+        "date": "2025-06-14",
+        "value": 13
+      },
+      {
+        "date": "2025-06-15",
+        "value": 11
+      },
+      {
+        "date": "2025-06-16",
+        "value": 9
+      },
+      {
+        "date": "2025-06-17",
+        "value": 13
+      },
+      {
+        "date": "2025-06-18",
+        "value": 9
+      },
+      {
+        "date": "2025-06-19",
+        "value": 12
+      },
+      {
+        "date": "2025-06-20",
+        "value": 12
+      },
+      {
+        "date": "2025-06-21",
+        "value": 10
+      },
+      {
+        "date": "2025-06-22",
+        "value": 12
+      },
+      {
+        "date": "2025-06-23",
+        "value": 10
+      },
+      {
+        "date": "2025-06-24",
+        "value": 8
+      },
+      {
+        "date": "2025-06-25",
+        "value": 10
+      },
+      {
+        "date": "2025-06-26",
+        "value": 11
+      },
+      {
+        "date": "2025-06-27",
+        "value": 11
+      },
+      {
+        "date": "2025-06-28",
+        "value": 9
+      },
+      {
+        "date": "2025-06-29",
+        "value": 8
+      },
+      {
+        "date": "2025-06-30",
+        "value": 10
+      },
+      {
+        "date": "2025-07-01",
+        "value": 9
+      },
+      {
+        "date": "2025-07-02",
+        "value": 9
+      },
+      {
+        "date": "2025-07-03",
+        "value": 8
+      },
+      {
+        "date": "2025-07-04",
+        "value": 8
+      }
+    ],
+    "moduleBreakdown": [
+      {
+        "date": "2025-06-05",
+        "modules": [
+          {
+            "module": "HOME",
+            "issues": 26,
+            "priority": "high"
+          },
+          {
+            "module": "UPLAY",
+            "issues": 21,
+            "priority": "high"
+          },
+          {
+            "module": "WALLET",
+            "issues": 5,
+            "priority": "high"
+          },
+          {
+            "module": "AUTH",
+            "issues": 20,
+            "priority": "high"
+          },
+          {
+            "module": "SHARED",
+            "issues": 13,
+            "priority": "medium"
+          }
+        ]
+      },
+      {
+        "date": "2025-06-06",
+        "modules": [
+          {
+            "module": "HOME",
+            "issues": 27,
+            "priority": "high"
+          },
+          {
+            "module": "UPLAY",
+            "issues": 22,
+            "priority": "high"
+          },
+          {
+            "module": "WALLET",
+            "issues": 5,
+            "priority": "high"
+          },
+          {
+            "module": "AUTH",
+            "issues": 20,
+            "priority": "high"
+          },
+          {
+            "module": "SHARED",
+            "issues": 14,
+            "priority": "medium"
+          }
+        ]
+      },
+      {
+        "date": "2025-06-07",
+        "modules": [
+          {
+            "module": "HOME",
+            "issues": 33,
+            "priority": "high"
+          },
+          {
+            "module": "UPLAY",
+            "issues": 26,
+            "priority": "high"
+          },
+          {
+            "module": "WALLET",
+            "issues": 7,
+            "priority": "high"
+          },
+          {
+            "module": "AUTH",
+            "issues": 25,
+            "priority": "high"
+          },
+          {
+            "module": "SHARED",
+            "issues": 16,
+            "priority": "medium"
+          }
+        ]
+      },
+      {
+        "date": "2025-06-08",
+        "modules": [
+          {
+            "module": "HOME",
+            "issues": 28,
+            "priority": "high"
+          },
+          {
+            "module": "UPLAY",
+            "issues": 23,
+            "priority": "high"
+          },
+          {
+            "module": "WALLET",
+            "issues": 6,
+            "priority": "high"
+          },
+          {
+            "module": "AUTH",
+            "issues": 21,
+            "priority": "high"
+          },
+          {
+            "module": "SHARED",
+            "issues": 14,
+            "priority": "medium"
+          }
+        ]
+      },
+      {
+        "date": "2025-06-09",
+        "modules": [
+          {
+            "module": "HOME",
+            "issues": 26,
+            "priority": "high"
+          },
+          {
+            "module": "UPLAY",
+            "issues": 21,
+            "priority": "high"
+          },
+          {
+            "module": "WALLET",
+            "issues": 5,
+            "priority": "high"
+          },
+          {
+            "module": "AUTH",
+            "issues": 20,
+            "priority": "high"
+          },
+          {
+            "module": "SHARED",
+            "issues": 13,
+            "priority": "medium"
+          }
+        ]
+      },
+      {
+        "date": "2025-06-10",
+        "modules": [
+          {
+            "module": "HOME",
+            "issues": 26,
+            "priority": "high"
+          },
+          {
+            "module": "UPLAY",
+            "issues": 21,
+            "priority": "high"
+          },
+          {
+            "module": "WALLET",
+            "issues": 5,
+            "priority": "high"
+          },
+          {
+            "module": "AUTH",
+            "issues": 20,
+            "priority": "high"
+          },
+          {
+            "module": "SHARED",
+            "issues": 13,
+            "priority": "medium"
+          }
+        ]
+      },
+      {
+        "date": "2025-06-11",
+        "modules": [
+          {
+            "module": "HOME",
+            "issues": 29,
+            "priority": "high"
+          },
+          {
+            "module": "UPLAY",
+            "issues": 23,
+            "priority": "high"
+          },
+          {
+            "module": "WALLET",
+            "issues": 6,
+            "priority": "high"
+          },
+          {
+            "module": "AUTH",
+            "issues": 22,
+            "priority": "high"
+          },
+          {
+            "module": "SHARED",
+            "issues": 15,
+            "priority": "medium"
+          }
+        ]
+      },
+      {
+        "date": "2025-06-12",
+        "modules": [
+          {
+            "module": "HOME",
+            "issues": 26,
+            "priority": "high"
+          },
+          {
+            "module": "UPLAY",
+            "issues": 21,
+            "priority": "high"
+          },
+          {
+            "module": "WALLET",
+            "issues": 5,
+            "priority": "high"
+          },
+          {
+            "module": "AUTH",
+            "issues": 19,
+            "priority": "high"
+          },
+          {
+            "module": "SHARED",
+            "issues": 13,
+            "priority": "medium"
+          }
+        ]
+      },
+      {
+        "date": "2025-06-13",
+        "modules": [
+          {
+            "module": "HOME",
+            "issues": 27,
+            "priority": "high"
+          },
+          {
+            "module": "UPLAY",
+            "issues": 21,
+            "priority": "high"
+          },
+          {
+            "module": "WALLET",
+            "issues": 5,
+            "priority": "high"
+          },
+          {
+            "module": "AUTH",
+            "issues": 20,
+            "priority": "high"
+          },
+          {
+            "module": "SHARED",
+            "issues": 13,
+            "priority": "medium"
+          }
+        ]
+      },
+      {
+        "date": "2025-06-14",
+        "modules": [
+          {
+            "module": "HOME",
+            "issues": 29,
+            "priority": "high"
+          },
+          {
+            "module": "UPLAY",
+            "issues": 23,
+            "priority": "high"
+          },
+          {
+            "module": "WALLET",
+            "issues": 6,
+            "priority": "high"
+          },
+          {
+            "module": "AUTH",
+            "issues": 21,
+            "priority": "high"
+          },
+          {
+            "module": "SHARED",
+            "issues": 14,
+            "priority": "medium"
+          }
+        ]
+      },
+      {
+        "date": "2025-06-15",
+        "modules": [
+          {
+            "module": "HOME",
+            "issues": 23,
+            "priority": "high"
+          },
+          {
+            "module": "UPLAY",
+            "issues": 19,
+            "priority": "high"
+          },
+          {
+            "module": "WALLET",
+            "issues": 5,
+            "priority": "high"
+          },
+          {
+            "module": "AUTH",
+            "issues": 18,
+            "priority": "high"
+          },
+          {
+            "module": "SHARED",
+            "issues": 12,
+            "priority": "medium"
+          }
+        ]
+      },
+      {
+        "date": "2025-06-16",
+        "modules": [
+          {
+            "module": "HOME",
+            "issues": 21,
+            "priority": "high"
+          },
+          {
+            "module": "UPLAY",
+            "issues": 16,
+            "priority": "high"
+          },
+          {
+            "module": "WALLET",
+            "issues": 4,
+            "priority": "high"
+          },
+          {
+            "module": "AUTH",
+            "issues": 15,
+            "priority": "high"
+          },
+          {
+            "module": "SHARED",
+            "issues": 10,
+            "priority": "medium"
+          }
+        ]
+      },
+      {
+        "date": "2025-06-17",
+        "modules": [
+          {
+            "module": "HOME",
+            "issues": 29,
+            "priority": "high"
+          },
+          {
+            "module": "UPLAY",
+            "issues": 23,
+            "priority": "high"
+          },
+          {
+            "module": "WALLET",
+            "issues": 6,
+            "priority": "high"
+          },
+          {
+            "module": "AUTH",
+            "issues": 22,
+            "priority": "high"
+          },
+          {
+            "module": "SHARED",
+            "issues": 14,
+            "priority": "medium"
+          }
+        ]
+      },
+      {
+        "date": "2025-06-18",
+        "modules": [
+          {
+            "module": "HOME",
+            "issues": 20,
+            "priority": "high"
+          },
+          {
+            "module": "UPLAY",
+            "issues": 16,
+            "priority": "high"
+          },
+          {
+            "module": "WALLET",
+            "issues": 4,
+            "priority": "high"
+          },
+          {
+            "module": "AUTH",
+            "issues": 15,
+            "priority": "high"
+          },
+          {
+            "module": "SHARED",
+            "issues": 10,
+            "priority": "medium"
+          }
+        ]
+      },
+      {
+        "date": "2025-06-19",
+        "modules": [
+          {
+            "module": "HOME",
+            "issues": 27,
+            "priority": "high"
+          },
+          {
+            "module": "UPLAY",
+            "issues": 22,
+            "priority": "high"
+          },
+          {
+            "module": "WALLET",
+            "issues": 5,
+            "priority": "high"
+          },
+          {
+            "module": "AUTH",
+            "issues": 21,
+            "priority": "high"
+          },
+          {
+            "module": "SHARED",
+            "issues": 14,
+            "priority": "medium"
+          }
+        ]
+      },
+      {
+        "date": "2025-06-20",
+        "modules": [
+          {
+            "module": "HOME",
+            "issues": 27,
+            "priority": "high"
+          },
+          {
+            "module": "UPLAY",
+            "issues": 21,
+            "priority": "high"
+          },
+          {
+            "module": "WALLET",
+            "issues": 5,
+            "priority": "high"
+          },
+          {
+            "module": "AUTH",
+            "issues": 20,
+            "priority": "high"
+          },
+          {
+            "module": "SHARED",
+            "issues": 13,
+            "priority": "medium"
+          }
+        ]
+      },
+      {
+        "date": "2025-06-21",
+        "modules": [
+          {
+            "module": "HOME",
+            "issues": 22,
+            "priority": "high"
+          },
+          {
+            "module": "UPLAY",
+            "issues": 17,
+            "priority": "high"
+          },
+          {
+            "module": "WALLET",
+            "issues": 4,
+            "priority": "high"
+          },
+          {
+            "module": "AUTH",
+            "issues": 16,
+            "priority": "high"
+          },
+          {
+            "module": "SHARED",
+            "issues": 11,
+            "priority": "medium"
+          }
+        ]
+      },
+      {
+        "date": "2025-06-22",
+        "modules": [
+          {
+            "module": "HOME",
+            "issues": 26,
+            "priority": "high"
+          },
+          {
+            "module": "UPLAY",
+            "issues": 21,
+            "priority": "high"
+          },
+          {
+            "module": "WALLET",
+            "issues": 5,
+            "priority": "high"
+          },
+          {
+            "module": "AUTH",
+            "issues": 19,
+            "priority": "high"
+          },
+          {
+            "module": "SHARED",
+            "issues": 13,
+            "priority": "medium"
+          }
+        ]
+      },
+      {
+        "date": "2025-06-23",
+        "modules": [
+          {
+            "module": "HOME",
+            "issues": 22,
+            "priority": "high"
+          },
+          {
+            "module": "UPLAY",
+            "issues": 18,
+            "priority": "high"
+          },
+          {
+            "module": "WALLET",
+            "issues": 4,
+            "priority": "high"
+          },
+          {
+            "module": "AUTH",
+            "issues": 16,
+            "priority": "high"
+          },
+          {
+            "module": "SHARED",
+            "issues": 11,
+            "priority": "medium"
+          }
+        ]
+      },
+      {
+        "date": "2025-06-24",
+        "modules": [
+          {
+            "module": "HOME",
+            "issues": 18,
+            "priority": "high"
+          },
+          {
+            "module": "UPLAY",
+            "issues": 15,
+            "priority": "high"
+          },
+          {
+            "module": "WALLET",
+            "issues": 4,
+            "priority": "high"
+          },
+          {
+            "module": "AUTH",
+            "issues": 14,
+            "priority": "high"
+          },
+          {
+            "module": "SHARED",
+            "issues": 9,
+            "priority": "medium"
+          }
+        ]
+      },
+      {
+        "date": "2025-06-25",
+        "modules": [
+          {
+            "module": "HOME",
+            "issues": 21,
+            "priority": "high"
+          },
+          {
+            "module": "UPLAY",
+            "issues": 17,
+            "priority": "high"
+          },
+          {
+            "module": "WALLET",
+            "issues": 4,
+            "priority": "high"
+          },
+          {
+            "module": "AUTH",
+            "issues": 16,
+            "priority": "high"
+          },
+          {
+            "module": "SHARED",
+            "issues": 11,
+            "priority": "medium"
+          }
+        ]
+      },
+      {
+        "date": "2025-06-26",
+        "modules": [
+          {
+            "module": "HOME",
+            "issues": 24,
+            "priority": "high"
+          },
+          {
+            "module": "UPLAY",
+            "issues": 19,
+            "priority": "high"
+          },
+          {
+            "module": "WALLET",
+            "issues": 5,
+            "priority": "high"
+          },
+          {
+            "module": "AUTH",
+            "issues": 18,
+            "priority": "high"
+          },
+          {
+            "module": "SHARED",
+            "issues": 12,
+            "priority": "medium"
+          }
+        ]
+      },
+      {
+        "date": "2025-06-27",
+        "modules": [
+          {
+            "module": "HOME",
+            "issues": 24,
+            "priority": "high"
+          },
+          {
+            "module": "UPLAY",
+            "issues": 19,
+            "priority": "high"
+          },
+          {
+            "module": "WALLET",
+            "issues": 5,
+            "priority": "high"
+          },
+          {
+            "module": "AUTH",
+            "issues": 18,
+            "priority": "high"
+          },
+          {
+            "module": "SHARED",
+            "issues": 12,
+            "priority": "medium"
+          }
+        ]
+      },
+      {
+        "date": "2025-06-28",
+        "modules": [
+          {
+            "module": "HOME",
+            "issues": 21,
+            "priority": "high"
+          },
+          {
+            "module": "UPLAY",
+            "issues": 17,
+            "priority": "high"
+          },
+          {
+            "module": "WALLET",
+            "issues": 4,
+            "priority": "high"
+          },
+          {
+            "module": "AUTH",
+            "issues": 16,
+            "priority": "high"
+          },
+          {
+            "module": "SHARED",
+            "issues": 10,
+            "priority": "medium"
+          }
+        ]
+      },
+      {
+        "date": "2025-06-29",
+        "modules": [
+          {
+            "module": "HOME",
+            "issues": 17,
+            "priority": "high"
+          },
+          {
+            "module": "UPLAY",
+            "issues": 14,
+            "priority": "high"
+          },
+          {
+            "module": "WALLET",
+            "issues": 3,
+            "priority": "high"
+          },
+          {
+            "module": "AUTH",
+            "issues": 13,
+            "priority": "high"
+          },
+          {
+            "module": "SHARED",
+            "issues": 8,
+            "priority": "medium"
+          }
+        ]
+      },
+      {
+        "date": "2025-06-30",
+        "modules": [
+          {
+            "module": "HOME",
+            "issues": 22,
+            "priority": "high"
+          },
+          {
+            "module": "UPLAY",
+            "issues": 18,
+            "priority": "high"
+          },
+          {
+            "module": "WALLET",
+            "issues": 4,
+            "priority": "high"
+          },
+          {
+            "module": "AUTH",
+            "issues": 17,
+            "priority": "high"
+          },
+          {
+            "module": "SHARED",
+            "issues": 11,
+            "priority": "medium"
+          }
+        ]
+      },
+      {
+        "date": "2025-07-01",
+        "modules": [
+          {
+            "module": "HOME",
+            "issues": 20,
+            "priority": "high"
+          },
+          {
+            "module": "UPLAY",
+            "issues": 16,
+            "priority": "high"
+          },
+          {
+            "module": "WALLET",
+            "issues": 4,
+            "priority": "high"
+          },
+          {
+            "module": "AUTH",
+            "issues": 15,
+            "priority": "high"
+          },
+          {
+            "module": "SHARED",
+            "issues": 10,
+            "priority": "medium"
+          }
+        ]
+      },
+      {
+        "date": "2025-07-02",
+        "modules": [
+          {
+            "module": "HOME",
+            "issues": 19,
+            "priority": "high"
+          },
+          {
+            "module": "UPLAY",
+            "issues": 15,
+            "priority": "high"
+          },
+          {
+            "module": "WALLET",
+            "issues": 4,
+            "priority": "high"
+          },
+          {
+            "module": "AUTH",
+            "issues": 15,
+            "priority": "high"
+          },
+          {
+            "module": "SHARED",
+            "issues": 10,
+            "priority": "medium"
+          }
+        ]
+      },
+      {
+        "date": "2025-07-03",
+        "modules": [
+          {
+            "module": "HOME",
+            "issues": 17,
+            "priority": "high"
+          },
+          {
+            "module": "UPLAY",
+            "issues": 14,
+            "priority": "high"
+          },
+          {
+            "module": "WALLET",
+            "issues": 3,
+            "priority": "high"
+          },
+          {
+            "module": "AUTH",
+            "issues": 13,
+            "priority": "high"
+          },
+          {
+            "module": "SHARED",
+            "issues": 9,
+            "priority": "medium"
+          }
+        ]
+      },
+      {
+        "date": "2025-07-04",
+        "modules": [
+          {
+            "module": "HOME",
+            "issues": 17,
+            "priority": "high"
+          },
+          {
+            "module": "UPLAY",
+            "issues": 13,
+            "priority": "high"
+          },
+          {
+            "module": "WALLET",
+            "issues": 3,
+            "priority": "high"
+          },
+          {
+            "module": "AUTH",
+            "issues": 13,
+            "priority": "high"
+          },
+          {
+            "module": "SHARED",
+            "issues": 8,
+            "priority": "medium"
+          }
+        ]
+      }
+    ],
+    "severityTrends": [
+      {
+        "date": "2025-06-05",
+        "severities": {
+          "Error": 12,
+          "Warning": 25,
+          "Suggestion": 17,
+          "Info": 16
+        }
+      },
+      {
+        "date": "2025-06-06",
+        "severities": {
+          "Error": 12,
+          "Warning": 26,
+          "Suggestion": 18,
+          "Info": 16
+        }
+      },
+      {
+        "date": "2025-06-07",
+        "severities": {
+          "Error": 15,
+          "Warning": 31,
+          "Suggestion": 21,
+          "Info": 20
+        }
+      },
+      {
+        "date": "2025-06-08",
+        "severities": {
+          "Error": 13,
+          "Warning": 27,
+          "Suggestion": 18,
+          "Info": 17
+        }
+      },
+      {
+        "date": "2025-06-09",
+        "severities": {
+          "Error": 12,
+          "Warning": 25,
+          "Suggestion": 17,
+          "Info": 16
+        }
+      },
+      {
+        "date": "2025-06-10",
+        "severities": {
+          "Error": 12,
+          "Warning": 25,
+          "Suggestion": 17,
+          "Info": 16
+        }
+      },
+      {
+        "date": "2025-06-11",
+        "severities": {
+          "Error": 13,
+          "Warning": 28,
+          "Suggestion": 19,
+          "Info": 18
+        }
+      },
+      {
+        "date": "2025-06-12",
+        "severities": {
+          "Error": 12,
+          "Warning": 25,
+          "Suggestion": 17,
+          "Info": 16
+        }
+      },
+      {
+        "date": "2025-06-13",
+        "severities": {
+          "Error": 12,
+          "Warning": 25,
+          "Suggestion": 17,
+          "Info": 16
+        }
+      },
+      {
+        "date": "2025-06-14",
+        "severities": {
+          "Error": 13,
+          "Warning": 27,
+          "Suggestion": 19,
+          "Info": 17
+        }
+      },
+      {
+        "date": "2025-06-15",
+        "severities": {
+          "Error": 11,
+          "Warning": 22,
+          "Suggestion": 15,
+          "Info": 14
+        }
+      },
+      {
+        "date": "2025-06-16",
+        "severities": {
+          "Error": 9,
+          "Warning": 20,
+          "Suggestion": 13,
+          "Info": 12
+        }
+      },
+      {
+        "date": "2025-06-17",
+        "severities": {
+          "Error": 13,
+          "Warning": 27,
+          "Suggestion": 19,
+          "Info": 17
+        }
+      },
+      {
+        "date": "2025-06-18",
+        "severities": {
+          "Error": 9,
+          "Warning": 19,
+          "Suggestion": 13,
+          "Info": 12
+        }
+      },
+      {
+        "date": "2025-06-19",
+        "severities": {
+          "Error": 12,
+          "Warning": 26,
+          "Suggestion": 18,
+          "Info": 16
+        }
+      },
+      {
+        "date": "2025-06-20",
+        "severities": {
+          "Error": 12,
+          "Warning": 25,
+          "Suggestion": 17,
+          "Info": 16
+        }
+      },
+      {
+        "date": "2025-06-21",
+        "severities": {
+          "Error": 10,
+          "Warning": 21,
+          "Suggestion": 14,
+          "Info": 13
+        }
+      },
+      {
+        "date": "2025-06-22",
+        "severities": {
+          "Error": 12,
+          "Warning": 24,
+          "Suggestion": 17,
+          "Info": 15
+        }
+      },
+      {
+        "date": "2025-06-23",
+        "severities": {
+          "Error": 10,
+          "Warning": 21,
+          "Suggestion": 14,
+          "Info": 13
+        }
+      },
+      {
+        "date": "2025-06-24",
+        "severities": {
+          "Error": 8,
+          "Warning": 17,
+          "Suggestion": 12,
+          "Info": 11
+        }
+      },
+      {
+        "date": "2025-06-25",
+        "severities": {
+          "Error": 10,
+          "Warning": 20,
+          "Suggestion": 14,
+          "Info": 13
+        }
+      },
+      {
+        "date": "2025-06-26",
+        "severities": {
+          "Error": 11,
+          "Warning": 23,
+          "Suggestion": 16,
+          "Info": 15
+        }
+      },
+      {
+        "date": "2025-06-27",
+        "severities": {
+          "Error": 11,
+          "Warning": 23,
+          "Suggestion": 16,
+          "Info": 14
+        }
+      },
+      {
+        "date": "2025-06-28",
+        "severities": {
+          "Error": 9,
+          "Warning": 20,
+          "Suggestion": 14,
+          "Info": 13
+        }
+      },
+      {
+        "date": "2025-06-29",
+        "severities": {
+          "Error": 8,
+          "Warning": 16,
+          "Suggestion": 11,
+          "Info": 10
+        }
+      },
+      {
+        "date": "2025-06-30",
+        "severities": {
+          "Error": 10,
+          "Warning": 21,
+          "Suggestion": 15,
+          "Info": 13
+        }
+      },
+      {
+        "date": "2025-07-01",
+        "severities": {
+          "Error": 9,
+          "Warning": 19,
+          "Suggestion": 13,
+          "Info": 12
+        }
+      },
+      {
+        "date": "2025-07-02",
+        "severities": {
+          "Error": 9,
+          "Warning": 18,
+          "Suggestion": 13,
+          "Info": 12
+        }
+      },
+      {
+        "date": "2025-07-03",
+        "severities": {
+          "Error": 8,
+          "Warning": 17,
+          "Suggestion": 11,
+          "Info": 10
+        }
+      },
+      {
+        "date": "2025-07-04",
+        "severities": {
+          "Error": 8,
+          "Warning": 16,
+          "Suggestion": 11,
+          "Info": 10
+        }
+      }
+    ]
+  }
+}

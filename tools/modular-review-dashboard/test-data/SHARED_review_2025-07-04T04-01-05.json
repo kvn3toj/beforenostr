@@ -1,0 +1,76 @@
+{
+  "module": "SHARED",
+  "moduleName": "Shared Components",
+  "description": "Componentes y utilidades compartidas",
+  "priority": "medium",
+  "timestamp": "2025-07-04T04:01:05.690Z",
+  "summary": {
+    "totalFiles": 10,
+    "totalIssues": 10,
+    "filesWithIssues": 4,
+    "severityBreakdown": {
+      "Error": 3,
+      "Warning": 6,
+      "Suggestion": 3,
+      "Info": 2
+    },
+    "categoryBreakdown": {
+      "Performance": 3,
+      "Security": 2,
+      "Accessibility": 3,
+      "Code Quality": 4,
+      "Architecture": 2,
+      "Philosophy": 2,
+      "Best Practices": 4
+    }
+  },
+  "results": [
+    {
+      "file": "Demo/apps/superapp-unified/src/components/ui/Card.tsx",
+      "language": "typescript",
+      "issues": [
+        {
+          "line_number": 92,
+          "severity": "Error",
+          "message": "Hardcoded strings should be moved to i18n",
+          "recommendation": "Definir interface/type para props del componente",
+          "category": "Accessibility"
+        }
+      ]
+    },
+    {
+      "file": "Demo/apps/superapp-unified/src/lib/api-service.ts",
+      "language": "javascript",
+      "issues": [
+        {
+          "line_number": 70,
+          "severity": "Error",
+          "message": "Consider adding ARIA labels for better accessibility",
+          "recommendation": "Definir interface/type para props del componente",
+          "category": "Accessibility"
+        },
+        {
+          "line_number": 84,
+          "severity": "Warning",
+          "message": "Componente sin memoización puede causar re-renders innecesarios",
+          "recommendation": "Implementar lazy loading o code splitting",
+          "category": "Philosophy"
+        },
+        {
+          "line_number": 45,
+          "severity": "Warning",
+          "message": "Large bundle size detected in this component",
+          "recommendation": "Implementar aria-label y role attributes",
+          "category": "Code Quality"
+        },
+        {
+          "line_number": 19,
+          "severity": "Error",
+          "message": "Componente sin memoización puede causar re-renders innecesarios",
+          "recommendation": "Definir interface/type para props del componente",
+          "category": "Code Quality"
+        }
+      ]
+    }
+  ]
+}

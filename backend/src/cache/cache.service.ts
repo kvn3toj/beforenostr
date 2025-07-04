@@ -308,7 +308,7 @@ export class CacheService implements OnModuleInit, OnModuleDestroy {
       if (cachedValue) {
         this.cacheStats.hits++;
         this.metricsService.incrementCacheOperations('get', 'hit');
-        return JSON.parse(cachedValue) as T;
+        return JSON.parse(String(cachedValue)) as T;
       } else {
         this.cacheStats.misses++;
         this.metricsService.incrementCacheOperations('get', 'miss');

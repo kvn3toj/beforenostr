@@ -66,8 +66,8 @@ export class AuthService {
       // Remove password from returned user object
       const { password: _, ...userWithoutPassword } = user;
       return userWithoutPassword;
-    } catch (error) {
-      //       console.error('>>> AuthService validateUser error:', error);
+    } catch (_error) {
+      //       console.error('>>> AuthService validateUser error:', _error);
       return null;
     }
   }

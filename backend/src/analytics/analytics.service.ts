@@ -706,4 +706,125 @@ export class AnalyticsService {
       };
     }
   }
+
+  /**
+   * Get modular review data for code quality dashboard
+   */
+  async getModularReviewData() {
+    // Mock data structure matching the expected format for modular-review dashboard
+    return {
+      results: [
+        {
+          module: 'HOME',
+          score: 8.5,
+          issues: 12,
+          files: 8,
+          results: [
+            {
+              file: 'src/pages/HomePage.tsx',
+              score: 9.0,
+              issues: [
+                {
+                  type: 'warning',
+                  message: 'Component could be optimized with React.memo',
+                  line: 15,
+                  severity: 'medium'
+                },
+                {
+                  type: 'info',
+                  message: 'Consider extracting inline styles to styled components',
+                  line: 32,
+                  severity: 'low'
+                }
+              ]
+            },
+            {
+              file: 'src/components/HomeHeader.tsx',
+              score: 8.0,
+              issues: [
+                {
+                  type: 'error',
+                  message: 'Missing PropTypes validation',
+                  line: 8,
+                  severity: 'high'
+                }
+              ]
+            }
+          ]
+        },
+        {
+          module: 'UPlay Gaming',
+          score: 7.2,
+          issues: 18,
+          files: 12,
+          results: [
+            {
+              file: 'src/pages/UPlayPage.tsx',
+              score: 7.5,
+              issues: [
+                {
+                  type: 'warning',
+                  message: 'Large component should be split into smaller components',
+                  line: 45,
+                  severity: 'medium'
+                },
+                {
+                  type: 'error',
+                  message: 'useEffect missing dependency',
+                  line: 78,
+                  severity: 'high'
+                }
+              ]
+            }
+          ]
+        },
+        {
+          module: 'Authentication',
+          score: 9.1,
+          issues: 5,
+          files: 6,
+          results: [
+            {
+              file: 'src/services/auth.service.ts',
+              score: 9.5,
+              issues: [
+                {
+                  type: 'info',
+                  message: 'Consider adding JSDoc comments',
+                  line: 12,
+                  severity: 'low'
+                }
+              ]
+            }
+          ]
+        },
+        {
+          module: 'Wallet & Merits',
+          score: 8.8,
+          issues: 8,
+          files: 10,
+          results: [
+            {
+              file: 'src/pages/WalletPage.tsx',
+              score: 8.5,
+              issues: [
+                {
+                  type: 'warning',
+                  message: 'Consider using React Query for data fetching',
+                  line: 25,
+                  severity: 'medium'
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      metadata: {
+        generatedAt: new Date().toISOString(),
+        totalModules: 4,
+        totalIssues: 43,
+        averageScore: 8.4
+      }
+    };
+  }
 }

@@ -7,7 +7,6 @@ import {
   Param,
   UseGuards,
   Req,
-  ForbiddenException,
   Query,
 } from '@nestjs/common';
 import { UserChallengesService } from './user-challenges.service';

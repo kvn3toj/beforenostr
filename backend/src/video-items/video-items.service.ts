@@ -362,19 +362,19 @@ export class VideoItemsService {
       // }
 
       const endTime = Date.now();
-      const executionTime = endTime - startTime;
+      const _executionTime = endTime - startTime;
 
       // this.logger.logVideoCalculation(
       //   content,
       //   duration,
       //   platform,
-      //   executionTime
+      //   _executionTime
       // );
 
       return duration;
-    } catch (error) {
+    } catch (_error) {
       const endTime = Date.now();
-      const executionTime = endTime - startTime;
+      const _executionTime = endTime - startTime;
 
       // this.metricsService.incrementApiErrors('video_duration', 'calculate_duration');
 
@@ -382,8 +382,8 @@ export class VideoItemsService {
       //   content,
       //   -1,
       //   VideoPlatform.UNKNOWN,
-      //   executionTime,
-      //   error
+      //   _executionTime,
+      //   _error
       // );
 
       const fallbackDuration = this.getEstimatedDuration(content);

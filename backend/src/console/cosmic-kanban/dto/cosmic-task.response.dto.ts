@@ -148,7 +148,7 @@ export class CosmicTaskResponseDto {
   @ApiProperty({
     description: 'Metadatos adicionales de la tarea cósmica',
     required: false,
-    type: 'object',
+    type: Object,
     example: {
       guardianInfo: { name: 'ANA', role: 'Chief Innovation Officer' },
       links: { documentation: 'https://docs.coomunity.com/cosmic-tasks' },

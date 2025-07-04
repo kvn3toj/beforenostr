@@ -1,11 +1,4 @@
-import {
-  Injectable,
-  NotFoundException,
-  ForbiddenException,
-  BadRequestException,
-  Inject,
-  Logger,
-} from '@nestjs/common';
+import { Injectable, NotFoundException, Inject, Logger } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import {
   CreateMarketplaceItemDto,
@@ -51,7 +44,7 @@ interface MarketplaceItemData {
 }
 
 // 🔹 COSMOS: Integrated Cache Keys
-const CACHE_KEYS = {
+const _CACHE_KEYS = {
   ALL_ITEMS: 'marketplace:all_items',
   SEARCH_RESULTS: 'marketplace:search',
   ITEM_DETAIL: 'marketplace:item',

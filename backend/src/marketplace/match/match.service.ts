@@ -80,7 +80,11 @@ export class MatchService {
     });
   }
 
-  async submitReview(matchId: string, userId: string, reviewDto: ReviewSubmissionData) {
+  async submitReview(
+    matchId: string,
+    userId: string,
+    reviewDto: ReviewSubmissionData
+  ) {
     const match = await this.assertParticipant(matchId, userId);
     const existing = await this.prisma.review.findFirst({
       where: { marketplaceItemId: match.itemId, userId },

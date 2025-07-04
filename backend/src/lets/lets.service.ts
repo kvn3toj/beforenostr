@@ -736,7 +736,7 @@ export class LetsService {
   /**
    * Obtener notificaciones LETS para un usuario
    */
-  async getNotifications(userId: string) {
+  async getNotifications(_userId: string) {
     //     console.log('>>> LetsService.getNotifications: Getting notifications for user', userId);
 
     try {

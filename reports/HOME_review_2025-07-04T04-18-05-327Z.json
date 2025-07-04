@@ -1,0 +1,424 @@
+{
+  "module": "HOME",
+  "moduleName": "Home",
+  "description": "Página principal y dashboard del usuario",
+  "priority": "high",
+  "timestamp": "2025-07-04T04:18:05.328Z",
+  "summary": {
+    "totalFiles": 8,
+    "totalIssues": 51,
+    "filesWithIssues": 8,
+    "severityBreakdown": {
+      "Error": 2,
+      "Warning": 8,
+      "Suggestion": 26,
+      "Info": 14,
+      "Best Practices": null
+    },
+    "categoryBreakdown": {
+      "Architecture": 3,
+      "Code Quality": 28,
+      "Best Practices": 10,
+      "Philosophy": 7,
+      "Performance": 2,
+      "Accessibility": 1
+    }
+  },
+  "results": [
+    {
+      "file": "Demo/apps/superapp-unified/src/pages/Home.tsx",
+      "language": "typescript",
+      "issues": [
+        {
+          "line_number": 5,
+          "severity": "Suggestion",
+          "message": "The debug logic is placed at the module level and uses a `setTimeout`. This executes code upon module evaluation rather than being tied to a component's lifecycle, and the `setTimeout` adds an arbitrary delay.",
+          "recommendation": "Consider moving module-level side effects like this to a dedicated setup file imported early in the application entry point (e.g., `main.tsx`). If the debug logic is specific to the Home page and relies on the DOM or component state, consider triggering it within a `useEffect` hook in `HomeEnhanced` after it mounts, removing the need for `setTimeout`.",
+          "category": "Architecture"
+        },
+        {
+          "line_number": 14,
+          "severity": "Suggestion",
+          "message": "The `Home` component is a very thin wrapper around `HomeEnhanced`. If `HomeEnhanced` is the complete and final implementation, this wrapper might add unnecessary complexity.",
+          "recommendation": "Evaluate if the `Home` wrapper serves a specific future purpose (e.g., adding context providers, layout). If not, consider exporting `HomeEnhanced` directly as the default export to simplify the component tree and reduce cognitive load (Bien Común for developers).",
+          "category": "Code Quality"
+        },
+        {
+          "line_number": null,
+          "severity": "Info",
+          "message": "Comments are in Spanish. Ensure consistency in comment language across the codebase according to project standards.",
+          "recommendation": "If the project standard is English, translate the comments for consistency.",
+          "category": "Best Practices"
+        }
+      ]
+    },
+    {
+      "file": "Demo/apps/superapp-unified/src/pages/HomeRevolutionary.tsx",
+      "language": "typescript",
+      "issues": [
+        {
+          "severity": "Error",
+          "message": "Error al llamar a Gemini: got status: 503 Service Unavailable. {\"error\":{\"code\":503,\"message\":\"The model is overloaded. Please try again later.\",\"status\":\"UNAVAILABLE\"}}",
+          "line_number": null,
+          "category": "Code Quality"
+        }
+      ]
+    },
+    {
+      "file": "Demo/apps/superapp-unified/src/pages/HomeRenovated.tsx",
+      "language": "typescript",
+      "issues": [
+        {
+          "severity": "Error",
+          "message": "Error al llamar a Gemini: got status: 503 Service Unavailable. {\"error\":{\"code\":503,\"message\":\"The model is overloaded. Please try again later.\",\"status\":\"UNAVAILABLE\"}}",
+          "line_number": null,
+          "category": "Code Quality"
+        }
+      ]
+    },
+    {
+      "file": "Demo/apps/superapp-unified/src/pages/HomePageOptimized.tsx",
+      "language": "typescript",
+      "issues": [
+        {
+          "line_number": 56,
+          "severity": "Warning",
+          "message": "The custom Error Boundary implementation using `window.addEventListener('error')` will catch global unhandled errors but might not reliably catch errors occurring during React's render phase within the component tree. React's own error boundary mechanism is designed for this.",
+          "recommendation": "Consider using React's built-in `componentDidCatch` (in a class component) or a library like `react-error-boundary` which leverages this mechanism to wrap the component tree.",
+          "category": "Best Practices"
+        },
+        {
+          "line_number": 111,
+          "severity": "Warning",
+          "message": "Using `as any` bypasses TypeScript's type checking. This specific cast `500 as any` seems unnecessary as `500` is a valid number literal.",
+          "recommendation": "Remove the `as any` cast. Ensure the `getPrimaryColor` function correctly handles the number type or adjust its type definition if necessary.",
+          "category": "Code Quality"
+        },
+        {
+          "line_number": 244,
+          "severity": "Warning",
+          "message": "Using `as any` bypasses TypeScript's type checking. This specific cast `500 as any` seems unnecessary as `500` is a valid number literal.",
+          "recommendation": "Remove the `as any` cast. Ensure the `getPrimaryColor` function correctly handles the number type or adjust its type definition if necessary.",
+          "category": "Code Quality"
+        },
+        {
+          "line_number": 40,
+          "severity": "Suggestion",
+          "message": "The imports `COOMUNITY_ELEMENTS` and `createGradient` from `../design-system/color-system` are not used in this file.",
+          "recommendation": "Remove unused imports to keep the code clean and reduce bundle size.",
+          "category": "Code Quality"
+        },
+        {
+          "line_number": 364,
+          "severity": "Suggestion",
+          "message": "Extensive use of inline `sx` props for complex styling and layout makes the component verbose and harder to read. It also hinders style reusability.",
+          "recommendation": "Consider consolidating complex styles using MUI's `styled` API or Emotion's `css` prop/styled components, especially for recurring patterns or larger style blocks. This improves readability and maintainability.",
+          "category": "Architecture"
+        },
+        {
+          "line_number": 374,
+          "severity": "Suggestion",
+          "message": "Applying Grid item padding via `sx` on the container (`& .MuiGrid-item`) is a non-standard way to handle Grid spacing. MUI Grids are designed to handle spacing directly.",
+          "recommendation": "Use the `spacing` prop on the `Grid container` and let the `Grid item` components handle their padding implicitly based on the spacing value. Remove the custom `sx` padding on the container.",
+          "category": "Best Practices"
+        },
+        {
+          "line_number": 459,
+          "severity": "Suggestion",
+          "message": "The reflection text is hardcoded within the component. While philosophically relevant, hardcoded strings can make localization difficult and require code changes for updates.",
+          "recommendation": "Consider managing this text externally, perhaps via a configuration file, a content management system, or a dedicated data source, especially if it might change or need translation.",
+          "category": "Code Quality"
+        },
+        {
+          "line_number": 1,
+          "severity": "Info",
+          "message": "The use of descriptive comments and emojis (🎯, 🎨, 🚀, 🌌, 🚨, 💀, etc.) adds personality and helps navigate the file, aligning with a potentially vibrant project culture. Ensure this style is consistent across the codebase if it's a project standard.",
+          "category": "Code Quality"
+        },
+        {
+          "line_number": 1,
+          "severity": "Info",
+          "message": "The component structure with dedicated sub-components (`OptimizedErrorBoundary`, `OptimizedLoader`, `DashboardControls`, etc.) and the use of `memo` is a good practice for optimizing performance and improving readability by breaking down the UI.",
+          "category": "Best Practices"
+        },
+        {
+          "line_number": 1,
+          "severity": "Info",
+          "message": "The explicit references to 'Reciprocidad', 'Bien Común', and the philosophical quote directly align the code with the CoomÜnity philosophy, reinforcing project values within the codebase itself.",
+          "category": "Philosophy"
+        }
+      ]
+    },
+    {
+      "file": "Demo/apps/superapp-unified/src/pages/HomePage.tsx",
+      "language": "typescript",
+      "issues": [
+        {
+          "line_number": 55,
+          "severity": "Suggestion",
+          "message": "Using `window.location.reload()` in the error boundary fallback is a simple but potentially disruptive way to recover from errors. It discards all current state and forces a full page reload.",
+          "recommendation": "Consider alternative error recovery strategies, such as resetting the error boundary state (`this.setState({ hasError: false })`) to attempt re-rendering, or navigating to a dedicated error page, depending on the severity and context of the error. This could provide a smoother user experience (Bien Común).",
+          "category": "Best Practices"
+        },
+        {
+          "line_number": 112,
+          "severity": "Suggestion",
+          "message": "The `sx` props applied to the `Paper` components wrapping several widgets are duplicated multiple times throughout the layout.",
+          "recommendation": "Extract the common styling into a reusable component (e.g., `WidgetPaperWrapper`) or a style object to improve maintainability, reduce repetition, and make styling updates easier across the dashboard.",
+          "category": "Code Quality"
+        },
+        {
+          "line_number": 142,
+          "severity": "Suggestion",
+          "message": "The `CustomerJourneyWidget` is not wrapped in a `Paper` component like most other widgets on the page.",
+          "recommendation": "Consider wrapping `CustomerJourneyWidget` in a `Paper` component for visual consistency across the dashboard layout, unless there is a specific design requirement otherwise. Consistent presentation contributes to a better user experience (Bien Común).",
+          "category": "Code Quality"
+        },
+        {
+          "line_number": 120,
+          "severity": "Info",
+          "message": "The inclusion and prominent placement of the `ReciprocidadBalanceWidget` directly reflects the 'Reciprocidad' principle of the CoomÜnity philosophy, highlighting the importance of balanced contributions and exchanges within the community.",
+          "recommendation": null,
+          "category": "Philosophy"
+        },
+        {
+          "line_number": null,
+          "severity": "Info",
+          "message": "The overall structure of the HomePage, including the clear authentication requirement, loading state, and error boundary, contributes to a robust and user-friendly experience. This aligns with the 'Bien Común' principle by ensuring the application is accessible, reliable, and provides clear guidance (like the login prompt) for all users.",
+          "recommendation": null,
+          "category": "Philosophy"
+        }
+      ]
+    },
+    {
+      "file": "Demo/apps/superapp-unified/src/pages/HomeEnhanced.tsx",
+      "language": "typescript",
+      "issues": [
+        {
+          "line_number": null,
+          "severity": "Warning",
+          "message": "The HomeEnhanced component is excessively large and manages a significant amount of state, effects, and rendering logic for numerous sub-components. This violates the Single Responsibility Principle.",
+          "recommendation": "Consider breaking down this component into smaller, more focused components. For example, separate sections like the Hero, Metrics, Wallet, Quick Actions, and Notifications into their own container components. Lift shared state or use a state management solution if necessary. This improves maintainability and aligns with Ayni (mutual help) by making the code easier for others to understand and contribute to.",
+          "category": "Architecture"
+        },
+        {
+          "line_number": 154,
+          "severity": "Warning",
+          "message": "The `useEffect` hook with an empty dependency array and an empty cleanup function is unnecessary.",
+          "recommendation": "Remove this `useEffect` hook entirely if no cleanup is required. If cleanup is needed, implement the actual cleanup logic inside the return function.",
+          "category": "Code Quality"
+        },
+        {
+          "line_number": 160,
+          "severity": "Suggestion",
+          "message": "The error handling for specific 'Builder' or 'hook' errors is very narrow and might indicate a specific issue with a third-party library or pattern.",
+          "recommendation": "Consider implementing a more generic and robust error boundary component higher up in the application tree to catch and handle errors gracefully across the application, rather than logging specific errors within a component. This contributes to a more stable and reliable application for the community (Bien Común).",
+          "category": "Best Practices"
+        },
+        {
+          "line_number": 369,
+          "severity": "Warning",
+          "message": "There is a significant block of commented-out code related to background visualization. This suggests unresolved architectural decisions or potential duplication.",
+          "recommendation": "Either remove the commented-out code if it's no longer relevant, or resolve the underlying issue (e.g., duplication, architectural conflict) and integrate or remove the component properly. Commented-out code reduces code clarity and maintainability, hindering collaboration (Ayni).",
+          "category": "Code Quality"
+        },
+        {
+          "line_number": 405,
+          "severity": "Suggestion",
+          "message": "Mixing multiple CSS files (`.css` imports) with MUI's `sx` prop can make styling complex and potentially lead to style conflicts.",
+          "recommendation": "Consider consolidating styling approaches. You could leverage MUI's `styled` utility or Emotion/Styled-System more extensively, or organize the CSS files more clearly. A unified styling approach improves maintainability and makes it easier for the team to contribute (Ayni).",
+          "category": "Code Quality"
+        },
+        {
+          "line_number": 208,
+          "severity": "Suggestion",
+          "message": "The `filteredNotifications` and `notificationStats` use hardcoded mock data (`enhancedMockData.notifications`) instead of potentially using data fetched from the backend or managed in component state.",
+          "recommendation": "If notifications are intended to come from the backend, ensure the logic uses the actual data source (e.g., `dashboardData.notifications` if available) and update the state accordingly when data is fetched. This ensures the UI reflects real user data.",
+          "category": "Code Quality"
+        },
+        {
+          "line_number": 246,
+          "severity": "Suggestion",
+          "message": "The calculation for `avgEngagement` in `notificationStats` does not handle the case where `total` is 0, which would result in `NaN`.",
+          "recommendation": "Add a check for `total > 0` before performing the division to prevent `NaN`. Return 0 or a suitable default value if there are no notifications.",
+          "category": "Code Quality"
+        },
+        {
+          "line_number": 283,
+          "severity": "Suggestion",
+          "message": "The calculation for `reciprocidadProgress` uses `nextLevelExp` which could potentially be 0 or undefined, leading to division by zero or `NaN`.",
+          "recommendation": "Add a check to ensure `nextLevelExp` is a positive number before performing the division. Provide a default or handle the edge case gracefully.",
+          "category": "Code Quality"
+        },
+        {
+          "line_number": 316,
+          "severity": "Suggestion",
+          "message": "The calculation for `heroData.progress` uses a hardcoded value `2000` instead of the potentially dynamic `normalizedGameData.nextLevelExp`.",
+          "recommendation": "Use `normalizedGameData.nextLevelExp` in the progress calculation to ensure it accurately reflects the user's progress towards their *actual* next level, promoting transparency and accurate representation (Bien Común).",
+          "category": "Code Quality"
+        },
+        {
+          "line_number": 359,
+          "severity": "Suggestion",
+          "message": "The `@keyframes` animations are defined directly within the `sx` prop's style object.",
+          "recommendation": "While functional, defining complex `@keyframes` within `sx` can reduce readability. Consider defining animations in separate CSS files (if using CSS modules or standard CSS) or using styled components/Emotion's dedicated API for keyframes if you prefer CSS-in-JS. This can make the styling logic clearer.",
+          "category": "Code Quality"
+        },
+        {
+          "line_number": 812,
+          "severity": "Suggestion",
+          "message": "The `handleNotificationAction` and mock `onAction` functions primarily log to the console.",
+          "recommendation": "Implement the actual navigation or state updates required when a user interacts with a notification action. Ensure these actions align with the intended user flow and contribute to a responsive and helpful user experience (Bien Común).",
+          "category": "Code Quality"
+        },
+        {
+          "line_number": 660,
+          "severity": "Suggestion",
+          "message": "The `PerformanceMonitor` component is rendered conditionally based on `backendAvailability.isAvailable`.",
+          "recommendation": "Consider if the performance monitor should always be available, perhaps showing client-side metrics even when the backend is offline. Or, clarify why it's tied specifically to backend availability. Providing performance insights can be valuable to users (Bien Común).",
+          "category": "Performance"
+        },
+        {
+          "line_number": 787,
+          "severity": "Suggestion",
+          "message": "The `notificationStats` passed to `IntelligentNotificationCenter` contains hardcoded values for `avgEngagement` and `byType`.",
+          "recommendation": "Ensure the `IntelligentNotificationCenter` receives the actual calculated `notificationStats` derived from the notification data source (whether mock or real). This ensures the stats displayed are accurate.",
+          "category": "Code Quality"
+        },
+        {
+          "line_number": null,
+          "severity": "Info",
+          "message": "The component effectively uses custom hooks (`useScrollToTop`, `useRealTimeUpdates`, `useDashboardData`, `useGuardianColors`) and memoization (`useMemo`, `useCallback`) to manage complexity and optimize performance.",
+          "recommendation": null,
+          "category": "Best Practices"
+        },
+        {
+          "line_number": null,
+          "severity": "Info",
+          "message": "The component incorporates CoomÜnity terminology and concepts (Reciprocidad, Meritos, Ondas, Bien Común) into the UI elements, mock data, and component names, aligning well with the project's philosophy.",
+          "recommendation": null,
+          "category": "Philosophy"
+        },
+        {
+          "line_number": null,
+          "severity": "Info",
+          "message": "The component includes features focused on user experience and transparency, such as loading skeletons, backend availability alerts, performance monitoring, and detailed insights/notifications, which supports the Bien Común principle.",
+          "recommendation": null,
+          "category": "Philosophy"
+        }
+      ]
+    },
+    {
+      "file": "Demo/apps/superapp-unified/src/pages/Home/HomeRenovated.tsx",
+      "language": "typescript",
+      "issues": [
+        {
+          "line_number": 15,
+          "severity": "Suggestion",
+          "message": "Mock data is defined directly within the component file. While useful for development or fallbacks, consider moving mock data to a separate file (e.g., `__mocks__` directory or a dedicated `mockData.ts`) to keep component files cleaner and separate concerns.",
+          "recommendation": "Create a `mockData.ts` file and import `mockReciprocidadData` from there.",
+          "category": "Code Quality"
+        },
+        {
+          "line_number": 33,
+          "severity": "Warning",
+          "message": "The 'Racha' metric value is hardcoded to `5`. This value should ideally come from a data source (hook, prop, context) to be dynamic and reflect actual user data.",
+          "recommendation": "Fetch the 'Racha' data using a dedicated hook or include it in the existing hooks if related to Meritos or Reciprocidad.",
+          "category": "Code Quality"
+        },
+        {
+          "line_number": 28,
+          "severity": "Suggestion",
+          "message": "The component uses custom hooks (`useReciprocidad`, `useMeritos`) but doesn't explicitly handle potential error states from these hooks. If the data fetching fails, the UI might not reflect the error appropriately.",
+          "recommendation": "Add error handling logic using the hooks' return values (e.g., `error: errorReciprocidad`) and display an error message or fallback UI if an error occurs.",
+          "category": "Code Quality"
+        },
+        {
+          "line_number": null,
+          "severity": "Info",
+          "message": "The component effectively uses MUI Grid and components to create a responsive layout, enhancing the user experience across different devices. This aligns with making the platform accessible and usable for the whole community (Bien Común).",
+          "category": "Best Practices"
+        },
+        {
+          "line_number": null,
+          "severity": "Info",
+          "message": "Displaying 'Méritos', 'Luks', and 'Reciprocidad' metrics prominently on the home page directly reinforces the core values of the CoomÜnity philosophy (Ayni, Reciprocidad). The quick actions also encourage community engagement.",
+          "category": "Philosophy"
+        },
+        {
+          "line_number": 70,
+          "severity": "Suggestion",
+          "message": "Using `??` (nullish coalescing) for providing mock data fallbacks is a good pattern for handling potentially null or undefined data from hooks.",
+          "category": "Best Practices"
+        },
+        {
+          "line_number": 40,
+          "severity": "Info",
+          "message": "Reusing the `RevolutionaryMetricCard` component for different metrics promotes code reusability and maintainability.",
+          "category": "Code Quality"
+        },
+        {
+          "line_number": 59,
+          "severity": "Info",
+          "message": "Using `Button` with `component={Link}` from `react-router-dom` is the correct way to integrate routing with MUI buttons.",
+          "category": "Best Practices"
+        }
+      ]
+    },
+    {
+      "file": "Demo/apps/superapp-unified/src/components/modules/home/widgets/ReciprocidadBalanceWidget.tsx",
+      "language": "typescript",
+      "issues": [
+        {
+          "line_number": null,
+          "severity": "Suggestion",
+          "message": "The component is missing a TypeScript interface for its props (`ReciprocidadBalanceWidgetProps`). Defining prop types provides clarity, enables static analysis, and improves maintainability.",
+          "recommendation": "Define the `ReciprocidadBalanceWidgetProps` interface explicitly listing all expected props (`balance`, `nivel`, `progreso`, `meritos`, `ondas`, `isLoading`, `showAnimation`, `compactView`) with their respective types.",
+          "category": "Code Quality"
+        },
+        {
+          "line_number": 41,
+          "severity": "Warning",
+          "message": "Using `console.log` in an event handler is typically for debugging purposes and should be removed or replaced with a proper action (e.g., dispatching an event, calling a prop function) before deploying.",
+          "recommendation": "Replace `console.log('Ver detalle de reciprocidad')` with a function call passed down via props, for example, `onViewDetails()`, to handle the button click action.",
+          "category": "Code Quality"
+        },
+        {
+          "line_number": 43,
+          "severity": "Suggestion",
+          "message": "The `sx` prop for the 'Ver Detalle' button contains complex, inline styles including gradients, transitions, and hover effects. While functional, this can make the component harder to read and maintain. Consider abstracting some of these styles.",
+          "recommendation": "For complex or reusable styles, consider defining them as separate style objects or using the theme's customization capabilities. This improves readability and potentially allows for style reuse.",
+          "category": "Code Quality"
+        },
+        {
+          "line_number": 105,
+          "severity": "Suggestion",
+          "message": "The `cardActions` JSX element is defined inside the component function, meaning it's recreated on every render. While not a major performance issue for this small element, for larger or more complex JSX, this pattern can sometimes lead to unnecessary work or issues with memoization.",
+          "recommendation": "If the `cardActions` were more complex or dependent on props that change frequently, you might consider memoizing it using `useMemo` or defining it outside the component if it has no dependencies. In this specific case, the impact is minimal, but it's a pattern to be aware of.",
+          "category": "Performance"
+        },
+        {
+          "line_number": 174,
+          "severity": "Suggestion",
+          "message": "The hardcoded values for sizes, spacing, thickness, border radius, etc. (e.g., `80`, `100`, `6`, `4`, `1.5`, `2`) are 'magic numbers'. Using named constants or theme values improves readability and makes it easier to adjust styles consistently.",
+          "recommendation": "Define constants for recurring size or spacing values, or ideally, leverage the Material UI theme's spacing and size helpers where appropriate.",
+          "category": "Code Quality"
+        },
+        {
+          "line_number": 130,
+          "severity": "Best Practices",
+          "message": "Excellent use of ARIA attributes (`role`, `aria-label`, `aria-describedby`, `aria-busy`, `aria-live`) and hidden description divs (`aria-hidden`) to enhance accessibility for screen reader users, aligning with the Bien Común principle of inclusivity.",
+          "recommendation": null,
+          "category": "Accessibility"
+        },
+        {
+          "line_number": null,
+          "severity": "Info",
+          "message": "The component effectively visualizes the core concepts of Ayni/Reciprocidad (Balance, Nivel, Méritos, Ondas) using clear visual indicators (circular/linear progress) and thematic language ('Sincronizando energías cósmicas', 'energía espiritual'), strongly aligning with the CoomÜnity philosophy.",
+          "recommendation": null,
+          "category": "Philosophy"
+        }
+      ]
+    }
+  ]
+}

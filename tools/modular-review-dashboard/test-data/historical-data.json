@@ -1,0 +1,467 @@
+[
+  {
+    "date": "2025-06-04",
+    "totalIssues": 62,
+    "errors": 4,
+    "warnings": 7,
+    "suggestions": 3,
+    "info": 3,
+    "moduleBreakdown": {
+      "HOME": 10,
+      "UPLAY": 8,
+      "WALLET": 1,
+      "AUTH": 1,
+      "SHARED": 8
+    }
+  },
+  {
+    "date": "2025-06-05",
+    "totalIssues": 33,
+    "errors": 8,
+    "warnings": 20,
+    "suggestions": 15,
+    "info": 4,
+    "moduleBreakdown": {
+      "HOME": 1,
+      "UPLAY": 7,
+      "WALLET": 2,
+      "AUTH": 9,
+      "SHARED": 5
+    }
+  },
+  {
+    "date": "2025-06-06",
+    "totalIssues": 38,
+    "errors": 5,
+    "warnings": 21,
+    "suggestions": 15,
+    "info": 7,
+    "moduleBreakdown": {
+      "HOME": 1,
+      "UPLAY": 1,
+      "WALLET": 6,
+      "AUTH": 9,
+      "SHARED": 10
+    }
+  },
+  {
+    "date": "2025-06-07",
+    "totalIssues": 62,
+    "errors": 1,
+    "warnings": 8,
+    "suggestions": 7,
+    "info": 9,
+    "moduleBreakdown": {
+      "HOME": 3,
+      "UPLAY": 4,
+      "WALLET": 10,
+      "AUTH": 1,
+      "SHARED": 10
+    }
+  },
+  {
+    "date": "2025-06-08",
+    "totalIssues": 29,
+    "errors": 2,
+    "warnings": 18,
+    "suggestions": 3,
+    "info": 5,
+    "moduleBreakdown": {
+      "HOME": 7,
+      "UPLAY": 2,
+      "WALLET": 7,
+      "AUTH": 1,
+      "SHARED": 1
+    }
+  },
+  {
+    "date": "2025-06-09",
+    "totalIssues": 41,
+    "errors": 4,
+    "warnings": 17,
+    "suggestions": 16,
+    "info": 6,
+    "moduleBreakdown": {
+      "HOME": 1,
+      "UPLAY": 9,
+      "WALLET": 9,
+      "AUTH": 10,
+      "SHARED": 4
+    }
+  },
+  {
+    "date": "2025-06-10",
+    "totalIssues": 27,
+    "errors": 9,
+    "warnings": 19,
+    "suggestions": 14,
+    "info": 4,
+    "moduleBreakdown": {
+      "HOME": 2,
+      "UPLAY": 2,
+      "WALLET": 9,
+      "AUTH": 4,
+      "SHARED": 6
+    }
+  },
+  {
+    "date": "2025-06-11",
+    "totalIssues": 27,
+    "errors": 0,
+    "warnings": 10,
+    "suggestions": 13,
+    "info": 6,
+    "moduleBreakdown": {
+      "HOME": 10,
+      "UPLAY": 5,
+      "WALLET": 6,
+      "AUTH": 1,
+      "SHARED": 6
+    }
+  },
+  {
+    "date": "2025-06-12",
+    "totalIssues": 25,
+    "errors": 7,
+    "warnings": 13,
+    "suggestions": 15,
+    "info": 6,
+    "moduleBreakdown": {
+      "HOME": 3,
+      "UPLAY": 2,
+      "WALLET": 7,
+      "AUTH": 7,
+      "SHARED": 10
+    }
+  },
+  {
+    "date": "2025-06-13",
+    "totalIssues": 22,
+    "errors": 6,
+    "warnings": 22,
+    "suggestions": 6,
+    "info": 7,
+    "moduleBreakdown": {
+      "HOME": 5,
+      "UPLAY": 4,
+      "WALLET": 3,
+      "AUTH": 10,
+      "SHARED": 5
+    }
+  },
+  {
+    "date": "2025-06-14",
+    "totalIssues": 55,
+    "errors": 7,
+    "warnings": 15,
+    "suggestions": 16,
+    "info": 5,
+    "moduleBreakdown": {
+      "HOME": 1,
+      "UPLAY": 8,
+      "WALLET": 4,
+      "AUTH": 4,
+      "SHARED": 4
+    }
+  },
+  {
+    "date": "2025-06-15",
+    "totalIssues": 28,
+    "errors": 2,
+    "warnings": 20,
+    "suggestions": 16,
+    "info": 9,
+    "moduleBreakdown": {
+      "HOME": 10,
+      "UPLAY": 6,
+      "WALLET": 8,
+      "AUTH": 10,
+      "SHARED": 7
+    }
+  },
+  {
+    "date": "2025-06-16",
+    "totalIssues": 63,
+    "errors": 3,
+    "warnings": 10,
+    "suggestions": 5,
+    "info": 3,
+    "moduleBreakdown": {
+      "HOME": 6,
+      "UPLAY": 10,
+      "WALLET": 5,
+      "AUTH": 1,
+      "SHARED": 9
+    }
+  },
+  {
+    "date": "2025-06-17",
+    "totalIssues": 21,
+    "errors": 9,
+    "warnings": 15,
+    "suggestions": 4,
+    "info": 2,
+    "moduleBreakdown": {
+      "HOME": 10,
+      "UPLAY": 7,
+      "WALLET": 4,
+      "AUTH": 7,
+      "SHARED": 8
+    }
+  },
+  {
+    "date": "2025-06-18",
+    "totalIssues": 27,
+    "errors": 2,
+    "warnings": 6,
+    "suggestions": 10,
+    "info": 5,
+    "moduleBreakdown": {
+      "HOME": 5,
+      "UPLAY": 10,
+      "WALLET": 9,
+      "AUTH": 9,
+      "SHARED": 9
+    }
+  },
+  {
+    "date": "2025-06-19",
+    "totalIssues": 40,
+    "errors": 1,
+    "warnings": 11,
+    "suggestions": 9,
+    "info": 3,
+    "moduleBreakdown": {
+      "HOME": 9,
+      "UPLAY": 8,
+      "WALLET": 7,
+      "AUTH": 8,
+      "SHARED": 5
+    }
+  },
+  {
+    "date": "2025-06-20",
+    "totalIssues": 33,
+    "errors": 0,
+    "warnings": 22,
+    "suggestions": 4,
+    "info": 5,
+    "moduleBreakdown": {
+      "HOME": 3,
+      "UPLAY": 1,
+      "WALLET": 9,
+      "AUTH": 9,
+      "SHARED": 5
+    }
+  },
+  {
+    "date": "2025-06-21",
+    "totalIssues": 32,
+    "errors": 4,
+    "warnings": 17,
+    "suggestions": 15,
+    "info": 9,
+    "moduleBreakdown": {
+      "HOME": 9,
+      "UPLAY": 8,
+      "WALLET": 10,
+      "AUTH": 9,
+      "SHARED": 6
+    }
+  },
+  {
+    "date": "2025-06-22",
+    "totalIssues": 65,
+    "errors": 7,
+    "warnings": 6,
+    "suggestions": 7,
+    "info": 5,
+    "moduleBreakdown": {
+      "HOME": 2,
+      "UPLAY": 10,
+      "WALLET": 3,
+      "AUTH": 7,
+      "SHARED": 2
+    }
+  },
+  {
+    "date": "2025-06-23",
+    "totalIssues": 45,
+    "errors": 5,
+    "warnings": 16,
+    "suggestions": 9,
+    "info": 2,
+    "moduleBreakdown": {
+      "HOME": 2,
+      "UPLAY": 10,
+      "WALLET": 7,
+      "AUTH": 6,
+      "SHARED": 7
+    }
+  },
+  {
+    "date": "2025-06-24",
+    "totalIssues": 66,
+    "errors": 3,
+    "warnings": 19,
+    "suggestions": 5,
+    "info": 4,
+    "moduleBreakdown": {
+      "HOME": 9,
+      "UPLAY": 8,
+      "WALLET": 4,
+      "AUTH": 9,
+      "SHARED": 8
+    }
+  },
+  {
+    "date": "2025-06-25",
+    "totalIssues": 59,
+    "errors": 8,
+    "warnings": 21,
+    "suggestions": 9,
+    "info": 3,
+    "moduleBreakdown": {
+      "HOME": 7,
+      "UPLAY": 4,
+      "WALLET": 10,
+      "AUTH": 8,
+      "SHARED": 3
+    }
+  },
+  {
+    "date": "2025-06-26",
+    "totalIssues": 65,
+    "errors": 4,
+    "warnings": 19,
+    "suggestions": 7,
+    "info": 6,
+    "moduleBreakdown": {
+      "HOME": 5,
+      "UPLAY": 2,
+      "WALLET": 5,
+      "AUTH": 1,
+      "SHARED": 3
+    }
+  },
+  {
+    "date": "2025-06-27",
+    "totalIssues": 64,
+    "errors": 5,
+    "warnings": 5,
+    "suggestions": 4,
+    "info": 5,
+    "moduleBreakdown": {
+      "HOME": 8,
+      "UPLAY": 2,
+      "WALLET": 2,
+      "AUTH": 10,
+      "SHARED": 9
+    }
+  },
+  {
+    "date": "2025-06-28",
+    "totalIssues": 37,
+    "errors": 1,
+    "warnings": 6,
+    "suggestions": 16,
+    "info": 3,
+    "moduleBreakdown": {
+      "HOME": 8,
+      "UPLAY": 2,
+      "WALLET": 6,
+      "AUTH": 10,
+      "SHARED": 10
+    }
+  },
+  {
+    "date": "2025-06-29",
+    "totalIssues": 51,
+    "errors": 6,
+    "warnings": 11,
+    "suggestions": 10,
+    "info": 9,
+    "moduleBreakdown": {
+      "HOME": 5,
+      "UPLAY": 10,
+      "WALLET": 10,
+      "AUTH": 10,
+      "SHARED": 8
+    }
+  },
+  {
+    "date": "2025-06-30",
+    "totalIssues": 27,
+    "errors": 0,
+    "warnings": 10,
+    "suggestions": 15,
+    "info": 2,
+    "moduleBreakdown": {
+      "HOME": 4,
+      "UPLAY": 5,
+      "WALLET": 4,
+      "AUTH": 6,
+      "SHARED": 3
+    }
+  },
+  {
+    "date": "2025-07-01",
+    "totalIssues": 55,
+    "errors": 6,
+    "warnings": 6,
+    "suggestions": 6,
+    "info": 8,
+    "moduleBreakdown": {
+      "HOME": 6,
+      "UPLAY": 6,
+      "WALLET": 2,
+      "AUTH": 6,
+      "SHARED": 4
+    }
+  },
+  {
+    "date": "2025-07-02",
+    "totalIssues": 61,
+    "errors": 4,
+    "warnings": 23,
+    "suggestions": 6,
+    "info": 3,
+    "moduleBreakdown": {
+      "HOME": 9,
+      "UPLAY": 3,
+      "WALLET": 4,
+      "AUTH": 3,
+      "SHARED": 5
+    }
+  },
+  {
+    "date": "2025-07-03",
+    "totalIssues": 63,
+    "errors": 5,
+    "warnings": 8,
+    "suggestions": 3,
+    "info": 8,
+    "moduleBreakdown": {
+      "HOME": 10,
+      "UPLAY": 3,
+      "WALLET": 3,
+      "AUTH": 2,
+      "SHARED": 6
+    }
+  },
+  {
+    "date": "2025-07-04",
+    "totalIssues": 47,
+    "errors": 8,
+    "warnings": 22,
+    "suggestions": 7,
+    "info": 3,
+    "moduleBreakdown": {
+      "HOME": 9,
+      "UPLAY": 7,
+      "WALLET": 3,
+      "AUTH": 6,
+      "SHARED": 4
+    }
+  }
+]

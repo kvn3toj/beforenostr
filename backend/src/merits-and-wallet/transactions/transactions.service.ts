@@ -12,7 +12,7 @@ import {
   TransactionCurrency,
 } from './dto/send-transaction.dto';
 import { Merit } from '../../generated/prisma';
-import { Prisma } from '@prisma/client';
+import { Prisma } from '../../generated/prisma';
 
 // Define a basic type for the authenticated user passed from the controller
 type AuthenticatedUser = { id: string; roles: string[] /* other properties */ };

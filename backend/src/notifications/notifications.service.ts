@@ -292,7 +292,7 @@ export class NotificationsService {
   /**
    * Simular envío de push notification (aquí se integraría con un servicio real)
    */
-  private async sendPushNotification(notification: Notification) {
+  private async sendPushNotification(_notification: Notification) {
     // console.log('>>> NotificationsService.sendPushNotification: Sending push notification', {
     //   userId: notification.userId,
     //   type: notification.type,

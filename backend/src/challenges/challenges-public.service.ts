@@ -2,7 +2,7 @@ import { Injectable, Inject } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { Challenge } from '../generated/prisma';
 
-interface TestConnectionResponse {
+export interface TestConnectionResponse {
   success?: boolean;
   challengeCount?: number;
   error?: string;
