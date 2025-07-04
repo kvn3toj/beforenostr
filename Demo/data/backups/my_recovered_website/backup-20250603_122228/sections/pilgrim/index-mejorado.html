@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- SEO Meta Tags -->
+    <title>Pilgrim Demo - CoomÜnity Player</title>
+    <meta name="description" content="Experiencia interactiva del usuario Pilgrim en la plataforma CoomÜnity con navegación mejorada y diseño responsive.">
+    
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" sizes="76x76" href="/assets/img/icons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" href="/assets/img/icons/blanco/favicon.png">
+    
+    <!-- External Fonts -->
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600|Montserrat:400,500,600|Material+Icons">
+    <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    
+    <!-- Estilos principales unificados -->
+    <link rel="stylesheet" href="/shared/css/unified-styles.css">
+    
+    <!-- Estilos específicos de Pilgrim -->
+    <link rel="stylesheet" type="text/css" href="assets/css/material-kit.css?v=2.2.0">
+    <link rel="stylesheet" type="text/css" href="assets/css/custom.css?v=1.0">
+    <link rel="stylesheet" href="assets/css/coomunity-player.css?v=0.0.0.2">
+    <link rel="stylesheet" href="assets/css/tour.min.css">
+    
+    <!-- Analytics (Hotjar) -->
+    <script>
+        (function(h,o,t,j,a,r){
+            h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+            h._hjSettings={hjid:1689339,hjsv:6};
+            a=o.getElementsByTagName('head')[0];
+            r=o.createElement('script');r.async=1;
+            r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+            a.appendChild(r);
+        })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+    </script>
+    
+    <!-- Estilos específicos para esta página -->
+    <style>
+        /* Personalización para Pilgrim */
+        .unified-navbar.pilgrim-nav {
+            --primary-color: #4CAF50;
+        }
+        
+        .pilgrim-hero {
+            position: relative;
+            margin-bottom: 2rem;
+        }
+        
+        .video-player-enhanced {
+            position: relative;
+            background: #000;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--box-shadow-lg);
+        }
+        
+        .player-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+        
+        .player-overlay.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+        
+        .play-button {
+            width: 80px;
+            height: 80px;
+            background: var(--primary-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2rem;
+            transition: var(--transition);
+            border: 3px solid rgba(255,255,255,0.3);
+        }
+        
+        .play-button:hover {
+            transform: scale(1.1);
+            background: #45a049;
+        }
+        
+        .floating-controls {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 1000;
+        }
+        
+        .floating-controls .btn-hexa {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            border: none;
+            color: white;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--box-shadow-lg);
+            transition: var(--transition);
+            cursor: pointer;
+        }
+        
+        .floating-controls .btn-hexa:hover {
+            transform: scale(1.1);
+            background: #45a049;
+        }
+        
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #ff4444;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            font-size: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        @media (max-width: 768px) {
+            .floating-controls {
+                bottom: 1rem;
+                right: 1rem;
+            }
+            
+            .floating-controls .btn-hexa {
+                width: 50px;
+                height: 50px;
+            }
+            
+            .play-button {
+                width: 60px;
+                height: 60px;
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- NAVEGACIÓN UNIFICADA -->
+    <nav class="unified-navbar pilgrim-nav">
+        <div class="container">
+            <div class="navbar-container">
+                <!-- Logo -->
+                <a href="/public/" class="navbar-brand">
+                    <img src="/shared/images/logo.png" alt="CoomÜnity" class="logo">
+                </a>
+                
+                <!-- Enlaces de navegación -->
+                <ul class="nav-links" id="navLinks">
+                    <li>
+                        <a href="/public/" class="nav-link" data-section="home">
+                            <span class="nav-icon">🏠</span>
+                            <span class="nav-text">Inicio</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/sections/pilgrim/" class="nav-link active" data-section="pilgrim">
+                            <span class="nav-icon">🚀</span>
+                            <span class="nav-text">Pilgrim</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/sections/merchant/" class="nav-link" data-section="merchant">
+                            <span class="nav-icon">🏪</span>
+                            <span class="nav-text">Merchant</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/sections/red-pill/" class="nav-link" data-section="red-pill">
+                            <span class="nav-icon">💊</span>
+                            <span class="nav-text">Red Pill</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/docs/" class="nav-link" data-section="docs">
+                            <span class="nav-icon">📚</span>
+                            <span class="nav-text">Docs</span>
+                        </a>
+                    </li>
+                </ul>
+                
+                <!-- Botón menú móvil -->
+                <button class="mobile-toggle" id="mobileToggle" aria-label="Toggle navigation">
+                    ☰
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- BREADCRUMBS -->
+    <div class="breadcrumbs" id="breadcrumbs">
+        <!-- Se generan dinámicamente con JavaScript -->
+    </div>
+
+    <!-- CONTENIDO PRINCIPAL -->
+    <main class="main">
+        <div class="container">
+            
+            <!-- Sección Hero con Video -->
+            <section class="pilgrim-hero">
+                <div class="row">
+                    <div class="col-12">
+                        <h1 class="text-center mb-3">🚀 Pilgrim Demo - CoomÜnity Player</h1>
+                        <p class="text-center text-muted mb-4">
+                            Experimenta la interface interactiva del usuario Pilgrim con navegación mejorada y controles optimizados.
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-12">
+                        <div class="video-player-enhanced">
+                            <div class="video-container">
+                                <iframe id="vimeo-player" 
+                                        src="https://player.vimeo.com/video/381951343?app_id=122963" 
+                                        width="100%" 
+                                        height="100%" 
+                                        frameborder="0" 
+                                        allow="autoplay; fullscreen; picture-in-picture" 
+                                        allowfullscreen>
+                                </iframe>
+                            </div>
+                            
+                            <!-- Overlay con botón de play mejorado -->
+                            <div class="player-overlay" id="playerOverlay">
+                                <div class="play-button" onclick="playVideo()">
+                                    <i class="fa fa-play"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Sección de Características -->
+            <section class="features-section">
+                <div class="row">
+                    <div class="col-12">
+                        <h2 class="text-center mb-4">Características Mejoradas</h2>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-12 col-md-4 mb-3">
+                        <div class="card p-3 text-center">
+                            <div class="card-icon mb-2">
+                                <i class="fa fa-mobile fa-2x text-primary"></i>
+                            </div>
+                            <h5>Diseño Responsive</h5>
+                            <p class="text-muted">Optimizado para todos los dispositivos con navegación móvil mejorada.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="col-12 col-md-4 mb-3">
+                        <div class="card p-3 text-center">
+                            <div class="card-icon mb-2">
+                                <i class="fa fa-comments fa-2x text-primary"></i>
+                            </div>
+                            <h5>Feedback Visual</h5>
+                            <p class="text-muted">Estados de carga y notificaciones en tiempo real para mejor UX.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="col-12 col-md-4 mb-3">
+                        <div class="card p-3 text-center">
+                            <div class="card-icon mb-2">
+                                <i class="fa fa-navigation fa-2x text-primary"></i>
+                            </div>
+                            <h5>Navegación Intuitiva</h5>
+                            <p class="text-muted">Breadcrumbs automáticos y estados activos claros.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Formulario de Ejemplo con Validación -->
+            <section class="contact-section">
+                <div class="row">
+                    <div class="col-12 col-md-8 mx-auto">
+                        <h3 class="text-center mb-4">Prueba el Sistema de Validación</h3>
+                        
+                        <form class="enhanced-form" id="demoForm" novalidate>
+                            <div class="form-field">
+                                <label for="userEmail">Email *</label>
+                                <input type="email" id="userEmail" name="userEmail" required placeholder="tu@email.com">
+                                <div class="form-feedback success">✓ Email válido</div>
+                                <div class="form-feedback error">⚠ Email inválido</div>
+                            </div>
+
+                            <div class="form-field">
+                                <label for="userName">Nombre *</label>
+                                <input type="text" id="userName" name="userName" required minlength="2" placeholder="Tu nombre">
+                                <div class="form-feedback success">✓ Nombre válido</div>
+                                <div class="form-feedback error">⚠ Nombre debe tener al menos 2 caracteres</div>
+                            </div>
+
+                            <div class="form-field">
+                                <label for="userMessage">Mensaje</label>
+                                <textarea id="userMessage" name="userMessage" rows="4" minlength="10" maxlength="500" placeholder="Escribe tu mensaje aquí..."></textarea>
+                                <div class="form-feedback success">✓ Mensaje válido</div>
+                                <div class="form-feedback error">⚠ Mensaje debe tener entre 10 y 500 caracteres</div>
+                            </div>
+
+                            <div class="text-center">
+                                <button type="submit" class="btn btn-primary btn-lg">
+                                    Enviar Mensaje
+                                </button>
+                                <button type="button" class="btn btn-secondary btn-lg ml-2" onclick="resetForm()">
+                                    Limpiar
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- CONTROLES FLOTANTES MEJORADOS -->
+    <div class="floating-controls">
+        <button class="btn-hexa" onclick="toggleProfile()" title="Perfil" aria-label="Abrir perfil">
+            <i class="fa fa-user"></i>
+            <span class="notification-badge">3</span>
+        </button>
+        
+        <button class="btn-hexa" onclick="toggleNotifications()" title="Notificaciones" aria-label="Ver notificaciones">
+            <i class="fa fa-bell"></i>
+            <span class="notification-badge">5</span>
+        </button>
+        
+        <button class="btn-hexa" onclick="toggleMenu()" title="Menú" aria-label="Abrir menú">
+            <i class="fa fa-bars"></i>
+        </button>
+    </div>
+
+    <!-- SCRIPTS -->
+    <!-- jQuery y dependencias originales -->
+    <script type="text/javascript" src="assets/js/core/jquery.min.js"></script>
+    <script type="text/javascript" src="assets/js/core/popper.min.js"></script>
+    <script type="text/javascript" src="assets/js/core/bootstrap-material-design.min.js"></script>
+    <script type="text/javascript" src="assets/js/material-kit.js?v=2.2.0"></script>
+    
+    <!-- Scripts específicos de Pilgrim -->
+    <script type="text/javascript" src="https://player.vimeo.com/api/player.js"></script>
+    <script type="text/javascript" src="assets/js/coomunity-player.js?v=0.0.0.1"></script>
+    
+    <!-- Sistema de mejoras UX -->
+    <script src="/shared/js/ux-enhancements.js"></script>
+    
+    <!-- Scripts específicos de esta página -->
+    <script>
+        // Funciones específicas de Pilgrim mejoradas
+        function playVideo() {
+            const overlay = document.getElementById('playerOverlay');
+            const iframe = document.getElementById('vimeo-player');
+            
+            // Mostrar loading
+            if (window.loadingManager) {
+                window.loadingManager.show('Cargando video...');
+            }
+            
+            // Ocultar overlay
+            overlay.classList.add('hidden');
+            
+            // Simular carga de video
+            setTimeout(() => {
+                if (window.loadingManager) {
+                    window.loadingManager.hide();
+                }
+                
+                if (window.notificationSystem) {
+                    window.notificationSystem.success('Video iniciado correctamente');
+                }
+            }, 1500);
+        }
+        
+        function resetForm() {
+            const form = document.getElementById('demoForm');
+            form.reset();
+            
+            // Limpiar estados de validación
+            const fields = form.querySelectorAll('.form-field');
+            fields.forEach(field => {
+                field.classList.remove('success', 'error');
+            });
+            
+            if (window.notificationSystem) {
+                window.notificationSystem.info('Formulario limpiado');
+            }
+        }
+        
+        function toggleProfile() {
+            if (window.notificationSystem) {
+                window.notificationSystem.info('Función de perfil en desarrollo');
+            }
+        }
+        
+        function toggleNotifications() {
+            if (window.notificationSystem) {
+                window.notificationSystem.warning('Tienes 5 notificaciones pendientes');
+            }
+        }
+        
+        function toggleMenu() {
+            if (window.notificationSystem) {
+                window.notificationSystem.info('Menú adicional disponible');
+            }
+        }
+        
+        // Inicializaciones específicas cuando el DOM esté listo
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🚀 Pilgrim Demo mejorado cargado');
+            
+            // Mostrar notificación de bienvenida específica
+            setTimeout(() => {
+                if (window.notificationSystem) {
+                    window.notificationSystem.success('¡Bienvenido a Pilgrim Demo! Todas las mejoras UX están activas.', 4000);
+                }
+            }, 1500);
+            
+            // Ejemplo de validación en tiempo real mejorada
+            const form = document.getElementById('demoForm');
+            if (form) {
+                form.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    if (window.notificationSystem) {
+                        window.notificationSystem.info('Procesando formulario con validación mejorada...');
+                    }
+                    
+                    // Simular envío exitoso
+                    setTimeout(() => {
+                        if (window.notificationSystem) {
+                            window.notificationSystem.success('¡Formulario enviado exitosamente! Todas las validaciones pasaron.');
+                        }
+                        resetForm();
+                    }, 2500);
+                });
+            }
+        });
+    </script>
+</body>
+</html> 

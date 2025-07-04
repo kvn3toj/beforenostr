@@ -1,0 +1,45 @@
+# ===========================================
+# GAMIFIER MONITORING SYSTEM CONFIGURATION
+# ===========================================
+
+# Alert System Configuration
+ALERT_EMAIL_ENABLED=true
+ALERT_SLACK_ENABLED=true
+ALERT_THRESHOLD=5
+
+# Email Configuration (SMTP)
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+SMTP_SECURE=false
+SMTP_USER=your-email@gmail.com
+SMTP_PASS=your-app-password
+SMTP_FROM=GAMIFIER Monitoring <your-email@gmail.com>
+ALERT_EMAIL_RECIPIENTS=admin@yourcompany.com,devops@yourcompany.com
+
+# Slack Configuration
+SLACK_WEBHOOK_URL=https://hooks.slack.com/services/YOUR/SLACK/WEBHOOK
+
+# Monitoring Schedule Configuration
+MONITORING_TIMEZONE=America/New_York
+DAILY_CHECK_HOUR=2
+DAILY_CHECK_MINUTE=0
+
+# Performance Thresholds
+MAX_INCONSISTENCIES_WARNING=10
+MAX_INCONSISTENCIES_CRITICAL=50
+MAX_EXECUTION_TIME_WARNING=30000
+MAX_EXECUTION_TIME_CRITICAL=60000
+
+# Cache Health Thresholds
+CACHE_MEMORY_WARNING_MB=100
+CACHE_MEMORY_CRITICAL_MB=500
+
+# ===========================================
+# INSTRUCTIONS FOR SETUP:
+# ===========================================
+# 1. Copy these variables to your .env file
+# 2. Update the email configuration with your SMTP settings
+# 3. Create a Slack webhook URL and add it to SLACK_WEBHOOK_URL
+# 4. Adjust the alert recipients and thresholds as needed
+# 5. Test the configuration using the /monitoring/test-alerts endpoint
+# =========================================== 

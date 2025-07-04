@@ -1,0 +1,298 @@
+/* ===============================================================================
+   🎨 CORRECCIONES ESPECÍFICAS DE CONTRASTE - INSIGHTS Y TARJETAS GRISES
+   Soluciona problemas específicos vistos en la captura de pantalla
+   =============================================================================== */
+
+/* ===== INSIGHTS INTELIGENTES - TARJETAS GRISES ===== */
+.insight-card,
+.insights-panel .MuiBox-root,
+[data-testid*='insight'] {
+  /* Fondo con mejor contraste */
+  background-color: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+}
+
+.insight-card .MuiTypography-subtitle2,
+.insights-panel .MuiTypography-subtitle2 {
+  color: #0f172a !important; /* Negro puro para títulos */
+  font-weight: 700 !important;
+}
+
+.insight-card .MuiTypography-body2,
+.insights-panel .MuiTypography-body2 {
+  color: #1e293b !important; /* Gris muy oscuro para descripción */
+  font-weight: 500 !important;
+}
+
+/* ===== TARJETAS DE PROGRESO Y ESTADÍSTICAS ===== */
+.progress-card,
+.stats-card,
+.elemental-card {
+  background-color: #ffffff !important;
+  border: 1px solid #cbd5e1 !important;
+}
+
+.progress-card .MuiTypography-h6,
+.stats-card .MuiTypography-h6,
+.elemental-card .MuiTypography-h6 {
+  color: #0f172a !important;
+  font-weight: 700 !important;
+}
+
+.progress-card .MuiTypography-body2,
+.stats-card .MuiTypography-body2,
+.elemental-card .MuiTypography-body2 {
+  color: #334155 !important;
+  font-weight: 500 !important;
+}
+
+/* ===== ELEMENTOS ESPECÍFICOS VISTOS EN LA IMAGEN ===== */
+
+/* Balance Elemental - Textos de elementos */
+.element-text,
+.elemental-progress .MuiTypography-caption {
+  color: #1e293b !important;
+  font-weight: 600 !important;
+}
+
+/* Progreso de nivel - Textos */
+.level-progress .MuiTypography-body2,
+.level-indicator {
+  color: #0f172a !important;
+  font-weight: 600 !important;
+}
+
+/* "Todos los Insights" - Títulos y descripciones */
+.all-insights .MuiTypography-h6 {
+  color: #0f172a !important;
+  font-weight: 700 !important;
+}
+
+.all-insights .MuiTypography-body2 {
+  color: #334155 !important;
+  font-weight: 500 !important;
+}
+
+.all-insights .MuiTypography-caption {
+  color: #475569 !important;
+  font-weight: 500 !important;
+}
+
+/* ===== ACCIONES RECOMENDADAS - MEJORA ESPECÍFICA ===== */
+.recommended-actions .action-title {
+  color: #0f172a !important;
+  font-weight: 700 !important;
+}
+
+.recommended-actions .action-description {
+  color: #1e293b !important;
+  font-weight: 500 !important;
+}
+
+.recommended-actions .action-subtitle {
+  color: #334155 !important;
+  font-weight: 500 !important;
+}
+
+/* ===== TARJETAS DE MÓDULOS - MEJOR CONTRASTE ===== */
+.module-recommendation-card {
+  background-color: #ffffff !important;
+  border: 2px solid #e2e8f0 !important;
+}
+
+.module-recommendation-card .module-title {
+  color: #0f172a !important;
+  font-weight: 700 !important;
+}
+
+.module-recommendation-card .module-subtitle {
+  color: #1e293b !important;
+  font-weight: 600 !important;
+}
+
+.module-recommendation-card .module-description {
+  color: #334155 !important;
+  font-weight: 500 !important;
+}
+
+/* ===== CHIPS Y BADGES - CONTRASTE MEJORADO ===== */
+.insight-priority-chip,
+.recommendation-badge {
+  background-color: #1e40af !important;
+  color: #ffffff !important;
+  font-weight: 700 !important;
+}
+
+.insight-priority-chip.warning {
+  background-color: #d97706 !important;
+  color: #ffffff !important;
+}
+
+.insight-priority-chip.success {
+  background-color: #059669 !important;
+  color: #ffffff !important;
+}
+
+/* ===== BOTONES DE ACCIÓN - CONTRASTE GARANTIZADO ===== */
+.insight-action-button {
+  background-color: #1e40af !important;
+  color: #ffffff !important;
+  font-weight: 700 !important;
+  border: none !important;
+}
+
+.insight-action-button:hover {
+  background-color: #1d4ed8 !important;
+  transform: translateY(-2px) !important;
+}
+
+.insight-action-button.outlined {
+  background-color: transparent !important;
+  color: #1e40af !important;
+  border: 2px solid #1e40af !important;
+  font-weight: 600 !important;
+}
+
+/* ===== ICONOS EN INSIGHTS - CONTRASTE MEJORADO ===== */
+.insight-icon {
+  color: #1e40af !important;
+}
+
+.insight-icon.warning {
+  color: #d97706 !important;
+}
+
+.insight-icon.success {
+  color: #059669 !important;
+}
+
+.insight-icon.error {
+  color: #dc2626 !important;
+}
+
+/* ===== TEXTOS PEQUEÑOS Y CAPTIONS - LEGIBILIDAD ===== */
+.insight-caption,
+.small-text,
+.meta-text {
+  color: #475569 !important;
+  font-weight: 500 !important;
+  font-size: 0.75rem !important;
+}
+
+/* ===== NÚMEROS Y MÉTRICAS EN INSIGHTS ===== */
+.insight-metric,
+.insight-number,
+.progress-percentage {
+  color: #0f172a !important;
+  font-weight: 800 !important;
+  font-variant-numeric: tabular-nums !important;
+}
+
+/* ===== OVERRIDE PARA MATERIALES CON BAJA OPACIDAD ===== */
+.MuiTypography-root[style*='opacity: 0.7'],
+.MuiTypography-root[style*='opacity: 0.8'],
+.MuiTypography-root[style*='opacity: 0.9'] {
+  opacity: 1 !important;
+  color: #334155 !important;
+  font-weight: 500 !important;
+}
+
+/* ===== MODO OSCURO - INVERSIÓN PARA INSIGHTS ===== */
+@media (prefers-color-scheme: dark) {
+  .insight-card,
+  .insights-panel .MuiBox-root,
+  .progress-card,
+  .stats-card,
+  .elemental-card {
+    background-color: #1e293b !important;
+    border-color: #475569 !important;
+  }
+
+  .insight-card .MuiTypography-subtitle2,
+  .progress-card .MuiTypography-h6,
+  .all-insights .MuiTypography-h6,
+  .recommended-actions .action-title {
+    color: #f8fafc !important;
+  }
+
+  .insight-card .MuiTypography-body2,
+  .progress-card .MuiTypography-body2,
+  .recommended-actions .action-description {
+    color: #e2e8f0 !important;
+  }
+
+  .insight-caption,
+  .small-text,
+  .meta-text {
+    color: #cbd5e1 !important;
+  }
+}
+
+/* ===== FORZAR CONTRASTE EN ELEMENTOS ESPECÍFICOS ===== */
+.force-high-contrast {
+  color: #000000 !important;
+  font-weight: 700 !important;
+  background-color: #ffffff !important;
+}
+
+.force-medium-contrast {
+  color: #1e293b !important;
+  font-weight: 600 !important;
+}
+
+.force-readable-text {
+  color: #334155 !important;
+  font-weight: 500 !important;
+}
+
+/* ===== SELECTORES ESPECÍFICOS PARA LA CAPTURA ===== */
+
+/* Tarjetas grises que se ven en la imagen */
+[style*='background-color: rgb(248, 250, 252)'],
+[style*='backgroundColor: rgb(248, 250, 252)'],
+.MuiBox-root[style*='rgb(248, 250, 252)'] {
+  background-color: #ffffff !important;
+  border: 1px solid #cbd5e1 !important;
+}
+
+/* Textos que aparecen con poca opacidad */
+[style*='opacity: 0.9'] .MuiTypography-root,
+[style*='opacity: 0.8'] .MuiTypography-root,
+[style*='opacity: 0.7'] .MuiTypography-root {
+  opacity: 1 !important;
+  color: #1e293b !important;
+  font-weight: 500 !important;
+}
+
+/* ===== CASOS ESPECÍFICOS DE LA IMAGEN ===== */
+
+/* Sección "Insights Inteligentes" */
+.insights-section .MuiTypography-h6 {
+  color: #0f172a !important;
+  font-weight: 700 !important;
+}
+
+/* Sección "Balance Elemental" */
+.elemental-section .MuiTypography-h6 {
+  color: #0f172a !important;
+  font-weight: 700 !important;
+}
+
+/* Textos de porcentajes en elementos */
+.element-percentage {
+  color: #0f172a !important;
+  font-weight: 700 !important;
+  font-size: 0.875rem !important;
+}
+
+/* Botón "Ver detalles" / "Ocultar detalles" */
+.details-toggle-button {
+  color: #1e40af !important;
+  font-weight: 600 !important;
+  border-color: #1e40af !important;
+}
+
+.details-toggle-button:hover {
+  background-color: rgba(30, 64, 175, 0.1) !important;
+  color: #1d4ed8 !important;
+}

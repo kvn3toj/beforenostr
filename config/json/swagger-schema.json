@@ -1,0 +1,260 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Gamifier API",
+    "description": "API for the Gamifier educational platform",
+    "version": "1.0"
+  },
+  "paths": {
+    "/video-items/extract-metadata": {
+      "post": {
+        "summary": "Extract advanced metadata from video content",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ExtractMetadataDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Metadata extracted successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MetadataResponseDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/video-items/{id}": {
+      "get": {
+        "summary": "Get video item by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Video item found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VideoItemResponseDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ExtractMetadataDto": {
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "string",
+            "description": "Contenido del video (URL o JSON con información del video)",
+            "example": "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+          }
+        },
+        "required": ["content"]
+      },
+      "MetadataResponseDto": {
+        "type": "object",
+        "properties": {
+          "platform": {
+            "type": "string",
+            "description": "Plataforma detectada",
+            "enum": ["youtube", "vimeo", "local", "uploaded", "unknown"],
+            "example": "youtube"
+          },
+          "externalId": {
+            "type": "string",
+            "description": "ID del video en la plataforma externa",
+            "example": "dQw4w9WgXcQ"
+          },
+          "url": {
+            "type": "string",
+            "description": "URL completa del video",
+            "example": "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+          },
+          "thumbnailUrl": {
+            "type": "string",
+            "description": "URL de la imagen miniatura",
+            "example": "https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg"
+          },
+          "language": {
+            "type": "string",
+            "description": "Código de idioma del contenido",
+            "example": "en"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Etiquetas como array de strings",
+            "example": ["music", "pop", "80s"]
+          },
+          "categories": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Categorías como array de strings",
+            "example": ["Entertainment", "Music"]
+          },
+          "quality": {
+            "type": "object",
+            "description": "Información de calidad como objeto",
+            "example": { "resolution": "1080p", "aspectRatio": "16:9" }
+          },
+          "duration": {
+            "type": "integer",
+            "description": "Duración en segundos",
+            "example": 212
+          },
+          "title": {
+            "type": "string",
+            "description": "Título extraído del video",
+            "example": "Rick Astley - Never Gonna Give You Up"
+          },
+          "description": {
+            "type": "string",
+            "description": "Descripción extraída del video",
+            "example": "Official video for Never Gonna Give You Up"
+          },
+          "success": {
+            "type": "boolean",
+            "description": "Indica si la extracción fue exitosa",
+            "example": true
+          },
+          "error": {
+            "type": "string",
+            "description": "Mensaje de error si la extracción falló",
+            "example": "Video not found"
+          }
+        },
+        "required": ["platform", "success"]
+      },
+      "VideoItemResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "ID único del video item"
+          },
+          "title": {
+            "type": "string",
+            "description": "Título del video"
+          },
+          "description": {
+            "type": "string",
+            "description": "Descripción del video"
+          },
+          "content": {
+            "type": "string",
+            "description": "Contenido del video (HTML/JSON)"
+          },
+          "url": {
+            "type": "string",
+            "description": "URL original del video"
+          },
+          "platform": {
+            "type": "string",
+            "description": "Plataforma del video",
+            "enum": ["youtube", "vimeo", "local", "uploaded", "unknown"],
+            "example": "youtube"
+          },
+          "externalId": {
+            "type": "string",
+            "description": "ID externo de la plataforma"
+          },
+          "duration": {
+            "type": "integer",
+            "description": "Duración en segundos"
+          },
+          "thumbnailUrl": {
+            "type": "string",
+            "description": "URL de la miniatura"
+          },
+          "language": {
+            "type": "string",
+            "description": "Idioma del video"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Tags del video como array de strings",
+            "example": ["education", "gamification"]
+          },
+          "categories": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Categorías del video como array de strings",
+            "example": ["Education", "Technology"]
+          },
+          "quality": {
+            "type": "object",
+            "description": "Información de calidad del video",
+            "example": { "resolution": "1080p", "aspectRatio": "16:9" }
+          },
+          "playlistId": {
+            "type": "string",
+            "description": "ID de la playlist"
+          },
+          "itemTypeId": {
+            "type": "string",
+            "description": "ID del tipo de item"
+          },
+          "order": {
+            "type": "integer",
+            "description": "Orden en la playlist"
+          },
+          "isActive": {
+            "type": "boolean",
+            "description": "Si está activo"
+          },
+          "isDeleted": {
+            "type": "boolean",
+            "description": "Si está eliminado (soft delete)"
+          },
+          "deletedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Fecha de eliminación"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Fecha de creación"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Fecha de actualización"
+          }
+        },
+        "required": ["id", "title", "content", "platform", "playlistId", "isActive", "isDeleted", "createdAt", "updatedAt"]
+      }
+    }
+  }
+}

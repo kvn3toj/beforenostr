@@ -1,0 +1,467 @@
+/* ===============================================================================
+   🌟 GUARDIAN ENHANCED MOTION SYSTEM - COOMUNITY SUPERAPP
+   Sistema de movimiento y animaciones inspirado en los cinco elementos
+   Armoniza con el Guardian Visual System para crear experiencias fluidas
+   =============================================================================== */
+
+/* ===== 🎯 TOKENS DE MOVIMIENTO ELEMENTAL ===== */
+:root {
+  /* ===== 🔥 FUEGO - Energía y Acción ===== */
+  --motion-fuego-swift: 0.15s cubic-bezier(0.4, 0.0, 0.2, 1);
+  --motion-fuego-burst: 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  --motion-fuego-flicker: 0.2s ease-in-out;
+
+  /* ===== 💧 AGUA - Flujo y Continuidad ===== */
+  --motion-agua-flow: 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --motion-agua-wave: 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+  --motion-agua-ripple: 0.6s ease-out;
+
+  /* ===== 🌱 TIERRA - Estabilidad y Crecimiento ===== */
+  --motion-tierra-stable: 0.4s cubic-bezier(0.25, 0.1, 0.25, 1);
+  --motion-tierra-growth: 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+  --motion-tierra-settle: 0.7s cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* ===== 🌪️ AIRE - Transformación y Ligereza ===== */
+  --motion-aire-float: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  --motion-aire-spiral: 0.6s cubic-bezier(0.55, 0.085, 0.68, 0.53);
+  --motion-aire-lift: 0.4s cubic-bezier(0.55, 0.055, 0.675, 0.19);
+
+  /* ===== ⚡ ÉTER - Trascendencia y Unión ===== */
+  --motion-eter-transcend: 1s cubic-bezier(0.23, 1, 0.32, 1);
+  --motion-eter-unity: 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  --motion-eter-cosmic: 2s cubic-bezier(0.45, 0.05, 0.55, 0.95);
+}
+
+/* ===== 🎭 ANIMACIONES SIGNATURE GUARDIAN ===== */
+
+/* 🔥 Reciprocidad Breathing - Respiración de reciprocidad */
+@keyframes guardian-reciprocidad-breathe {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.8;
+    filter: brightness(1);
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 1;
+    filter: brightness(1.1);
+  }
+}
+
+/* 💧 Energy Waves - Ondas de energía */
+@keyframes guardian-energy-waves {
+  0% {
+    transform: translateX(0) scaleY(1);
+    opacity: 0.6;
+  }
+  25% {
+    transform: translateX(25%) scaleY(1.1);
+    opacity: 0.8;
+  }
+  50% {
+    transform: translateX(50%) scaleY(1.2);
+    opacity: 1;
+  }
+  75% {
+    transform: translateX(75%) scaleY(1.1);
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateX(100%) scaleY(1);
+    opacity: 0.6;
+  }
+}
+
+/* 🌱 Guardian Levitation - Levitación guardian */
+@keyframes guardian-levitate {
+  0%, 100% {
+    transform: translateY(0px) rotateZ(0deg);
+    box-shadow: 0 4px 12px rgba(245, 166, 35, 0.15);
+  }
+  25% {
+    transform: translateY(-8px) rotateZ(1deg);
+    box-shadow: 0 12px 24px rgba(245, 166, 35, 0.25);
+  }
+  50% {
+    transform: translateY(-12px) rotateZ(0deg);
+    box-shadow: 0 16px 32px rgba(245, 166, 35, 0.3);
+  }
+  75% {
+    transform: translateY(-8px) rotateZ(-1deg);
+    box-shadow: 0 12px 24px rgba(245, 166, 35, 0.25);
+  }
+}
+
+/* 💰 Lukas Flow - Flujo de Lukas */
+@keyframes guardian-lukas-flow {
+  0% {
+    transform: translateX(-100%) scale(0.8);
+    opacity: 0;
+  }
+  25% {
+    transform: translateX(-25%) scale(1);
+    opacity: 0.5;
+  }
+  50% {
+    transform: translateX(0%) scale(1.1);
+    opacity: 1;
+  }
+  75% {
+    transform: translateX(25%) scale(1);
+    opacity: 0.5;
+  }
+  100% {
+    transform: translateX(100%) scale(0.8);
+    opacity: 0;
+  }
+}
+
+/* 🏆 Merit Pulse - Pulso de méritos */
+@keyframes guardian-merit-pulse {
+  0%, 100% {
+    transform: scale(1);
+    background-size: 100% 100%;
+  }
+  50% {
+    transform: scale(1.08);
+    background-size: 110% 110%;
+  }
+}
+
+/* 🌀 Elemental Rotation - Rotación elemental */
+@keyframes guardian-elemental-rotation {
+  0% {
+    transform: rotate(0deg) scale(1);
+    filter: hue-rotate(0deg);
+  }
+  25% {
+    transform: rotate(90deg) scale(1.05);
+    filter: hue-rotate(90deg);
+  }
+  50% {
+    transform: rotate(180deg) scale(1.1);
+    filter: hue-rotate(180deg);
+  }
+  75% {
+    transform: rotate(270deg) scale(1.05);
+    filter: hue-rotate(270deg);
+  }
+  100% {
+    transform: rotate(360deg) scale(1);
+    filter: hue-rotate(360deg);
+  }
+}
+
+/* ===== 🎯 APLICACIONES CONTEXTUALES ===== */
+
+/* Home Container - Animación sutil de entrada */
+.guardian-home-container {
+  animation: guardian-container-entrance var(--motion-agua-flow) ease-out;
+}
+
+@keyframes guardian-container-entrance {
+  0% {
+    opacity: 0;
+    transform: translateY(20px) scale(0.98);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0px) scale(1);
+  }
+}
+
+/* Cards Guardian - Múltiples variaciones */
+.guardian-card {
+  transition: all var(--motion-aire-float) ease-out;
+  transform-origin: center center;
+}
+
+.guardian-card:hover {
+  animation: guardian-levitate 6s ease-in-out infinite;
+}
+
+.guardian-card.reciprocidad-card {
+  animation: guardian-reciprocidad-breathe 4s ease-in-out infinite;
+}
+
+.guardian-card.meritos-card:hover {
+  animation: guardian-merit-pulse 2s ease-in-out infinite;
+}
+
+.guardian-card.lukas-card .guardian-metric-value {
+  position: relative;
+  overflow: hidden;
+}
+
+.guardian-card.lukas-card .guardian-metric-value::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(245, 158, 11, 0.3), transparent);
+  animation: guardian-lukas-flow 3s ease-in-out infinite;
+}
+
+/* Botones Guardian - Interacciones fluidas */
+.guardian-button-primary {
+  position: relative;
+  overflow: hidden;
+  transition: all var(--motion-fuego-swift) ease-out;
+}
+
+.guardian-button-primary::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transition: var(--motion-fuego-burst);
+}
+
+.guardian-button-primary:hover::before {
+  left: 100%;
+}
+
+.guardian-button-primary:active {
+  transform: scale(0.95);
+  transition: var(--motion-fuego-flicker);
+}
+
+/* Progress Bars Guardian - Flujo dinámico */
+.guardian-progress-bar {
+  position: relative;
+  overflow: hidden;
+}
+
+.guardian-progress-bar::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+  animation: guardian-energy-waves 2s ease-in-out infinite;
+}
+
+/* Chips y Badges - Micro-interacciones */
+.guardian-chip {
+  transition: all var(--motion-aire-float) ease-out;
+}
+
+.guardian-chip:hover {
+  transform: translateY(-3px) scale(1.05) rotateZ(2deg);
+  transition: var(--motion-aire-lift);
+}
+
+/* Iconos Guardian - Efectos mágicos */
+.guardian-icon {
+  transition: all var(--motion-fuego-swift) ease-out;
+  transform-origin: center center;
+}
+
+.guardian-icon:hover {
+  animation: guardian-elemental-rotation 4s ease-in-out infinite;
+}
+
+.guardian-icon-fuego:hover {
+  filter: drop-shadow(0 0 8px rgba(245, 166, 35, 0.6)) brightness(1.2);
+}
+
+.guardian-icon-agua:hover {
+  filter: drop-shadow(0 0 8px rgba(8, 145, 178, 0.6)) brightness(1.2);
+}
+
+.guardian-icon-tierra:hover {
+  filter: drop-shadow(0 0 8px rgba(22, 163, 74, 0.6)) brightness(1.2);
+}
+
+.guardian-icon-aire:hover {
+  filter: drop-shadow(0 0 8px rgba(168, 85, 247, 0.6)) brightness(1.2);
+}
+
+/* ===== 🌟 EFECTOS ESPECIALES AVANZADOS ===== */
+
+/* Entrada de texto con efecto typewriter */
+.guardian-text-typewriter {
+  overflow: hidden;
+  border-right: 3px solid var(--guardian-primary);
+  white-space: nowrap;
+  animation:
+    guardian-typewriter 2s steps(30, end),
+    guardian-cursor-blink 0.75s step-end infinite;
+}
+
+@keyframes guardian-typewriter {
+  from { width: 0; }
+  to { width: 100%; }
+}
+
+@keyframes guardian-cursor-blink {
+  0%, 50% { border-color: var(--guardian-primary); }
+  51%, 100% { border-color: transparent; }
+}
+
+/* Efecto de partículas flotantes */
+.guardian-particles-container {
+  position: relative;
+  overflow: hidden;
+}
+
+.guardian-particles-container::before,
+.guardian-particles-container::after {
+  content: '';
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--guardian-primary);
+  opacity: 0.6;
+  animation: guardian-particle-float 8s ease-in-out infinite;
+}
+
+.guardian-particles-container::before {
+  top: 20%;
+  left: 20%;
+  animation-delay: 0s;
+}
+
+.guardian-particles-container::after {
+  top: 70%;
+  right: 30%;
+  animation-delay: 4s;
+}
+
+@keyframes guardian-particle-float {
+  0%, 100% {
+    transform: translateY(0px) translateX(0px) scale(1);
+    opacity: 0.6;
+  }
+  25% {
+    transform: translateY(-20px) translateX(10px) scale(1.2);
+    opacity: 0.8;
+  }
+  50% {
+    transform: translateY(-40px) translateX(-5px) scale(0.8);
+    opacity: 1;
+  }
+  75% {
+    transform: translateY(-20px) translateX(-10px) scale(1.1);
+    opacity: 0.7;
+  }
+}
+
+/* Efecto de color dinámico basado en estado */
+.guardian-dynamic-color {
+  transition: all var(--motion-agua-flow) ease-out;
+}
+
+.guardian-dynamic-color[data-state="active"] {
+  color: var(--guardian-primary);
+  text-shadow: 0 0 10px rgba(245, 166, 35, 0.5);
+}
+
+.guardian-dynamic-color[data-state="success"] {
+  color: var(--guardian-accent);
+  text-shadow: 0 0 10px rgba(22, 163, 74, 0.5);
+}
+
+.guardian-dynamic-color[data-state="warning"] {
+  color: var(--guardian-ether);
+  text-shadow: 0 0 10px rgba(245, 158, 11, 0.5);
+}
+
+/* ===== 🔄 SISTEMAS DE RITMO VISUAL ===== */
+
+/* Secuencia de entrada escalonada */
+.guardian-staggered-entrance {
+  opacity: 0;
+  transform: translateY(30px);
+  animation: guardian-entrance-stagger var(--motion-tierra-growth) ease-out forwards;
+}
+
+.guardian-staggered-entrance:nth-child(1) { animation-delay: 0.1s; }
+.guardian-staggered-entrance:nth-child(2) { animation-delay: 0.2s; }
+.guardian-staggered-entrance:nth-child(3) { animation-delay: 0.3s; }
+.guardian-staggered-entrance:nth-child(4) { animation-delay: 0.4s; }
+.guardian-staggered-entrance:nth-child(5) { animation-delay: 0.5s; }
+
+@keyframes guardian-entrance-stagger {
+  0% {
+    opacity: 0;
+    transform: translateY(30px) scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0px) scale(1);
+  }
+}
+
+/* ===== 📱 RESPONSIVE MOTION ===== */
+@media (max-width: 768px) {
+  .guardian-card:hover {
+    animation: none; /* Simplificar en móviles */
+    transform: translateY(-4px) scale(1.02);
+  }
+
+  .guardian-icon:hover {
+    animation: none;
+    transform: scale(1.1);
+  }
+}
+
+/* ===== ♿ ACCESIBILIDAD - REDUCIR MOVIMIENTO ===== */
+@media (prefers-reduced-motion: reduce) {
+  .guardian-card,
+  .guardian-button-primary,
+  .guardian-icon,
+  .guardian-chip {
+    animation: none !important;
+    transition: opacity 0.2s ease !important;
+  }
+
+  .guardian-card:hover,
+  .guardian-button-primary:hover,
+  .guardian-icon:hover,
+  .guardian-chip:hover {
+    transform: none !important;
+    filter: brightness(1.1) !important;
+  }
+
+  .guardian-particles-container::before,
+  .guardian-particles-container::after {
+    display: none !important;
+  }
+}
+
+/* ===== 🎯 CLASES UTILITARIAS DE MOVIMIENTO ===== */
+
+.guardian-motion-swift { transition: all var(--motion-fuego-swift) ease-out; }
+.guardian-motion-flow { transition: all var(--motion-agua-flow) ease-out; }
+.guardian-motion-stable { transition: all var(--motion-tierra-stable) ease-out; }
+.guardian-motion-float { transition: all var(--motion-aire-float) ease-out; }
+.guardian-motion-transcend { transition: all var(--motion-eter-transcend) ease-out; }
+
+.guardian-hover-lift:hover { transform: translateY(-4px) scale(1.02); }
+.guardian-hover-grow:hover { transform: scale(1.05); }
+.guardian-hover-glow:hover { filter: drop-shadow(0 0 12px currentColor); }
+.guardian-hover-brighten:hover { filter: brightness(1.15); }
+
+/* ===== 🌀 FINALIZADOR - ORQUESTACIÓN GLOBAL ===== */
+.guardian-system-active * {
+  /* Garantizar que todos los elementos tengan transiciones suaves */
+  transition-property: transform, opacity, filter, color, background-color, border-color, box-shadow;
+  transition-duration: var(--motion-fuego-swift);
+  transition-timing-function: ease-out;
+}
+
+/* ===============================================================================
+   🌟 FIN DEL SISTEMA DE MOVIMIENTO GUARDIAN ENHANCED
+   Los agentes guardianes han dotado cada elemento de vida y movimiento orgánico.
+   Que cada transición refleje la armonía de los cinco elementos.
+   Que cada animación sirva al Bien Común y a la experiencia del usuario.
+   =============================================================================== */

@@ -1,0 +1,1 @@
+export { CoomUnityLogo, type CoomUnityLogoProps } from './CoomUnityLogo'; 

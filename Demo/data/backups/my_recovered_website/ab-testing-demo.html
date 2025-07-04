@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demo A/B Testing - Densidad de Interfaz | CoomÜnity</title>
+    
+    <!-- CSS Styles -->
+    <link rel="stylesheet" href="shared/css/design-system.css">
+    <link rel="stylesheet" href="shared/css/heuristic-16-adaptive-contextual.css">
+    <link rel="stylesheet" href="shared/css/ab-testing-variations.css">
+    
+    <!-- GA4 Configuration -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-XXXXXXXXXX');
+    </script>
+    
+    <style>
+        /* Demo-specific styles */
+        .demo-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .demo-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+        }
+        
+        .demo-info {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .demo-controls {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            min-width: 250px;
+        }
+        
+        .demo-controls h4 {
+            margin: 0 0 10px 0;
+            color: #2d3748;
+        }
+        
+        .debug-info {
+            font-family: 'Monaco', 'Consolas', monospace;
+            font-size: 12px;
+            background: #1a202c;
+            color: #68d391;
+            padding: 10px;
+            border-radius: 4px;
+            margin-top: 10px;
+        }
+        
+        .conversion-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .conversion-btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.2s ease;
+        }
+        
+        .conversion-btn.primary {
+            background: #3182ce;
+            color: white;
+        }
+        
+        .conversion-btn.secondary {
+            background: #e2e8f0;
+            color: #2d3748;
+        }
+        
+        .conversion-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="demo-container">
+        <!-- Demo Header -->
+        <div class="demo-header">
+            <h1>🧪 Demo A/B Testing - Densidad de Interfaz</h1>
+            <p>Esta página demuestra el sistema de A/B testing implementado para probar diferentes densidades de interfaz.</p>
+        </div>
+
+        <!-- Demo Controls (Fixed position) -->
+        <div class="demo-controls">
+            <h4>🔧 Controles de Demo</h4>
+            <p><strong>Grupo Asignado:</strong> <span id="assigned-group">Cargando...</span></p>
+            <p><strong>Test ID:</strong> <span id="test-id">interface_density</span></p>
+            
+            <div class="debug-info" id="debug-info">
+                Inicializando...
+            </div>
+            
+            <div class="conversion-buttons">
+                <button class="conversion-btn primary" onclick="trackConversion('button_click')">
+                    📊 Conversión
+                </button>
+                <button class="conversion-btn secondary" onclick="showTestMetrics()">
+                    📈 Métricas
+                </button>
+            </div>
+        </div>
+
+        <!-- Demo Info -->
+        <div class="demo-info">
+            <h3>📋 Información del Test</h3>
+            <p><strong>Objetivo:</strong> Comparar el impacto de la densidad de interfaz en la experiencia del usuario.</p>
+            <p><strong>Variantes:</strong></p>
+            <ul>
+                <li><strong>Grupo A (Control):</strong> Densidad normal - Espaciado estándar para máxima legibilidad</li>
+                <li><strong>Grupo B (Variante):</strong> Densidad compacta - Espaciado reducido para mayor eficiencia</li>
+            </ul>
+            <p><strong>Métricas:</strong> Clics en navegación, uso de sugerencias, tiempo de sesión, descubrimiento de features</p>
+        </div>
+
+        <!-- Adaptive Navigation (Target Element 1) -->
+        <nav class="adaptive-navigation" data-ab-feature="navigation">
+            <h3>🧭 Navegación Adaptativa</h3>
+            <div class="adaptive-nav-items">
+                <a href="#" class="adaptive-nav-item" onclick="trackNavigation('inicio')">🏠 Inicio</a>
+                <a href="#" class="adaptive-nav-item" onclick="trackNavigation('explorar')">🔍 Explorar</a>
+                <a href="#" class="adaptive-nav-item" onclick="trackNavigation('comunidad')">👥 Comunidad</a>
+                <a href="#" class="adaptive-nav-item" onclick="trackNavigation('perfil')">👤 Perfil</a>
+                <a href="#" class="adaptive-nav-item" onclick="trackNavigation('configuracion')">⚙️ Configuración</a>
+            </div>
+        </nav>
+
+        <!-- Adaptive Grid with Cards (Target Element 2) -->
+        <div class="adaptive-container">
+            <h3>📱 Contenido Adaptativo</h3>
+            <div class="adaptive-grid">
+                <div class="contextual-card">
+                    <h4>🎯 Personalización Inteligente</h4>
+                    <p>La interfaz se adapta automáticamente según tu comportamiento y preferencias. Esta tarjeta mostrará diferentes niveles de densidad según tu grupo asignado.</p>
+                    <button class="adaptive-control" onclick="trackFeatureUse('personalization')">
+                        Configurar
+                    </button>
+                </div>
+                
+                <div class="contextual-card">
+                    <h4>📊 Análisis de Comportamiento</h4>
+                    <p>Monitoreamos cómo interactúas con diferentes elementos para optimizar la experiencia. Los datos son anónimos y se usan solo para mejorar la UX.</p>
+                    <button class="adaptive-control" onclick="trackFeatureUse('analytics')">
+                        Ver Datos
+                    </button>
+                </div>
+                
+                <div class="contextual-card">
+                    <h4>🔄 Adaptación Contextual</h4>
+                    <p>La densidad de la interfaz se ajusta automáticamente según el dispositivo, hora del día y patrones de uso para maximizar la eficiencia.</p>
+                    <button class="adaptive-control" onclick="trackFeatureUse('adaptation')">
+                        Personalizar
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Smart Suggestions (Target Element 3) -->
+        <div class="smart-suggestions" data-ab-feature="suggestions">
+            <h3>💡 Sugerencias Inteligentes</h3>
+            <div class="suggestion-list">
+                <div class="suggestion-item" onclick="trackSuggestion('workflow')">
+                    🚀 Optimizar flujo de trabajo
+                </div>
+                <div class="suggestion-item" onclick="trackSuggestion('shortcuts')">
+                    ⌨️ Aprende atajos de teclado
+                </div>
+                <div class="suggestion-item" onclick="trackSuggestion('features')">
+                    ✨ Descubre nuevas funciones
+                </div>
+                <div class="suggestion-item" onclick="trackSuggestion('customization')">
+                    🎨 Personaliza tu espacio
+                </div>
+            </div>
+        </div>
+
+        <!-- Adaptive Controls (Target Element 4) -->
+        <div class="adaptive-controls" data-ab-feature="controls">
+            <h3>🎛️ Controles Adaptativos</h3>
+            <div class="control-grid">
+                <button class="adaptive-control" onclick="cycleDensity()">
+                    📏 Densidad
+                </button>
+                <button class="adaptive-control" onclick="cycleTheme()">
+                    🌙 Tema
+                </button>
+                <button class="adaptive-control" onclick="toggleAnimations()">
+                    ⚡ Animaciones
+                </button>
+                <button class="adaptive-control" onclick="showHelp()">
+                    ❓ Ayuda
+                </button>
+            </div>
+        </div>
+
+        <!-- Real-time Metrics Display -->
+        <div class="demo-info">
+            <h3>📈 Métricas en Tiempo Real</h3>
+            <div id="metrics-display">
+                <p>Las métricas aparecerán aquí conforme interactúes con los elementos...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Load Required Scripts -->
+    <script src="shared/js/ga4-events.js"></script>
+    <script src="shared/js/ab-testing-manager.js"></script>
+    
+    <!-- Demo-specific JavaScript -->
+    <script>
+        // Demo state
+        let interactionCount = 0;
+        let conversionCount = 0;
+        let sessionStartTime = Date.now();
+
+        // Initialize demo when DOM is ready
+        document.addEventListener('DOMContentLoaded', function() {
+            // Wait for A/B Testing Manager to initialize
+            setTimeout(() => {
+                updateDemoControls();
+                startMetricsUpdater();
+            }, 500);
+        });
+
+        // Update demo controls with current test state
+        function updateDemoControls() {
+            if (window.ABTesting) {
+                const group = window.ABTesting.getUserGroup('interface_density');
+                const activeTests = window.ABTesting.getActiveTests();
+                
+                document.getElementById('assigned-group').textContent = 
+                    group ? `Grupo ${group}` : 'No asignado';
+                
+                const debugInfo = {
+                    grupo: group,
+                    tests_activos: activeTests,
+                    sesion_id: sessionStorage.getItem('ab_session_id'),
+                    usuario_id: localStorage.getItem('ab_user_id')?.substring(0, 20) + '...'
+                };
+                
+                document.getElementById('debug-info').textContent = 
+                    JSON.stringify(debugInfo, null, 2);
+            }
+        }
+
+        // Track navigation clicks
+        function trackNavigation(page) {
+            if (window.ABTesting) {
+                window.ABTesting.trackConversion('navigation_use', {
+                    page: page,
+                    timestamp: Date.now()
+                });
+                
+                interactionCount++;
+                updateMetricsDisplay(`🧭 Navegación: ${page}`);
+            }
+        }
+
+        // Track feature usage
+        function trackFeatureUse(feature) {
+            if (window.ABTesting) {
+                window.ABTesting.trackConversion('feature_discovery', {
+                    feature: feature,
+                    method: 'button_click'
+                });
+                
+                interactionCount++;
+                updateMetricsDisplay(`🎯 Feature: ${feature}`);
+            }
+        }
+
+        // Track suggestion clicks
+        function trackSuggestion(suggestion) {
+            if (window.ABTesting) {
+                window.ABTesting.trackConversion('feature_discovery', {
+                    suggestion_type: suggestion,
+                    source: 'smart_suggestions'
+                });
+                
+                interactionCount++;
+                updateMetricsDisplay(`💡 Sugerencia: ${suggestion}`);
+            }
+        }
+
+        // Manual conversion tracking
+        function trackConversion(type) {
+            if (window.ABTesting) {
+                window.ABTesting.trackConversion(type, {
+                    manual_trigger: true,
+                    demo_source: 'control_panel'
+                });
+                
+                conversionCount++;
+                updateMetricsDisplay(`📊 Conversión manual: ${type}`);
+            }
+        }
+
+        // Show test metrics
+        function showTestMetrics() {
+            if (window.ABTesting) {
+                const metrics = window.ABTesting.getTestMetrics('interface_density');
+                alert('Métricas del Test:\n\n' + JSON.stringify(metrics, null, 2));
+            }
+        }
+
+        // Adaptive control functions
+        function cycleDensity() {
+            const body = document.body;
+            const currentDensity = body.classList.contains('density-compact') ? 'compact' :
+                                 body.classList.contains('density-comfortable') ? 'comfortable' :
+                                 body.classList.contains('density-spacious') ? 'spacious' : 'normal';
+            
+            const densities = ['normal', 'comfortable', 'compact', 'spacious'];
+            const currentIndex = densities.indexOf(currentDensity);
+            const nextIndex = (currentIndex + 1) % densities.length;
+            const nextDensity = densities[nextIndex];
+            
+            // Remove all density classes and add new one
+            body.classList.remove('density-normal', 'density-comfortable', 'density-compact', 'density-spacious');
+            body.classList.add(`density-${nextDensity}`);
+            
+            trackFeatureUse('density_control');
+            updateMetricsDisplay(`📏 Densidad cambiada a: ${nextDensity}`);
+        }
+
+        function cycleTheme() {
+            const html = document.documentElement;
+            const currentTheme = html.classList.contains('theme-dark') ? 'dark' :
+                               html.classList.contains('theme-light') ? 'light' : 'auto';
+            
+            const themes = ['auto', 'light', 'dark'];
+            const currentIndex = themes.indexOf(currentTheme);
+            const nextIndex = (currentIndex + 1) % themes.length;
+            const nextTheme = themes[nextIndex];
+            
+            html.classList.remove('theme-auto', 'theme-light', 'theme-dark');
+            html.classList.add(`theme-${nextTheme}`);
+            
+            trackFeatureUse('theme_control');
+            updateMetricsDisplay(`🌙 Tema cambiado a: ${nextTheme}`);
+        }
+
+        function toggleAnimations() {
+            const body = document.body;
+            const disabled = body.classList.toggle('animations-disabled');
+            
+            if (disabled) {
+                body.style.setProperty('--current-animations', '0ms');
+            } else {
+                body.style.removeProperty('--current-animations');
+            }
+            
+            trackFeatureUse('animation_control');
+            updateMetricsDisplay(`⚡ Animaciones: ${disabled ? 'deshabilitadas' : 'habilitadas'}`);
+        }
+
+        function showHelp() {
+            const helpText = `
+🧪 Demo A/B Testing - Ayuda
+
+Esta demo muestra cómo funciona el sistema de A/B testing:
+
+1. Al cargar la página, se te asigna aleatoriamente a un grupo (A o B)
+2. Según tu grupo, verás diferentes densidades de interfaz:
+   - Grupo A: Densidad normal (control)
+   - Grupo B: Densidad compacta (variante)
+
+3. Todas tus interacciones se registran para análisis:
+   - Clics en navegación
+   - Uso de sugerencias
+   - Descubrimiento de features
+   - Tiempo de sesión
+
+4. Los datos se envían a GA4 para análisis posterior
+
+¡Prueba interactuar con diferentes elementos para ver el tracking en acción!
+            `;
+            alert(helpText);
+            trackFeatureUse('help_system');
+        }
+
+        // Update metrics display
+        function updateMetricsDisplay(lastAction) {
+            const sessionTime = Math.floor((Date.now() - sessionStartTime) / 1000);
+            const group = window.ABTesting ? window.ABTesting.getUserGroup('interface_density') : 'N/A';
+            
+            const metricsHtml = `
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                    <div style="background: #ebf8ff; padding: 15px; border-radius: 8px;">
+                        <strong>👤 Grupo Asignado</strong><br>
+                        Grupo ${group || 'No asignado'}
+                    </div>
+                    <div style="background: #f0fff4; padding: 15px; border-radius: 8px;">
+                        <strong>🔄 Interacciones</strong><br>
+                        ${interactionCount} acciones
+                    </div>
+                    <div style="background: #fefcbf; padding: 15px; border-radius: 8px;">
+                        <strong>📊 Conversiones</strong><br>
+                        ${conversionCount} eventos
+                    </div>
+                    <div style="background: #fed7e2; padding: 15px; border-radius: 8px;">
+                        <strong>⏱️ Tiempo de Sesión</strong><br>
+                        ${sessionTime}s
+                    </div>
+                </div>
+                <div style="margin-top: 15px; padding: 10px; background: #f7fafc; border-radius: 4px; font-family: monospace; font-size: 12px;">
+                    <strong>Última acción:</strong> ${lastAction || 'Ninguna'}
+                </div>
+            `;
+            
+            document.getElementById('metrics-display').innerHTML = metricsHtml;
+        }
+
+        // Start metrics updater
+        function startMetricsUpdater() {
+            updateMetricsDisplay();
+            setInterval(() => {
+                updateMetricsDisplay();
+            }, 5000);
+        }
+
+        // Track page unload
+        window.addEventListener('beforeunload', function() {
+            if (window.ABTesting) {
+                const sessionDuration = Date.now() - sessionStartTime;
+                window.ABTesting.trackConversion('session_complete', {
+                    total_duration_seconds: Math.floor(sessionDuration / 1000),
+                    total_interactions: interactionCount,
+                    total_conversions: conversionCount
+                });
+            }
+        });
+    </script>
+</body>
+</html> 

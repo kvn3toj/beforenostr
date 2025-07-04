@@ -1,0 +1,52 @@
+🎬 REFERENCIA RÁPIDA - GUARDIANES DEL ÜPLAY
+=====================================================
+
+📍 UBICACIÓN REQUERIDA: /Users/kevinp/Movies/GAMIFIER-copy/
+
+🎯 COMANDOS PRINCIPALES:
+------------------------
+
+# Mostrar ayuda completa
+./scripts/invoke-guardian-uplay.sh
+
+# Verificar estado del sistema
+./scripts/invoke-guardian-uplay.sh STATUS
+
+# Mostrar métricas actuales
+./scripts/invoke-guardian-uplay.sh METRICS
+
+# Ejecutar tests de UPlay
+./scripts/invoke-guardian-uplay.sh TEST
+
+👑 INVOCACIÓN DE GUARDIANES:
+---------------------------
+
+# 🎨 ARIA - Frontend & Estética
+./scripts/invoke-guardian-uplay.sh ARIA
+
+# 🎮 ZENO - Experiencia de Usuario
+./scripts/invoke-guardian-uplay.sh ZENO
+
+# 🏗️ ATLAS - Infraestructura & Performance
+./scripts/invoke-guardian-uplay.sh ATLAS
+
+# 🧪 SAGE - Testing & Calidad
+./scripts/invoke-guardian-uplay.sh SAGE
+
+# 🔮 NIRA - Analytics & Métricas
+./scripts/invoke-guardian-uplay.sh NIRA
+
+# 🔄 PHOENIX - Refactoring & Arquitectura
+./scripts/invoke-guardian-uplay.sh PHOENIX
+
+# 🌍 COSMOS - Integración & Sincronización
+./scripts/invoke-guardian-uplay.sh COSMOS
+
+# 🌟 TODOS LOS GUARDIANES
+./scripts/invoke-guardian-uplay.sh ALL
+
+🚀 COMANDO DE TRANSFORMACIÓN SUPREMA:
+------------------------------------
+./scripts/invoke-guardian-uplay.sh ALL
+
+¡Que comience la perfección del ÜPlay! 🌟

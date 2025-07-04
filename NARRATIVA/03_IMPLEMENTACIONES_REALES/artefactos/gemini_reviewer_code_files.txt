@@ -1,0 +1,15 @@
+./gemini-code-reviewer/index.tsx
+./gemini-code-reviewer/App.tsx
+./gemini-code-reviewer/index.html
+./gemini-code-reviewer/types.ts
+./gemini-code-reviewer/components/FeedbackDisplay.tsx
+./gemini-code-reviewer/components/ErrorDisplay.tsx
+./gemini-code-reviewer/components/Footer.tsx
+./gemini-code-reviewer/components/LoadingSpinner.tsx
+./gemini-code-reviewer/components/LanguageSelector.tsx
+./gemini-code-reviewer/components/CodeInput.tsx
+./gemini-code-reviewer/components/Header.tsx
+./gemini-code-reviewer/components/FeedbackItemCard.tsx
+./gemini-code-reviewer/constants.ts
+./gemini-code-reviewer/vite.config.ts
+./gemini-code-reviewer/services/geminiService.ts

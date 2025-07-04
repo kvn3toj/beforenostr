@@ -1,0 +1,799 @@
+/* ===== UPLAY CORPORATE DESIGN SYSTEM - REDISEÑO VISUAL CORPORATIVO ===== */
+/* Implementación Completa con Paleta Corporativa Oficial CoomÜnity */
+/* Colores Corporativos: Navy #142C46, Blue #005CA9, Purple Dark #392768, Purple #5C2483 */
+/* ✅ CORRECCIÓN DE CONTRASTE - Solucionando problemas de visibilidad de texto */
+
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap");
+
+/* ============ VARIABLES CSS CORPORATIVAS ============ */
+:root {
+  /* Paleta Corporativa UPlay - Colores Oficiales */
+  --uplay-navy: #142c46; /* C: 100 M: 80 Y: 45 K: 45 */
+  --uplay-blue: #005ca9; /* C: 100 M: 60 Y: 0 K: 0 */
+  --uplay-purple-dark: #392768; /* C: 95 M: 100 Y: 25 K: 10 */
+  --uplay-purple: #5c2483; /* C: 80 M: 100 Y: 0 K: 0 */
+
+  /* Variantes derivadas para UI */
+  --uplay-navy-light: #1a3555;
+  --uplay-navy-dark: #0f1f35;
+  --uplay-blue-light: #0066bc;
+  --uplay-blue-dark: #004a89;
+  --uplay-purple-light: #6b2d96;
+  --uplay-purple-ultra: #4a1d68;
+
+  /* ✅ NUEVOS COLORES PARA MEJOR CONTRASTE */
+  --uplay-text-primary: #1e293b; /* Gris muy oscuro para mejor legibilidad */
+  --uplay-text-secondary: #334155; /* Gris medio para texto secundario */
+  --uplay-text-muted: #64748b; /* Gris suave para texto terciario */
+  --uplay-text-blue: #0f4c75; /* Azul oscuro para mejor contraste */
+  --uplay-text-purple: #4c1d95; /* Púrpura oscuro para mejor contraste */
+
+  /* Grises corporativos complementarios */
+  --uplay-gray-50: #f8fafc;
+  --uplay-gray-100: #f1f5f9;
+  --uplay-gray-200: #e2e8f0;
+  --uplay-gray-300: #cbd5e1;
+  --uplay-gray-400: #94a3b8;
+  --uplay-gray-500: #64748b;
+  --uplay-gray-600: #475569;
+  --uplay-gray-700: #334155;
+  --uplay-gray-800: #1e293b;
+  --uplay-gray-900: #0f172a;
+
+  /* Gradientes corporativos */
+  --gradient-primary: linear-gradient(135deg, var(--uplay-blue), var(--uplay-purple));
+  --gradient-header: linear-gradient(135deg, var(--uplay-navy) 0%, var(--uplay-blue) 50%, var(--uplay-purple-dark) 100%);
+  --gradient-blue: linear-gradient(135deg, var(--uplay-blue), var(--uplay-blue-light));
+  --gradient-purple: linear-gradient(135deg, var(--uplay-purple), var(--uplay-purple-light));
+  --gradient-navy: linear-gradient(135deg, var(--uplay-navy), var(--uplay-navy-light));
+  --gradient-card: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
+
+  /* Sombras corporativas */
+  --shadow-sm: 0 1px 2px 0 rgba(20, 44, 70, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(20, 44, 70, 0.1), 0 2px 4px -1px rgba(20, 44, 70, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(20, 44, 70, 0.1), 0 4px 6px -2px rgba(20, 44, 70, 0.05);
+  --shadow-blue: 0 6px 20px rgba(0, 92, 169, 0.3);
+  --shadow-purple: 0 4px 12px rgba(92, 36, 131, 0.3);
+  --shadow-navy: 0 4px 12px rgba(20, 44, 70, 0.3);
+  --shadow-hover-blue: 0 8px 25px rgba(0, 92, 169, 0.4);
+  --shadow-hover-purple: 0 6px 16px rgba(92, 36, 131, 0.4);
+  --shadow-hover-navy: 0 6px 16px rgba(20, 44, 70, 0.4);
+}
+
+/* ============ HEADER PRINCIPAL - IDENTIDAD CORPORATIVA ============ */
+
+/* ✅ Header con gradiente corporativo definido */
+.header-uplay-advanced {
+  background: var(--gradient-header);
+  border-bottom: 3px solid var(--uplay-purple);
+  box-shadow: 0 8px 32px rgba(20, 44, 70, 0.3);
+  position: relative;
+  overflow: hidden;
+  padding: 2rem 0;
+}
+
+.header-uplay-advanced::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.1) 0%,
+    transparent 50%,
+    rgba(255, 255, 255, 0.05) 100%
+  );
+  pointer-events: none;
+}
+
+.header-uplay-advanced::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.3) 50%,
+    transparent 100%
+  );
+}
+
+/* ✅ Badge corporativo con glassmorphism */
+.header-badge {
+  background: rgba(255, 255, 255, 0.15);
+  border: 2px solid rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(10px);
+  border-radius: 50px;
+  padding: 8px 20px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: white;
+  font-weight: 600;
+  font-size: 0.875rem;
+  margin-bottom: 1rem;
+  transition: all 0.3s ease;
+}
+
+.header-badge:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.4);
+  transform: translateY(-1px);
+}
+
+/* Títulos del header con contraste mejorado */
+.header-text-enhanced {
+  color: white !important;
+  font-weight: 800 !important;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  margin-bottom: 0.5rem !important;
+  line-height: 1.2;
+}
+
+.header-subtitle-enhanced {
+  color: rgba(255, 255, 255, 0.95) !important;
+  font-weight: 500 !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  line-height: 1.4;
+}
+
+/* ============ CARDS DE MÉTRICAS - MARCOS CORPORATIVOS MEJORADOS ============ */
+
+/* ✅ Card métrica principal con marco azul */
+.metric-card {
+  background: var(--gradient-card);
+  border: 2px solid var(--uplay-gray-200);
+  border-left: 4px solid var(--uplay-blue);
+  border-radius: 16px;
+  box-shadow: var(--shadow-md), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  padding: 1.5rem;
+  min-height: 140px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  overflow: hidden;
+}
+
+.metric-card:hover {
+  border-color: var(--uplay-blue);
+  border-left-color: var(--uplay-purple);
+  box-shadow: var(--shadow-hover-blue);
+  transform: translateY(-2px);
+}
+
+.metric-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(0, 92, 169, 0.02) 0%,
+    transparent 50%,
+    rgba(92, 36, 131, 0.02) 100%
+  );
+  pointer-events: none;
+}
+
+/* Card de logros con marco púrpura */
+.achievement-card {
+  background: var(--gradient-card);
+  border: 2px solid var(--uplay-gray-200);
+  border-left: 4px solid var(--uplay-purple);
+  border-radius: 16px;
+  box-shadow: var(--shadow-md), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  padding: 1.5rem;
+  min-height: 140px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  overflow: hidden;
+}
+
+.achievement-card:hover {
+  border-color: var(--uplay-purple);
+  border-left-color: var(--uplay-blue);
+  box-shadow: var(--shadow-hover-purple);
+  transform: translateY(-2px);
+}
+
+/* Card de actividad con marcos navy */
+.activity-card {
+  background: var(--gradient-card);
+  border: 2px solid var(--uplay-gray-200);
+  border-left: 4px solid var(--uplay-navy);
+  border-radius: 16px;
+  box-shadow: var(--shadow-md), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  padding: 1.5rem;
+  min-height: 140px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  overflow: hidden;
+}
+
+.activity-card:hover {
+  border-color: var(--uplay-navy);
+  border-left-color: var(--uplay-purple);
+  box-shadow: var(--shadow-hover-navy);
+  transform: translateY(-2px);
+}
+
+/* ============ SISTEMA DE ICONOS CORPORATIVO ============ */
+
+.icon-container-base {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid white;
+  position: relative;
+  transition: all 0.3s ease;
+  margin-bottom: 1rem;
+  box-shadow: var(--shadow-sm);
+}
+
+/* Iconos con colores corporativos */
+.icon-container-blue {
+  background: var(--gradient-blue);
+  box-shadow: var(--shadow-blue);
+}
+
+.icon-container-blue:hover {
+  transform: scale(1.05);
+  box-shadow: var(--shadow-hover-blue);
+}
+
+.icon-container-purple {
+  background: var(--gradient-purple);
+  box-shadow: var(--shadow-purple);
+}
+
+.icon-container-purple:hover {
+  transform: scale(1.05);
+  box-shadow: var(--shadow-hover-purple);
+}
+
+.icon-container-navy {
+  background: var(--gradient-navy);
+  box-shadow: var(--shadow-navy);
+}
+
+.icon-container-navy:hover {
+  transform: scale(1.05);
+  box-shadow: var(--shadow-hover-navy);
+}
+
+/* ============ SECCIÓN DE PROGRESO - REDISEÑO COMPLETO ============ */
+
+/* ✅ Sección de progreso con identidad corporativa */
+.progress-section {
+  background: linear-gradient(145deg, var(--uplay-gray-50) 0%, white 100%);
+  border: 2px solid var(--uplay-gray-200);
+  border-radius: 20px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6), var(--shadow-lg);
+  overflow: hidden;
+  margin: 2rem 0;
+}
+
+.progress-header {
+  background: var(--gradient-navy);
+  color: white;
+  padding: 1rem 1.5rem;
+  border-bottom: 3px solid var(--uplay-purple);
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+.progress-bar-advanced {
+  background: var(--uplay-gray-200);
+  border-radius: 8px;
+  height: 12px;
+  overflow: hidden;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.progress-fill-advanced {
+  background: var(--gradient-primary);
+  border-radius: 8px;
+  height: 100%;
+  box-shadow: 0 2px 8px rgba(0, 92, 169, 0.3);
+  transition: width 0.5s ease;
+  position: relative;
+}
+
+.progress-fill-advanced::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.3) 50%,
+    transparent 100%
+  );
+  animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+/* Días de progreso */
+.progress-day-completed {
+  background: var(--gradient-primary);
+  border: 2px solid white;
+  box-shadow: var(--shadow-blue);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 700;
+  font-size: 0.875rem;
+}
+
+.progress-day-pending {
+  background: var(--uplay-gray-200);
+  border: 2px solid var(--uplay-gray-300);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--uplay-gray-500);
+  font-weight: 600;
+  font-size: 0.875rem;
+}
+
+/* ============ NAVEGACIÓN TABS - ESTILO CORPORATIVO ============ */
+
+/* ✅ Tabs con diseño corporativo */
+.tab-container-advanced {
+  background: white;
+  border: 2px solid var(--uplay-gray-200);
+  border-radius: 16px;
+  padding: 6px;
+  box-shadow: var(--shadow-md);
+  display: flex;
+  gap: 4px;
+  margin: 2rem 0;
+}
+
+.tab-active {
+  background: var(--gradient-primary);
+  color: white;
+  border: 2px solid var(--uplay-purple);
+  border-radius: 12px;
+  padding: 12px 20px;
+  font-weight: 600;
+  font-size: 0.875rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: var(--shadow-blue), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.tab-inactive {
+  color: var(--uplay-gray-600);
+  background: transparent;
+  border: 2px solid transparent;
+  border-radius: 12px;
+  padding: 12px 20px;
+  font-weight: 500;
+  font-size: 0.875rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.tab-inactive:hover {
+  color: var(--uplay-blue);
+  background: rgba(0, 92, 169, 0.05);
+  border-color: var(--uplay-blue);
+}
+
+.tab-badge {
+  background: var(--uplay-purple);
+  color: white;
+  border-radius: 50%;
+  padding: 2px 6px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  min-width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 4px;
+  box-shadow: 0 2px 4px rgba(92, 36, 131, 0.3);
+}
+
+/* ============ BOTONES DE ACCIÓN - JERARQUÍA VISUAL ============ */
+
+/* ✅ Botones con jerarquía corporativa */
+.btn-primary-uplay {
+  background: var(--gradient-primary);
+  color: white;
+  border: 2px solid var(--uplay-purple);
+  border-radius: 12px;
+  padding: 16px 24px;
+  font-weight: 700;
+  font-size: 1rem;
+  box-shadow: var(--shadow-blue), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-primary-uplay:hover {
+  background: linear-gradient(135deg, var(--uplay-blue-light), var(--uplay-purple-light));
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 92, 169, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+}
+
+.btn-secondary-uplay {
+  background: white;
+  color: var(--uplay-navy);
+  border: 2px solid var(--uplay-blue);
+  border-radius: 12px;
+  padding: 16px 24px;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-secondary-uplay:hover {
+  background: var(--uplay-blue);
+  color: white;
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-blue);
+}
+
+/* ============ SECCIÓN DE LOGROS - MARCOS DEFINIDOS ============ */
+
+/* ✅ Cards de logros con marcos corporativos */
+.achievement-item {
+  background: var(--gradient-card);
+  border: 2px solid var(--uplay-gray-200);
+  border-left: 5px solid var(--uplay-purple);
+  border-radius: 16px;
+  box-shadow: var(--shadow-md), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  padding: 1.5rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.achievement-item:hover {
+  border-left-color: var(--uplay-blue);
+  box-shadow: var(--shadow-hover-blue), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  transform: translateY(-3px);
+}
+
+.achievement-icon {
+  background: var(--gradient-purple);
+  border: 3px solid white;
+  box-shadow: var(--shadow-purple);
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.achievement-completed .achievement-icon {
+  background: linear-gradient(135deg, #10b981, #059669);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+}
+
+/* ============ GALERÍA PRINCIPAL - REORGANIZACIÓN VISUAL ============ */
+
+/* ✅ Galería con marcos corporativos */
+.gallery-section {
+  background: var(--uplay-gray-50);
+  border: 2px solid var(--uplay-gray-200);
+  border-radius: 20px;
+  padding: 24px;
+  margin: 2rem 0;
+}
+
+.gallery-header {
+  background: var(--gradient-navy);
+  color: white;
+  padding: 16px 24px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  border: 3px solid var(--uplay-purple);
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+.category-tag {
+  background: var(--gradient-primary);
+  color: white;
+  border: 2px solid white;
+  border-radius: 20px;
+  padding: 6px 16px;
+  font-size: 12px;
+  font-weight: 600;
+  box-shadow: var(--shadow-blue);
+  display: inline-block;
+  margin: 4px;
+}
+
+.content-item {
+  background: white;
+  border: 2px solid var(--uplay-gray-200);
+  border-radius: 12px;
+  padding: 16px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+}
+
+.content-item:hover {
+  border-color: var(--uplay-blue);
+  box-shadow: var(--shadow-hover-blue);
+  transform: translateY(-2px);
+}
+
+/* ============ BACKGROUNDS Y SECCIONES ============ */
+
+.main-background-advanced {
+  background: linear-gradient(
+    135deg,
+    var(--uplay-gray-50) 0%,
+    white 50%,
+    var(--uplay-gray-50) 100%
+  );
+  min-height: 100vh;
+}
+
+.section-background-blue {
+  background: linear-gradient(145deg, white 0%, var(--uplay-gray-50) 100%);
+  border-radius: 20px;
+  padding: 2rem;
+  margin: 2rem 0;
+  border: 1px solid var(--uplay-gray-200);
+  box-shadow: var(--shadow-sm);
+}
+
+/* ============ GRADIENTES DE TEXTO MEJORADOS ============ */
+
+.text-gradient-blue {
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 800;
+}
+
+/* ✅ NUEVAS CLASES PARA MEJOR CONTRASTE DE TEXTO */
+.text-uplay-primary {
+  color: var(--uplay-text-primary) !important;
+}
+
+.text-uplay-secondary {
+  color: var(--uplay-text-secondary) !important;
+}
+
+.text-uplay-muted {
+  color: var(--uplay-text-muted) !important;
+}
+
+.text-uplay-blue {
+  color: var(--uplay-text-blue) !important;
+}
+
+.text-uplay-purple {
+  color: var(--uplay-text-purple) !important;
+}
+
+.text-dark-contrast {
+  color: var(--uplay-gray-800) !important;
+  font-weight: 600;
+}
+
+.text-medium-contrast {
+  color: var(--uplay-gray-700) !important;
+  font-weight: 500;
+}
+
+/* ============ SPACING UTILITIES ============ */
+
+.spacing-section {
+  margin: 2rem 0;
+}
+
+.spacing-component {
+  margin: 1rem 0;
+}
+
+.spacing-element {
+  margin: 0.5rem 0;
+}
+
+/* ============ RESPONSIVE DESIGN ============ */
+
+@media (max-width: 768px) {
+  .header-uplay-advanced {
+    background: var(--uplay-navy);
+    border-bottom: 2px solid var(--uplay-purple);
+    padding: 1.5rem 0;
+  }
+
+  .metric-card,
+  .achievement-card,
+  .activity-card {
+    border-left-width: 3px;
+    padding: 1rem;
+    min-height: 120px;
+  }
+
+  .tab-active,
+  .tab-inactive {
+    padding: 10px 16px;
+    font-size: 0.8rem;
+  }
+
+  .icon-container-base {
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+
+  .progress-day-completed,
+  .progress-day-pending {
+    width: 35px;
+    height: 35px;
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .header-uplay-advanced {
+    background: var(--uplay-blue);
+    padding: 1rem 0;
+  }
+
+  .metric-card,
+  .achievement-card,
+  .activity-card {
+    border-left-width: 2px;
+    padding: 0.75rem;
+    min-height: 100px;
+  }
+
+  .tab-active,
+  .tab-inactive {
+    padding: 8px 12px;
+    font-size: 0.75rem;
+  }
+
+  .icon-container-base {
+    width: 2rem;
+    height: 2rem;
+  }
+
+  .progress-day-completed,
+  .progress-day-pending {
+    width: 30px;
+    height: 30px;
+    font-size: 0.75rem;
+  }
+
+  .btn-primary-uplay,
+  .btn-secondary-uplay {
+    padding: 12px 16px;
+    font-size: 0.875rem;
+  }
+}
+
+/* ============ ANIMACIONES Y INTERACTIVIDAD ============ */
+
+.interactive-scale:hover {
+  transform: scale(1.05);
+}
+
+.interactive-lift:hover {
+  transform: translateY(-2px);
+}
+
+.interactive-glow:hover {
+  box-shadow: 0 0 20px rgba(0, 92, 169, 0.3);
+}
+
+/* Animaciones corporativas */
+@keyframes corporateSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes corporateFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.animate-slide-in {
+  animation: corporateSlideIn 0.6s ease-out;
+}
+
+.animate-fade-in {
+  animation: corporateFadeIn 0.8s ease-out;
+}
+
+/* ============ ACCESIBILIDAD ============ */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+.tab-active:focus,
+.btn-primary-uplay:focus,
+.btn-secondary-uplay:focus {
+  outline: 2px solid var(--uplay-blue);
+  outline-offset: 2px;
+}
+
+/* ============ ALTO CONTRASTE ============ */
+
+@media (prefers-contrast: high) {
+  .metric-card,
+  .achievement-card,
+  .activity-card {
+    border-width: 3px;
+  }
+
+  .tab-active {
+    border-width: 3px;
+  }
+}

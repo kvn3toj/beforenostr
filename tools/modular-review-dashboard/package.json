@@ -1,0 +1,71 @@
+{
+  "name": "modular-review-dashboard",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "🤖 Dashboard para visualización de reportes del Gemini Modular Code Reviewer - CoomÜnity",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "preview": "vite preview",
+    "clean": "rm -rf dist node_modules/.vite",
+    "type-check": "tsc --noEmit",
+    "review:all": "cd ../../ && node scripts/utilities/gemini-modular-review.js --all --delay 1000",
+    "review:module": "cd ../../ && node scripts/utilities/gemini-modular-review.js --module",
+    "generate:trends": "cd ../../ && node scripts/utilities/generate-trends.js",
+    "send:alerts": "cd ../../ && node scripts/utilities/send-alerts.js",
+    "setup:review": "cd ../../ && bash scripts/utilities/setup-modular-review.sh"
+  },
+  "dependencies": {
+    "@emotion/styled": "^11.11.5",
+    "@mui/icons-material": "^5.15.15",
+    "@mui/material": "^5.15.15",
+    "axios": "^1.6.8",
+    "date-fns": "^3.6.0",
+    "framer-motion": "^11.0.24",
+    "fuse.js": "^7.0.0",
+    "lodash": "^4.17.21",
+    "react-dropzone": "^14.2.3",
+    "react-hot-toast": "^2.4.1",
+    "react-query": "^3.39.3",
+    "react-router-dom": "^6.22.3",
+    "react-syntax-highlighter": "^15.5.0",
+    "react-virtualized": "^9.22.5",
+    "recharts": "^2.12.2"
+  },
+  "devDependencies": {
+    "@types/lodash": "^4.17.0",
+    "@types/react": "^18.2.66",
+    "@types/react-dom": "^18.2.22",
+    "@types/react-syntax-highlighter": "^15.5.11",
+    "@types/react-virtualized": "^9.21.29",
+    "@typescript-eslint/eslint-plugin": "^7.2.0",
+    "@typescript-eslint/parser": "^7.2.0",
+    "@vitejs/plugin-react": "^4.2.1",
+    "eslint": "^8.57.0",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-refresh": "^0.4.6",
+    "typescript": "^5.2.2",
+    "vite": "^5.2.0"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/your-org/coomunity-project.git",
+    "directory": "tools/modular-review-dashboard"
+  },
+  "keywords": [
+    "code-review",
+    "gemini-ai",
+    "dashboard",
+    "coomunity",
+    "react",
+    "typescript"
+  ],
+  "author": "CoomÜnity Team",
+  "license": "MIT"
+}

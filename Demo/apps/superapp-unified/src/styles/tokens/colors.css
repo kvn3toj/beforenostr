@@ -1,0 +1,281 @@
+/* ===== COOMUNITY DESIGN TOKENS - COLORS ===== */
+
+:root {
+  /* ============ PALETA CORPORATIVA UPLAY COMPLETA ============ */
+  /* Colores principales definidos según guía corporativa */
+  --uplay-navy: #142c46; /* C: 100 M: 80 Y: 45 K: 45 */
+  --uplay-blue: #005ca9; /* C: 100 M: 60 Y: 0 K: 0 */
+  --uplay-purple-dark: #392768; /* C: 95 M: 100 Y: 25 K: 10 */
+  --uplay-purple: #5c2483; /* C: 80 M: 100 Y: 0 K: 0 */
+
+  /* 🆕 COLORES SECUNDARIOS CORPORATIVOS - GUÍA AVANZADA */
+  --uplay-burgundy: #5d1626; /* C: 50 M: 100 Y: 70 K: 50 */
+  --uplay-magenta: #d6075c; /* C: 10 M: 100 Y: 40 K: 0 */
+  --uplay-forest: #004134; /* C: 90 M: 40 Y: 70 K: 60 */
+  --uplay-green: #3e8638; /* C: 80 M: 30 Y: 100 K: 0 */
+
+  /* 🆕 NEUTROS CORPORATIVOS */
+  --uplay-white: #ffffff; /* C: 0 M: 0 Y: 0 K: 0 */
+  --uplay-black: #1d1d1b; /* C: 0 M: 0 Y: 0 K: 100 */
+  --uplay-yellow: #fbba00; /* C: 0 M: 30 Y: 100 K: 0 */
+
+  /* Variantes derivadas para UI */
+  --uplay-navy-light: #1a3555;
+  --uplay-navy-dark: #0f1f35;
+  --uplay-blue-light: #0066bc;
+  --uplay-blue-dark: #004a89;
+  --uplay-purple-light: #6b2d96;
+  --uplay-purple-ultra: #4a1d68;
+
+  /* 🆕 VARIANTES DE COLORES SECUNDARIOS */
+  --uplay-magenta-light: #e63a7a;
+  --uplay-magenta-dark: #b30548;
+  --uplay-green-light: #4cad44;
+  --uplay-green-dark: #2d5f2a;
+  --uplay-forest-light: #00594a;
+  --uplay-forest-dark: #002e26;
+  --uplay-yellow-light: #ffcc33;
+  --uplay-yellow-dark: #cc9400;
+
+  /* Grises corporativos complementarios */
+  --uplay-gray-50: #f8fafc;
+  --uplay-gray-100: #f1f5f9;
+  --uplay-gray-200: #e2e8f0;
+  --uplay-gray-300: #cbd5e1;
+  --uplay-gray-400: #94a3b8;
+  --uplay-gray-500: #64748b;
+  --uplay-gray-600: #475569;
+  --uplay-gray-700: #334155;
+  --uplay-gray-800: #1e293b;
+  --uplay-gray-900: #0f172a;
+
+  /* ============ GRADIENTES CORPORATIVOS AVANZADOS ============ */
+  /* Gradientes principales */
+  --gradient-header-uplay: linear-gradient(
+    135deg,
+    var(--uplay-navy) 0%,
+    var(--uplay-blue) 25%,
+    var(--uplay-purple-dark) 50%,
+    var(--uplay-purple) 75%,
+    var(--uplay-magenta) 100%
+  );
+  --gradient-primary-uplay: linear-gradient(135deg, var(--uplay-blue), var(--uplay-purple));
+  --gradient-secondary-uplay: linear-gradient(135deg, var(--uplay-green), var(--uplay-forest));
+  --gradient-tertiary-uplay: linear-gradient(135deg, var(--uplay-magenta), var(--uplay-burgundy));
+  --gradient-warning-uplay: linear-gradient(135deg, var(--uplay-yellow), #e6a500);
+
+  /* 🆕 GRADIENTES MULTI-COLOR PARA PROGRESS BARS */
+  --gradient-progress-uplay: linear-gradient(
+    90deg,
+    var(--uplay-green) 0%,
+    var(--uplay-blue) 50%,
+    var(--uplay-purple) 100%
+  );
+  --gradient-success-uplay: linear-gradient(
+    135deg,
+    var(--uplay-green) 0%,
+    var(--uplay-blue) 100%
+  );
+  --gradient-achievement-uplay: linear-gradient(
+    135deg,
+    var(--uplay-purple) 0%,
+    var(--uplay-magenta) 100%
+  );
+
+  /* ============ SOMBRAS CORPORATIVAS AVANZADAS ============ */
+  /* Sombras con colores de marca */
+  --shadow-navy-uplay: 0 8px 32px rgba(20, 44, 70, 0.15), 0 2px 8px rgba(0, 92, 169, 0.08);
+  --shadow-blue-uplay: 0 12px 24px rgba(0, 92, 169, 0.1), 0 4px 8px rgba(20, 44, 70, 0.05);
+  --shadow-purple-uplay: 0 12px 24px rgba(92, 36, 131, 0.1), 0 4px 8px rgba(57, 39, 104, 0.05);
+  --shadow-green-uplay: 0 12px 24px rgba(62, 134, 56, 0.1), 0 4px 8px rgba(0, 65, 52, 0.05);
+  --shadow-magenta-uplay: 0 12px 24px rgba(214, 7, 92, 0.1), 0 4px 8px rgba(93, 22, 38, 0.05);
+
+  /* 🆕 SOMBRAS HOVER INTENSIFICADAS */
+  --shadow-hover-blue: 0 20px 40px rgba(0, 92, 169, 0.2), 0 8px 16px rgba(0, 92, 169, 0.15);
+  --shadow-hover-purple: 0 20px 40px rgba(92, 36, 131, 0.2), 0 8px 16px rgba(92, 36, 131, 0.15);
+  --shadow-hover-green: 0 20px 40px rgba(62, 134, 56, 0.2), 0 8px 16px rgba(62, 134, 56, 0.15);
+  --shadow-hover-magenta: 0 20px 40px rgba(214, 7, 92, 0.2), 0 8px 16px rgba(214, 7, 92, 0.15);
+
+  /* ============ GLASSMORPHISM EFFECTS ============ */
+  --glass-uplay: rgba(255, 255, 255, 0.95);
+  --glass-uplay-light: rgba(248, 250, 252, 0.95);
+  --glass-border-uplay: rgba(20, 44, 70, 0.15);
+  --glass-backdrop-blur: blur(12px);
+
+  /* === COLORES PRIMARIOS COOMUNITY === */
+  --coomunity-primary-50: #faf5ff;
+  --coomunity-primary-100: #f3e8ff;
+  --coomunity-primary-200: #e9d5ff;
+  --coomunity-primary-300: #d8b4fe;
+  --coomunity-primary-400: #c084fc;
+  --coomunity-primary-500: #7c3aed; /* Principal - menos saturado */
+  --coomunity-primary-600: #6d28d9;
+  --coomunity-primary-700: #5b21b6;
+  --coomunity-primary-800: #4c1d95;
+  --coomunity-primary-900: #3c1361;
+
+  /* === COLORES SECUNDARIOS === */
+  --coomunity-gold-50: #fffbeb;
+  --coomunity-gold-100: #fef3c7;
+  --coomunity-gold-200: #fde68a;
+  --coomunity-gold-300: #fcd34d;
+  --coomunity-gold-400: #fbbf24;
+  --coomunity-gold-500: #d97706; /* Más sutil que antes */
+  --coomunity-gold-600: #b45309;
+  --coomunity-gold-700: #92400e;
+  --coomunity-gold-800: #78350f;
+  --coomunity-gold-900: #451a03;
+
+  /* === ELEMENTOS NATURALES - ARMONIZADOS === */
+  --coomunity-earth-50: #fdf8f6;
+  --coomunity-earth-100: #f2e8e5;
+  --coomunity-earth-200: #eaddd7;
+  --coomunity-earth-300: #e0cfc7;
+  --coomunity-earth-400: #d2bab0;
+  --coomunity-earth-500: #92400e; /* Más cálido */
+  --coomunity-earth-600: #7c2d12;
+  --coomunity-earth-700: #6c2410;
+  --coomunity-earth-800: #581c0c;
+  --coomunity-earth-900: #451a03;
+
+  --coomunity-water-50: #ecfeff;
+  --coomunity-water-100: #cffafe;
+  --coomunity-water-200: #a5f3fc;
+  --coomunity-water-300: #67e8f9;
+  --coomunity-water-400: #22d3ee;
+  --coomunity-water-500: #0891b2; /* Más profundo */
+  --coomunity-water-600: #0e7490;
+  --coomunity-water-700: #155e75;
+  --coomunity-water-800: #164e63;
+  --coomunity-water-900: #083344;
+
+  --coomunity-fire-50: #fef2f2;
+  --coomunity-fire-100: #fee2e2;
+  --coomunity-fire-200: #fecaca;
+  --coomunity-fire-300: #fca5a5;
+  --coomunity-fire-400: #f87171;
+  --coomunity-fire-500: #dc2626; /* Menos agresivo */
+  --coomunity-fire-600: #b91c1c;
+  --coomunity-fire-700: #991b1b;
+  --coomunity-fire-800: #7f1d1d;
+  --coomunity-fire-900: #450a0a;
+
+  --coomunity-air-50: #faf5ff;
+  --coomunity-air-100: #f3e8ff;
+  --coomunity-air-200: #e9d5ff;
+  --coomunity-air-300: #d8b4fe;
+  --coomunity-air-400: #c084fc;
+  --coomunity-air-500: #7c3aed; /* Consistente con primary */
+  --coomunity-air-600: #6d28d9;
+  --coomunity-air-700: #5b21b6;
+  --coomunity-air-800: #4c1d95;
+  --coomunity-air-900: #3c1361;
+
+  /* === COLORES SEMÁNTICOS === */
+  --color-success-50: #ecfdf5;
+  --color-success-100: #d1fae5;
+  --color-success-200: #a7f3d0;
+  --color-success-300: #6ee7b7;
+  --color-success-400: #34d399;
+  --color-success-500: #10b981;
+  --color-success-600: #059669;
+  --color-success-700: #047857;
+  --color-success-800: #065f46;
+  --color-success-900: #064e3b;
+
+  --color-warning-50: #fffbeb;
+  --color-warning-100: #fef3c7;
+  --color-warning-200: #fde68a;
+  --color-warning-300: #fcd34d;
+  --color-warning-400: #fbbf24;
+  --color-warning-500: #f59e0b;
+  --color-warning-600: #d97706;
+  --color-warning-700: #b45309;
+  --color-warning-800: #92400e;
+  --color-warning-900: #78350f;
+
+  --color-error-50: #fef2f2;
+  --color-error-100: #fee2e2;
+  --color-error-200: #fecaca;
+  --color-error-300: #fca5a5;
+  --color-error-400: #f87171;
+  --color-error-500: #ef4444;
+  --color-error-600: #dc2626;
+  --color-error-700: #b91c1c;
+  --color-error-800: #991b1b;
+  --color-error-900: #7f1d1d;
+
+  --color-info-50: #eff6ff;
+  --color-info-100: #dbeafe;
+  --color-info-200: #bfdbfe;
+  --color-info-300: #93c5fd;
+  --color-info-400: #60a5fa;
+  --color-info-500: #3b82f6;
+  --color-info-600: #2563eb;
+  --color-info-700: #1d4ed8;
+  --color-info-800: #1e40af;
+  --color-info-900: #1e3a8a;
+
+  /* === COLORES NEUTROS === */
+  --color-white: #ffffff;
+  --color-gray-50: #f9fafb;
+  --color-gray-100: #f3f4f6;
+  --color-gray-200: #e5e7eb;
+  --color-gray-300: #d1d5db;
+  --color-gray-400: #9ca3af;
+  --color-gray-500: #6b7280;
+  --color-gray-600: #4b5563;
+  --color-gray-700: #374151;
+  --color-gray-800: #1f2937;
+  --color-gray-900: #111827;
+  --color-black: #000000;
+
+  /* === COLORES DE TEXTO === */
+  --color-text-primary: var(--color-gray-900);
+  --color-text-secondary: var(--color-gray-600);
+  --color-text-tertiary: var(--color-gray-500);
+  --color-text-inverse: var(--color-white);
+  --color-text-disabled: var(--color-gray-400);
+
+  /* === COLORES DE FONDO === */
+  --color-background-primary: var(--color-white);
+  --color-background-secondary: var(--color-gray-50);
+  --color-background-tertiary: var(--color-gray-100);
+  --color-background-inverse: var(--color-gray-900);
+
+  /* === COLORES DE BORDE === */
+  --color-border-primary: var(--color-gray-200);
+  --color-border-secondary: var(--color-gray-300);
+  --color-border-focus: var(--coomunity-primary-500);
+  --color-border-error: var(--color-error-500);
+  --color-border-success: var(--color-success-500);
+}
+
+/* === MODO OSCURO (FUTURO) === */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-text-primary: var(--color-gray-100);
+    --color-text-secondary: var(--color-gray-300);
+    --color-text-tertiary: var(--color-gray-400);
+    --color-text-inverse: var(--color-gray-900);
+
+    --color-background-primary: var(--color-gray-900);
+    --color-background-secondary: var(--color-gray-800);
+    --color-background-tertiary: var(--color-gray-700);
+    --color-background-inverse: var(--color-white);
+
+    --color-border-primary: var(--color-gray-700);
+    --color-border-secondary: var(--color-gray-600);
+  }
+}
+
+/* === ALTO CONTRASTE === */
+@media (prefers-contrast: high) {
+  :root {
+    --coomunity-primary-500: #000000;
+    --color-text-primary: #000000;
+    --color-text-secondary: #000000;
+    --color-background-primary: #ffffff;
+    --color-border-primary: #000000;
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "mcpServers": {
+    "coomunity_filesystem": {
+      "name": "CoomÜnity Project Files - Core",
+      "description": "Intelligent file navigation and context for the CoomÜnity monorepo - optimized for <40 tools limit",
+      "command": "npx",
+      "args": ["@modelcontextprotocol/server-filesystem", "/Users/kevinp/Movies/GAMIFIER-copy"],
+      "enabled": true
+    },
+    "coomunity_github": {
+      "name": "CoomÜnity Repository Manager - Core",
+      "description": "GitHub integration for repository management and collaboration - optimized for performance",
+      "command": "npx",
+      "args": ["@modelcontextprotocol/server-github"],
+      "env": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": ""
+      },
+      "enabled": true
+    }
+  },
+  "_metadata": {
+    "optimized_for": "CoomÜnity Philosophy",
+    "optimization_date": "2025-01-23",
+    "total_expected_tools": "~37 (11 filesystem + 26 github)",
+    "philosophy": "Neguentropía aplicada - eficiencia y reciprocidad con el sistema",
+    "notes": [
+      "Configuración optimizada para rendimiento máximo",
+      "Solo servidores esenciales y funcionales",
+      "Nombres con underscores (compatibilidad Cursor)",
+      "Orden prioritario: filesystem primero (ANA - Curadora Cósmica), github segundo (Cosmos - Integración)"
+    ]
+  }
+}

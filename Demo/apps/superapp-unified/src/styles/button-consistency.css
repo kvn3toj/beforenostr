@@ -1,0 +1,86 @@
+/* Consistencia de Border-Radius para Botones */
+/* Este archivo asegura que todos los botones tengan un border-radius consistente de 12px */
+
+/* Sobrescribir cualquier estilo de border-radius para botones con alta especificidad */
+.btn,
+button.btn,
+.btn:not(.btn-round):not(.btn-fab):not(.btn-just-icon) {
+  border-radius: 12px !important;
+}
+
+.btn-primary,
+.btn-secondary,
+.btn-success,
+.btn-info,
+.btn-warning,
+.btn-danger,
+.btn-light,
+.btn-dark,
+button.btn-primary,
+button.btn-secondary,
+button.btn-success,
+button.btn-info,
+button.btn-warning,
+button.btn-danger,
+button.btn-light,
+button.btn-dark {
+  border-radius: 12px !important;
+}
+
+/* Botones de Material UI */
+.MuiButton-root,
+.MuiButton-root.MuiButton-contained,
+.MuiButton-root.MuiButton-outlined,
+.MuiButton-root.MuiButton-text {
+  border-radius: 12px !important;
+}
+
+/* Sobrescribir clases de Bootstrap/Material-Kit que puedan conflictir */
+.rounded.btn,
+.btn.rounded {
+  border-radius: 12px !important;
+}
+
+/* Botones en grupos específicos */
+.btn-group .btn:not(.btn-round):not(.btn-fab) {
+  border-radius: 12px !important;
+}
+
+/* Sobrescribir reglas específicas de material-kit con alta especificidad */
+.btn.btn-primary:not(.btn-round):not(.btn-fab),
+.btn.btn-secondary:not(.btn-round):not(.btn-fab),
+.btn.btn-success:not(.btn-round):not(.btn-fab),
+.btn.btn-info:not(.btn-round):not(.btn-fab),
+.btn.btn-warning:not(.btn-round):not(.btn-fab),
+.btn.btn-danger:not(.btn-round):not(.btn-fab) {
+  border-radius: 12px !important;
+}
+
+/* Botones round y fab deben mantener sus estilos específicos */
+.btn.btn-round,
+button.btn-round {
+  border-radius: 30px !important;
+}
+
+.btn.btn-fab,
+.btn.btn-just-icon,
+button.btn-fab,
+button.btn-just-icon {
+  border-radius: 50% !important;
+}
+
+/* Sobrescribir específicamente clases utility de Bootstrap */
+.rounded:not(.btn-round):not(.btn-fab):not(.btn-just-icon) {
+  border-radius: 12px !important;
+}
+
+/* Para elementos que pueden tener múltiples clases */
+button[class*="btn"]:not(.btn-round):not(.btn-fab):not(.btn-just-icon),
+.btn[class*="btn"]:not(.btn-round):not(.btn-fab):not(.btn-just-icon) {
+  border-radius: 12px !important;
+}
+
+/* Clases de utilidad para override específico */
+.border-radius-consistent {
+  border-radius: 12px !important;
+} 

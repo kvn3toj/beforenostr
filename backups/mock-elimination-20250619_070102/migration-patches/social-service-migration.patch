@@ -1,0 +1,16 @@
+# MIGRACIÓN social.service.ts
+# DE: Mock social data
+# A: Backend NestJS social endpoints
+
+BACKEND ENDPOINTS DISPONIBLES:
+- GET /social/feed
+- POST /social/posts
+- GET /social/groups
+- POST /social/groups/join
+- GET /study-rooms (WebSocket support)
+
+FEATURES IMPLEMENTADAS EN BACKEND:
+- Social feed real
+- Group management
+- WebSocket chat
+- Study rooms

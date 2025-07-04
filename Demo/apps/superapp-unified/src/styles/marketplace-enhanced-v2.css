@@ -1,0 +1,645 @@
+/**
+ * 🎨 Estilos Avanzados del Marketplace CoomÜnity v2.0
+ * Nuevas mejoras con micro-interacciones y efectos premium
+ */
+
+/* ===== VARIABLES CSS AVANZADAS ===== */
+:root {
+  /* Colores principales mejorados */
+  --marketplace-primary: #740056;
+  --marketplace-primary-light: #a64d79;
+  --marketplace-secondary: #4caf50;
+  --marketplace-accent: #ffd700;
+  --marketplace-danger: #ff4444;
+  --marketplace-info: #2196f3;
+
+  /* Gradientes premium */
+  --gradient-coomünity: linear-gradient(135deg, #740056 0%, #a64d79 100%);
+  --gradient-success: linear-gradient(135deg, #4caf50 0%, #66bb6a 100%);
+  --gradient-premium: linear-gradient(135deg, #ffd700 0%, #ffa000 100%);
+  --gradient-sunset: linear-gradient(135deg, #ff6b6b 0%, #4ecdc4 100%);
+
+  /* Sombras mejoradas */
+  --shadow-soft: 0 2px 8px rgba(0, 0, 0, 0.04);
+  --shadow-medium: 0 4px 12px rgba(0, 0, 0, 0.08);
+  --shadow-strong: 0 8px 24px rgba(0, 0, 0, 0.12);
+  --shadow-premium: 0 12px 28px rgba(116, 0, 86, 0.15);
+  --shadow-glow: 0 0 20px rgba(116, 0, 86, 0.3);
+
+  /* Transiciones suaves */
+  --transition-quick: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-smooth: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-bounce: 500ms cubic-bezier(0.68, -0.55, 0.265, 1.55);
+
+  /* Espaciado responsivo */
+  --space-2xs: 2px;
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+  --space-2xl: 48px;
+}
+
+/* ===== GRID MEJORADO DE 2 COLUMNAS ===== */
+.marketplace-grid-enhanced {
+  display: grid !important;
+  grid-template-columns: repeat(2, 1fr) !important;
+  gap: var(--space-md) !important;
+  padding: var(--space-md) !important;
+  width: 100% !important;
+}
+
+@media (min-width: 768px) {
+  .marketplace-grid-enhanced {
+    gap: var(--space-lg) !important;
+    padding: var(--space-lg) !important;
+  }
+}
+
+@media (min-width: 1024px) {
+  .marketplace-grid-enhanced {
+    gap: var(--space-xl) !important;
+    padding: var(--space-xl) !important;
+  }
+}
+
+/* ===== CARDS PREMIUM MEJORADAS ===== */
+.marketplace-card-enhanced {
+  background: #ffffff !important;
+  border: 1px solid #e0e0e0 !important;
+  border-radius: 18px !important;
+  overflow: hidden !important;
+  transition: all var(--transition-smooth) !important;
+  box-shadow: var(--shadow-medium) !important;
+  position: relative !important;
+  height: 100% !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+.marketplace-card-enhanced::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--gradient-coomünity);
+  opacity: 0;
+  transition: opacity var(--transition-smooth);
+  pointer-events: none;
+  z-index: -1;
+}
+
+.marketplace-card-enhanced:hover {
+  transform: translateY(-8px) !important;
+  box-shadow: var(--shadow-premium) !important;
+  border-color: #c0c0c0 !important;
+}
+
+.marketplace-card-enhanced:hover::before {
+  opacity: 0.02;
+}
+
+/* Estados especiales */
+.marketplace-card-enhanced.featured {
+  border: 2px solid var(--marketplace-accent) !important;
+  box-shadow: 0 4px 20px rgba(255, 215, 0, 0.2) !important;
+}
+
+.marketplace-card-enhanced.trending {
+  border: 2px solid #ff6b6b !important;
+  box-shadow: 0 4px 20px rgba(255, 107, 107, 0.2) !important;
+}
+
+/* ===== IMÁGENES PREMIUM ===== */
+.marketplace-image-container {
+  position: relative !important;
+  overflow: hidden !important;
+  aspect-ratio: 16/10 !important;
+  background: linear-gradient(45deg, #f5f5f5 0%, #e0e0e0 100%) !important;
+}
+
+.marketplace-image {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  transition: all var(--transition-smooth) !important;
+}
+
+.marketplace-card-enhanced:hover .marketplace-image {
+  transform: scale(1.05) !important;
+  filter: brightness(1.1) contrast(1.05) !important;
+}
+
+/* Overlays de imagen */
+.marketplace-image-overlay {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    transparent 60%,
+    rgba(0, 0, 0, 0.1) 100%
+  ) !important;
+  opacity: 0 !important;
+  transition: opacity var(--transition-smooth) !important;
+}
+
+.marketplace-card-enhanced:hover .marketplace-image-overlay {
+  opacity: 1 !important;
+}
+
+/* ===== NAVEGACIÓN DE IMÁGENES ===== */
+.image-nav-button {
+  position: absolute !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  background: rgba(255, 255, 255, 0.9) !important;
+  backdrop-filter: blur(10px) !important;
+  border: none !important;
+  border-radius: 50% !important;
+  width: 32px !important;
+  height: 32px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  transition: all var(--transition-quick) !important;
+  z-index: 3 !important;
+}
+
+.image-nav-button:hover {
+  background: rgba(255, 255, 255, 1) !important;
+  transform: translateY(-50%) scale(1.1) !important;
+  box-shadow: var(--shadow-medium) !important;
+}
+
+.image-nav-button.prev {
+  left: var(--space-sm) !important;
+}
+
+.image-nav-button.next {
+  right: var(--space-sm) !important;
+}
+
+/* Indicadores de imagen */
+.image-indicators {
+  position: absolute !important;
+  bottom: var(--space-sm) !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  display: flex !important;
+  gap: var(--space-xs) !important;
+  z-index: 3 !important;
+}
+
+.image-indicator {
+  width: 6px !important;
+  height: 6px !important;
+  border-radius: 50% !important;
+  background: rgba(255, 255, 255, 0.5) !important;
+  cursor: pointer !important;
+  transition: all var(--transition-quick) !important;
+}
+
+.image-indicator.active {
+  background: white !important;
+  transform: scale(1.2) !important;
+}
+
+/* ===== BOTONES DE ACCIÓN RÁPIDA ===== */
+.quick-actions-overlay {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  background: linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.7) 0%,
+    rgba(0, 0, 0, 0.2) 40%,
+    transparent 70%
+  ) !important;
+  display: flex !important;
+  align-items: flex-end !important;
+  justify-content: center !important;
+  padding: var(--space-lg) !important;
+  opacity: 0 !important;
+  transition: opacity var(--transition-smooth) !important;
+  z-index: 2 !important;
+}
+
+.marketplace-card-enhanced:hover .quick-actions-overlay {
+  opacity: 1 !important;
+}
+
+.quick-action-button {
+  background: rgba(255, 255, 255, 0.95) !important;
+  backdrop-filter: blur(10px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  border-radius: 12px !important;
+  width: 40px !important;
+  height: 40px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  transition: all var(--transition-quick) !important;
+  margin: 0 var(--space-xs) !important;
+}
+
+.quick-action-button:hover {
+  background: white !important;
+  transform: scale(1.1) !important;
+  box-shadow: var(--shadow-strong) !important;
+}
+
+.quick-action-button.cart {
+  background: var(--gradient-success) !important;
+  color: white !important;
+}
+
+.quick-action-button.cart:hover {
+  background: var(--gradient-success) !important;
+  box-shadow: 0 4px 20px rgba(76, 175, 80, 0.4) !important;
+}
+
+.quick-action-button.whatsapp {
+  background: linear-gradient(135deg, #25d366 0%, #128c7e 100%) !important;
+  color: white !important;
+}
+
+.quick-action-button.whatsapp:hover {
+  box-shadow: 0 4px 20px rgba(37, 211, 102, 0.4) !important;
+}
+
+/* ===== BADGES Y ETIQUETAS ===== */
+.status-badges {
+  position: absolute !important;
+  top: var(--space-sm) !important;
+  left: var(--space-sm) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: var(--space-xs) !important;
+  z-index: 2 !important;
+}
+
+.status-badge {
+  padding: var(--space-xs) var(--space-sm) !important;
+  border-radius: 12px !important;
+  font-size: 10px !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+  backdrop-filter: blur(10px) !important;
+  animation: fadeInScale 0.3s ease-out !important;
+}
+
+.status-badge.featured {
+  background: var(--gradient-premium) !important;
+  color: #000 !important;
+  box-shadow: 0 2px 8px rgba(255, 215, 0, 0.3) !important;
+}
+
+.status-badge.trending {
+  background: var(--gradient-sunset) !important;
+  color: white !important;
+  box-shadow: 0 2px 8px rgba(255, 107, 107, 0.3) !important;
+}
+
+.status-badge.discount {
+  background: linear-gradient(135deg, #ff4444 0%, #ff6666 100%) !important;
+  color: white !important;
+  box-shadow: 0 2px 8px rgba(255, 68, 68, 0.3) !important;
+}
+
+/* ===== BOTÓN DE FAVORITO ===== */
+.favorite-button {
+  position: absolute !important;
+  top: var(--space-sm) !important;
+  right: var(--space-sm) !important;
+  background: rgba(255, 255, 255, 0.9) !important;
+  backdrop-filter: blur(10px) !important;
+  border: none !important;
+  border-radius: 50% !important;
+  width: 36px !important;
+  height: 36px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  transition: all var(--transition-quick) !important;
+  z-index: 3 !important;
+}
+
+.favorite-button:hover {
+  background: white !important;
+  transform: scale(1.1) !important;
+  box-shadow: var(--shadow-medium) !important;
+}
+
+.favorite-button.active {
+  background: linear-gradient(135deg, #ff4444 0%, #ff6666 100%) !important;
+  color: white !important;
+}
+
+/* ===== CONTENIDO DE LA CARD ===== */
+.card-content-enhanced {
+  padding: var(--space-lg) !important;
+  flex-grow: 1 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  background: white !important;
+}
+
+.card-title {
+  font-size: 16px !important;
+  font-weight: 700 !important;
+  line-height: 1.3 !important;
+  margin-bottom: var(--space-sm) !important;
+  display: -webkit-box !important;
+  -webkit-line-clamp: 2 !important;
+  -webkit-box-orient: vertical !important;
+  overflow: hidden !important;
+  color: #1a1a1a !important;
+}
+
+.card-description {
+  font-size: 14px !important;
+  line-height: 1.4 !important;
+  color: #666666 !important;
+  margin-bottom: var(--space-md) !important;
+  display: -webkit-box !important;
+  -webkit-line-clamp: 2 !important;
+  -webkit-box-orient: vertical !important;
+  overflow: hidden !important;
+  flex-grow: 1 !important;
+}
+
+.price-section {
+  margin-bottom: var(--space-md) !important;
+}
+
+.current-price {
+  font-size: 20px !important;
+  font-weight: 700 !important;
+  color: var(--marketplace-secondary) !important;
+  line-height: 1 !important;
+}
+
+.original-price {
+  font-size: 14px !important;
+  color: #999999 !important;
+  text-decoration: line-through !important;
+  margin-left: var(--space-sm) !important;
+}
+
+/* ===== INFORMACIÓN DEL VENDEDOR ===== */
+.seller-info {
+  display: flex !important;
+  align-items: center !important;
+  gap: var(--space-sm) !important;
+  padding-top: var(--space-md) !important;
+  border-top: 1px solid #f0f0f0 !important;
+  margin-top: auto !important;
+}
+
+.seller-avatar {
+  width: 32px !important;
+  height: 32px !important;
+  border-radius: 50% !important;
+  object-fit: cover !important;
+  border: 2px solid white !important;
+  box-shadow: var(--shadow-soft) !important;
+}
+
+.seller-details {
+  flex-grow: 1 !important;
+  min-width: 0 !important;
+}
+
+.seller-name {
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  color: #1a1a1a !important;
+  margin-bottom: 2px !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+.seller-location {
+  font-size: 12px !important;
+  color: #666666 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+/* ===== RATING Y RESEÑAS ===== */
+.rating-section {
+  display: flex !important;
+  align-items: center !important;
+  gap: var(--space-xs) !important;
+  margin-bottom: var(--space-sm) !important;
+}
+
+.rating-stars {
+  display: flex !important;
+  align-items: center !important;
+}
+
+.rating-count {
+  font-size: 12px !important;
+  color: #666666 !important;
+}
+
+/* ===== TAGS ===== */
+.tags-section {
+  display: flex !important;
+  gap: var(--space-xs) !important;
+  flex-wrap: wrap !important;
+  margin-top: var(--space-sm) !important;
+}
+
+.tag-chip {
+  padding: 2px 6px !important;
+  background: #f5f5f5 !important;
+  border: 1px solid #e0e0e0 !important;
+  border-radius: 8px !important;
+  font-size: 10px !important;
+  color: #666666 !important;
+  transition: all var(--transition-quick) !important;
+}
+
+.tag-chip:hover {
+  background: var(--marketplace-primary) !important;
+  color: white !important;
+  transform: scale(1.05) !important;
+}
+
+/* ===== ANIMACIONES ===== */
+@keyframes fadeInScale {
+  0% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes slideInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes shimmerLoading {
+  0% {
+    background-position: -200px 0;
+  }
+  100% {
+    background-position: 200px 0;
+  }
+}
+
+@keyframes heartbeat {
+  0% {
+    transform: scale(1);
+  }
+  14% {
+    transform: scale(1.2);
+  }
+  28% {
+    transform: scale(1);
+  }
+  42% {
+    transform: scale(1.2);
+  }
+  70% {
+    transform: scale(1);
+  }
+}
+
+/* ===== ESTADOS DE LOADING ===== */
+.loading-skeleton {
+  background: linear-gradient(
+    90deg,
+    #f0f0f0 25%,
+    #e0e0e0 50%,
+    #f0f0f0 75%
+  ) !important;
+  background-size: 200% 100% !important;
+  animation: shimmerLoading 1.5s infinite !important;
+  border-radius: 8px !important;
+}
+
+.loading-pulse {
+  animation: pulse 2s ease-in-out infinite !important;
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+@media (max-width: 480px) {
+  .marketplace-card-enhanced {
+    border-radius: 14px !important;
+  }
+
+  .card-content-enhanced {
+    padding: var(--space-md) !important;
+  }
+
+  .card-title {
+    font-size: 14px !important;
+  }
+
+  .current-price {
+    font-size: 18px !important;
+  }
+
+  .quick-action-button {
+    width: 36px !important;
+    height: 36px !important;
+  }
+}
+
+@media (min-width: 768px) {
+  .marketplace-card-enhanced:hover {
+    transform: translateY(-10px) !important;
+  }
+}
+
+/* ===== ACCESIBILIDAD ===== */
+@media (prefers-reduced-motion: reduce) {
+  .marketplace-card-enhanced,
+  .marketplace-image,
+  .quick-action-button,
+  .favorite-button {
+    transition: none !important;
+    animation: none !important;
+  }
+
+  .marketplace-card-enhanced:hover {
+    transform: none !important;
+  }
+}
+
+/* ===== ALTO CONTRASTE ===== */
+@media (prefers-contrast: high) {
+  .marketplace-card-enhanced {
+    border: 2px solid #000000 !important;
+  }
+
+  .quick-action-button {
+    border: 2px solid #000000 !important;
+  }
+
+  .status-badge {
+    border: 1px solid #000000 !important;
+  }
+}
+
+/* ===== DARK MODE ===== */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --marketplace-primary: #a64d79;
+    --shadow-medium: 0 4px 12px rgba(255, 255, 255, 0.1);
+    --shadow-strong: 0 8px 24px rgba(255, 255, 255, 0.15);
+  }
+
+  .marketplace-card-enhanced {
+    background: #1a1a1a !important;
+    border-color: #333333 !important;
+  }
+
+  .card-content-enhanced {
+    background: #1a1a1a !important;
+  }
+
+  .card-title {
+    color: #ffffff !important;
+  }
+
+  .card-description {
+    color: #cccccc !important;
+  }
+
+  .seller-name {
+    color: #ffffff !important;
+  }
+
+  .seller-location {
+    color: #cccccc !important;
+  }
+}

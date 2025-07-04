@@ -1,0 +1,482 @@
+/* ===============================================================================
+   🍂 NAVEGACIÓN OTOÑAL - COOMUNITY SUPERAPP
+   Header, Sidebar y Bottom Navigation con paleta otoño verdadero
+   =============================================================================== */
+
+/* ===== HEADER PRINCIPAL OTOÑAL ===== */
+[data-testid='app-header'],
+header[class*='MuiAppBar'] {
+  background: var(--gradient-autumn-primary) !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 16px rgba(124, 45, 18, 0.2) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+  backdrop-filter: blur(10px) !important;
+}
+
+/* Logo con efecto otoñal */
+.brand-logo {
+  background: linear-gradient(45deg, #ffffff 30%, #fef3c7 90%) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+  font-weight: 800 !important;
+}
+
+/* Iconos del header */
+.MuiAppBar-root .MuiIconButton-root {
+  color: #ffffff !important;
+  background: rgba(255, 255, 255, 0.1) !important;
+  border-radius: 12px !important;
+  transition: all 250ms cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.MuiAppBar-root .MuiIconButton-root:hover {
+  background: rgba(255, 255, 255, 0.2) !important;
+  transform: scale(1.08) translateY(-1px) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2) !important;
+}
+
+/* Búsqueda en header */
+.search-container {
+  background: rgba(255, 255, 255, 0.15) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  border-radius: 16px !important;
+  backdrop-filter: blur(10px) !important;
+  transition: all 250ms cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.search-container:hover {
+  background: rgba(255, 255, 255, 0.25) !important;
+  border-color: rgba(255, 255, 255, 0.3) !important;
+  transform: scale(1.02) !important;
+}
+
+.search-container input {
+  color: #ffffff !important;
+  font-weight: 500 !important;
+}
+
+.search-container input::placeholder {
+  color: rgba(255, 255, 255, 0.7) !important;
+  font-weight: 500 !important;
+}
+
+/* Badge de notificaciones otoñal */
+.MuiBadge-badge {
+  background: var(--autumn-secondary-500) !important;
+  color: #ffffff !important;
+  font-weight: 700 !important;
+  box-shadow: 0 2px 8px rgba(220, 38, 38, 0.4) !important;
+  border: 2px solid #ffffff !important;
+  animation: autumn-notification-pulse 2s ease-in-out infinite !important;
+}
+
+@keyframes autumn-notification-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    box-shadow: 0 2px 8px rgba(220, 38, 38, 0.4);
+  }
+  50% {
+    transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(220, 38, 38, 0.6);
+  }
+}
+
+/* Avatar del usuario */
+.user-avatar {
+  border: 3px solid rgba(255, 255, 255, 0.3) !important;
+  transition: all 250ms cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.user-avatar:hover {
+  border-color: rgba(255, 255, 255, 0.6) !important;
+  transform: scale(1.1) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Menú de perfil otoñal */
+.profile-menu .MuiPaper-root {
+  background: var(--card-bg-autumn) !important;
+  border: 2px solid var(--border-subtle-autumn) !important;
+  border-radius: 20px !important;
+  box-shadow: var(--card-shadow-hover-autumn) !important;
+  backdrop-filter: blur(15px) !important;
+}
+
+.profile-menu .MuiMenuItem-root {
+  border-radius: 12px !important;
+  margin: 4px 8px !important;
+  color: var(--home-text-primary-autumn) !important;
+  transition: var(--transition-autumn-fast) !important;
+}
+
+.profile-menu .MuiMenuItem-root:hover {
+  background: var(--autumn-primary-50) !important;
+  color: var(--autumn-primary-700) !important;
+  transform: translateX(4px) !important;
+}
+
+/* ===== SIDEBAR OTOÑAL ===== */
+.MuiDrawer-paper,
+nav[role='navigation'].sidebar {
+  background: linear-gradient(
+    180deg,
+    var(--warm-neutral-50) 0%,
+    var(--bg-secondary-autumn) 100%
+  ) !important;
+  border-right: 2px solid var(--border-subtle-autumn) !important;
+  box-shadow: 4px 0 20px rgba(124, 45, 18, 0.1) !important;
+}
+
+/* Elementos del sidebar */
+.MuiListItemButton-root {
+  border-radius: 16px !important;
+  margin: 6px 12px !important;
+  color: var(--warm-neutral-700) !important;
+  transition: all 250ms cubic-bezier(0.4, 0, 0.2, 1) !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+.MuiListItemButton-root::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--gradient-autumn-soft);
+  opacity: 0;
+  transition: opacity 250ms ease;
+  z-index: 0;
+}
+
+.MuiListItemButton-root:hover::before {
+  opacity: 1;
+}
+
+.MuiListItemButton-root:hover {
+  color: var(--autumn-primary-800) !important;
+  transform: translateX(6px) translateY(-1px) !important;
+  box-shadow: 0 4px 12px rgba(249, 115, 22, 0.25) !important;
+}
+
+.MuiListItemButton-root.Mui-selected {
+  background: var(--gradient-autumn-soft) !important;
+  color: var(--autumn-primary-800) !important;
+  border-left: 4px solid var(--autumn-primary-500) !important;
+  font-weight: 700 !important;
+  box-shadow: 0 2px 8px rgba(249, 115, 22, 0.2) !important;
+}
+
+.MuiListItemButton-root.Mui-selected::after {
+  content: '🍂';
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1rem;
+  opacity: 0.7;
+}
+
+/* Iconos del sidebar */
+.MuiListItemIcon-root {
+  color: inherit !important;
+  min-width: 44px !important;
+  transition: all 250ms ease !important;
+  z-index: 1 !important;
+  position: relative !important;
+}
+
+.MuiListItemButton-root:hover .MuiListItemIcon-root {
+  transform: scale(1.1) !important;
+}
+
+.MuiListItemText-primary {
+  font-weight: 600 !important;
+  z-index: 1 !important;
+  position: relative !important;
+}
+
+/* ===== BOTTOM NAVIGATION OTOÑAL ===== */
+.MuiBottomNavigation-root {
+  background: linear-gradient(
+    180deg,
+    var(--warm-neutral-50) 0%,
+    var(--bg-secondary-autumn) 100%
+  ) !important;
+  border-top: 2px solid var(--border-subtle-autumn) !important;
+  box-shadow: 0 -4px 20px rgba(124, 45, 18, 0.15) !important;
+  backdrop-filter: blur(10px) !important;
+}
+
+.MuiBottomNavigationAction-root {
+  color: var(--warm-neutral-600) !important;
+  transition: all 250ms cubic-bezier(0.4, 0, 0.2, 1) !important;
+  border-radius: 16px !important;
+  margin: 4px !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+.MuiBottomNavigationAction-root::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--gradient-autumn-soft);
+  opacity: 0;
+  transition: opacity 250ms ease;
+  transform: translateY(100%);
+}
+
+.MuiBottomNavigationAction-root.Mui-selected {
+  color: var(--autumn-primary-700) !important;
+  background: var(--autumn-primary-100) !important;
+  box-shadow: 0 2px 8px rgba(249, 115, 22, 0.2) !important;
+}
+
+.MuiBottomNavigationAction-root.Mui-selected::before {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.MuiBottomNavigationAction-root:hover:not(.Mui-selected) {
+  color: var(--autumn-primary-600) !important;
+  background: var(--autumn-primary-50) !important;
+  transform: translateY(-2px) !important;
+}
+
+.MuiBottomNavigationAction-root .MuiSvgIcon-root {
+  transition: all 250ms ease !important;
+}
+
+.MuiBottomNavigationAction-root:hover .MuiSvgIcon-root {
+  transform: scale(1.1) !important;
+}
+
+/* ===== BREADCRUMBS OTOÑALES ===== */
+.MuiBreadcrumbs-root {
+  background: var(--warm-neutral-100) !important;
+  border: 1px solid var(--border-subtle-autumn) !important;
+  border-radius: 16px !important;
+  padding: 12px 20px !important;
+  margin-bottom: 24px !important;
+  box-shadow: var(--card-shadow-autumn) !important;
+}
+
+.MuiBreadcrumbs-root .MuiLink-root {
+  color: var(--autumn-primary-600) !important;
+  font-weight: 600 !important;
+  text-decoration: none !important;
+  transition: var(--transition-autumn-fast) !important;
+}
+
+.MuiBreadcrumbs-root .MuiLink-root:hover {
+  color: var(--autumn-primary-700) !important;
+  text-decoration: underline !important;
+  text-underline-offset: 4px !important;
+}
+
+.MuiBreadcrumbs-root .MuiTypography-root {
+  color: var(--warm-neutral-600) !important;
+  font-weight: 600 !important;
+}
+
+.MuiBreadcrumbs-separator {
+  color: var(--warm-neutral-400) !important;
+}
+
+/* ===== TABS NAVEGACIÓN OTOÑAL ===== */
+.MuiTabs-root {
+  background: var(--warm-neutral-100) !important;
+  border-radius: 20px !important;
+  padding: 6px !important;
+  margin-bottom: 24px !important;
+  border: 1px solid var(--border-subtle-autumn) !important;
+  box-shadow: var(--card-shadow-autumn) !important;
+}
+
+.MuiTab-root {
+  color: var(--warm-neutral-600) !important;
+  font-weight: 600 !important;
+  text-transform: none !important;
+  border-radius: 14px !important;
+  margin: 0 4px !important;
+  transition: all 250ms cubic-bezier(0.4, 0, 0.2, 1) !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+.MuiTab-root::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--gradient-autumn-primary);
+  opacity: 0;
+  transition: opacity 250ms ease;
+  z-index: 0;
+}
+
+.MuiTab-root.Mui-selected {
+  color: #ffffff !important;
+  box-shadow: var(--card-shadow-autumn) !important;
+}
+
+.MuiTab-root.Mui-selected::before {
+  opacity: 1;
+}
+
+.MuiTab-root:hover:not(.Mui-selected) {
+  background: var(--autumn-primary-100) !important;
+  color: var(--autumn-primary-700) !important;
+  transform: translateY(-1px) !important;
+}
+
+.MuiTabs-indicator {
+  display: none !important; /* Usamos background en su lugar */
+}
+
+/* ===== SYNC INDICATOR OTOÑAL ===== */
+.sync-indicator {
+  background: rgba(255, 255, 255, 0.1) !important;
+  border-radius: 16px !important;
+  padding: 6px 12px !important;
+  backdrop-filter: blur(10px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+}
+
+.sync-spinner {
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.2)) !important;
+}
+
+/* ===== RESPONSIVE NAVEGACIÓN ===== */
+@media (max-width: 768px) {
+  .MuiAppBar-root .MuiToolbar-root {
+    padding: 8px 12px !important;
+  }
+
+  .search-container {
+    max-width: 280px !important;
+  }
+
+  .brand-logo {
+    font-size: 1.2rem !important;
+  }
+
+  .MuiListItemButton-root {
+    margin: 4px 8px !important;
+    border-radius: 12px !important;
+  }
+
+  .MuiBottomNavigationAction-root {
+    border-radius: 12px !important;
+    margin: 2px !important;
+  }
+
+  .MuiBreadcrumbs-root {
+    padding: 8px 12px !important;
+    font-size: 0.85rem !important;
+  }
+}
+
+/* ===== EFECTOS ESPECIALES NAVEGACIÓN ===== */
+.hamburger-menu:hover {
+  animation: autumn-menu-wiggle 0.5s ease-in-out !important;
+}
+
+@keyframes autumn-menu-wiggle {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(-5deg);
+  }
+  75% {
+    transform: rotate(5deg);
+  }
+}
+
+.notification-button:hover .MuiBadge-badge {
+  animation: autumn-notification-bounce 0.6s ease-in-out !important;
+}
+
+@keyframes autumn-notification-bounce {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.3);
+  }
+}
+
+/* ===== ESTADOS DE CARGA NAVEGACIÓN ===== */
+.loading-navigation {
+  background: linear-gradient(
+    90deg,
+    var(--warm-neutral-200) 0%,
+    var(--warm-neutral-100) 50%,
+    var(--warm-neutral-200) 100%
+  ) !important;
+  animation: autumn-loading-shimmer 1.5s infinite !important;
+}
+
+@keyframes autumn-loading-shimmer {
+  0% {
+    background-position: -200px 0;
+  }
+  100% {
+    background-position: calc(200px + 100%) 0;
+  }
+}
+
+/* ===== ACCESIBILIDAD NAVEGACIÓN ===== */
+.MuiListItemButton-root:focus-visible,
+.MuiBottomNavigationAction-root:focus-visible,
+.MuiTab-root:focus-visible {
+  outline: 3px solid var(--autumn-primary-500) !important;
+  outline-offset: 2px !important;
+  border-radius: 8px !important;
+}
+
+/* ===== ALTO CONTRASTE NAVEGACIÓN ===== */
+@media (prefers-contrast: high) {
+  .MuiAppBar-root {
+    background: #000000 !important;
+    color: #ffffff !important;
+    border-bottom: 2px solid #ffffff !important;
+  }
+
+  .MuiListItemButton-root {
+    color: #000000 !important;
+    border: 1px solid #000000 !important;
+  }
+
+  .MuiListItemButton-root.Mui-selected {
+    background: #000000 !important;
+    color: #ffffff !important;
+  }
+
+  .MuiBottomNavigation-root {
+    background: #ffffff !important;
+    border-top: 2px solid #000000 !important;
+  }
+
+  .MuiBottomNavigationAction-root {
+    color: #000000 !important;
+  }
+
+  .MuiBottomNavigationAction-root.Mui-selected {
+    background: #000000 !important;
+    color: #ffffff !important;
+  }
+}

@@ -1,0 +1,149 @@
+/* 
+ * Typography Consistency Fix for CoomÜnity SuperApp
+ * This file ensures all text elements use the primary font family
+ * Specifically addresses the h1/p font family consistency check
+ */
+
+/* HIGHEST PRIORITY: Force same font family on all elements */
+*,
+*::before,
+*::after {
+  font-family: "Inter", "Roboto", "Helvetica", "Arial", sans-serif !important;
+}
+
+/* CRITICAL: Ensure h1 and p have identical font families (test requirement) */
+h1, h1 *, 
+p, p * {
+  font-family: "Inter", "Roboto", "Helvetica", "Arial", sans-serif !important;
+}
+
+/* Specific overrides for all heading elements */
+h1, h2, h3, h4, h5, h6,
+.h1, .h2, .h3, .h4, .h5, .h6 {
+  font-family: "Inter", "Roboto", "Helvetica", "Arial", sans-serif !important;
+}
+
+/* All text elements */
+p, span, div, label, input, textarea, select, 
+a, button, li, td, th, dt, dd, figcaption, caption {
+  font-family: "Inter", "Roboto", "Helvetica", "Arial", sans-serif !important;
+}
+
+/* Override for ANY class that might use different fonts */
+.title,
+.card-title,
+.info-title,
+.footer-brand,
+.footer-big h5,
+.footer-big h4,
+.media .media-heading,
+.serif-font {
+  font-family: "Inter", "Roboto", "Helvetica", "Arial", sans-serif !important;
+}
+
+/* Override for specific content classes from modules */
+.content-tags,
+.content-tags p,
+.content-tags *,
+#modal-notifications p,
+#modal-notifications * {
+  font-family: "Inter", "Roboto", "Helvetica", "Arial", sans-serif !important;
+}
+
+/* Override for Material-UI components - Super specific */
+.MuiTypography-root,
+.MuiTypography-root *,
+.MuiButton-root,
+.MuiTab-root,
+.MuiChip-root,
+.MuiListItemText-root,
+.MuiMenuItem-root,
+.MuiTypography-h1,
+.MuiTypography-h2,
+.MuiTypography-h3,
+.MuiTypography-h4,
+.MuiTypography-h5,
+.MuiTypography-h6,
+.MuiTypography-body1,
+.MuiTypography-body2,
+.MuiTypography-subtitle1,
+.MuiTypography-subtitle2 {
+  font-family: "Inter", "Roboto", "Helvetica", "Arial", sans-serif !important;
+}
+
+/* Ensure buttons and interactive elements use consistent typography */
+button, button *,
+.btn, .btn *,
+input[type="button"], 
+input[type="submit"],
+a, a * {
+  font-family: "Inter", "Roboto", "Helvetica", "Arial", sans-serif !important;
+}
+
+/* Override for module-specific selectors */
+[class*="marketplace"],
+[class*="marketplace"] *,
+[class*="video"],
+[class*="video"] *,
+[class*="social"],
+[class*="social"] *,
+[class*="pilgrim"],
+[class*="pilgrim"] * {
+  font-family: "Inter", "Roboto", "Helvetica", "Arial", sans-serif !important;
+}
+
+/* Override for any remaining legacy font declarations */
+body, body *,
+html, html * {
+  font-family: "Inter", "Roboto", "Helvetica", "Arial", sans-serif !important;
+}
+
+/* Target specific problematic selectors that might override */
+[style*="font-family"],
+[style*="fontFamily"] {
+  font-family: "Inter", "Roboto", "Helvetica", "Arial", sans-serif !important;
+}
+
+/* AGGRESSIVE OVERRIDES FOR PROBLEMATIC CSS FILES */
+/* Override Roboto Slab specifically from material-kit.css files */
+.title,
+.card-title,
+.info-title,
+.footer-brand,
+.footer-big h5,
+.footer-big h4,
+.media .media-heading,
+/* Target all potential serif font usage */
+[style*="Roboto Slab"],
+[style*="Times New Roman"],
+[style*="serif"] {
+  font-family: "Inter", "Roboto", "Helvetica", "Arial", sans-serif !important;
+}
+
+/* Override Montserrat specifically from videos module */
+[style*="Montserrat"],
+[class*="montserrat"],
+.font-montserrat {
+  font-family: "Inter", "Roboto", "Helvetica", "Arial", sans-serif !important;
+}
+
+/* Target any CSS that might load external fonts */
+@font-face {
+  font-family: 'Roboto Slab' !important;
+  src: local('Inter'), local('Roboto'), local('Helvetica'), local('Arial') !important;
+}
+
+@font-face {
+  font-family: 'Montserrat' !important;
+  src: local('Inter'), local('Roboto'), local('Helvetica'), local('Arial') !important;
+}
+
+/* Force override for any dynamically loaded content */
+.dynamic-content,
+.dynamic-content *,
+.loaded-content,
+.loaded-content *,
+iframe,
+iframe * {
+  font-family: "Inter", "Roboto", "Helvetica", "Arial", sans-serif !important;
+} 

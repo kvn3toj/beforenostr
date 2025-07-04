@@ -1,0 +1,298 @@
+/* ===== GUARDIAN DYNAMIC STYLES =====
+ * Clases CSS que usan las variables Guardian dinámicas
+ * Estas clases reemplazan colores hardcodeados con variables responsivas
+ */
+
+/* ===== FONDOS DINÁMICOS ===== */
+.guardian-bg-primary { background-color: var(--guardian-bg-primary) !important; }
+.guardian-bg-surface { background-color: var(--guardian-bg-surface) !important; }
+.guardian-bg-secondary { background-color: var(--guardian-secondary) !important; }
+.guardian-bg-accent { background-color: var(--guardian-accent) !important; }
+.guardian-bg-mystic { background-color: var(--guardian-mystic) !important; }
+
+/* ===== GRADIENTES DINÁMICOS ===== */
+.guardian-gradient-primary { background: var(--guardian-gradient-primary) !important; }
+.guardian-gradient-secondary { background: var(--guardian-gradient-secondary) !important; }
+.guardian-gradient-cosmic { background: var(--guardian-gradient-cosmic) !important; }
+.guardian-gradient-elements { background: var(--guardian-gradient-elements) !important; }
+.guardian-gradient-unity { background: var(--guardian-gradient-unity) !important; }
+
+/* ===== TEXTOS DINÁMICOS ===== */
+.guardian-text-primary { color: var(--guardian-text-primary) !important; }
+.guardian-text-secondary { color: var(--guardian-text-secondary) !important; }
+.guardian-text-muted { color: var(--guardian-text-muted) !important; }
+.guardian-color-primary { color: var(--guardian-primary) !important; }
+.guardian-color-secondary { color: var(--guardian-secondary) !important; }
+.guardian-color-accent { color: var(--guardian-accent) !important; }
+.guardian-color-mystic { color: var(--guardian-mystic) !important; }
+
+/* ===== BORDES DINÁMICOS ===== */
+.guardian-border-primary { border-color: var(--guardian-primary) !important; }
+.guardian-border-secondary { border-color: var(--guardian-secondary) !important; }
+.guardian-border-accent { border-color: var(--guardian-accent) !important; }
+.guardian-border-mystic { border-color: var(--guardian-mystic) !important; }
+
+/* ===== 🎯 COMPONENTES ESPECÍFICOS - MIGRACIÓN MASIVA ===== */
+
+/* ===== CARDS Y PAPERS DINÁMICOS ===== */
+.guardian-card {
+  background: var(--guardian-bg-surface) !important;
+  border: 1px solid var(--guardian-primary) !important;
+  border-opacity: 0.2 !important;
+  transition: all 0.3s ease !important;
+}
+
+.guardian-card:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 8px 32px var(--guardian-primary)40 !important;
+}
+
+.guardian-card-accent {
+  background: linear-gradient(135deg, var(--guardian-accent)15, var(--guardian-accent)25) !important;
+  border: 1px solid var(--guardian-accent)30 !important;
+}
+
+.guardian-card-mystic {
+  background: linear-gradient(135deg, var(--guardian-mystic)15, var(--guardian-mystic)25) !important;
+  border: 1px solid var(--guardian-mystic)30 !important;
+}
+
+/* ===== PROGRESS RINGS DINÁMICOS ===== */
+.guardian-progress-ring {
+  background: linear-gradient(135deg, var(--guardian-bg-surface) 0%, var(--guardian-neutral) 100%) !important;
+  border: 1px solid var(--guardian-accent) !important;
+  box-shadow: 0 0 20px var(--guardian-accent)20 !important;
+}
+
+.guardian-progress-ring:hover {
+  box-shadow: 0 0 30px var(--guardian-accent)40 !important;
+}
+
+/* ===== MARKETPLACE DINÁMICO ===== */
+.guardian-marketplace-hero {
+  background: linear-gradient(135deg, var(--guardian-accent) 0%, var(--guardian-secondary) 85%, var(--guardian-primary) 100%) !important;
+  color: var(--guardian-text-primary) !important;
+}
+
+/* ===== SOCIAL COMPONENTS DINÁMICOS ===== */
+.guardian-social-header {
+  background: linear-gradient(135deg, var(--guardian-primary)10 0%, var(--guardian-mystic)10 50%, var(--guardian-secondary)05 100%) !important;
+  border: 1px solid var(--guardian-primary)20 !important;
+}
+
+.guardian-social-metric {
+  background: linear-gradient(135deg, var(--guardian-accent)10, var(--guardian-accent)05) !important;
+  border: 1px solid var(--guardian-accent)20 !important;
+}
+
+/* ===== BUTTONS DINÁMICOS ===== */
+.guardian-button {
+  background: var(--guardian-gradient-primary) !important;
+  color: white !important;
+  border: none !important;
+  transition: all 0.3s ease !important;
+}
+
+.guardian-button:hover {
+  transform: translateY(-2px) scale(1.05) !important;
+  box-shadow: 0 8px 20px var(--guardian-primary)40 !important;
+}
+
+.guardian-button-secondary {
+  background: var(--guardian-gradient-secondary) !important;
+  color: white !important;
+}
+
+.guardian-button-accent {
+  background: linear-gradient(45deg, var(--guardian-accent), var(--guardian-mystic)) !important;
+  color: white !important;
+}
+
+/* ===== FAB DINÁMICOS ===== */
+.guardian-fab {
+  background: var(--guardian-gradient-unity) !important;
+  color: white !important;
+  box-shadow: 0 8px 32px var(--guardian-primary)20 !important;
+}
+
+.guardian-fab:hover {
+  transform: scale(1.1) !important;
+  box-shadow: 0 12px 40px var(--guardian-primary)30 !important;
+}
+
+/* ===== CHIPS DINÁMICOS ===== */
+.guardian-chip-primary {
+  background: var(--guardian-gradient-primary) !important;
+  color: white !important;
+}
+
+.guardian-chip-secondary {
+  background: var(--guardian-gradient-secondary) !important;
+  color: white !important;
+}
+
+.guardian-chip-accent {
+  background: linear-gradient(45deg, var(--guardian-accent), var(--guardian-mystic)) !important;
+  color: white !important;
+}
+
+.guardian-chip-cosmic {
+  background: var(--guardian-gradient-cosmic) !important;
+  color: white !important;
+}
+
+/* ===== LINEAR PROGRESS DINÁMICOS ===== */
+.guardian-progress {
+  background-color: var(--guardian-neutral)20 !important;
+}
+
+.guardian-progress .MuiLinearProgress-bar {
+  background: var(--guardian-gradient-primary) !important;
+}
+
+/* ===== OVERRIDE PARA ESTILOS INLINE PROBLEMÁTICOS ===== */
+
+/* Gradientes hardcodeados específicos detectados por ANA */
+*[style*="linear-gradient(135deg, #4CAF50"] {
+  background: var(--guardian-gradient-primary) !important;
+}
+
+*[style*="linear-gradient(135deg, #1a1a1a"] {
+  background: linear-gradient(135deg, var(--guardian-bg-surface) 0%, var(--guardian-neutral) 100%) !important;
+}
+
+*[style*="linear-gradient(135deg, #E91E63"] {
+  background: var(--guardian-gradient-primary) !important;
+}
+
+*[style*="linear-gradient(135deg, #667eea"] {
+  background: var(--guardian-gradient-secondary) !important;
+}
+
+*[style*="linear-gradient(45deg, #FF6B35"] {
+  background: var(--guardian-gradient-unity) !important;
+}
+
+/* ===== MATERIAL-KIT CSS OVERRIDES ===== */
+.section-info {
+  background: var(--guardian-gradient-secondary) !important;
+}
+
+.section-success {
+  background: var(--guardian-gradient-primary) !important;
+}
+
+.section-warning {
+  background: linear-gradient(60deg, var(--guardian-accent), var(--guardian-accent)) !important;
+}
+
+.section-danger {
+  background: linear-gradient(60deg, var(--guardian-mystic), var(--guardian-mystic)) !important;
+}
+
+.section-rose {
+  background: var(--guardian-gradient-cosmic) !important;
+}
+
+/* ===== RESPONSIVE GUARDIAN ADAPTATIONS ===== */
+@media (max-width: 768px) {
+  .guardian-card {
+    padding: 1rem !important;
+  }
+
+  .guardian-button {
+    min-width: 120px !important;
+    font-size: 0.875rem !important;
+  }
+}
+
+/* ===== ACCESSIBILITY ENHANCEMENTS ===== */
+.guardian-button:focus,
+.guardian-card:focus {
+  outline: 2px solid var(--guardian-accent) !important;
+  outline-offset: 2px !important;
+}
+
+/* ===== ANIMATION UTILITIES ===== */
+.guardian-animate {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.guardian-animate:hover {
+  transform: translateY(-2px) !important;
+}
+
+/* ===== HIGH IMPACT VISUAL STATES ===== */
+.guardian-elevated {
+  box-shadow: 0 20px 60px var(--guardian-primary)30 !important;
+  transform: translateY(-4px) scale(1.02) !important;
+}
+
+.guardian-glowing {
+  box-shadow:
+    0 0 20px var(--guardian-accent)40,
+    0 0 40px var(--guardian-accent)20,
+    0 0 60px var(--guardian-accent)10 !important;
+}
+
+/* ===== DARK MODE COMPATIBILITY ===== */
+@media (prefers-color-scheme: dark) {
+  .guardian-bg-primary {
+    background-color: var(--guardian-bg-surface) !important;
+  }
+
+  .guardian-text-primary {
+    color: var(--guardian-text-secondary) !important;
+  }
+}
+
+/* ===== NUEVAS CLASES ESPECÍFICAS - FASE 2 ===== */
+
+/* Headers específicos */
+.guardian-header {
+  background: var(--guardian-gradient-primary) !important;
+}
+
+/* Cards específicas por tipo */
+.guardian-card-success {
+  background: linear-gradient(135deg, var(--guardian-primary)10, var(--guardian-primary)05) !important;
+  border: 1px solid var(--guardian-primary)20 !important;
+}
+
+.guardian-card-info {
+  background: linear-gradient(135deg, var(--guardian-secondary)10, var(--guardian-secondary)05) !important;
+  border: 1px solid var(--guardian-secondary)20 !important;
+}
+
+/* Textos con gradientes */
+.guardian-text-mystic {
+  background: linear-gradient(45deg, var(--guardian-mystic), var(--guardian-accent)) !important;
+  background-clip: text !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+}
+
+.guardian-text-gradient {
+  background: var(--guardian-gradient-primary) !important;
+  background-clip: text !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+}
+
+/* Elementos cósmicos */
+.guardian-element-button {
+  border: 2px solid var(--guardian-neutral)40 !important;
+  background: linear-gradient(135deg, var(--guardian-primary)10, var(--guardian-primary)05) !important;
+  transition: all 0.3s ease !important;
+}
+
+.guardian-element-button:hover {
+  border: 2px solid var(--guardian-accent) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 20px var(--guardian-accent)30 !important;
+}
+
+.guardian-element-selected {
+  background: var(--guardian-gradient-primary) !important;
+  border: 2px solid var(--guardian-accent) !important;
+}

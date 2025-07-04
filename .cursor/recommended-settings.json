@@ -1,0 +1,19 @@
+{
+  "cursor.chat.defaultMode": "agent",
+  "cursor.chat.autoRefresh": true,
+  "cursor.chat.autoScroll": true,
+  "cursor.chat.autoApplyOutsideContext": true,
+  "cursor.chat.autoRun": true,
+  "cursor.chat.largeContext": true,
+  "cursor.chat.iterateOnLints": true,
+  "cursor.chat.webSearchTool": true,
+  "cursor.tab.enabled": true,
+  "cursor.tab.suggestionsInComments": true,
+  "cursor.tab.autoImport": true,
+  "cursor.codebase.indexNewFolders": true,
+  "cursor.editor.showChatEditTooltip": true,
+  "cursor.editor.autoSelectForCmdK": true,
+  "cursor.editor.useThemedDiffBackgrounds": true,
+  "cursor.terminal.hint": true,
+  "cursor.terminal.showHoverHint": true
+}

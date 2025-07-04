@@ -1,0 +1,137 @@
+config:
+  target: 'http://localhost:8080'
+  phases:
+    # Fase 1: Calentamiento (100 usuarios)
+    - duration: 60
+      arrivalRate: 5
+      name: "Calentamiento - 100 usuarios"
+    
+    # Fase 2: Carga normal (1,000 usuarios)
+    - duration: 120
+      arrivalRate: 25
+      name: "Carga normal - 1K usuarios"
+    
+    # Fase 3: Pico de tráfico (5,000 usuarios)
+    - duration: 180
+      arrivalRate: 50
+      name: "Pico de tráfico - 5K usuarios"
+    
+    # Fase 4: Carga extrema (10,000 usuarios)
+    - duration: 300
+      arrivalRate: 100
+      name: "Carga extrema - 10K usuarios"
+    
+    # Fase 5: Sostenimiento (mantener 10K)
+    - duration: 600
+      arrivalRate: 100
+      name: "Sostenimiento - 10K usuarios"
+
+  defaults:
+    headers:
+      User-Agent: 'CoomUnity-LoadTest/1.0'
+      Accept: 'application/json'
+      Content-Type: 'application/json'
+
+  plugins:
+    metrics-by-endpoint:
+      useOnlyRequestNames: true
+
+scenarios:
+  # Escenario 1: Health Check (básico)
+  - name: "Health Check"
+    weight: 20
+    flow:
+      - get:
+          url: "/health"
+          name: "health_check"
+          expect:
+            - statusCode: 200
+            - contentType: text/plain
+
+  # Escenario 2: API Backend (simulación de uso real)
+  - name: "Backend API Calls"
+    weight: 30
+    flow:
+      # Verificar backend
+      - get:
+          url: "/api"
+          name: "api_root"
+          expect:
+            - statusCode: [200, 404]
+      
+      # Simular llamadas a endpoints comunes
+      - get:
+          url: "/api/users"
+          name: "get_users"
+          expect:
+            - statusCode: [200, 401, 404]
+      
+      - get:
+          url: "/api/merits"
+          name: "get_merits"
+          expect:
+            - statusCode: [200, 401, 404]
+
+  # Escenario 3: Autenticación (crítico para CoomÜnity)
+  - name: "Authentication Flow"
+    weight: 25
+    flow:
+      # Intentar login (sin credenciales válidas)
+      - post:
+          url: "/api/auth/login"
+          name: "login_attempt"
+          json:
+            email: "test@coomunity.com"
+            password: "testpassword"
+          expect:
+            - statusCode: [200, 401, 400]
+      
+      # Verificar perfil (sin token)
+      - get:
+          url: "/api/auth/profile"
+          name: "profile_check"
+          expect:
+            - statusCode: [200, 401]
+
+  # Escenario 4: Marketplace (GMP)
+  - name: "Marketplace Operations"
+    weight: 15
+    flow:
+      # Listar productos/servicios
+      - get:
+          url: "/api/marketplace/items"
+          name: "marketplace_items"
+          expect:
+            - statusCode: [200, 404]
+      
+      # Buscar en marketplace
+      - get:
+          url: "/api/marketplace/search?q=ayni"
+          name: "marketplace_search"
+          expect:
+            - statusCode: [200, 404]
+
+  # Escenario 5: Métricas Filosóficas (único de CoomÜnity)
+  - name: "Philosophical Metrics"
+    weight: 10
+    flow:
+      # Métricas de Ayni
+      - get:
+          url: "/api/metrics/ayni"
+          name: "ayni_metrics"
+          expect:
+            - statusCode: [200, 404]
+      
+      # Métricas de Bien Común
+      - get:
+          url: "/api/metrics/bien-comun"
+          name: "bien_comun_metrics"
+          expect:
+            - statusCode: [200, 404]
+      
+      # Métricas de alineación vocacional
+      - get:
+          url: "/api/metrics/vocational-alignment"
+          name: "vocational_metrics"
+          expect:
+            - statusCode: [200, 404] 

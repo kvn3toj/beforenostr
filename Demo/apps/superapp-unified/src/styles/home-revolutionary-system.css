@@ -1,0 +1,601 @@
+/* 🌟 SISTEMA REVOLUCIONARIO UNIFICADO - COOMUNITY SUPERAPP
+   Eleva todos los componentes al nivel del Balance Reciprocidad revolucionario */
+
+/* ================================================================
+   🎨 VARIABLES GLOBALES REVOLUCIONARIAS
+   ================================================================ */
+
+:root {
+  /* 🔥 Paleta Elemental Revolucionaria */
+  --revolutionary-fire: linear-gradient(135deg, #ff6b35, #ff8a50, #ffb366);
+  --revolutionary-water: linear-gradient(135deg, #00bcd4, #26c6da, #4dd0e1);
+  --revolutionary-earth: linear-gradient(135deg, #66bb6a, #81c784, #a5d6a7);
+  --revolutionary-air: linear-gradient(135deg, #ffd54f, #ffeb3b, #fff176);
+  --revolutionary-power: linear-gradient(135deg, #9c27b0, #ab47bc, #ba68c8);
+  --revolutionary-love: linear-gradient(135deg, #e91e63, #f06292, #f48fb1);
+  --revolutionary-wisdom: linear-gradient(135deg, #3f51b5, #5c6bc0, #7986cb);
+  --revolutionary-harmony: linear-gradient(135deg, #00e676, #4caf50, #8bc34a);
+
+  /* 🌈 Gradientes Cónicos Mágicos */
+  --revolutionary-conic-primary: conic-gradient(
+    from 0deg,
+    #ff6b35 0deg,
+    #00bcd4 90deg,
+    #66bb6a 180deg,
+    #ffd54f 270deg,
+    #ff6b35 360deg
+  );
+
+  --revolutionary-conic-secondary: conic-gradient(
+    from 45deg,
+    #e91e63 0deg,
+    #9c27b0 90deg,
+    #3f51b5 180deg,
+    #00e676 270deg,
+    #e91e63 360deg
+  );
+
+  /* ✨ Efectos Glassmorphism */
+  --revolutionary-glass-light: rgba(255, 255, 255, 0.15);
+  --revolutionary-glass-medium: rgba(255, 255, 255, 0.25);
+  --revolutionary-glass-strong: rgba(255, 255, 255, 0.35);
+  --revolutionary-blur-light: blur(10px);
+  --revolutionary-blur-medium: blur(20px);
+  --revolutionary-blur-strong: blur(40px);
+
+  /* 🎯 Sombras Revolucionarias */
+  --revolutionary-shadow-soft: 0 8px 32px rgba(0, 0, 0, 0.1);
+  --revolutionary-shadow-medium: 0 16px 64px rgba(0, 0, 0, 0.15);
+  --revolutionary-shadow-strong: 0 24px 96px rgba(0, 0, 0, 0.2);
+  --revolutionary-shadow-glow: 0 0 40px rgba(255, 255, 255, 0.3);
+
+  /* 🔄 Espaciado del Sistema 8px */
+  --revolutionary-spacing-xs: 4px;
+  --revolutionary-spacing-sm: 8px;
+  --revolutionary-spacing-md: 16px;
+  --revolutionary-spacing-lg: 24px;
+  --revolutionary-spacing-xl: 32px;
+  --revolutionary-spacing-xxl: 48px;
+  --revolutionary-spacing-xxxl: 64px;
+
+  /* 📐 Radios Orgánicos */
+  --revolutionary-radius-sm: 12px;
+  --revolutionary-radius-md: 16px;
+  --revolutionary-radius-lg: 24px;
+  --revolutionary-radius-xl: 32px;
+  --revolutionary-radius-round: 50%;
+
+  /* ⚡ Velocidades de Animación */
+  --revolutionary-speed-fast: 0.3s;
+  --revolutionary-speed-medium: 0.6s;
+  --revolutionary-speed-slow: 1.2s;
+  --revolutionary-speed-ultra-slow: 2.4s;
+}
+
+/* ================================================================
+   🎯 CLASES BASE REVOLUCIONARIAS
+   ================================================================ */
+
+/* 🎨 Container Principal Revolucionario */
+.revolutionary-container {
+  position: relative;
+  width: 100%;
+  background:
+    radial-gradient(
+      circle at 20% 20%,
+      rgba(255, 107, 53, 0.1) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      circle at 80% 80%,
+      rgba(0, 188, 212, 0.1) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      circle at 40% 60%,
+      rgba(102, 187, 106, 0.05) 0%,
+      transparent 50%
+    );
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+/* ✨ Card Base Revolucionaria */
+.revolutionary-card {
+  position: relative;
+  background: var(--revolutionary-glass-light);
+  backdrop-filter: var(--revolutionary-blur-light);
+  border: 1px solid var(--revolutionary-glass-medium);
+  border-radius: var(--revolutionary-radius-lg);
+  box-shadow: var(--revolutionary-shadow-medium);
+  transition: all var(--revolutionary-speed-medium)
+    cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  overflow: hidden;
+}
+
+.revolutionary-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--revolutionary-conic-primary);
+  opacity: 0.6;
+}
+
+.revolutionary-card:hover {
+  transform: translateY(-4px) scale(1.02);
+  box-shadow:
+    var(--revolutionary-shadow-strong), var(--revolutionary-shadow-glow);
+  border-color: var(--revolutionary-glass-strong);
+}
+
+/* 🌟 Hero Card Especial */
+.revolutionary-card-hero {
+  background: var(--revolutionary-glass-medium);
+  backdrop-filter: var(--revolutionary-blur-medium);
+  border: 2px solid var(--revolutionary-glass-strong);
+  box-shadow:
+    var(--revolutionary-shadow-strong), var(--revolutionary-shadow-glow);
+  min-height: 280px;
+}
+
+.revolutionary-card-hero::before {
+  height: 2px;
+  background: var(--revolutionary-conic-primary);
+  opacity: 0.8;
+}
+
+/* 🔮 Orb Central Mágico */
+.revolutionary-orb {
+  position: relative;
+  width: 200px;
+  height: 200px;
+  border-radius: var(--revolutionary-radius-round);
+  background: var(--revolutionary-conic-primary);
+  animation: revolutionary-rotate-continuous
+    var(--revolutionary-speed-ultra-slow) linear infinite;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+  box-shadow:
+    0 0 60px rgba(255, 107, 53, 0.3),
+    0 0 120px rgba(0, 188, 212, 0.2),
+    inset 0 0 60px rgba(255, 255, 255, 0.1);
+}
+
+.revolutionary-orb::before {
+  content: '';
+  position: absolute;
+  inset: 8px;
+  border-radius: var(--revolutionary-radius-round);
+  background: var(--revolutionary-glass-medium);
+  backdrop-filter: var(--revolutionary-blur-medium);
+  z-index: 1;
+}
+
+.revolutionary-orb-content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  color: white;
+}
+
+/* ⚡ Elementos Orbitales */
+.revolutionary-orbital-container {
+  position: relative;
+  width: 280px;
+  height: 280px;
+  margin: 0 auto;
+}
+
+.revolutionary-orbital-element {
+  position: absolute;
+  width: 48px;
+  height: 48px;
+  border-radius: var(--revolutionary-radius-round);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: revolutionary-orbital-rotation 8s linear infinite;
+  cursor: pointer;
+  transition: all var(--revolutionary-speed-fast) ease;
+  box-shadow: var(--revolutionary-shadow-soft);
+}
+
+.revolutionary-orbital-element:hover {
+  transform: scale(1.2);
+  box-shadow: var(--revolutionary-shadow-medium);
+}
+
+/* 🎭 Métricas Revolucionarias */
+.revolutionary-metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: var(--revolutionary-spacing-md);
+  margin-top: var(--revolutionary-spacing-lg);
+}
+
+.revolutionary-metric-card {
+  background: var(--revolutionary-glass-light);
+  backdrop-filter: var(--revolutionary-blur-light);
+  border-radius: var(--revolutionary-radius-md);
+  padding: var(--revolutionary-spacing-md);
+  text-align: center;
+  border: 1px solid var(--revolutionary-glass-medium);
+  transition: all var(--revolutionary-speed-fast) ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.revolutionary-metric-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  transition: left var(--revolutionary-speed-medium) ease;
+}
+
+.revolutionary-metric-card:hover::before {
+  left: 100%;
+}
+
+.revolutionary-metric-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--revolutionary-shadow-medium);
+  border-color: var(--revolutionary-glass-strong);
+}
+
+/* 🌊 Progreso Energético */
+.revolutionary-progress-bar {
+  position: relative;
+  width: 100%;
+  height: 8px;
+  background: var(--revolutionary-glass-light);
+  border-radius: var(--revolutionary-radius-sm);
+  overflow: hidden;
+  margin: var(--revolutionary-spacing-sm) 0;
+}
+
+.revolutionary-progress-fill {
+  height: 100%;
+  background: var(--revolutionary-conic-primary);
+  border-radius: var(--revolutionary-radius-sm);
+  position: relative;
+  animation: revolutionary-energy-wave 2s ease-in-out infinite alternate;
+}
+
+.revolutionary-progress-fill::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.3) 50%,
+    transparent 100%
+  );
+  animation: revolutionary-shimmer 1.5s ease-in-out infinite;
+}
+
+/* 🎯 Grid Revolucionario */
+.revolutionary-grid {
+  display: grid;
+  gap: var(--revolutionary-spacing-lg);
+  padding: var(--revolutionary-spacing-lg);
+}
+
+.revolutionary-grid-2 {
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+
+.revolutionary-grid-3 {
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+}
+
+.revolutionary-grid-4 {
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+
+/* 🎪 Acciones Flotantes */
+.revolutionary-fab-container {
+  position: fixed;
+  bottom: var(--revolutionary-spacing-xl);
+  right: var(--revolutionary-spacing-xl);
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  gap: var(--revolutionary-spacing-md);
+}
+
+.revolutionary-fab {
+  width: 56px;
+  height: 56px;
+  border-radius: var(--revolutionary-radius-round);
+  background: var(--revolutionary-conic-primary);
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--revolutionary-shadow-medium);
+  transition: all var(--revolutionary-speed-fast)
+    cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  animation: revolutionary-fab-pulse 3s ease-in-out infinite;
+}
+
+.revolutionary-fab:hover {
+  transform: scale(1.1);
+  box-shadow:
+    var(--revolutionary-shadow-strong), var(--revolutionary-shadow-glow);
+}
+
+/* ================================================================
+   🎬 ANIMACIONES REVOLUCIONARIAS
+   ================================================================ */
+
+@keyframes revolutionary-rotate-continuous {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes revolutionary-orbital-rotation {
+  from {
+    transform: rotate(0deg) translateX(140px) rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg) translateX(140px) rotate(-360deg);
+  }
+}
+
+@keyframes revolutionary-energy-wave {
+  0% {
+    box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.1);
+  }
+  100% {
+    box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.3);
+  }
+}
+
+@keyframes revolutionary-shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes revolutionary-fab-pulse {
+  0%,
+  100% {
+    box-shadow: var(--revolutionary-shadow-medium);
+  }
+  50% {
+    box-shadow:
+      var(--revolutionary-shadow-strong),
+      0 0 30px rgba(255, 107, 53, 0.4);
+  }
+}
+
+@keyframes revolutionary-sparkle {
+  0%,
+  100% {
+    opacity: 0;
+    transform: scale(0);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes revolutionary-glow-pulse {
+  0%,
+  100% {
+    filter: brightness(1) saturate(1);
+  }
+  50% {
+    filter: brightness(1.2) saturate(1.3);
+  }
+}
+
+/* ================================================================
+   📱 RESPONSIVE REVOLUCIONARIO
+   ================================================================ */
+
+/* 📱 Mobile First */
+@media (max-width: 640px) {
+  .revolutionary-orb {
+    width: 160px;
+    height: 160px;
+  }
+
+  .revolutionary-orbital-container {
+    width: 240px;
+    height: 240px;
+  }
+
+  .revolutionary-orbital-element {
+    width: 40px;
+    height: 40px;
+  }
+
+  .revolutionary-metrics-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--revolutionary-spacing-sm);
+  }
+
+  .revolutionary-grid {
+    gap: var(--revolutionary-spacing-md);
+    padding: var(--revolutionary-spacing-md);
+  }
+
+  .revolutionary-fab-container {
+    bottom: var(--revolutionary-spacing-lg);
+    right: var(--revolutionary-spacing-lg);
+  }
+}
+
+/* 💻 Tablet */
+@media (min-width: 641px) and (max-width: 1024px) {
+  .revolutionary-orb {
+    width: 180px;
+    height: 180px;
+  }
+
+  .revolutionary-orbital-container {
+    width: 260px;
+    height: 260px;
+  }
+}
+
+/* 🖥️ Desktop */
+@media (min-width: 1025px) {
+  .revolutionary-grid {
+    gap: var(--revolutionary-spacing-xl);
+    padding: var(--revolutionary-spacing-xl);
+  }
+
+  .revolutionary-card:hover {
+    transform: translateY(-8px) scale(1.03);
+  }
+}
+
+/* ================================================================
+   🌙 MODO OSCURO REVOLUCIONARIO
+   ================================================================ */
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --revolutionary-glass-light: rgba(255, 255, 255, 0.08);
+    --revolutionary-glass-medium: rgba(255, 255, 255, 0.15);
+    --revolutionary-glass-strong: rgba(255, 255, 255, 0.25);
+  }
+
+  .revolutionary-container {
+    background:
+      radial-gradient(
+        circle at 20% 20%,
+        rgba(255, 107, 53, 0.15) 0%,
+        transparent 50%
+      ),
+      radial-gradient(
+        circle at 80% 80%,
+        rgba(0, 188, 212, 0.15) 0%,
+        transparent 50%
+      ),
+      radial-gradient(
+        circle at 40% 60%,
+        rgba(102, 187, 106, 0.08) 0%,
+        transparent 50%
+      ),
+      #0a0a0a;
+  }
+}
+
+/* ================================================================
+   ♿ ACCESIBILIDAD REVOLUCIONARIA
+   ================================================================ */
+
+/* Reducir animaciones para usuarios sensibles */
+@media (prefers-reduced-motion: reduce) {
+  .revolutionary-orb,
+  .revolutionary-orbital-element,
+  .revolutionary-progress-fill,
+  .revolutionary-fab {
+    animation: none;
+  }
+
+  .revolutionary-card,
+  .revolutionary-metric-card,
+  .revolutionary-fab {
+    transition: none;
+  }
+}
+
+/* Alto contraste */
+@media (prefers-contrast: high) {
+  .revolutionary-card {
+    border: 2px solid rgba(255, 255, 255, 0.8);
+  }
+
+  .revolutionary-orb {
+    box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.8);
+  }
+}
+
+/* ================================================================
+   🎨 UTILIDADES REVOLUCIONARIAS
+   ================================================================ */
+
+.revolutionary-text-gradient {
+  background: var(--revolutionary-conic-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 700;
+}
+
+.revolutionary-glow {
+  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.5));
+}
+
+.revolutionary-interactive {
+  cursor: pointer;
+  transition: all var(--revolutionary-speed-fast) ease;
+}
+
+.revolutionary-interactive:hover {
+  transform: scale(1.05);
+}
+
+.revolutionary-hidden {
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(20px);
+  transition: all var(--revolutionary-speed-medium) ease;
+}
+
+.revolutionary-visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+/* ✨ Partículas Flotantes */
+.revolutionary-particles {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.revolutionary-particle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: var(--revolutionary-radius-round);
+  animation: revolutionary-sparkle 3s ease-in-out infinite;
+}

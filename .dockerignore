@@ -1,0 +1,161 @@
+# Dependencies & Caches
+node_modules
+.cache
+.parcel-cache
+.vite
+.yarn
+.turbo
+
+# Build artifacts
+dist
+build
+.output
+coverage
+.nyc_output
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+backend_startup.log
+/logs
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE / Editor
+.vscode
+.idea
+.cursor
+*.swp
+*.swo
+*~
+
+# Local Env Files
+.env
+.env.local
+.env.*.local
+!/.env.example
+
+# Git
+.git
+
+# Test Reports and E2E
+test-results/
+playwright-report/
+e2e-results/
+e2e-archive/
+playwright-demo-report/
+
+# TypeScript config files from root (use SuperApp-specific configs)
+/tsconfig.json
+/tsconfig.backend.json
+
+# Scripts and verification files
+*.sh
+verify-*.sh
+test-*.sh
+fix-*.sh
+eliminate-*.sh
+final-*.sh
+ultimate-*.sh
+cop-*.sh
+
+# Documentation and reports (keep only essential ones)
+*.md
+!README.md
+!CONTRIBUTING.md
+!LICENSE.md
+
+# Backup and temporary files
+*backup*
+*temp*
+*.tmp
+*.bak
+src_mixed_backup/
+.vercel
+vercel.json.backup
+
+# Configuration files not needed for runtime
+.markdownlintignore
+.editorconfig
+.eslintrc.js
+.guardian-pids
+prometheus.yml
+preflight
+pnpm-workspace.yaml
+playwright.config*.ts
+vitest.config.ts
+vite.config.ts
+render.yaml
+railway.json
+# Test files and HTML demos
+*.html
+!index.html
+test-*.html
+test-*.vtt
+
+# Archive files
+*.zip
+*.tar.gz
+*.tgz
+
+# Database and session files
+*.session.sql
+*.db
+
+#################################################################
+# MONOREPO-SPECIFIC EXCLUSIONS
+# These are the most important lines to reduce build context
+#################################################################
+
+# Ignore other apps and the backend
+/backend
+/apps/admin-frontend
+/apps/guardians-portal-frontend
+/apps/gamifier-admin
+/apps/guardian-portal
+/apps/*
+
+# Ignore large non-essential top-level directories
+/backups
+/_temp_frontend_src_files
+/analysis
+/config
+/docker
+/docs
+/e2e
+/gemini-code-reviewer
+/global
+/grafana
+/infrastructure
+/logs
+/NARRATIVA
+/playwright-report
+/prisma
+/public
+/scripts
+/src
+/supabase
+/tests
+/tests-backup
+/test-results
+/src_mixed_backup
+/.vercel
+/.cursor
+/.vscode
+/.turbo
+/infrastructure
+/NARRATIVA
+/prisma
+/Recursos_Wireframes_Gamifier
+/roadmap
+/scripts
+/src
+/src_mixed_backup
+/supabase
+/tests
+/tests-backup
+/Typography:REM_Wireframes_Gamifie

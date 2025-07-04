@@ -1,0 +1,16 @@
+{
+  "timestamp": "2025-06-03T05:32:17.298Z",
+  "processedFiles": 13,
+  "errors": [],
+  "sections": [
+    "pilgrim",
+    "merchant",
+    "red-pill"
+  ],
+  "targetDirectory": "./my_recovered_website",
+  "summary": {
+    "success": true,
+    "totalErrors": 0,
+    "sectionsProcessed": 3
+  }
+}

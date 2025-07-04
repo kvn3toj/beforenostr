@@ -1,0 +1,762 @@
+/* ===============================================================================
+   🍂 MÓDULOS OTOÑALES - COOMUNITY SUPERAPP
+   Paleta otoño verdadero aplicada a todos los módulos principales
+   =============================================================================== */
+
+/* ===== MARKETPLACE OTOÑAL ===== */
+.marketplace-main,
+.marketplace-container,
+div[data-testid*='marketplace'] {
+  background: linear-gradient(
+    180deg,
+    var(--autumn-gold-50) 0%,
+    var(--bg-primary-autumn) 30%,
+    var(--bg-primary-autumn) 100%
+  ) !important;
+}
+
+.marketplace-card,
+.product-card,
+div[class*='marketplace-card'] {
+  background: var(--card-bg-autumn) !important;
+  border: 2px solid var(--card-border-autumn) !important;
+  border-radius: 20px !important;
+  box-shadow: var(--card-shadow-autumn) !important;
+  position: relative !important;
+  overflow: hidden !important;
+  transition: var(--transition-autumn-normal) !important;
+}
+
+.marketplace-card::before,
+.product-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--gradient-autumn-warm);
+  opacity: 0.8;
+}
+
+.marketplace-card:hover,
+.product-card:hover {
+  transform: translateY(-3px) !important;
+  box-shadow: var(--card-shadow-hover-autumn) !important;
+  border-color: var(--autumn-gold-400) !important;
+}
+
+.marketplace-price {
+  color: var(--autumn-gold-700) !important;
+  font-weight: 800 !important;
+  font-size: 1.5rem !important;
+  text-shadow: 0 1px 2px rgba(245, 158, 11, 0.2) !important;
+}
+
+.marketplace-tag,
+.product-tag {
+  background: var(--autumn-gold-100) !important;
+  color: var(--autumn-gold-800) !important;
+  border: 1px solid var(--autumn-gold-200) !important;
+  border-radius: 16px !important;
+  font-weight: 600 !important;
+}
+
+.marketplace-seller {
+  color: var(--warm-neutral-600) !important;
+  font-weight: 500 !important;
+}
+
+.marketplace-button-buy {
+  background: var(--gradient-autumn-primary) !important;
+  color: #ffffff !important;
+  border: none !important;
+  border-radius: 16px !important;
+  padding: 12px 24px !important;
+  font-weight: 700 !important;
+  box-shadow: var(--card-shadow-autumn) !important;
+}
+
+.marketplace-button-buy:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: var(--card-shadow-hover-autumn) !important;
+  filter: brightness(1.1) saturate(1.1) !important;
+}
+
+/* ===== SOCIAL OTOÑAL ===== */
+.social-main,
+.social-container,
+div[data-testid*='social'] {
+  background: linear-gradient(
+    180deg,
+    var(--autumn-secondary-50) 0%,
+    var(--bg-primary-autumn) 30%,
+    var(--bg-primary-autumn) 100%
+  ) !important;
+}
+
+.post-card,
+.social-post,
+.feed-item {
+  background: var(--card-bg-autumn) !important;
+  border: 2px solid var(--card-border-autumn) !important;
+  border-radius: 24px !important;
+  box-shadow: var(--card-shadow-autumn) !important;
+  margin-bottom: 20px !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+.post-card::before,
+.social-post::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(
+    90deg,
+    var(--autumn-secondary-400) 0%,
+    var(--autumn-primary-400) 100%
+  );
+  opacity: 0.7;
+}
+
+.post-avatar {
+  border: 3px solid var(--autumn-primary-200) !important;
+  box-shadow: 0 2px 8px rgba(249, 115, 22, 0.3) !important;
+}
+
+.post-author {
+  color: var(--home-heading-primary-autumn) !important;
+  font-weight: 700 !important;
+}
+
+.post-time {
+  color: var(--warm-neutral-500) !important;
+  font-weight: 500 !important;
+}
+
+.post-content {
+  color: var(--home-text-secondary-autumn) !important;
+  line-height: 1.7 !important;
+}
+
+.like-button,
+.social-action-button {
+  color: var(--autumn-secondary-500) !important;
+  transition: var(--transition-autumn-fast) !important;
+}
+
+.like-button:hover,
+.social-action-button:hover {
+  color: var(--autumn-secondary-700) !important;
+  transform: scale(1.1) !important;
+}
+
+.like-button.liked {
+  color: var(--autumn-secondary-600) !important;
+  background: var(--autumn-secondary-50) !important;
+  border-radius: 8px !important;
+}
+
+.comment-input {
+  background: var(--warm-neutral-50) !important;
+  border: 2px solid var(--border-subtle-autumn) !important;
+  border-radius: 16px !important;
+  padding: 12px 16px !important;
+}
+
+.comment-input:focus {
+  border-color: var(--autumn-primary-400) !important;
+  box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.15) !important;
+}
+
+/* ===== UPLAY OTOÑAL ===== */
+.uplay-main,
+.uplay-container,
+div[data-testid*='uplay'] {
+  background: linear-gradient(
+    180deg,
+    var(--autumn-earth-50) 0%,
+    var(--bg-primary-autumn) 30%,
+    var(--bg-primary-autumn) 100%
+  ) !important;
+}
+
+.video-player-container {
+  background: var(--card-bg-autumn) !important;
+  border: 2px solid var(--card-border-autumn) !important;
+  border-radius: 24px !important;
+  box-shadow: var(--card-shadow-autumn) !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+.video-player-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--gradient-autumn-primary);
+  z-index: 10;
+}
+
+.video-controls {
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    rgba(28, 25, 23, 0.8) 100%
+  ) !important;
+  border-radius: 0 0 24px 24px !important;
+}
+
+.play-button,
+.video-control-button {
+  background: var(--autumn-primary-500) !important;
+  color: #ffffff !important;
+  border: none !important;
+  border-radius: 50% !important;
+  width: 48px !important;
+  height: 48px !important;
+  box-shadow: var(--card-shadow-autumn) !important;
+  transition: var(--transition-autumn-normal) !important;
+}
+
+.play-button:hover,
+.video-control-button:hover {
+  background: var(--autumn-primary-600) !important;
+  transform: scale(1.1) !important;
+  box-shadow: var(--card-shadow-hover-autumn) !important;
+}
+
+.video-progress-bar {
+  background: var(--warm-neutral-300) !important;
+  height: 6px !important;
+  border-radius: 3px !important;
+}
+
+.video-progress-fill {
+  background: var(--gradient-autumn-primary) !important;
+  height: 100% !important;
+  border-radius: 3px !important;
+  transition: width 0.1s ease !important;
+}
+
+.question-overlay {
+  background: var(--card-bg-autumn) !important;
+  border: 2px solid var(--autumn-gold-400) !important;
+  border-radius: 20px !important;
+  box-shadow: var(--card-shadow-hover-autumn) !important;
+  padding: 24px !important;
+}
+
+.question-title {
+  color: var(--home-heading-primary-autumn) !important;
+  font-weight: 700 !important;
+  margin-bottom: 16px !important;
+}
+
+.question-option {
+  background: var(--warm-neutral-100) !important;
+  border: 2px solid var(--border-subtle-autumn) !important;
+  border-radius: 12px !important;
+  padding: 12px 16px !important;
+  margin: 8px 0 !important;
+  transition: var(--transition-autumn-fast) !important;
+  cursor: pointer !important;
+}
+
+.question-option:hover {
+  background: var(--autumn-primary-50) !important;
+  border-color: var(--autumn-primary-300) !important;
+  transform: translateX(4px) !important;
+}
+
+.question-option.correct {
+  background: var(--autumn-success-light) !important;
+  border-color: var(--autumn-success) !important;
+  color: var(--autumn-success-dark) !important;
+}
+
+.question-option.incorrect {
+  background: var(--autumn-error-light) !important;
+  border-color: var(--autumn-error) !important;
+  color: var(--autumn-error-dark) !important;
+}
+
+.achievement-notification {
+  background: var(--gradient-autumn-primary) !important;
+  color: #ffffff !important;
+  border-radius: 16px !important;
+  padding: 16px 20px !important;
+  box-shadow: var(--card-shadow-hover-autumn) !important;
+  animation: autumn-achievement-bounce 0.6s ease-out !important;
+}
+
+@keyframes autumn-achievement-bounce {
+  0% {
+    opacity: 0;
+    transform: scale(0.3) translateY(100px);
+  }
+  50% {
+    transform: scale(1.05) translateY(0);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* ===== USTATS OTOÑAL ===== */
+.ustats-main,
+.stats-container,
+div[data-testid*='ustats'] {
+  background: linear-gradient(
+    180deg,
+    var(--autumn-burgundy-50) 0%,
+    var(--bg-primary-autumn) 30%,
+    var(--bg-primary-autumn) 100%
+  ) !important;
+}
+
+.stat-card,
+.metric-card {
+  background: var(--card-bg-autumn) !important;
+  border: 2px solid var(--card-border-autumn) !important;
+  border-radius: 20px !important;
+  box-shadow: var(--card-shadow-autumn) !important;
+  padding: 24px !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+.stat-card::before,
+.metric-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(
+    90deg,
+    var(--autumn-burgundy-400) 0%,
+    var(--autumn-gold-400) 100%
+  );
+  opacity: 0.8;
+}
+
+.stat-value {
+  color: var(--autumn-burgundy-600) !important;
+  font-weight: 800 !important;
+  font-size: 2.5rem !important;
+  text-shadow: 0 1px 2px rgba(139, 21, 56, 0.2) !important;
+}
+
+.stat-label {
+  color: var(--warm-neutral-600) !important;
+  font-weight: 600 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.8px !important;
+}
+
+.chart-container {
+  background: var(--warm-neutral-50) !important;
+  border-radius: 16px !important;
+  padding: 20px !important;
+  border: 1px solid var(--border-subtle-autumn) !important;
+}
+
+.progress-ring {
+  color: var(--autumn-primary-500) !important;
+}
+
+.progress-ring.high {
+  color: var(--autumn-success) !important;
+}
+
+.progress-ring.medium {
+  color: var(--autumn-gold-500) !important;
+}
+
+.progress-ring.low {
+  color: var(--autumn-secondary-500) !important;
+}
+
+/* ===== WALLET OTOÑAL ===== */
+.wallet-main,
+.wallet-container,
+div[data-testid*='wallet'] {
+  background: linear-gradient(
+    180deg,
+    var(--autumn-gold-50) 0%,
+    var(--bg-primary-autumn) 30%,
+    var(--bg-primary-autumn) 100%
+  ) !important;
+}
+
+.balance-card {
+  background: var(--gradient-autumn-primary) !important;
+  color: #ffffff !important;
+  border-radius: 24px !important;
+  padding: 32px !important;
+  box-shadow: var(--card-shadow-hover-autumn) !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+.balance-card::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -20%;
+  width: 200px;
+  height: 200px;
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.1) 0%,
+    transparent 70%
+  );
+  border-radius: 50%;
+}
+
+.balance-amount {
+  font-size: 3rem !important;
+  font-weight: 900 !important;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2) !important;
+  margin-bottom: 8px !important;
+}
+
+.balance-label {
+  font-weight: 600 !important;
+  opacity: 0.9 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 1px !important;
+}
+
+.transaction-item {
+  background: var(--card-bg-autumn) !important;
+  border: 1px solid var(--border-subtle-autumn) !important;
+  border-radius: 16px !important;
+  padding: 16px !important;
+  margin-bottom: 12px !important;
+  transition: var(--transition-autumn-fast) !important;
+}
+
+.transaction-item:hover {
+  background: var(--warm-neutral-100) !important;
+  border-color: var(--autumn-gold-300) !important;
+  transform: translateX(4px) !important;
+}
+
+.transaction-amount.positive {
+  color: var(--autumn-success) !important;
+  font-weight: 700 !important;
+}
+
+.transaction-amount.negative {
+  color: var(--autumn-error) !important;
+  font-weight: 700 !important;
+}
+
+.transaction-type {
+  color: var(--warm-neutral-600) !important;
+  font-weight: 500 !important;
+  text-transform: capitalize !important;
+}
+
+/* ===== CHALLENGES OTOÑAL ===== */
+.challenges-main,
+.challenges-container,
+div[data-testid*='challenges'] {
+  background: linear-gradient(
+    180deg,
+    var(--autumn-primary-50) 0%,
+    var(--bg-primary-autumn) 30%,
+    var(--bg-primary-autumn) 100%
+  ) !important;
+}
+
+.challenge-card {
+  background: var(--card-bg-autumn) !important;
+  border: 2px solid var(--card-border-autumn) !important;
+  border-radius: 20px !important;
+  box-shadow: var(--card-shadow-autumn) !important;
+  padding: 24px !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+.challenge-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--gradient-autumn-primary);
+  opacity: 0.9;
+}
+
+.challenge-card.completed::before {
+  background: var(--autumn-success) !important;
+}
+
+.challenge-card.in-progress::before {
+  background: var(--autumn-gold-500) !important;
+}
+
+.challenge-title {
+  color: var(--home-heading-primary-autumn) !important;
+  font-weight: 700 !important;
+  margin-bottom: 12px !important;
+}
+
+.challenge-description {
+  color: var(--home-text-secondary-autumn) !important;
+  line-height: 1.6 !important;
+  margin-bottom: 16px !important;
+}
+
+.challenge-reward {
+  background: var(--autumn-gold-100) !important;
+  color: var(--autumn-gold-800) !important;
+  border-radius: 12px !important;
+  padding: 8px 12px !important;
+  font-weight: 600 !important;
+  display: inline-block !important;
+}
+
+.challenge-progress {
+  background: var(--warm-neutral-200) !important;
+  border-radius: 9999px !important;
+  height: 8px !important;
+  margin: 16px 0 !important;
+}
+
+.challenge-progress-fill {
+  background: var(--gradient-autumn-primary) !important;
+  border-radius: 9999px !important;
+  height: 100% !important;
+  transition: width 0.3s ease !important;
+}
+
+.challenge-button {
+  background: var(--gradient-autumn-primary) !important;
+  color: #ffffff !important;
+  border: none !important;
+  border-radius: 12px !important;
+  padding: 10px 20px !important;
+  font-weight: 600 !important;
+  transition: var(--transition-autumn-normal) !important;
+}
+
+.challenge-button:hover {
+  transform: translateY(-1px) !important;
+  box-shadow: var(--card-shadow-autumn) !important;
+  filter: brightness(1.1) !important;
+}
+
+.challenge-button:disabled {
+  background: var(--warm-neutral-300) !important;
+  color: var(--warm-neutral-600) !important;
+  cursor: not-allowed !important;
+  transform: none !important;
+}
+
+/* ===== PROFILE OTOÑAL ===== */
+.profile-main,
+.profile-container,
+div[data-testid*='profile'] {
+  background: linear-gradient(
+    180deg,
+    var(--autumn-earth-50) 0%,
+    var(--bg-primary-autumn) 30%,
+    var(--bg-primary-autumn) 100%
+  ) !important;
+}
+
+.profile-header {
+  background: var(--gradient-autumn-primary) !important;
+  color: #ffffff !important;
+  border-radius: 24px !important;
+  padding: 32px !important;
+  margin-bottom: 24px !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+.profile-avatar {
+  border: 4px solid #ffffff !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3) !important;
+  width: 120px !important;
+  height: 120px !important;
+}
+
+.profile-name {
+  font-size: 2rem !important;
+  font-weight: 800 !important;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2) !important;
+  margin: 16px 0 8px 0 !important;
+}
+
+.profile-role {
+  background: rgba(255, 255, 255, 0.2) !important;
+  color: #ffffff !important;
+  border-radius: 16px !important;
+  padding: 6px 12px !important;
+  font-weight: 600 !important;
+  display: inline-block !important;
+}
+
+.profile-section {
+  background: var(--card-bg-autumn) !important;
+  border: 2px solid var(--card-border-autumn) !important;
+  border-radius: 20px !important;
+  box-shadow: var(--card-shadow-autumn) !important;
+  padding: 24px !important;
+  margin-bottom: 20px !important;
+}
+
+.profile-section-title {
+  color: var(--home-heading-primary-autumn) !important;
+  font-weight: 700 !important;
+  margin-bottom: 16px !important;
+  border-bottom: 2px solid var(--autumn-primary-200) !important;
+  padding-bottom: 8px !important;
+}
+
+.profile-field {
+  margin-bottom: 16px !important;
+}
+
+.profile-field-label {
+  color: var(--warm-neutral-600) !important;
+  font-weight: 600 !important;
+  margin-bottom: 4px !important;
+  text-transform: uppercase !important;
+  font-size: 0.8rem !important;
+  letter-spacing: 0.5px !important;
+}
+
+.profile-field-value {
+  color: var(--home-text-primary-autumn) !important;
+  font-weight: 500 !important;
+  font-size: 1rem !important;
+}
+
+/* ===== RESPONSIVE PARA MÓDULOS ===== */
+@media (max-width: 768px) {
+  .marketplace-card,
+  .product-card,
+  .post-card,
+  .social-post,
+  .challenge-card,
+  .stat-card,
+  .metric-card {
+    border-radius: 16px !important;
+    padding: 16px !important;
+    margin-bottom: 16px !important;
+  }
+
+  .balance-card {
+    padding: 24px !important;
+    border-radius: 20px !important;
+  }
+
+  .balance-amount {
+    font-size: 2.5rem !important;
+  }
+
+  .profile-header {
+    padding: 24px !important;
+    border-radius: 20px !important;
+  }
+
+  .profile-avatar {
+    width: 80px !important;
+    height: 80px !important;
+  }
+
+  .profile-name {
+    font-size: 1.5rem !important;
+  }
+}
+
+/* ===== ANIMACIONES ESPECÍFICAS DE MÓDULOS ===== */
+@keyframes autumn-module-entrance {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.marketplace-card,
+.product-card,
+.post-card,
+.challenge-card,
+.stat-card {
+  animation: autumn-module-entrance 0.4s ease-out;
+}
+
+.video-player-container {
+  animation: autumn-module-entrance 0.6s ease-out;
+}
+
+.balance-card {
+  animation: autumn-module-entrance 0.5s ease-out;
+}
+
+/* ===== EFECTOS ESPECIALES POR MÓDULO ===== */
+.marketplace-card:hover::after {
+  content: '🛒';
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  font-size: 1.2rem;
+  opacity: 0.7;
+}
+
+.social-post:hover::after {
+  content: '💬';
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  font-size: 1.2rem;
+  opacity: 0.7;
+}
+
+.challenge-card:hover::after {
+  content: '🏆';
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  font-size: 1.2rem;
+  opacity: 0.7;
+}
+
+.stat-card:hover::after {
+  content: '📊';
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  font-size: 1.2rem;
+  opacity: 0.7;
+}
+
+.wallet-main .balance-card::after {
+  content: '💰';
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  font-size: 2rem;
+  opacity: 0.3;
+}

@@ -1,0 +1,97 @@
+# 🚀 CoomÜnity SuperApp - Reglas de Desarrollo
+
+## 🔄 Reglas Críticas para Lazy Loading en React
+
+### **OBLIGATORIO - Prevención de Errores "Element type is invalid"**
+
+Estas reglas previenen el error crítico: *"Element type is invalid. Received a promise that resolves to: undefined. Lazy element type must resolve to a class or function"*
+
+#### **1. Consistencia de Nombres y Exportaciones**
+```typescript
+// ✅ CORRECTO
+// Archivo: UPlay.tsx
+export default function UPlay() { ... }
+
+// ❌ INCORRECTO
+// Archivo: UPlay.tsx
+export const UPlayPage = () => { ... } // Nombre inconsistente
+```
+
+#### **2. Exportaciones por Defecto Obligatorias**
+```typescript
+// ✅ CORRECTO - Para componentes de página
+const MyPage = () => { ... };
+export default MyPage;
+
+// ❌ INCORRECTO - Named exports causan lazy loading failures
+export const MyPage = () => { ... };
+```
+
+#### **3. Extensiones de Archivo en Importaciones Dinámicas**
+```typescript
+// ✅ CORRECTO
+const createLazyPage = (path: string) => {
+  return lazy(() => import(`../pages/${path}.tsx`));
+};
+
+// ❌ INCORRECTO - Causa warnings de Vite
+const createLazyPage = (path: string) => {
+  return lazy(() => import(`../pages/${path}`)); // Sin extensión
+};
+```
+
+#### **4. Estructura de lazyComponents.ts**
+```typescript
+// ✅ ESTRUCTURA CORRECTA
+import { lazy } from 'react';
+
+// Para exportaciones por defecto
+const createLazyPage = (path: string) => {
+  return lazy(() => import(`../pages/${path}.tsx`));
+};
+
+// Para exportaciones nombradas (solo si es necesario)
+const createLazyPageNamed = (path: string, componentName: string) => {
+  return lazy(() => import(`../pages/${path}.tsx`).then(module => ({
+    default: (module as any)[componentName]
+  })));
+};
+```
+
+#### **5. Protocolo de Verificación Post-Cambios**
+```bash
+# SIEMPRE ejecutar después de cambios en lazy loading:
+npm run dev
+# Verificar logs de Vite para warnings
+# Probar navegación a páginas lazy-loaded
+# Verificar que no hay errores en consola del navegador
+```
+
+#### **6. Monitoreo de Logs de Vite**
+Estar atento a estos warnings críticos:
+```
+⚠️ WARNING: invalid import "../pages/${path}"
+⚠️ WARNING: A file extension must be included in the static part of the import
+⚠️ WARNING: The above dynamic import cannot be analyzed by Vite
+```
+
+### **Recomendaciones Adicionales**
+
+- **Testing**: Siempre probar lazy loading después de cambios en estructura de archivos
+- **Naming**: Mantener nombres de archivo simples y consistentes con exportaciones
+- **Debugging**: Usar React DevTools para verificar que componentes lazy se cargan correctamente
+- **Performance**: Monitorear que el code splitting esté funcionando en Network tab
+
+### **Casos de Uso Específicos CoomÜnity**
+
+```typescript
+// Páginas principales de la SuperApp
+const HomePage = createLazyPage('HomePage');      // ✅ HomePage.tsx exports default HomePage
+const UPlay = createLazyPage('UPlay');            // ✅ UPlay.tsx exports default UPlay
+const Marketplace = createLazyPage('Marketplace'); // ✅ Marketplace.tsx exports default Marketplace
+const Social = createLazyPage('Social');          // ✅ Social.tsx exports default Social
+```
+
+---
+
+**Estas reglas son CRÍTICAS para el funcionamiento correcto de la SuperApp CoomÜnity y deben seguirse estrictamente para evitar errores de lazy loading.**

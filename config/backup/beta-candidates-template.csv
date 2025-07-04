@@ -1,0 +1,19 @@
+nombre,email,origen,experiencia_cooperativa,region,idioma,codigo_invitacion,fecha_invitacion,estado
+# EJEMPLO DE ESTRUCTURA:
+# María González,maria@coop.mx,Red Cooperativas México,5_años,LATAM,ES,BETA001,2025-06-07,pendiente
+# John Smith,john@solidarity.org,Solidarity Economy Network,3_años,NORTE_AMERICA,EN,BETA002,2025-06-07,pendiente
+# Pierre Dubois,pierre@coopeurope.fr,European Cooperatives,7_años,EUROPA,FR,BETA003,2025-06-07,pendiente
+
+# INSTRUCCIONES:
+# 1. Llena esta plantilla con candidatos reales
+# 2. Genera códigos únicos de invitación
+# 3. Personaliza invitaciones usando el template
+# 4. Envía invitaciones por email/WhatsApp/Discord
+# 5. Actualiza el estado según respuestas
+
+# FUENTES SUGERIDAS:
+# - Redes de cooperativas locales
+# - Plataformas de economía colaborativa
+# - Comunidades de impacto social
+# - Referencias del equipo CoomÜnity
+# - Participantes de eventos de sustentabilidad

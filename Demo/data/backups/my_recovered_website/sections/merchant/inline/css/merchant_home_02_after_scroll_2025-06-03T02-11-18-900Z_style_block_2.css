@@ -1,0 +1,11 @@
+/* Extracted from: merchant_home_02_after_scroll_2025-06-03T02-11-18-900Z.html */
+/* Block index: 2 */
+/* Extracted at: 2025-06-03T02:16:25.357Z */
+
+body { line-height: 1.1; }
+		body, button, input, select, textarea { font-family: 'Poppins', sans-serif; }
+		html, body { /*background-image: url('/assets/v0.2/images/core/chat_bg.png');*/ background-size: contain; background-attachment: fixed; background-position: center;}
+		body .footer.is-role, body .navbar.is-role, body .bg-search { background-color: #DC1A5B !important; }
+		
+		.is-borderless { border: 0px; }
+		.section { padding: 1.5rem; overflow: hidden; }

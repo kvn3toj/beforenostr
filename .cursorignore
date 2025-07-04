@@ -1,0 +1,55 @@
+# Dependencias y artefactos de build
+node_modules/
+dist/
+build/
+.cache/
+
+# Backups y archivos temporales
+backups/
+_temp_frontend_src_files/
+src_mixed_backup/
+*.backup
+*.bak
+*.log
+logs/
+
+# Documentación y assets no esenciales para el código
+NARRATIVA/
+docs/restored-chats/
+Recursos_Wireframes_Gamifier/
+assets/
+Typography:REM_Wireframes_Gamifie/
+
+# Bases de datos y reportes
+*.db
+playwright-report/
+test-results/
+e2e/
+tests-backup/
+tests/
+
+# Git
+.git/
+
+# Otros
+.idea/
+.vscode/
+grafana/
+docker/
+supabase/
+infrastructure/
+miro-sdk-test/
+gemini-code-reviewer/
+atlas-test-dir/
+admin-frontend/_backend_files_quarantine/
+admin-frontend/consola_example/
+admin-frontend/playwright-report/
+admin-frontend/test-results/
+admin-frontend/tests/
+apps/admin-frontend/
+apps/guardians-portal-frontend/
+public/
+prisma/migrations/
+prisma/migrations_sqlite_backup/
+package-lock.json
+*.lockb

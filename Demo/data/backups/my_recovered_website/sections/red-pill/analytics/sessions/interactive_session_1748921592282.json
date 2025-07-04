@@ -1,0 +1,91 @@
+{
+  "timestamp": "2025-06-03T03:34:18.674Z",
+  "url": "https://demo.coomunity.co/pilgrim/640baa58",
+  "videoState": {
+    "playing": false,
+    "currentTime": 0,
+    "duration": 0,
+    "buffering": false,
+    "hasControls": false,
+    "isFullscreen": false,
+    "hasInteractionPoints": false
+  },
+  "interactiveElements": [
+    {
+      "type": "button",
+      "id": "primary-float",
+      "className": "btn-hexa btn-hexa-color btn-hexa-big",
+      "text": "",
+      "position": {
+        "x": 1847,
+        "y": 990,
+        "width": 70,
+        "height": 70
+      },
+      "visible": true,
+      "clickable": true,
+      "timeAppeared": 67971,
+      "attributes": {
+        "id": "primary-float",
+        "class": "btn-hexa btn-hexa-color btn-hexa-big"
+      },
+      "selector": "button:not([disabled])"
+    },
+    {
+      "type": "unknown",
+      "id": "",
+      "className": "",
+      "text": "",
+      "position": {
+        "x": 0,
+        "y": 0,
+        "width": 1920,
+        "height": 1080
+      },
+      "visible": true,
+      "clickable": true,
+      "timeAppeared": 67985,
+      "attributes": {
+        "src": "https://player.vimeo.com/video/381951343?app_id=122963",
+        "width": "426",
+        "height": "240",
+        "frameborder": "0",
+        "allow": "autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media",
+        "data-ready": "true"
+      },
+      "selector": "iframe[src*=\"vimeo\"]"
+    },
+    {
+      "type": "unknown",
+      "id": "coomunity-player",
+      "className": "iframe-container",
+      "text": "",
+      "position": {
+        "x": 0,
+        "y": 0,
+        "width": 1920,
+        "height": 1080
+      },
+      "visible": true,
+      "clickable": true,
+      "timeAppeared": 67989,
+      "attributes": {
+        "class": "iframe-container",
+        "id": "coomunity-player",
+        "data-vimeo-initialized": "true"
+      },
+      "selector": "[id*=\"player\"]"
+    }
+  ],
+  "screenshots": [
+    "interactive_session_1748921592282_start_2025-06-03T03-33-15-115Z.png",
+    "interactive_session_1748921592282_scan_1_2025-06-03T03-33-15-541Z.png",
+    "interactive_session_1748921592282_scan_5_2025-06-03T03-33-28-100Z.png",
+    "interactive_session_1748921592282_scan_10_2025-06-03T03-33-43-904Z.png",
+    "interactive_session_1748921592282_scan_15_2025-06-03T03-33-59-542Z.png",
+    "interactive_session_1748921592282_scan_20_2025-06-03T03-34-15-050Z.png",
+    "interactive_session_1748921592282_end_2025-06-03T03-34-18-342Z.png"
+  ],
+  "totalElementsDetected": 4,
+  "sessionDuration": 60
+}

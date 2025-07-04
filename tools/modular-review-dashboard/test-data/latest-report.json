@@ -1,0 +1,417 @@
+{
+  "timestamp": "2025-07-04T04:01:05.690Z",
+  "summary": {
+    "totalModules": 5,
+    "totalFiles": 37,
+    "totalIssues": 65,
+    "severityBreakdown": {
+      "Error": 9,
+      "Warning": 19,
+      "Suggestion": 13,
+      "Info": 12
+    },
+    "categoryBreakdown": {
+      "Performance": 12,
+      "Security": 6,
+      "Accessibility": 11,
+      "Code Quality": 22,
+      "Architecture": 7,
+      "Philosophy": 6,
+      "Best Practices": 15
+    }
+  },
+  "modules": [
+    {
+      "module": "HOME",
+      "moduleName": "Home Dashboard",
+      "description": "Página principal y dashboard del usuario",
+      "priority": "high",
+      "timestamp": "2025-07-04T04:01:05.689Z",
+      "summary": {
+        "totalFiles": 5,
+        "totalIssues": 20,
+        "filesWithIssues": 5,
+        "severityBreakdown": {
+          "Error": 0,
+          "Warning": 7,
+          "Suggestion": 2,
+          "Info": 4
+        },
+        "categoryBreakdown": {
+          "Performance": 4,
+          "Security": 1,
+          "Accessibility": 2,
+          "Code Quality": 3,
+          "Architecture": 2,
+          "Philosophy": 1,
+          "Best Practices": 1
+        }
+      },
+      "results": [
+        {
+          "file": "Demo/apps/superapp-unified/src/pages/Home.tsx",
+          "language": "typescript",
+          "issues": [
+            {
+              "line_number": 64,
+              "severity": "Info",
+              "message": "Hardcoded strings should be moved to i18n",
+              "recommendation": "Mover strings a archivo de traducción",
+              "category": "Performance"
+            }
+          ]
+        },
+        {
+          "file": "Demo/apps/superapp-unified/src/components/modules/home/HomeStats.tsx",
+          "language": "typescript",
+          "issues": [
+            {
+              "line_number": 61,
+              "severity": "Info",
+              "message": "Hardcoded strings should be moved to i18n",
+              "recommendation": "Agregar try-catch block y error handling",
+              "category": "Security"
+            },
+            {
+              "line_number": 39,
+              "severity": "Suggestion",
+              "message": "Función puede ser simplificada usando destructuring",
+              "recommendation": "Agregar <ErrorBoundary> como componente padre",
+              "category": "Security"
+            },
+            {
+              "line_number": 59,
+              "severity": "Error",
+              "message": "Consider implementing Ayni principles in user interaction",
+              "recommendation": "Diseñar interacción que promueva reciprocidad (Ayni)",
+              "category": "Accessibility"
+            },
+            {
+              "line_number": 40,
+              "severity": "Info",
+              "message": "Hardcoded strings should be moved to i18n",
+              "recommendation": "Envolver componente con React.memo()",
+              "category": "Best Practices"
+            }
+          ]
+        },
+        {
+          "file": "Demo/apps/superapp-unified/src/components/modules/home/HomeQuickActions.tsx",
+          "language": "typescript",
+          "issues": [
+            {
+              "line_number": 88,
+              "severity": "Suggestion",
+              "message": "Función puede ser simplificada usando destructuring",
+              "recommendation": "Definir interface/type para props del componente",
+              "category": "Code Quality"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "module": "UPLAY",
+      "moduleName": "UPlay Gaming",
+      "description": "Sistema de gamificación y videos interactivos",
+      "priority": "high",
+      "timestamp": "2025-07-04T04:01:05.690Z",
+      "summary": {
+        "totalFiles": 5,
+        "totalIssues": 16,
+        "filesWithIssues": 5,
+        "severityBreakdown": {
+          "Error": 0,
+          "Warning": 1,
+          "Suggestion": 2,
+          "Info": 2
+        },
+        "categoryBreakdown": {
+          "Performance": 3,
+          "Security": 1,
+          "Accessibility": 1,
+          "Code Quality": 5,
+          "Architecture": 0,
+          "Philosophy": 1,
+          "Best Practices": 2
+        }
+      },
+      "results": [
+        {
+          "file": "Demo/apps/superapp-unified/src/components/modules/uplay/VideoPlayer.tsx",
+          "language": "typescript",
+          "issues": [
+            {
+              "line_number": 39,
+              "severity": "Info",
+              "message": "Large bundle size detected in this component",
+              "recommendation": "Refactorizar usando const { prop1, prop2 } = props",
+              "category": "Code Quality"
+            },
+            {
+              "line_number": 28,
+              "severity": "Error",
+              "message": "Función puede ser simplificada usando destructuring",
+              "recommendation": "Agregar <ErrorBoundary> como componente padre",
+              "category": "Security"
+            }
+          ]
+        },
+        {
+          "file": "Demo/apps/superapp-unified/src/components/modules/uplay/QuestionModal.tsx",
+          "language": "typescript",
+          "issues": [
+            {
+              "line_number": 97,
+              "severity": "Suggestion",
+              "message": "Función puede ser simplificada usando destructuring",
+              "recommendation": "Mover strings a archivo de traducción",
+              "category": "Philosophy"
+            },
+            {
+              "line_number": 50,
+              "severity": "Error",
+              "message": "Large bundle size detected in this component",
+              "recommendation": "Diseñar interacción que promueva reciprocidad (Ayni)",
+              "category": "Performance"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "module": "WALLET",
+      "moduleName": "Wallet & Ünits",
+      "description": "Gestión de Ünits y economía interna",
+      "priority": "high",
+      "timestamp": "2025-07-04T04:01:05.690Z",
+      "summary": {
+        "totalFiles": 5,
+        "totalIssues": 4,
+        "filesWithIssues": 1,
+        "severityBreakdown": {
+          "Error": 3,
+          "Warning": 2,
+          "Suggestion": 3,
+          "Info": 2
+        },
+        "categoryBreakdown": {
+          "Performance": 1,
+          "Security": 0,
+          "Accessibility": 3,
+          "Code Quality": 6,
+          "Architecture": 2,
+          "Philosophy": 1,
+          "Best Practices": 4
+        }
+      },
+      "results": [
+        {
+          "file": "Demo/apps/superapp-unified/src/pages/Wallet.tsx",
+          "language": "typescript",
+          "issues": [
+            {
+              "line_number": 11,
+              "severity": "Info",
+              "message": "Consider using React.memo for performance optimization",
+              "recommendation": "Envolver componente con React.memo()",
+              "category": "Accessibility"
+            },
+            {
+              "line_number": 53,
+              "severity": "Error",
+              "message": "Error boundary should be implemented for this component",
+              "recommendation": "Envolver componente con React.memo()",
+              "category": "Security"
+            },
+            {
+              "line_number": 71,
+              "severity": "Info",
+              "message": "Consider implementing Ayni principles in user interaction",
+              "recommendation": "Implementar lazy loading o code splitting",
+              "category": "Code Quality"
+            }
+          ]
+        },
+        {
+          "file": "Demo/apps/superapp-unified/src/components/modules/wallet/TransactionHistory.tsx",
+          "language": "typescript",
+          "issues": [
+            {
+              "line_number": 40,
+              "severity": "Warning",
+              "message": "Función puede ser simplificada usando destructuring",
+              "recommendation": "Agregar try-catch block y error handling",
+              "category": "Philosophy"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "module": "AUTH",
+      "moduleName": "Authentication",
+      "description": "Sistema de autenticación y autorización",
+      "priority": "high",
+      "timestamp": "2025-07-04T04:01:05.690Z",
+      "summary": {
+        "totalFiles": 12,
+        "totalIssues": 15,
+        "filesWithIssues": 5,
+        "severityBreakdown": {
+          "Error": 3,
+          "Warning": 3,
+          "Suggestion": 3,
+          "Info": 2
+        },
+        "categoryBreakdown": {
+          "Performance": 1,
+          "Security": 2,
+          "Accessibility": 2,
+          "Code Quality": 4,
+          "Architecture": 1,
+          "Philosophy": 1,
+          "Best Practices": 4
+        }
+      },
+      "results": [
+        {
+          "file": "Demo/apps/superapp-unified/src/pages/Login.tsx",
+          "language": "typescript",
+          "issues": [
+            {
+              "line_number": 48,
+              "severity": "Error",
+              "message": "Hardcoded strings should be moved to i18n",
+              "recommendation": "Diseñar interacción que promueva reciprocidad (Ayni)",
+              "category": "Best Practices"
+            },
+            {
+              "line_number": 58,
+              "severity": "Suggestion",
+              "message": "Missing TypeScript types for props",
+              "recommendation": "Implementar aria-label y role attributes",
+              "category": "Performance"
+            }
+          ]
+        },
+        {
+          "file": "Demo/apps/superapp-unified/src/components/auth/LoginForm.tsx",
+          "language": "typescript",
+          "issues": [
+            {
+              "line_number": 21,
+              "severity": "Info",
+              "message": "Hardcoded strings should be moved to i18n",
+              "recommendation": "Diseñar interacción que promueva reciprocidad (Ayni)",
+              "category": "Security"
+            },
+            {
+              "line_number": 82,
+              "severity": "Error",
+              "message": "Missing error handling in async function",
+              "recommendation": "Envolver componente con React.memo()",
+              "category": "Architecture"
+            }
+          ]
+        },
+        {
+          "file": "Demo/apps/superapp-unified/src/hooks/useAuth.ts",
+          "language": "javascript",
+          "issues": [
+            {
+              "line_number": 77,
+              "severity": "Info",
+              "message": "Missing error handling in async function",
+              "recommendation": "Agregar try-catch block y error handling",
+              "category": "Performance"
+            },
+            {
+              "line_number": 71,
+              "severity": "Suggestion",
+              "message": "Missing error handling in async function",
+              "recommendation": "Implementar aria-label y role attributes",
+              "category": "Performance"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "module": "SHARED",
+      "moduleName": "Shared Components",
+      "description": "Componentes y utilidades compartidas",
+      "priority": "medium",
+      "timestamp": "2025-07-04T04:01:05.690Z",
+      "summary": {
+        "totalFiles": 10,
+        "totalIssues": 10,
+        "filesWithIssues": 4,
+        "severityBreakdown": {
+          "Error": 3,
+          "Warning": 6,
+          "Suggestion": 3,
+          "Info": 2
+        },
+        "categoryBreakdown": {
+          "Performance": 3,
+          "Security": 2,
+          "Accessibility": 3,
+          "Code Quality": 4,
+          "Architecture": 2,
+          "Philosophy": 2,
+          "Best Practices": 4
+        }
+      },
+      "results": [
+        {
+          "file": "Demo/apps/superapp-unified/src/components/ui/Card.tsx",
+          "language": "typescript",
+          "issues": [
+            {
+              "line_number": 92,
+              "severity": "Error",
+              "message": "Hardcoded strings should be moved to i18n",
+              "recommendation": "Definir interface/type para props del componente",
+              "category": "Accessibility"
+            }
+          ]
+        },
+        {
+          "file": "Demo/apps/superapp-unified/src/lib/api-service.ts",
+          "language": "javascript",
+          "issues": [
+            {
+              "line_number": 70,
+              "severity": "Error",
+              "message": "Consider adding ARIA labels for better accessibility",
+              "recommendation": "Definir interface/type para props del componente",
+              "category": "Accessibility"
+            },
+            {
+              "line_number": 84,
+              "severity": "Warning",
+              "message": "Componente sin memoización puede causar re-renders innecesarios",
+              "recommendation": "Implementar lazy loading o code splitting",
+              "category": "Philosophy"
+            },
+            {
+              "line_number": 45,
+              "severity": "Warning",
+              "message": "Large bundle size detected in this component",
+              "recommendation": "Implementar aria-label y role attributes",
+              "category": "Code Quality"
+            },
+            {
+              "line_number": 19,
+              "severity": "Error",
+              "message": "Componente sin memoización puede causar re-renders innecesarios",
+              "recommendation": "Definir interface/type para props del componente",
+              "category": "Code Quality"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

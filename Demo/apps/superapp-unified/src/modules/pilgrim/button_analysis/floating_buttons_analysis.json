@@ -1,0 +1,91 @@
+{
+  "totalFloatingButtons": 4,
+  "primaryButton": {
+    "id": "primary-float",
+    "className": "btn-hexa btn-hexa-color btn-hexa-big",
+    "text": "",
+    "hasImage": true,
+    "imageSrc": "/assets/img/btn/oo.png",
+    "position": {
+      "isFixed": true,
+      "bottom": "20px",
+      "right": "3px"
+    },
+    "isPrimary": true,
+    "isChild": false
+  },
+  "childButtons": [
+    {
+      "id": "",
+      "className": "btn-hexa btn-mid btn-cinema",
+      "text": "",
+      "hasImage": true,
+      "imageSrc": "/assets/img/btn/cam-gris.png",
+      "position": {
+        "isFixed": true,
+        "bottom": "auto",
+        "right": "8px"
+      },
+      "isPrimary": false,
+      "isChild": true
+    },
+    {
+      "id": "",
+      "className": "btn-hexa btn-mid btn-plaza",
+      "text": "",
+      "hasImage": true,
+      "imageSrc": "/assets/img/btn/cart-gris.png",
+      "position": {
+        "isFixed": true,
+        "bottom": "auto",
+        "right": "8px"
+      },
+      "isPrimary": false,
+      "isChild": true
+    },
+    {
+      "id": "",
+      "className": "btn-hexa btn-mid btn-aldea",
+      "text": "",
+      "hasImage": true,
+      "imageSrc": "/assets/img/btn/user-gris.png",
+      "position": {
+        "isFixed": true,
+        "bottom": "auto",
+        "right": "8px"
+      },
+      "isPrimary": false,
+      "isChild": true
+    }
+  ],
+  "buttonTypes": [
+    {
+      "className": "btn-hexa btn-mid btn-cinema",
+      "type": "Cinema",
+      "imageSrc": "/assets/img/btn/cam-gris.png",
+      "hasClickHandler": false
+    },
+    {
+      "className": "btn-hexa btn-mid btn-plaza",
+      "type": "Plaza",
+      "imageSrc": "/assets/img/btn/cart-gris.png",
+      "hasClickHandler": false
+    },
+    {
+      "className": "btn-hexa btn-mid btn-aldea",
+      "type": "Aldea",
+      "imageSrc": "/assets/img/btn/user-gris.png",
+      "hasClickHandler": false
+    }
+  ],
+  "interactionResults": {
+    "childButtonsVisible": false,
+    "iframeVisible": true,
+    "activeClasses": [
+      {
+        "className": "ttour-bullet active",
+        "id": ""
+      }
+    ]
+  }
+}

@@ -1,0 +1,331 @@
+/* ===============================================================================
+   🌟 GUARDIAN VISUAL SYSTEM - COOMUNITY SUPERAPP
+   Sistema unificado de colores con contraste optimizado y filosofía CoomÜnity
+   =============================================================================== */
+
+/* ===== 🎨 PALETA GUARDIAN BASE ===== */
+:root {
+  /* Fuego - Dorado cálido principal */
+  --guardian-primary: #f5a623;
+  --guardian-primary-light: #fef7e1;
+  --guardian-primary-dark: #c17d15;
+
+  /* Agua - Azul confiable */
+  --guardian-secondary: #0891b2;
+  --guardian-secondary-light: #e0f2fe;
+  --guardian-secondary-dark: #155e75;
+
+  /* Tierra - Verde equilibrado */
+  --guardian-accent: #16a34a;
+  --guardian-accent-light: #dcfce7;
+  --guardian-accent-dark: #166534;
+
+  /* Aire - Violeta inspirador */
+  --guardian-mystic: #a855f7;
+  --guardian-mystic-light: #f3e8ff;
+  --guardian-mystic-dark: #7c3aed;
+}
+
+/* ===== 📝 TEXTOS CON CONTRASTE WCAG AAA ===== */
+:root {
+  --guardian-text-primary: #000000;    /* 21:1 contraste */
+  --guardian-text-heading: #1a1a1a;    /* 15:1 contraste */
+  --guardian-text-body: #2d2d2d;       /* 12:1 contraste */
+  --guardian-text-secondary: #4a4a4a;  /* 8:1 contraste */
+  --guardian-text-muted: #595959;      /* 7:1 contraste */
+}
+
+/* ===== 🏠 FONDOS ARMÓNICOS ===== */
+:root {
+  --guardian-bg-primary: #fffefb;
+  --guardian-bg-secondary: #faf9f6;
+  --guardian-bg-surface: #f8fafc;
+  --guardian-border: rgba(245, 166, 35, 0.1);
+}
+
+/* ===== 🌟 GRADIENTES GUARDIAN ===== */
+:root {
+  --guardian-gradient-primary: linear-gradient(135deg, var(--guardian-primary) 0%, var(--guardian-accent) 100%);
+  --guardian-gradient-secondary: linear-gradient(135deg, var(--guardian-secondary) 0%, var(--guardian-mystic) 100%);
+  --guardian-gradient-soft: linear-gradient(135deg, var(--guardian-primary-light) 0%, var(--guardian-accent-light) 100%);
+}
+
+/* ===== 🎭 APLICACIÓN GLOBAL ===== */
+body {
+  background: var(--guardian-bg-primary) !important;
+  color: var(--guardian-text-primary) !important;
+  font-family: 'Inter', 'Roboto', sans-serif !important;
+  transition: all 300ms ease !important;
+}
+
+#root, .main-content-area {
+  background: transparent !important;
+  color: var(--guardian-text-primary) !important;
+}
+
+/* ===== 🏠 HOME PAGE ESPECÍFICO ===== */
+
+/* Welcome Header */
+.home-welcome-header .MuiTypography-h4,
+[data-testid='welcome-header'] .MuiTypography-h4 {
+  color: var(--guardian-text-heading) !important;
+  font-weight: 800 !important;
+  font-size: 2.5rem !important;
+  background: var(--guardian-gradient-primary) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+}
+
+/* Fallback para navegadores sin soporte */
+@supports not (-webkit-background-clip: text) {
+  .home-welcome-header .MuiTypography-h4,
+  [data-testid='welcome-header'] .MuiTypography-h4 {
+    color: var(--guardian-text-heading) !important;
+    background: none !important;
+    -webkit-text-fill-color: unset !important;
+  }
+}
+
+/* Porcentaje principal */
+.reciprocidad-metrics-card .MuiTypography-h1,
+.percentage-display,
+[data-testid*='percentage'] {
+  color: var(--guardian-text-primary) !important;
+  font-weight: 900 !important;
+  font-size: 6rem !important;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Títulos generales */
+.MuiTypography-h2,
+.MuiTypography-h3,
+.MuiTypography-h4,
+.MuiTypography-h5,
+.MuiTypography-h6 {
+  color: var(--guardian-text-heading) !important;
+  font-weight: 700 !important;
+}
+
+/* Textos de cuerpo */
+.MuiTypography-body1 {
+  color: var(--guardian-text-body) !important;
+  font-weight: 500 !important;
+}
+
+.MuiTypography-body2 {
+  color: var(--guardian-text-secondary) !important;
+  font-weight: 500 !important;
+}
+
+.MuiTypography-caption {
+  color: var(--guardian-text-muted) !important;
+  font-weight: 500 !important;
+}
+
+/* ===== 🃏 CARDS HARMÓNICAS ===== */
+.MuiCard-root,
+.MuiPaper-root {
+  background: var(--guardian-bg-primary) !important;
+  border: 2px solid var(--guardian-border) !important;
+  border-radius: 24px !important;
+  box-shadow: 0 4px 12px rgba(245, 166, 35, 0.08) !important;
+  transition: all 350ms ease !important;
+  position: relative !important;
+}
+
+.MuiCard-root:hover {
+  transform: translateY(-4px) scale(1.02) !important;
+  box-shadow: 0 12px 32px rgba(245, 166, 35, 0.15) !important;
+  border-color: rgba(245, 166, 35, 0.3) !important;
+}
+
+/* Borde superior con gradiente */
+.MuiCard-root::before {
+  content: '' !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  height: 4px !important;
+  background: var(--guardian-gradient-primary) !important;
+  opacity: 0.8 !important;
+}
+
+/* ===== 🔴 BOTONES GUARDIAN ===== */
+.MuiButton-root {
+  font-weight: 600 !important;
+  border-radius: 16px !important;
+  text-transform: none !important;
+  transition: all 250ms ease !important;
+}
+
+.MuiButton-contained {
+  background: var(--guardian-gradient-primary) !important;
+  color: #ffffff !important;
+  font-weight: 700 !important;
+}
+
+.MuiButton-contained:hover {
+  background: var(--guardian-gradient-secondary) !important;
+  transform: translateY(-2px) scale(1.05) !important;
+  box-shadow: 0 8px 24px rgba(245, 166, 35, 0.3) !important;
+}
+
+.MuiButton-outlined {
+  color: var(--guardian-text-primary) !important;
+  border: 2px solid var(--guardian-primary) !important;
+}
+
+.MuiButton-outlined:hover {
+  background: var(--guardian-primary-light) !important;
+  transform: translateY(-1px) !important;
+}
+
+/* ===== 📊 PROGRESS BARS ===== */
+.MuiLinearProgress-root {
+  height: 12px !important;
+  border-radius: 9999px !important;
+  background: var(--guardian-border) !important;
+}
+
+.MuiLinearProgress-bar {
+  border-radius: 9999px !important;
+  background: var(--guardian-gradient-primary) !important;
+  transition: all 500ms ease !important;
+}
+
+/* ===== 🎪 CHIPS Y ETIQUETAS ===== */
+.MuiChip-root {
+  border-radius: 20px !important;
+  font-weight: 600 !important;
+  border: 2px solid var(--guardian-border) !important;
+  transition: all 200ms ease !important;
+}
+
+.MuiChip-filled {
+  background: var(--guardian-gradient-soft) !important;
+  color: var(--guardian-text-primary) !important;
+}
+
+.MuiChip-filled:hover {
+  transform: translateY(-1px) scale(1.05) !important;
+  box-shadow: 0 4px 12px rgba(245, 166, 35, 0.2) !important;
+}
+
+/* ===== ⚡ ICONOS ===== */
+.MuiIconButton-root {
+  border-radius: 12px !important;
+  transition: all 200ms ease !important;
+}
+
+.MuiIconButton-root:hover {
+  background: var(--guardian-primary-light) !important;
+  transform: scale(1.1) !important;
+  color: var(--guardian-primary-dark) !important;
+}
+
+/* ===== 🌈 MÉTRICAS ESPECÍFICAS COOMUNITY ===== */
+.metric-reciprocidad,
+[data-metric='reciprocidad'] {
+  color: var(--guardian-accent-dark) !important;
+  font-weight: 700 !important;
+}
+
+.metric-meritos,
+[data-metric='meritos'] {
+  color: var(--guardian-primary-dark) !important;
+  font-weight: 700 !important;
+}
+
+.metric-ondas,
+[data-metric='ondas'] {
+  color: var(--guardian-mystic-dark) !important;
+  font-weight: 700 !important;
+}
+
+.metric-lukas,
+[data-metric='lukas'] {
+  color: var(--guardian-secondary-dark) !important;
+  font-weight: 700 !important;
+}
+
+/* ===== 🔔 ALERTAS Y NOTIFICACIONES ===== */
+.MuiAlert-standardSuccess {
+  background: var(--guardian-accent-light) !important;
+  color: var(--guardian-accent-dark) !important;
+  border: 2px solid var(--guardian-accent) !important;
+}
+
+.MuiAlert-standardWarning {
+  background: var(--guardian-primary-light) !important;
+  color: var(--guardian-primary-dark) !important;
+  border: 2px solid var(--guardian-primary) !important;
+}
+
+.MuiAlert-standardInfo {
+  background: var(--guardian-secondary-light) !important;
+  color: var(--guardian-secondary-dark) !important;
+  border: 2px solid var(--guardian-secondary) !important;
+}
+
+/* ===== 📱 RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .home-welcome-header .MuiTypography-h4 {
+    font-size: 2rem !important;
+  }
+
+  .reciprocidad-metrics-card .MuiTypography-h1 {
+    font-size: 4rem !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .home-welcome-header .MuiTypography-h4 {
+    font-size: 1.5rem !important;
+  }
+
+  .reciprocidad-metrics-card .MuiTypography-h1 {
+    font-size: 3rem !important;
+  }
+}
+
+/* ===== ♿ ACCESIBILIDAD ===== */
+@media (prefers-contrast: high) {
+  :root {
+    --guardian-text-primary: #000000 !important;
+    --guardian-text-heading: #000000 !important;
+    --guardian-bg-primary: #ffffff !important;
+  }
+
+  .MuiCard-root {
+    border: 3px solid #000000 !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ===== 🎯 FOCUS STATES ===== */
+.MuiButton-root:focus-visible,
+.MuiIconButton-root:focus-visible {
+  outline: 3px solid var(--guardian-primary) !important;
+  outline-offset: 3px !important;
+  box-shadow: 0 0 0 6px rgba(245, 166, 35, 0.3) !important;
+}
+
+/* ===== 🔧 UTILIDADES ===== */
+.guardian-text-primary { color: var(--guardian-text-primary) !important; }
+.guardian-text-heading { color: var(--guardian-text-heading) !important; }
+.guardian-bg-primary { background: var(--guardian-bg-primary) !important; }
+.guardian-gradient { background: var(--guardian-gradient-primary) !important; }
+.guardian-border { border: 2px solid var(--guardian-border) !important; }
+.guardian-shadow { box-shadow: 0 4px 12px rgba(245, 166, 35, 0.15) !important; }
+
+/* ===============================================================================
+   FIN DEL SISTEMA VISUAL GUARDIAN
+   =============================================================================== */

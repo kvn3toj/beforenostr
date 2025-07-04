@@ -1,0 +1,466 @@
+/* ==========================================================================
+   RESPONSIVE & CONTEXTUAL CLASSES FOR PLAYWRIGHT DETECTION
+   ========================================================================== */
+
+/* 
+   Este archivo define clases CSS que se utilizan exclusivamente para
+   hacer elementos detectables por los tests de Playwright.
+   
+   Estas clases no tienen estilos visuales asociados, solo sirven como
+   selectores para identificar elementos responsivos y contextuales.
+*/
+
+/* ==========================================================================
+   RESPONSIVE ELEMENT CLASSES
+   ========================================================================== */
+
+/* Elementos que cambian comportamiento según viewport */
+.responsive-element {
+  /* Marca elementos con comportamiento responsive */
+}
+
+.responsive-layout {
+  /* Layouts que se adaptan a diferentes tamaños de pantalla */
+}
+
+.responsive-container {
+  /* Contenedores adaptativos */
+}
+
+.responsive-content {
+  /* Contenido que se reorganiza según viewport */
+}
+
+.responsive-card {
+  /* Tarjetas que cambian layout responsivamente */
+}
+
+.responsive-grid {
+  /* Grids que se reorganizan según breakpoints */
+}
+
+.responsive-stats {
+  /* Estadísticas con layout responsive */
+}
+
+/* ==========================================================================
+   BREAKPOINT-SPECIFIC CLASSES
+   ========================================================================== */
+
+/* Elementos solo visibles en móviles */
+.mobile-only {
+  /* Elementos exclusivos para dispositivos móviles */
+}
+
+/* Elementos solo visibles en desktop */
+.desktop-only {
+  /* Elementos exclusivos para escritorio */
+}
+
+/* ==========================================================================
+   LAYOUT COMPONENT CLASSES
+   ========================================================================== */
+
+/* Componentes específicos de layout */
+.mobile-menu-drawer {
+  /* Drawer de navegación móvil */
+}
+
+.desktop-sidebar {
+  /* Sidebar de navegación desktop */
+}
+
+.hamburger-menu {
+  /* Botón hamburguesa para móviles */
+}
+
+.search-container {
+  /* Contenedor de búsqueda responsive */
+}
+
+.mobile-search-toggle {
+  /* Botón de búsqueda móvil */
+}
+
+.mobile-nav {
+  /* Navegación móvil inferior */
+}
+
+.bottom-navigation-container {
+  /* Contenedor de navegación inferior */
+}
+
+/* ==========================================================================
+   CONTEXTUAL ELEMENT CLASSES
+   ========================================================================== */
+
+/* Contenido que depende del contexto del usuario */
+.contextual-content {
+  /* Contenido basado en contexto */
+}
+
+.contextual-data {
+  /* Datos específicos del usuario/sistema */
+}
+
+.contextual-text {
+  /* Texto personalizado según contexto */
+}
+
+.contextual-value {
+  /* Valores dinámicos contextuales */
+}
+
+.contextual-indicator {
+  /* Indicadores de estado contextual */
+}
+
+.contextual-badge {
+  /* Badges/chips contextuales */
+}
+
+.contextual-control {
+  /* Controles que cambian según contexto */
+}
+
+.contextual-navigation {
+  /* Elementos de navegación contextuales */
+}
+
+.contextual-header {
+  /* Headers con información contextual */
+}
+
+.contextual-item {
+  /* Items de lista contextuales */
+}
+
+.contextual-timestamp {
+  /* Marcas de tiempo contextuales */
+}
+
+/* ==========================================================================
+   LOADING & STATE CLASSES
+   ========================================================================== */
+
+/* Estados de carga contextuales */
+.contextual-loading {
+  /* Elementos de carga contextual */
+}
+
+.contextual-progress {
+  /* Barras de progreso contextuales */
+}
+
+.sync-indicator {
+  /* Indicador de sincronización */
+}
+
+.loading-progress {
+  /* Progreso de carga */
+}
+
+.loading-spinner {
+  /* Spinner de carga */
+}
+
+/* ==========================================================================
+   USER-SPECIFIC CLASSES
+   ========================================================================== */
+
+/* Elementos específicos del usuario */
+.user-welcome {
+  /* Sección de bienvenida personalizada */
+}
+
+.user-profile-avatar {
+  /* Avatar del perfil de usuario */
+}
+
+.user-avatar {
+  /* Avatar de usuario en cualquier contexto */
+}
+
+.welcome-greeting {
+  /* Saludo personalizado */
+}
+
+.points-display {
+  /* Visualización de puntos del usuario */
+}
+
+.happiness-display {
+  /* Visualización de felicidad del usuario */
+}
+
+.balance-display {
+  /* Visualización de balance */
+}
+
+.ucoins-amount {
+  /* Cantidad de ÜCoins */
+}
+
+/* ==========================================================================
+   DASHBOARD COMPONENT CLASSES
+   ========================================================================== */
+
+/* Componentes específicos del dashboard */
+.dashboard-grid {
+  /* Grid principal del dashboard */
+}
+
+.dashboard-card {
+  /* Tarjetas del dashboard */
+}
+
+.gamification-card {
+  /* Tarjeta de gamificación */
+}
+
+.wallet-card {
+  /* Tarjeta de wallet */
+}
+
+.activity-card {
+  /* Tarjeta de actividad */
+}
+
+.quick-actions-card {
+  /* Tarjeta de acciones rápidas */
+}
+
+/* ==========================================================================
+   NAVIGATION CLASSES
+   ========================================================================== */
+
+/* Elementos de navegación */
+.brand-link {
+  /* Link de la marca/logo */
+}
+
+.brand-logo {
+  /* Logo de la aplicación */
+}
+
+.notification-button {
+  /* Botón de notificaciones */
+}
+
+.profile-menu-button {
+  /* Botón del menú de perfil */
+}
+
+.bottom-nav-action {
+  /* Acciones de navegación inferior */
+}
+
+.mobile-navigation-content {
+  /* Contenido de navegación móvil */
+}
+
+/* ==========================================================================
+   INTERACTIVE CLASSES
+   ========================================================================== */
+
+/* Elementos interactivos */
+.action-button {
+  /* Botones de acción */
+}
+
+.quick-action-button {
+  /* Botones de acción rápida */
+}
+
+.view-all-button {
+  /* Botones "ver todo" */
+}
+
+/* ==========================================================================
+   CONTENT ORGANIZATION CLASSES
+   ========================================================================== */
+
+/* Organización de contenido */
+.welcome-section {
+  /* Sección de bienvenida */
+}
+
+.welcome-text-container {
+  /* Contenedor de texto de bienvenida */
+}
+
+.stats-container {
+  /* Contenedor de estadísticas */
+}
+
+.progress-section {
+  /* Sección de progreso */
+}
+
+.badges-container {
+  /* Contenedor de badges */
+}
+
+.ucoins-section {
+  /* Sección de ÜCoins */
+}
+
+.actions-grid {
+  /* Grid de acciones */
+}
+
+.notifications-list {
+  /* Lista de notificaciones */
+}
+
+/* ==========================================================================
+   NOTIFICATION CLASSES
+   ========================================================================== */
+
+/* Elementos de notificaciones */
+.notification-count {
+  /* Contador de notificaciones */
+}
+
+.notification-item {
+  /* Item de notificación */
+}
+
+.notification-content {
+  /* Contenido de notificación */
+}
+
+.notification-time {
+  /* Tiempo de notificación */
+}
+
+/* ==========================================================================
+   ACHIEVEMENT CLASSES
+   ========================================================================== */
+
+/* Elementos de logros y gamificación */
+.achievement-badge {
+  /* Badge de logro */
+}
+
+.level-chip {
+  /* Chip de nivel */
+}
+
+.progress-bar {
+  /* Barra de progreso */
+}
+
+.badges-more {
+  /* Indicador de más badges */
+}
+
+/* ==========================================================================
+   FINANCIAL CLASSES
+   ========================================================================== */
+
+/* Elementos financieros */
+.trend-indicator {
+  /* Indicador de tendencia */
+}
+
+.contextual-currency {
+  /* Moneda contextual */
+}
+
+.contextual-achievements {
+  /* Logros contextuales */
+}
+
+/* ==========================================================================
+   SYSTEM CLASSES
+   ========================================================================== */
+
+/* Estados del sistema */
+.system-loading {
+  /* Carga del sistema */
+}
+
+.sync-spinner {
+  /* Spinner de sincronización */
+}
+
+.search-input {
+  /* Input de búsqueda */
+}
+
+.contextual-branding {
+  /* Branding contextual */
+}
+
+.contextual-metrics {
+  /* Métricas contextuales */
+}
+
+/* ==========================================================================
+   MEDIA QUERIES FOR RESPONSIVE TESTING
+   ========================================================================== */
+
+/* 
+   Estas media queries no aplican estilos, pero ayudan a los tests
+   a identificar comportamientos responsive específicos
+*/
+
+@media (max-width: 767px) {
+  .mobile-breakpoint-marker {
+    content: "mobile";
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  .tablet-breakpoint-marker {
+    content: "tablet";
+  }
+}
+
+@media (min-width: 1024px) {
+  .desktop-breakpoint-marker {
+    content: "desktop";
+  }
+}
+
+/* ==========================================================================
+   UTILITY CLASSES FOR TESTING
+   ========================================================================== */
+
+/* Clases utilitarias para testing */
+.hidden {
+  /* Elementos ocultos pero presentes en DOM */
+}
+
+.loading {
+  /* Elementos en estado de carga */
+}
+
+.contextual-state {
+  /* Estado contextual general */
+}
+
+.app-layout {
+  /* Layout principal de la aplicación */
+}
+
+.main-content-wrapper {
+  /* Wrapper del contenido principal */
+}
+
+.main-content-area {
+  /* Área de contenido principal */
+}
+
+.card-header {
+  /* Header de tarjetas */
+}
+
+.card-title {
+  /* Título de tarjetas */
+}
+
+.welcome-subtitle {
+  /* Subtítulo de bienvenida */
+} 

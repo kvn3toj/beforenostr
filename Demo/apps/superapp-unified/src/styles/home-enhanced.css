@@ -1,0 +1,726 @@
+/* ===============================================================================
+   🎨 COOMUNITY SUPERAPP HOME - ENHANCED STYLES (FIXED)
+   Eliminando animaciones excesivas que causan efecto de "olas del mar"
+   =============================================================================== */
+
+/* ===== PHASE 1: FUNDAMENTOS (COMPLETED) ===== */
+
+/* 🏗️ Layout Tokens */
+:root {
+  --home-container-max-width: 1440px;
+  --home-grid-gap: 24px;
+  --home-card-border-radius: 16px;
+  --home-section-spacing: 32px;
+}
+
+/* 🎭 Animation Tokens - SIMPLIFICADOS */
+:root {
+  --home-animation-duration-fast: 150ms;
+  --home-animation-duration-normal: 300ms;
+  --home-animation-duration-slow: 500ms;
+  --home-animation-easing: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* 🌈 Gradient Classes - ESTÁTICOS */
+.bg-gradient-subtle {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.05) 0%, rgba(168, 85, 247, 0.03) 100%);
+}
+
+.bg-gradient-metrics-card {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.08) 0%, rgba(168, 85, 247, 0.05) 100%);
+}
+
+.bg-gradient-welcome-header {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(168, 85, 247, 0.05) 100%);
+}
+
+.bg-gradient-wallet-card {
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.08) 0%, rgba(59, 130, 246, 0.05) 100%);
+}
+
+/* 🎯 ANIMACIONES SIMPLIFICADAS - Solo hover y focus */
+.home-card-hover {
+  transition: all var(--home-animation-duration-normal) var(--home-animation-easing);
+  cursor: pointer;
+}
+
+.home-card-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(99, 102, 241, 0.12);
+}
+
+.home-card-hover:active {
+  transform: translateY(-1px);
+  transition-duration: var(--home-animation-duration-fast);
+}
+
+/* 📱 Responsive Design */
+@media (max-width: 768px) {
+  :root {
+    --home-grid-gap: 16px;
+    --home-section-spacing: 24px;
+  }
+  
+  .home-card-hover:hover {
+    transform: none; /* Eliminar hover en mobile */
+  }
+}
+
+/* ♿ Accessibility - RESPETO TOTAL a prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* 🔮 Elementos interactivos SOLO con hover */
+.interactive-scale {
+  transition: transform var(--home-animation-duration-normal) var(--home-animation-easing);
+}
+
+.interactive-scale:hover {
+  transform: scale(1.02);
+}
+
+.interactive-scale:active {
+  transform: scale(0.98);
+  transition-duration: var(--home-animation-duration-fast);
+}
+
+/* 🎨 Module Cards - SIN animaciones automáticas */
+.module-card-enhanced {
+  position: relative;
+  overflow: hidden;
+  transition: all var(--home-animation-duration-normal) var(--home-animation-easing);
+}
+
+.module-card-enhanced:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+/* 🌟 Loading States - SIN shimmer automático */
+.loading-pulse {
+  opacity: 0.7;
+  transition: opacity var(--home-animation-duration-normal) ease-in-out;
+}
+
+/* 📊 Focus States */
+.enhanced-focus:focus-visible {
+  outline: 2px solid rgba(99, 102, 241, 0.6);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* 🎯 GLASSMORPHISM - Estático */
+.glassmorphism-card {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: var(--home-card-border-radius);
+}
+
+/* 🔧 Performance Optimizations */
+.will-change-transform {
+  will-change: transform;
+}
+
+.will-change-opacity {
+  will-change: opacity;
+}
+
+.gpu-accelerated {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+/* 🚫 ELIMINADAS TODAS LAS ANIMACIONES AUTOMÁTICAS */
+/* - flowing-wave (causaba efecto olas) */
+/* - gentle-pulse (movimiento constante) */
+/* - energy-flicker (parpadeo) */
+/* - light-float (flotación) */
+/* - rotate-glow (rotación) */
+/* - shimmer (brillo automático) */
+/* - float (flotación automática) */
+
+/* ✅ SOLO MANTENER TRANSICIONES EN HOVER/FOCUS */
+
+/* ===== PHASE 2: COMPONENT-LEVEL ENHANCEMENTS ===== */
+
+/* 🎯 Enhanced Micro-Animations */
+.home-card-hover {
+  transition: all var(--home-animation-duration-normal) var(--home-animation-easing);
+  cursor: pointer;
+}
+
+.home-card-hover:hover {
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 12px 40px rgba(99, 102, 241, 0.15);
+}
+
+.home-card-hover:active {
+  transform: translateY(-2px) scale(1.01);
+  transition-duration: var(--home-animation-duration-fast);
+}
+
+/* 🔮 Advanced Elemental Progress Circles */
+.elemental-progress-enhanced {
+  position: relative;
+  display: inline-block;
+}
+
+.elemental-progress-enhanced::before {
+  content: '';
+  position: absolute;
+  top: -4px;
+  left: -4px;
+  right: -4px;
+  bottom: -4px;
+  border-radius: 50%;
+  background: conic-gradient(from 0deg, transparent, rgba(99, 102, 241, 0.2), transparent);
+  /* animation: rotate-glow 3s linear infinite; - Eliminada para evitar efecto de olas */
+  opacity: 0;
+  transition: opacity var(--home-animation-duration-normal) var(--home-animation-easing);
+}
+
+.elemental-progress-enhanced:hover::before {
+  opacity: 1;
+}
+
+/* Animación rotate-glow eliminada para evitar efecto de olas */
+
+/* 🎨 Enhanced Module Cards */
+.module-card-enhanced {
+  position: relative;
+  overflow: hidden;
+  transition: all var(--home-animation-duration-normal) var(--home-animation-easing);
+}
+
+.module-card-enhanced::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  transition: left var(--home-animation-duration-slow) var(--home-animation-easing);
+}
+
+.module-card-enhanced:hover::before {
+  left: 100%;
+}
+
+.module-card-enhanced:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+/* 📊 Enhanced Metrics Relationships */
+.metrics-relationship-line {
+  position: relative;
+  overflow: hidden;
+}
+
+.metrics-relationship-line::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(99, 102, 241, 0.6), transparent);
+  transform: translateY(-50%) scaleX(0);
+  transition: transform var(--home-animation-duration-slow) var(--home-animation-easing);
+}
+
+.metrics-relationship-line:hover::after {
+  transform: translateY(-50%) scaleX(1);
+}
+
+/* 🌟 Enhanced Loading States */
+@keyframes shimmer {
+  0% { background-position: -200px 0; }
+  100% { background-position: calc(200px + 100%) 0; }
+}
+
+.loading-shimmer {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200px 100%;
+  /* animation: shimmer 1.5s infinite; - Eliminada para evitar efecto de olas */
+}
+
+/* 🌈 Enhanced Gradient Overlays */
+.gradient-overlay-hover {
+  position: relative;
+  overflow: hidden;
+}
+
+.gradient-overlay-hover::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(168, 85, 247, 0.05) 100%);
+  opacity: 0;
+  transition: opacity var(--home-animation-duration-normal) var(--home-animation-easing);
+  pointer-events: none;
+}
+
+.gradient-overlay-hover:hover::before {
+  opacity: 1;
+}
+
+/* 🔄 Enhanced Transitions */
+.smooth-transition {
+  transition: all var(--home-animation-duration-normal) var(--home-animation-easing);
+}
+
+.bounce-transition {
+  transition: all var(--home-animation-duration-normal) var(--home-animation-easing-bounce);
+}
+
+/* 🎯 Focus States Enhancement */
+.enhanced-focus:focus-visible {
+  outline: 2px solid rgba(99, 102, 241, 0.6);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+}
+
+/* 🌙 Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+  .loading-shimmer {
+    background: linear-gradient(90deg, #2a2a2a 25%, #3a3a3a 50%, #2a2a2a 75%);
+  }
+  
+  .enhanced-focus:focus-visible {
+    outline-color: rgba(168, 85, 247, 0.8);
+    box-shadow: 0 0 0 4px rgba(168, 85, 247, 0.2);
+  }
+}
+
+/* ===== PHASE 3: ADVANCED VISUAL ENHANCEMENTS ===== */
+
+/* === GLASSMORPHISM EFFECTS === */
+.glassmorphism-card {
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+}
+
+.glassmorphism-dark {
+  background: rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* === ADVANCED GRADIENT OVERLAYS === */
+.gradient-mesh-bg {
+  background: 
+    radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.3) 0%, transparent 50%),
+    radial-gradient(circle at 40% 40%, rgba(120, 219, 226, 0.3) 0%, transparent 50%),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+}
+
+.gradient-mesh-dark {
+  background: 
+    radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.2) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.2) 0%, transparent 50%),
+    radial-gradient(circle at 40% 40%, rgba(120, 219, 226, 0.2) 0%, transparent 50%),
+    linear-gradient(135deg, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.1) 100%);
+}
+
+/* === ADVANCED CARD INTERACTIONS === */
+.interactive-card-advanced {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  transform-style: preserve-3d;
+}
+
+.interactive-card-advanced::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  transition: left 0.5s;
+  z-index: 1;
+}
+
+.interactive-card-advanced:hover::before {
+  left: 100%;
+}
+
+.interactive-card-advanced:hover {
+  transform: translateY(-8px) rotateX(5deg) rotateY(5deg);
+  box-shadow: 
+    0 20px 40px rgba(0, 0, 0, 0.1),
+    0 0 0 1px rgba(255, 255, 255, 0.1);
+}
+
+/* === FLOATING ELEMENTS - DISABLED === */
+.floating-element {
+  /* Animación eliminada para evitar efecto de olas */
+}
+
+.floating-element-delayed {
+  /* Animación eliminada para evitar efecto de olas */
+}
+
+.floating-element-slow {
+  /* Animación eliminada para evitar efecto de olas */
+}
+
+/* === ADVANCED PROGRESS INDICATORS === */
+.progress-ring {
+  position: relative;
+  width: 120px;
+  height: 120px;
+}
+
+.progress-ring-circle {
+  transition: stroke-dashoffset 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  transform: rotate(-90deg);
+  transform-origin: 50% 50%;
+}
+
+.progress-ring-glow {
+  filter: drop-shadow(0 0 8px currentColor);
+}
+
+/* === METRIC RELATIONSHIP LINES === */
+.metrics-connection-line {
+  position: absolute;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--coomunity-primary-400) 20%,
+    var(--coomunity-secondary-400) 80%,
+    transparent 100%
+  );
+  opacity: 0;
+  transition: opacity 0.6s ease-in-out;
+}
+
+.metrics-card:hover .metrics-connection-line {
+  opacity: 0.6;
+  animation: pulse-line 2s ease-in-out infinite;
+}
+
+@keyframes pulse-line {
+  0%, 100% {
+    opacity: 0.6;
+    transform: scaleX(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scaleX(1.1);
+  }
+}
+
+/* === ADVANCED LOADING STATES === */
+.skeleton-shimmer-advanced {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.2) 20%,
+    rgba(255, 255, 255, 0.5) 60%,
+    rgba(255, 255, 255, 0)
+  );
+  animation: shimmer-advanced 2s infinite;
+}
+
+@keyframes shimmer-advanced {
+  0% {
+    background-position: -468px 0;
+  }
+  100% {
+    background-position: 468px 0;
+  }
+}
+
+.loading-dots-advanced {
+  display: inline-flex;
+  gap: 4px;
+}
+
+.loading-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--coomunity-primary-500);
+  animation: loading-bounce 1.4s ease-in-out infinite both;
+}
+
+.loading-dot:nth-child(1) { animation-delay: -0.32s; }
+.loading-dot:nth-child(2) { animation-delay: -0.16s; }
+.loading-dot:nth-child(3) { animation-delay: 0s; }
+
+@keyframes loading-bounce {
+  0%, 80%, 100% {
+    transform: scale(0.8);
+    opacity: 0.5;
+  }
+  40% {
+    transform: scale(1.2);
+    opacity: 1;
+  }
+}
+
+/* === CONTEXTUAL INSIGHTS PANEL === */
+.insights-panel {
+  position: relative;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.1) 0%,
+    rgba(255, 255, 255, 0.05) 100%
+  );
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 24px;
+  margin: 16px 0;
+  overflow: hidden;
+}
+
+.insights-panel::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    var(--coomunity-primary-500),
+    var(--coomunity-secondary-500),
+    var(--coomunity-air-500)
+  );
+  animation: insights-glow 3s ease-in-out infinite;
+}
+
+@keyframes insights-glow {
+  0%, 100% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* === SMART RECOMMENDATIONS === */
+.recommendation-card {
+  position: relative;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 16px;
+  margin: 8px 0;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.recommendation-card:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: var(--coomunity-primary-300);
+  transform: translateX(8px);
+}
+
+.recommendation-priority-high {
+  border-left: 4px solid var(--color-error-500);
+}
+
+.recommendation-priority-medium {
+  border-left: 4px solid var(--color-warning-500);
+}
+
+.recommendation-priority-low {
+  border-left: 4px solid var(--color-info-500);
+}
+
+/* === RECIPROCIDAD BALANCE VISUALIZATION === */
+.reciprocidad-balance-circle {
+  position: relative;
+  width: 200px;
+  height: 200px;
+  margin: 0 auto;
+}
+
+.reciprocidad-balance-bg {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: conic-gradient(
+    from 0deg,
+    var(--coomunity-primary-200) 0deg,
+    var(--coomunity-secondary-200) 180deg,
+    var(--coomunity-primary-200) 360deg
+  );
+  opacity: 0.3;
+}
+
+.reciprocidad-balance-indicator {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 160px;
+  height: 160px;
+  margin: -80px 0 0 -80px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+/* === ELEMENT HARMONY VISUALIZATION === */
+.element-harmony-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 16px;
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
+  position: relative;
+}
+
+.element-harmony-grid::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 2px;
+  height: 100%;
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    var(--coomunity-primary-300),
+    transparent
+  );
+  transform: translate(-50%, -50%);
+}
+
+.element-harmony-grid::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    var(--coomunity-secondary-300),
+    transparent
+  );
+  transform: translate(-50%, -50%);
+}
+
+.element-harmony-item {
+  position: relative;
+  padding: 16px;
+  border-radius: 12px;
+  text-align: center;
+  transition: all 0.3s ease;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.element-harmony-item:hover {
+  transform: scale(1.05);
+  background: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+/* === RESPONSIVE ENHANCEMENTS === */
+@media (max-width: 768px) {
+  .interactive-card-advanced:hover {
+    transform: translateY(-4px);
+  }
+  
+  .reciprocidad-balance-circle {
+    width: 150px;
+    height: 150px;
+  }
+  
+  .reciprocidad-balance-indicator {
+    width: 120px;
+    height: 120px;
+    margin: -60px 0 0 -60px;
+  }
+  
+  .element-harmony-grid {
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(4, 1fr);
+  }
+  
+  .element-harmony-grid::before,
+  .element-harmony-grid::after {
+    display: none;
+  }
+}
+
+/* === PERFORMANCE OPTIMIZATIONS === */
+.will-change-transform {
+  will-change: transform;
+}
+
+.will-change-opacity {
+  will-change: opacity;
+}
+
+.gpu-accelerated {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+/* === ACCESSIBILITY ENHANCEMENTS === */
+@media (prefers-reduced-motion: reduce) {
+  .floating-element,
+  .floating-element-delayed,
+  .floating-element-slow {
+    animation: none;
+  }
+  
+  .interactive-card-advanced:hover {
+    transform: translateY(-2px);
+  }
+  
+  .loading-dot {
+    animation: none;
+  }
+}
+
+/* === HIGH CONTRAST MODE === */
+@media (prefers-contrast: high) {
+  .glassmorphism-card {
+    background: rgba(255, 255, 255, 0.9);
+    border: 2px solid #000;
+  }
+  
+  .recommendation-card {
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid #000;
+  }
+} 

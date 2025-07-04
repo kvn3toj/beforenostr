@@ -1,0 +1,737 @@
+{
+  "version": "1.0.0",
+  "lastUpdated": "2024-06-03T20:00:00Z",
+  "metadata": {
+    "totalCount": 20,
+    "categories": ["pilgrim", "merchant", "red-pill", "community", "education", "challenges"],
+    "contentTypes": ["interactive", "form", "quiz", "social", "video", "article", "game"],
+    "difficultyLevels": ["beginner", "intermediate", "advanced", "expert"],
+    "estimatedGenerationTime": "2024-06-03T19:30:00Z",
+    "algorithmVersion": "mock_v1.0",
+    "confidenceThreshold": 0.7
+  },
+  "recommendations": [
+    {
+      "id": "pilgrim_experience_1",
+      "title": "Experiencia Pilgrim: El Viaje Interior",
+      "type": "interactive",
+      "category": "pilgrim",
+      "description": "Una experiencia inmersiva que te guía a través de un viaje de autoconocimiento personal usando técnicas de gamificación avanzada.",
+      "thumbnail": "/assets/img/pilgrim-experience-1.jpg",
+      "estimatedTime": 25,
+      "difficultyLevel": "intermediate",
+      "tags": ["autoconocimiento", "gamificación", "experiencia inmersiva", "desarrollo personal"],
+      "contentDetails": {
+        "format": "interactive_journey",
+        "hasVideo": true,
+        "hasQuizzes": true,
+        "hasReflections": true,
+        "progressTrackable": true
+      },
+      "targetAudience": {
+        "ageRange": "18-45",
+        "interests": ["desarrollo personal", "filosofía", "psicología"],
+        "experienceLevel": "any"
+      },
+      "mlFeatures": {
+        "engagementPotential": 0.85,
+        "completionLikelihood": 0.72,
+        "shareablePotential": 0.65,
+        "retentionValue": 0.78
+      },
+      "seasonality": {
+        "peakMonths": [1, 9, 10],
+        "timeOfDayOptimal": [8, 9, 20, 21],
+        "weekdayPreference": "any"
+      }
+    },
+    {
+      "id": "merchant_onboarding_1",
+      "title": "Crea tu Perfil de Merchant Profesional",
+      "type": "form",
+      "category": "merchant",
+      "description": "Configura tu perfil completo de merchant con herramientas avanzadas para maximizar tus oportunidades de negocio en la plataforma.",
+      "thumbnail": "/assets/img/merchant-onboarding.jpg",
+      "estimatedTime": 15,
+      "difficultyLevel": "beginner",
+      "tags": ["formulario", "perfil profesional", "configuración", "oportunidades de negocio"],
+      "contentDetails": {
+        "format": "guided_form",
+        "hasValidation": true,
+        "hasHelp": true,
+        "autoSave": true,
+        "progressTrackable": true
+      },
+      "targetAudience": {
+        "ageRange": "25-65",
+        "interests": ["emprendimiento", "negocios", "comercio"],
+        "experienceLevel": "beginner"
+      },
+      "mlFeatures": {
+        "engagementPotential": 0.75,
+        "completionLikelihood": 0.85,
+        "shareablePotential": 0.45,
+        "retentionValue": 0.65
+      },
+      "seasonality": {
+        "peakMonths": [1, 2, 9],
+        "timeOfDayOptimal": [9, 10, 11, 14, 15],
+        "weekdayPreference": "weekdays"
+      }
+    },
+    {
+      "id": "redpill_critical_thinking",
+      "title": "Red Pill: Desafío de Pensamiento Crítico",
+      "type": "quiz",
+      "category": "red-pill",
+      "description": "Un quiz avanzado que pone a prueba tu capacidad de pensamiento independiente y análisis crítico de situaciones complejas.",
+      "thumbnail": "/assets/img/redpill-critical-thinking.jpg",
+      "estimatedTime": 30,
+      "difficultyLevel": "advanced",
+      "tags": ["pensamiento crítico", "filosofía", "análisis", "independencia mental"],
+      "contentDetails": {
+        "format": "adaptive_quiz",
+        "hasTimer": true,
+        "hasExplanations": true,
+        "adaptiveDifficulty": true,
+        "progressTrackable": true
+      },
+      "targetAudience": {
+        "ageRange": "22-55",
+        "interests": ["filosofía", "psicología", "debate", "análisis"],
+        "experienceLevel": "intermediate"
+      },
+      "mlFeatures": {
+        "engagementPotential": 0.82,
+        "completionLikelihood": 0.68,
+        "shareablePotential": 0.75,
+        "retentionValue": 0.85
+      },
+      "seasonality": {
+        "peakMonths": [3, 4, 10, 11],
+        "timeOfDayOptimal": [19, 20, 21, 22],
+        "weekdayPreference": "weekends"
+      }
+    },
+    {
+      "id": "community_networking_1",
+      "title": "Conecta con Mentes Afines",
+      "type": "social",
+      "category": "community",
+      "description": "Descubre y conecta con otros miembros de la comunidad que comparten tus intereses y valores.",
+      "thumbnail": "/assets/img/community-networking.jpg",
+      "estimatedTime": 10,
+      "difficultyLevel": "beginner",
+      "tags": ["networking", "comunidad", "conexiones", "intereses compartidos"],
+      "contentDetails": {
+        "format": "social_discovery",
+        "hasMatching": true,
+        "hasMessaging": true,
+        "hasGroups": true,
+        "progressTrackable": false
+      },
+      "targetAudience": {
+        "ageRange": "18-65",
+        "interests": ["socialización", "networking", "comunidad"],
+        "experienceLevel": "any"
+      },
+      "mlFeatures": {
+        "engagementPotential": 0.70,
+        "completionLikelihood": 0.60,
+        "shareablePotential": 0.85,
+        "retentionValue": 0.75
+      },
+      "seasonality": {
+        "peakMonths": [1, 6, 7, 8, 9],
+        "timeOfDayOptimal": [18, 19, 20, 21],
+        "weekdayPreference": "any"
+      }
+    },
+    {
+      "id": "education_blockchain_basics",
+      "title": "Fundamentos de Blockchain para Emprendedores",
+      "type": "video",
+      "category": "education",
+      "description": "Aprende los conceptos básicos de blockchain y cómo pueden aplicarse en tu emprendimiento o proyecto personal.",
+      "thumbnail": "/assets/img/blockchain-education.jpg",
+      "estimatedTime": 45,
+      "difficultyLevel": "intermediate",
+      "tags": ["blockchain", "tecnología", "emprendimiento", "educación"],
+      "contentDetails": {
+        "format": "video_series",
+        "hasSubtitles": true,
+        "hasNotes": true,
+        "hasQuizzes": true,
+        "progressTrackable": true
+      },
+      "targetAudience": {
+        "ageRange": "25-50",
+        "interests": ["tecnología", "emprendimiento", "innovación"],
+        "experienceLevel": "beginner"
+      },
+      "mlFeatures": {
+        "engagementPotential": 0.75,
+        "completionLikelihood": 0.70,
+        "shareablePotential": 0.60,
+        "retentionValue": 0.80
+      },
+      "seasonality": {
+        "peakMonths": [1, 2, 3, 9, 10, 11],
+        "timeOfDayOptimal": [19, 20, 21],
+        "weekdayPreference": "weekends"
+      }
+    },
+    {
+      "id": "challenge_30_day_mindfulness",
+      "title": "Desafío: 30 Días de Mindfulness",
+      "type": "game",
+      "category": "challenges",
+      "description": "Un desafío gamificado de 30 días para desarrollar hábitos de mindfulness y meditación.",
+      "thumbnail": "/assets/img/mindfulness-challenge.jpg",
+      "estimatedTime": 10,
+      "difficultyLevel": "beginner",
+      "tags": ["mindfulness", "meditación", "hábitos", "gamificación", "30 días"],
+      "contentDetails": {
+        "format": "daily_challenge",
+        "hasReminders": true,
+        "hasProgress": true,
+        "hasBadges": true,
+        "progressTrackable": true
+      },
+      "targetAudience": {
+        "ageRange": "18-60",
+        "interests": ["bienestar", "meditación", "desarrollo personal"],
+        "experienceLevel": "beginner"
+      },
+      "mlFeatures": {
+        "engagementPotential": 0.80,
+        "completionLikelihood": 0.55,
+        "shareablePotential": 0.70,
+        "retentionValue": 0.85
+      },
+      "seasonality": {
+        "peakMonths": [1, 9],
+        "timeOfDayOptimal": [7, 8, 20, 21],
+        "weekdayPreference": "any"
+      }
+    },
+    {
+      "id": "pilgrim_values_compass",
+      "title": "Brújula de Valores Personales",
+      "type": "interactive",
+      "category": "pilgrim",
+      "description": "Una herramienta interactiva para identificar y priorizar tus valores fundamentales que guían tus decisiones.",
+      "thumbnail": "/assets/img/values-compass.jpg",
+      "estimatedTime": 20,
+      "difficultyLevel": "intermediate",
+      "tags": ["valores", "autoconocimiento", "toma de decisiones", "prioridades"],
+      "contentDetails": {
+        "format": "interactive_tool",
+        "hasVisualization": true,
+        "hasExport": true,
+        "hasReflections": true,
+        "progressTrackable": true
+      },
+      "targetAudience": {
+        "ageRange": "20-50",
+        "interests": ["desarrollo personal", "psicología", "liderazgo"],
+        "experienceLevel": "any"
+      },
+      "mlFeatures": {
+        "engagementPotential": 0.78,
+        "completionLikelihood": 0.75,
+        "shareablePotential": 0.65,
+        "retentionValue": 0.82
+      },
+      "seasonality": {
+        "peakMonths": [1, 6, 9],
+        "timeOfDayOptimal": [19, 20, 21],
+        "weekdayPreference": "weekends"
+      }
+    },
+    {
+      "id": "merchant_pricing_strategy",
+      "title": "Estrategias de Pricing Psicológico",
+      "type": "article",
+      "category": "merchant",
+      "description": "Aprende técnicas avanzadas de pricing psicológico para optimizar tus precios y aumentar conversiones.",
+      "thumbnail": "/assets/img/pricing-psychology.jpg",
+      "estimatedTime": 12,
+      "difficultyLevel": "intermediate",
+      "tags": ["pricing", "psicología", "conversiones", "estrategia"],
+      "contentDetails": {
+        "format": "article_interactive",
+        "hasExamples": true,
+        "hasCalculators": true,
+        "hasCheckpoints": true,
+        "progressTrackable": true
+      },
+      "targetAudience": {
+        "ageRange": "25-55",
+        "interests": ["negocios", "marketing", "psicología"],
+        "experienceLevel": "intermediate"
+      },
+      "mlFeatures": {
+        "engagementPotential": 0.73,
+        "completionLikelihood": 0.80,
+        "shareablePotential": 0.70,
+        "retentionValue": 0.75
+      },
+      "seasonality": {
+        "peakMonths": [2, 3, 10, 11],
+        "timeOfDayOptimal": [9, 10, 14, 15],
+        "weekdayPreference": "weekdays"
+      }
+    },
+    {
+      "id": "redpill_matrix_economics",
+      "title": "La Matrix de la Economía Moderna",
+      "type": "interactive",
+      "category": "red-pill",
+      "description": "Una exploración profunda de cómo funciona realmente el sistema económico y cómo navegarlo conscientemente.",
+      "thumbnail": "/assets/img/matrix-economics.jpg",
+      "estimatedTime": 40,
+      "difficultyLevel": "advanced",
+      "tags": ["economía", "sistema financiero", "conciencia", "análisis crítico"],
+      "contentDetails": {
+        "format": "deep_dive_interactive",
+        "hasResearch": true,
+        "hasDebate": true,
+        "hasReflections": true,
+        "progressTrackable": true
+      },
+      "targetAudience": {
+        "ageRange": "25-60",
+        "interests": ["economía", "política", "filosofía", "análisis"],
+        "experienceLevel": "advanced"
+      },
+      "mlFeatures": {
+        "engagementPotential": 0.85,
+        "completionLikelihood": 0.65,
+        "shareablePotential": 0.80,
+        "retentionValue": 0.90
+      },
+      "seasonality": {
+        "peakMonths": [4, 10, 11],
+        "timeOfDayOptimal": [20, 21, 22],
+        "weekdayPreference": "weekends"
+      }
+    },
+    {
+      "id": "community_skill_exchange",
+      "title": "Intercambio de Habilidades",
+      "type": "social",
+      "category": "community",
+      "description": "Ofrece tus habilidades y aprende de otros en un sistema de intercambio colaborativo.",
+      "thumbnail": "/assets/img/skill-exchange.jpg",
+      "estimatedTime": 15,
+      "difficultyLevel": "beginner",
+      "tags": ["intercambio", "habilidades", "colaboración", "aprendizaje mutuo"],
+      "contentDetails": {
+        "format": "marketplace_social",
+        "hasMatching": true,
+        "hasRating": true,
+        "hasScheduling": true,
+        "progressTrackable": false
+      },
+      "targetAudience": {
+        "ageRange": "18-65",
+        "interests": ["aprendizaje", "colaboración", "desarrollo de habilidades"],
+        "experienceLevel": "any"
+      },
+      "mlFeatures": {
+        "engagementPotential": 0.75,
+        "completionLikelihood": 0.70,
+        "shareablePotential": 0.85,
+        "retentionValue": 0.80
+      },
+      "seasonality": {
+        "peakMonths": [1, 2, 9, 10],
+        "timeOfDayOptimal": [18, 19, 20],
+        "weekdayPreference": "any"
+      }
+    },
+    {
+      "id": "education_emotional_intelligence",
+      "title": "Masterclass: Inteligencia Emocional",
+      "type": "video",
+      "category": "education",
+      "description": "Desarrolla tu inteligencia emocional con técnicas prácticas para mejorar relaciones y liderazgo.",
+      "thumbnail": "/assets/img/emotional-intelligence.jpg",
+      "estimatedTime": 35,
+      "difficultyLevel": "intermediate",
+      "tags": ["inteligencia emocional", "liderazgo", "relaciones", "psicología"],
+      "contentDetails": {
+        "format": "masterclass_video",
+        "hasWorkbook": true,
+        "hasExercises": true,
+        "hasCertification": true,
+        "progressTrackable": true
+      },
+      "targetAudience": {
+        "ageRange": "22-55",
+        "interests": ["desarrollo personal", "liderazgo", "psicología"],
+        "experienceLevel": "beginner"
+      },
+      "mlFeatures": {
+        "engagementPotential": 0.80,
+        "completionLikelihood": 0.72,
+        "shareablePotential": 0.68,
+        "retentionValue": 0.85
+      },
+      "seasonality": {
+        "peakMonths": [1, 3, 9],
+        "timeOfDayOptimal": [19, 20, 21],
+        "weekdayPreference": "weekends"
+      }
+    },
+    {
+      "id": "challenge_digital_detox",
+      "title": "Desafío: 7 Días de Detox Digital",
+      "type": "game",
+      "category": "challenges",
+      "description": "Un desafío de una semana para reducir el tiempo de pantalla y reconectar con el mundo real.",
+      "thumbnail": "/assets/img/digital-detox.jpg",
+      "estimatedTime": 5,
+      "difficultyLevel": "intermediate",
+      "tags": ["detox digital", "bienestar", "mindfulness", "equilibrio"],
+      "contentDetails": {
+        "format": "challenge_tracked",
+        "hasReminders": true,
+        "hasAlternatives": true,
+        "hasSupport": true,
+        "progressTrackable": true
+      },
+      "targetAudience": {
+        "ageRange": "16-50",
+        "interests": ["bienestar", "mindfulness", "productividad"],
+        "experienceLevel": "any"
+      },
+      "mlFeatures": {
+        "engagementPotential": 0.70,
+        "completionLikelihood": 0.60,
+        "shareablePotential": 0.75,
+        "retentionValue": 0.70
+      },
+      "seasonality": {
+        "peakMonths": [1, 6, 9],
+        "timeOfDayOptimal": [8, 20, 21],
+        "weekdayPreference": "any"
+      }
+    },
+    {
+      "id": "pilgrim_life_mission",
+      "title": "Descubre tu Misión de Vida",
+      "type": "interactive",
+      "category": "pilgrim",
+      "description": "Un proceso guiado para descubrir tu propósito y misión de vida únicos.",
+      "thumbnail": "/assets/img/life-mission.jpg",
+      "estimatedTime": 60,
+      "difficultyLevel": "advanced",
+      "tags": ["propósito", "misión de vida", "vocación", "autoconocimiento profundo"],
+      "contentDetails": {
+        "format": "guided_journey",
+        "hasReflections": true,
+        "hasVisualizations": true,
+        "hasActionPlan": true,
+        "progressTrackable": true
+      },
+      "targetAudience": {
+        "ageRange": "25-55",
+        "interests": ["desarrollo personal", "espiritualidad", "propósito"],
+        "experienceLevel": "intermediate"
+      },
+      "mlFeatures": {
+        "engagementPotential": 0.90,
+        "completionLikelihood": 0.65,
+        "shareablePotential": 0.70,
+        "retentionValue": 0.95
+      },
+      "seasonality": {
+        "peakMonths": [1, 6, 9, 12],
+        "timeOfDayOptimal": [19, 20, 21, 22],
+        "weekdayPreference": "weekends"
+      }
+    },
+    {
+      "id": "merchant_customer_psychology",
+      "title": "Psicología del Cliente: Triggers de Compra",
+      "type": "interactive",
+      "category": "merchant",
+      "description": "Aprende los triggers psicológicos que motivan las decisiones de compra de tus clientes.",
+      "thumbnail": "/assets/img/customer-psychology.jpg",
+      "estimatedTime": 25,
+      "difficultyLevel": "intermediate",
+      "tags": ["psicología del consumidor", "triggers", "conversiones", "comportamiento"],
+      "contentDetails": {
+        "format": "interactive_workshop",
+        "hasSimulations": true,
+        "hasTestCases": true,
+        "hasChecklist": true,
+        "progressTrackable": true
+      },
+      "targetAudience": {
+        "ageRange": "25-60",
+        "interests": ["marketing", "psicología", "ventas", "negocios"],
+        "experienceLevel": "intermediate"
+      },
+      "mlFeatures": {
+        "engagementPotential": 0.82,
+        "completionLikelihood": 0.78,
+        "shareablePotential": 0.65,
+        "retentionValue": 0.80
+      },
+      "seasonality": {
+        "peakMonths": [2, 3, 10, 11],
+        "timeOfDayOptimal": [10, 11, 15, 16],
+        "weekdayPreference": "weekdays"
+      }
+    },
+    {
+      "id": "redpill_media_manipulation",
+      "title": "Decodificando la Manipulación Mediática",
+      "type": "quiz",
+      "category": "red-pill",
+      "description": "Aprende a identificar técnicas de manipulación en medios y desarrolla pensamiento crítico.",
+      "thumbnail": "/assets/img/media-manipulation.jpg",
+      "estimatedTime": 35,
+      "difficultyLevel": "advanced",
+      "tags": ["manipulación mediática", "pensamiento crítico", "análisis de medios", "propaganda"],
+      "contentDetails": {
+        "format": "analytical_quiz",
+        "hasExamples": true,
+        "hasDiscussion": true,
+        "hasResources": true,
+        "progressTrackable": true
+      },
+      "targetAudience": {
+        "ageRange": "20-65",
+        "interests": ["análisis crítico", "medios", "política", "sociología"],
+        "experienceLevel": "intermediate"
+      },
+      "mlFeatures": {
+        "engagementPotential": 0.85,
+        "completionLikelihood": 0.70,
+        "shareablePotential": 0.85,
+        "retentionValue": 0.88
+      },
+      "seasonality": {
+        "peakMonths": [3, 4, 10, 11],
+        "timeOfDayOptimal": [20, 21, 22],
+        "weekdayPreference": "any"
+      }
+    },
+    {
+      "id": "community_project_collaboration",
+      "title": "Laboratorio de Proyectos Colaborativos",
+      "type": "social",
+      "category": "community",
+      "description": "Únete a proyectos colaborativos o inicia el tuyo propio con otros miembros de la comunidad.",
+      "thumbnail": "/assets/img/project-collaboration.jpg",
+      "estimatedTime": 30,
+      "difficultyLevel": "intermediate",
+      "tags": ["colaboración", "proyectos", "equipo", "innovación"],
+      "contentDetails": {
+        "format": "project_platform",
+        "hasTeamBuilding": true,
+        "hasProjectManagement": true,
+        "hasMessaging": true,
+        "progressTrackable": true
+      },
+      "targetAudience": {
+        "ageRange": "20-55",
+        "interests": ["colaboración", "innovación", "emprendimiento"],
+        "experienceLevel": "intermediate"
+      },
+      "mlFeatures": {
+        "engagementPotential": 0.80,
+        "completionLikelihood": 0.65,
+        "shareablePotential": 0.90,
+        "retentionValue": 0.85
+      },
+      "seasonality": {
+        "peakMonths": [1, 2, 9, 10],
+        "timeOfDayOptimal": [18, 19, 20],
+        "weekdayPreference": "weekdays"
+      }
+    },
+    {
+      "id": "education_future_of_work",
+      "title": "El Futuro del Trabajo: Preparándote para 2030",
+      "type": "article",
+      "category": "education",
+      "description": "Explora las tendencias del futuro del trabajo y cómo prepararte para las carreras emergentes.",
+      "thumbnail": "/assets/img/future-of-work.jpg",
+      "estimatedTime": 18,
+      "difficultyLevel": "intermediate",
+      "tags": ["futuro del trabajo", "carreras", "tecnología", "preparación"],
+      "contentDetails": {
+        "format": "trend_analysis",
+        "hasInfographics": true,
+        "hasActionItems": true,
+        "hasResources": true,
+        "progressTrackable": true
+      },
+      "targetAudience": {
+        "ageRange": "20-50",
+        "interests": ["carrera profesional", "tecnología", "innovación"],
+        "experienceLevel": "any"
+      },
+      "mlFeatures": {
+        "engagementPotential": 0.75,
+        "completionLikelihood": 0.80,
+        "shareablePotential": 0.75,
+        "retentionValue": 0.78
+      },
+      "seasonality": {
+        "peakMonths": [1, 9],
+        "timeOfDayOptimal": [9, 10, 19, 20],
+        "weekdayPreference": "any"
+      }
+    },
+    {
+      "id": "challenge_gratitude_practice",
+      "title": "21 Días de Práctica de Gratitud",
+      "type": "game",
+      "category": "challenges",
+      "description": "Transforma tu perspectiva con una práctica diaria de gratitud durante 21 días.",
+      "thumbnail": "/assets/img/gratitude-practice.jpg",
+      "estimatedTime": 5,
+      "difficultyLevel": "beginner",
+      "tags": ["gratitud", "bienestar", "mindfulness", "hábitos positivos"],
+      "contentDetails": {
+        "format": "daily_practice",
+        "hasJournal": true,
+        "hasReminders": true,
+        "hasSharing": true,
+        "progressTrackable": true
+      },
+      "targetAudience": {
+        "ageRange": "16-70",
+        "interests": ["bienestar", "mindfulness", "desarrollo personal"],
+        "experienceLevel": "beginner"
+      },
+      "mlFeatures": {
+        "engagementPotential": 0.75,
+        "completionLikelihood": 0.65,
+        "shareablePotential": 0.70,
+        "retentionValue": 0.82
+      },
+      "seasonality": {
+        "peakMonths": [1, 11, 12],
+        "timeOfDayOptimal": [7, 8, 21, 22],
+        "weekdayPreference": "any"
+      }
+    },
+    {
+      "id": "pilgrim_shadow_work",
+      "title": "Trabajo con la Sombra: Integrando tu Lado Oscuro",
+      "type": "interactive",
+      "category": "pilgrim",
+      "description": "Un proceso profundo para explorar y integrar aspectos rechazados de tu personalidad.",
+      "thumbnail": "/assets/img/shadow-work.jpg",
+      "estimatedTime": 50,
+      "difficultyLevel": "expert",
+      "tags": ["psicología profunda", "sombra", "integración", "autoconocimiento avanzado"],
+      "contentDetails": {
+        "format": "deep_psychological_work",
+        "hasGuidance": true,
+        "hasWarnings": true,
+        "hasSupport": true,
+        "progressTrackable": true
+      },
+      "targetAudience": {
+        "ageRange": "25-60",
+        "interests": ["psicología profunda", "desarrollo personal avanzado", "espiritualidad"],
+        "experienceLevel": "advanced"
+      },
+      "mlFeatures": {
+        "engagementPotential": 0.88,
+        "completionLikelihood": 0.55,
+        "shareablePotential": 0.40,
+        "retentionValue": 0.95
+      },
+      "seasonality": {
+        "peakMonths": [10, 11, 12, 1],
+        "timeOfDayOptimal": [20, 21, 22],
+        "weekdayPreference": "weekends"
+      }
+    },
+    {
+      "id": "merchant_automation_tools",
+      "title": "Automatización para Pequeños Negocios",
+      "type": "video",
+      "category": "merchant",
+      "description": "Descubre herramientas de automatización que pueden liberar tiempo y aumentar eficiencia.",
+      "thumbnail": "/assets/img/business-automation.jpg",
+      "estimatedTime": 28,
+      "difficultyLevel": "intermediate",
+      "tags": ["automatización", "productividad", "herramientas", "eficiencia"],
+      "contentDetails": {
+        "format": "tutorial_video",
+        "hasToolReviews": true,
+        "hasSetupGuides": true,
+        "hasComparisons": true,
+        "progressTrackable": true
+      },
+      "targetAudience": {
+        "ageRange": "25-60",
+        "interests": ["tecnología", "productividad", "negocios", "automatización"],
+        "experienceLevel": "intermediate"
+      },
+      "mlFeatures": {
+        "engagementPotential": 0.78,
+        "completionLikelihood": 0.75,
+        "shareablePotential": 0.68,
+        "retentionValue": 0.82
+      },
+      "seasonality": {
+        "peakMonths": [1, 2, 9, 10],
+        "timeOfDayOptimal": [9, 10, 19, 20],
+        "weekdayPreference": "weekdays"
+      }
+    }
+  ],
+  "algorithmSettings": {
+    "personalizedWeights": {
+      "clickFrequency": 0.25,
+      "timeSpent": 0.20,
+      "recency": 0.15,
+      "completion": 0.15,
+      "contextual": 0.10,
+      "seasonal": 0.08,
+      "social": 0.07
+    },
+    "diversityThreshold": 0.3,
+    "noveltyBoost": 0.1,
+    "popularityDecay": 0.05,
+    "cacheExpiryMinutes": 5
+  },
+  "mlTrainingData": {
+    "sampleInteractions": [
+      {
+        "userId": "sample_user_1",
+        "recommendationId": "pilgrim_experience_1",
+        "action": "click",
+        "timestamp": "2024-06-03T10:30:00Z",
+        "context": "desktop_morning_weekday"
+      },
+      {
+        "userId": "sample_user_1",
+        "recommendationId": "pilgrim_experience_1",
+        "action": "complete",
+        "timestamp": "2024-06-03T10:55:00Z",
+        "context": "desktop_morning_weekday"
+      }
+    ],
+    "conversionEvents": [
+      {
+        "userId": "sample_user_1",
+        "recommendationId": "pilgrim_experience_1",
+        "conversionType": "completion",
+        "value": 1.0,
+        "timestamp": "2024-06-03T10:55:00Z"
+      }
+    ]
+  }
+} 

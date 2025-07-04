@@ -1,0 +1,648 @@
+/* ===============================================================================
+   🌟 ARMONÍA VISUAL MEJORADA - COOMUNITY SUPERAPP
+   Invocación de los Agentes Guardianes para la mejora visual integral
+   Sistema coherente y unificado de colores con contraste optimizado WCAG AAA
+   =============================================================================== */
+
+/* ===== 🔮 PALETA GUARDIAN - COLORES DE LA SABIDURÍA ANCESTRAL ===== */
+:root {
+  /* 🌅 FUEGO - NARANJA DORADO CÁLIDO (Elemento dominante) */
+  --guardian-fuego-50: #fffbf0;
+  --guardian-fuego-100: #fef7e1;
+  --guardian-fuego-200: #fdecc4;
+  --guardian-fuego-300: #fbda9c;
+  --guardian-fuego-400: #f8c572;
+  --guardian-fuego-500: #f5a623; /* Dorado principal - Sabiduría */
+  --guardian-fuego-600: #e8941a;
+  --guardian-fuego-700: #c17d15;
+  --guardian-fuego-800: #9a6411;
+  --guardian-fuego-900: #7c500e;
+
+  /* 🌊 AGUA - AZUL PROFUNDO CONFIABLE */
+  --guardian-agua-50: #f0f9ff;
+  --guardian-agua-100: #e0f2fe;
+  --guardian-agua-200: #bae6fd;
+  --guardian-agua-300: #7dd3fc;
+  --guardian-agua-400: #38bdf8;
+  --guardian-agua-500: #0891b2; /* Azul equilibrado - Tranquilidad */
+  --guardian-agua-600: #0e7490;
+  --guardian-agua-700: #155e75;
+  --guardian-agua-800: #164e63;
+  --guardian-agua-900: #164e63;
+
+  /* 🌱 TIERRA - VERDE BOSQUE EQUILIBRADO */
+  --guardian-tierra-50: #f0fdf4;
+  --guardian-tierra-100: #dcfce7;
+  --guardian-tierra-200: #bbf7d0;
+  --guardian-tierra-300: #86efac;
+  --guardian-tierra-400: #4ade80;
+  --guardian-tierra-500: #16a34a; /* Verde bosque - Crecimiento */
+  --guardian-tierra-600: #15803d;
+  --guardian-tierra-700: #166534;
+  --guardian-tierra-800: #14532d;
+  --guardian-tierra-900: #0f3f23;
+
+  /* 🌬️ AIRE - VIOLETA MÍSTICO INSPIRADOR */
+  --guardian-aire-50: #faf5ff;
+  --guardian-aire-100: #f3e8ff;
+  --guardian-aire-200: #e9d5ff;
+  --guardian-aire-300: #d8b4fe;
+  --guardian-aire-400: #c084fc;
+  --guardian-aire-500: #a855f7; /* Violeta místico - Inspiración */
+  --guardian-aire-600: #9333ea;
+  --guardian-aire-700: #7c3aed;
+  --guardian-aire-800: #6b21a8;
+  --guardian-aire-900: #581c87;
+
+  /* ⚡ ÉTER - DORADO BRILLANTE TRASCENDENTAL */
+  --guardian-eter-50: #fffef7;
+  --guardian-eter-100: #fffde8;
+  --guardian-eter-200: #fffacd;
+  --guardian-eter-300: #fff4a8;
+  --guardian-eter-400: #ffea73;
+  --guardian-eter-500: #ffd700; /* Dorado trascendental - Iluminación */
+  --guardian-eter-600: #e6c200;
+  --guardian-eter-700: #cc9f00;
+  --guardian-eter-800: #b37d00;
+  --guardian-eter-900: #995c00;
+}
+
+/* ===== 🌈 COLORES SEMÁNTICOS GUARDIAN - PRINCIPIOS COOMUNITY ===== */
+:root {
+  /* 🤝 RECIPROCIDAD - Reciprocidad (Verde equilibrado) */
+  --guardian-reciprocidad: var(--guardian-tierra-500);
+  --guardian-reciprocidad-light: var(--guardian-tierra-100);
+  --guardian-reciprocidad-dark: var(--guardian-tierra-700);
+
+  /* 🏆 MÉRITOS - Logro (Dorado del fuego) */
+  --guardian-meritos: var(--guardian-fuego-500);
+  --guardian-meritos-light: var(--guardian-fuego-100);
+  --guardian-meritos-dark: var(--guardian-fuego-700);
+
+  /* 🌀 ÖNDAS - Energía (Violeta del aire) */
+  --guardian-ondas: var(--guardian-aire-500);
+  --guardian-ondas-light: var(--guardian-aire-100);
+  --guardian-ondas-dark: var(--guardian-aire-700);
+
+  /* 💰 LUKAS - Moneda (Azul del agua) */
+  --guardian-lukas: var(--guardian-agua-500);
+  --guardian-lukas-light: var(--guardian-agua-100);
+  --guardian-lukas-dark: var(--guardian-agua-700);
+
+  /* ✨ BIEN COMÚN - Iluminación (Dorado del éter) */
+  --guardian-bien-comun: var(--guardian-eter-500);
+  --guardian-bien-comun-light: var(--guardian-eter-100);
+  --guardian-bien-comun-dark: var(--guardian-eter-700);
+}
+
+/* ===== 🎨 SISTEMA DE FONDOS HARMÓNICOS ===== */
+:root {
+  --guardian-bg-primary: #fffefb; /* Blanco cálido dorado */
+  --guardian-bg-secondary: #faf9f6; /* Blanco suave */
+  --guardian-bg-tertiary: #f5f4f1; /* Blanco terroso */
+  --guardian-bg-accent: linear-gradient(135deg, #fffefb 0%, #faf9f6 100%);
+
+  /* Superficies con sutil textura energética */
+  --guardian-surface-calm: rgba(248, 250, 252, 0.9);
+  --guardian-surface-active: rgba(254, 252, 246, 0.95);
+  --guardian-surface-elevated: rgba(255, 255, 255, 0.98);
+}
+
+/* ===== 📝 TEXTOS CON CONTRASTE MÁXIMO WCAG AAA ===== */
+:root {
+  /* Contraste 21:1 - Negro puro para máxima legibilidad */
+  --guardian-text-primary: #000000;
+
+  /* Contraste 15:1 - Gris muy oscuro para headings */
+  --guardian-text-heading: #1a1a1a;
+
+  /* Contraste 12:1 - Gris oscuro para contenido principal */
+  --guardian-text-body: #2d2d2d;
+
+  /* Contraste 8:1 - Gris medio para texto secundario */
+  --guardian-text-secondary: #4a4a4a;
+
+  /* Contraste 7:1 - Mínimo AAA para texto pequeño */
+  --guardian-text-muted: #595959;
+
+  /* Textos de elementos específicos con contraste optimizado */
+  --guardian-text-reciprocidad: #0d4012; /* Verde muy oscuro */
+  --guardian-text-meritos: #7d3c00; /* Naranja muy oscuro */
+  --guardian-text-ondas: #4c1d95; /* Violeta muy oscuro */
+  --guardian-text-lukas: #0c4a6e; /* Azul muy oscuro */
+}
+
+/* ===== 🌟 GRADIENTES HARMÓNICOS GUARDIAN ===== */
+:root {
+  /* Gradiente principal - Fuego a Tierra (Cálido y estable) */
+  --guardian-gradient-primary: linear-gradient(
+    135deg,
+    var(--guardian-fuego-500) 0%,
+    var(--guardian-tierra-500) 100%
+  );
+
+  /* Gradiente secundario - Agua a Aire (Fluido y elevado) */
+  --guardian-gradient-secondary: linear-gradient(
+    135deg,
+    var(--guardian-agua-500) 0%,
+    var(--guardian-aire-500) 100%
+  );
+
+  /* Gradiente completo - Los 5 elementos (Unidad) */
+  --guardian-gradient-unity: linear-gradient(
+    135deg,
+    var(--guardian-fuego-500) 0%,
+    var(--guardian-agua-500) 25%,
+    var(--guardian-tierra-500) 50%,
+    var(--guardian-aire-500) 75%,
+    var(--guardian-eter-500) 100%
+  );
+
+  /* Gradientes suaves para fondos */
+  --guardian-gradient-soft: linear-gradient(
+    135deg,
+    var(--guardian-fuego-50) 0%,
+    var(--guardian-tierra-50) 100%
+  );
+}
+
+/* ===== 🎭 APLICACIÓN GLOBAL - ARMONÍA VISUAL ===== */
+
+/* Reset corporal con energía Guardian */
+body {
+  background: var(--guardian-bg-primary) !important;
+  color: var(--guardian-text-primary) !important;
+  font-family: 'Inter', 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif !important;
+  line-height: 1.6 !important;
+  font-weight: 400 !important;
+  transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+/* Container principal con armonía */
+#root,
+.main-content-area,
+.MuiContainer-root {
+  background: transparent !important;
+  color: var(--guardian-text-primary) !important;
+}
+
+/* ===== 🏠 HOME PAGE - TRANSFORMACIÓN GUARDIAN ===== */
+
+/* Welcome Header - Poderoso y legible */
+.home-welcome-header .MuiTypography-h4,
+[data-testid='welcome-header'] .MuiTypography-h4,
+.smart-header .MuiTypography-h4 {
+  color: var(--guardian-text-heading) !important;
+  font-weight: 800 !important;
+  font-size: 2.5rem !important;
+  background: var(--guardian-gradient-primary) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+  text-shadow: none !important;
+  letter-spacing: -0.025em !important;
+}
+
+/* Fallback para navegadores sin soporte de background-clip */
+@supports not (-webkit-background-clip: text) {
+  .home-welcome-header .MuiTypography-h4,
+  [data-testid='welcome-header'] .MuiTypography-h4,
+  .smart-header .MuiTypography-h4 {
+    color: var(--guardian-text-heading) !important;
+    background: none !important;
+    -webkit-text-fill-color: unset !important;
+  }
+}
+
+/* Porcentaje principal - Máximo impacto visual */
+.reciprocidad-metrics-card .percentage-display,
+.reciprocidad-metrics-card .MuiTypography-h1,
+.reciprocidad-metrics-card .MuiTypography-h2,
+[data-testid*='percentage'],
+.percentage-main,
+[data-testid*='primary-dashboard'] .MuiTypography-h1 {
+  color: var(--guardian-text-primary) !important;
+  font-weight: 900 !important;
+  font-size: 6rem !important;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+  background: none !important;
+  -webkit-text-fill-color: var(--guardian-text-primary) !important;
+  letter-spacing: -0.05em !important;
+}
+
+/* Textos principales - Legibilidad máxima */
+.MuiTypography-h2,
+.MuiTypography-h3,
+.MuiTypography-h4,
+.MuiTypography-h5,
+.MuiTypography-h6 {
+  color: var(--guardian-text-heading) !important;
+  font-weight: 700 !important;
+}
+
+.MuiTypography-body1 {
+  color: var(--guardian-text-body) !important;
+  font-weight: 500 !important;
+}
+
+.MuiTypography-body2 {
+  color: var(--guardian-text-secondary) !important;
+  font-weight: 500 !important;
+}
+
+.MuiTypography-caption {
+  color: var(--guardian-text-muted) !important;
+  font-weight: 500 !important;
+}
+
+/* ===== 🃏 CARDS - SUPERFICIES HARMÓNICAS ===== */
+.MuiCard-root,
+.MuiPaper-root {
+  background: var(--guardian-bg-primary) !important;
+  border: 2px solid rgba(245, 166, 35, 0.1) !important;
+  border-radius: 24px !important;
+  box-shadow:
+    0 4px 12px rgba(245, 166, 35, 0.08),
+    0 1px 3px rgba(0, 0, 0, 0.1) !important;
+  transition: all 350ms cubic-bezier(0.4, 0, 0.2, 1) !important;
+  overflow: hidden !important;
+  position: relative !important;
+}
+
+.MuiCard-root:hover,
+.MuiPaper-root:hover {
+  transform: translateY(-4px) scale(1.02) !important;
+  box-shadow:
+    0 12px 32px rgba(245, 166, 35, 0.15),
+    0 4px 8px rgba(0, 0, 0, 0.12) !important;
+  border-color: rgba(245, 166, 35, 0.3) !important;
+}
+
+/* Borde superior guardian con gradiente */
+.MuiCard-root::before,
+.MuiPaper-root::before {
+  content: '' !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  height: 4px !important;
+  background: var(--guardian-gradient-primary) !important;
+  opacity: 0.8 !important;
+  transition: opacity 300ms ease !important;
+}
+
+.MuiCard-root:hover::before,
+.MuiPaper-root:hover::before {
+  opacity: 1 !important;
+  height: 6px !important;
+}
+
+/* ===== 🎯 MÉTRICAS ESPECÍFICAS - COLORES SEMÁNTICOS ===== */
+
+/* Métricas Reciprocidad - Verde equilibrio */
+.metric-reciprocidad,
+.reciprocidad-metric,
+[data-metric='reciprocidad'] {
+  color: var(--guardian-text-reciprocidad) !important;
+  font-weight: 700 !important;
+}
+
+/* Métricas Méritos - Dorado logro */
+.metric-meritos,
+.meritos-metric,
+[data-metric='meritos'] {
+  color: var(--guardian-text-meritos) !important;
+  font-weight: 700 !important;
+}
+
+/* Métricas Öndas - Violeta energía */
+.metric-ondas,
+.ondas-metric,
+[data-metric='ondas'] {
+  color: var(--guardian-text-ondas) !important;
+  font-weight: 700 !important;
+}
+
+/* Métricas Lukas - Azul moneda */
+.metric-lukas,
+.lukas-metric,
+[data-metric='lukas'] {
+  color: var(--guardian-text-lukas) !important;
+  font-weight: 700 !important;
+}
+
+/* ===== 🔴 BOTONES - INTERACTIVIDAD GUARDIAN ===== */
+.MuiButton-root {
+  font-weight: 600 !important;
+  border-radius: 16px !important;
+  text-transform: none !important;
+  transition: all 250ms cubic-bezier(0.4, 0, 0.2, 1) !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+}
+
+.MuiButton-contained {
+  background: var(--guardian-gradient-primary) !important;
+  color: #ffffff !important;
+  font-weight: 700 !important;
+  border: none !important;
+}
+
+.MuiButton-contained:hover {
+  background: var(--guardian-gradient-secondary) !important;
+  transform: translateY(-2px) scale(1.05) !important;
+  box-shadow: 0 8px 24px rgba(245, 166, 35, 0.3) !important;
+}
+
+.MuiButton-outlined {
+  color: var(--guardian-text-primary) !important;
+  border: 2px solid var(--guardian-fuego-500) !important;
+  background: transparent !important;
+}
+
+.MuiButton-outlined:hover {
+  background: var(--guardian-fuego-50) !important;
+  border-color: var(--guardian-fuego-600) !important;
+  transform: translateY(-1px) !important;
+}
+
+/* ===== 📊 PROGRESS BARS - PROGRESO GUARDIAN ===== */
+.MuiLinearProgress-root {
+  height: 12px !important;
+  border-radius: 9999px !important;
+  background-color: rgba(245, 166, 35, 0.1) !important;
+  overflow: hidden !important;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1) !important;
+}
+
+.MuiLinearProgress-bar {
+  border-radius: 9999px !important;
+  background: var(--guardian-gradient-primary) !important;
+  transition: all 500ms cubic-bezier(0.4, 0, 0.2, 1) !important;
+  position: relative !important;
+}
+
+.MuiLinearProgress-bar::after {
+  content: '' !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.3) 50%,
+    transparent 100%
+  ) !important;
+  animation: shimmer 2s infinite !important;
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+/* ===== 🔔 NOTIFICACIONES - ALERTAS GUARDIAN ===== */
+.MuiAlert-root {
+  border-radius: 16px !important;
+  border: 2px solid !important;
+  font-weight: 500 !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+}
+
+.MuiAlert-standardSuccess {
+  background-color: var(--guardian-tierra-50) !important;
+  color: var(--guardian-text-reciprocidad) !important;
+  border-color: var(--guardian-tierra-200) !important;
+}
+
+.MuiAlert-standardWarning {
+  background-color: var(--guardian-fuego-50) !important;
+  color: var(--guardian-text-meritos) !important;
+  border-color: var(--guardian-fuego-200) !important;
+}
+
+.MuiAlert-standardError {
+  background-color: #fef2f2 !important;
+  color: #991b1b !important;
+  border-color: #fecaca !important;
+}
+
+.MuiAlert-standardInfo {
+  background-color: var(--guardian-agua-50) !important;
+  color: var(--guardian-text-lukas) !important;
+  border-color: var(--guardian-agua-200) !important;
+}
+
+/* ===== 🎪 CHIPS Y ETIQUETAS - CATEGORIZACIÓN GUARDIAN ===== */
+.MuiChip-root {
+  border-radius: 20px !important;
+  font-weight: 600 !important;
+  border: 2px solid !important;
+  transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.MuiChip-filled {
+  background: var(--guardian-gradient-soft) !important;
+  color: var(--guardian-text-primary) !important;
+  border-color: var(--guardian-fuego-200) !important;
+}
+
+.MuiChip-filled:hover {
+  background: var(--guardian-fuego-100) !important;
+  transform: translateY(-1px) scale(1.05) !important;
+  box-shadow: 0 4px 12px rgba(245, 166, 35, 0.2) !important;
+}
+
+/* ===== ⚡ ICONOS - SÍMBOLOS GUARDIAN ===== */
+.MuiSvgIcon-root {
+  transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.MuiIconButton-root {
+  border-radius: 12px !important;
+  transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.MuiIconButton-root:hover {
+  background: var(--guardian-fuego-50) !important;
+  transform: scale(1.1) rotate(5deg) !important;
+  color: var(--guardian-fuego-600) !important;
+}
+
+/* Iconos específicos de elementos */
+[data-testid="LocalFireDepartmentIcon"],
+.fuego-icon {
+  color: var(--guardian-fuego-500) !important;
+}
+
+[data-testid="WavesIcon"],
+.agua-icon {
+  color: var(--guardian-agua-500) !important;
+}
+
+[data-testid="NatureIcon"],
+.tierra-icon {
+  color: var(--guardian-tierra-500) !important;
+}
+
+[data-testid="AirIcon"],
+.aire-icon {
+  color: var(--guardian-aire-500) !important;
+}
+
+/* ===== 🌀 ANIMACIONES GUARDIAN - MOVIMIENTO ORGÁNICO ===== */
+@keyframes guardianGlow {
+  0%, 100% { box-shadow: 0 0 20px rgba(245, 166, 35, 0.3); }
+  50% { box-shadow: 0 0 40px rgba(245, 166, 35, 0.6); }
+}
+
+@keyframes guardianFloat {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes guardianPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+/* Aplicar animaciones sutiles a elementos importantes */
+.reciprocidad-metrics-card {
+  animation: guardianFloat 6s ease-in-out infinite !important;
+}
+
+.MuiCard-root:hover {
+  animation: guardianGlow 2s ease-in-out !important;
+}
+
+.percentage-main {
+  animation: guardianPulse 4s ease-in-out infinite !important;
+}
+
+/* ===== 📱 RESPONSIVE GUARDIAN - ARMONÍA EN TODOS LOS TAMAÑOS ===== */
+@media (max-width: 768px) {
+  .home-welcome-header .MuiTypography-h4 {
+    font-size: 2rem !important;
+  }
+
+  .reciprocidad-metrics-card .MuiTypography-h1 {
+    font-size: 4rem !important;
+  }
+
+  .MuiCard-root {
+    border-radius: 16px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .home-welcome-header .MuiTypography-h4 {
+    font-size: 1.5rem !important;
+  }
+
+  .reciprocidad-metrics-card .MuiTypography-h1 {
+    font-size: 3rem !important;
+  }
+}
+
+/* ===== 🌙 MODO OSCURO GUARDIAN - ADAPTACIÓN NOCTURNA ===== */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --guardian-bg-primary: #1a1a1a;
+    --guardian-bg-secondary: #2d2d2d;
+    --guardian-text-primary: #ffffff;
+    --guardian-text-heading: #f5f5f5;
+    --guardian-text-body: #e5e5e5;
+  }
+
+  .MuiCard-root,
+  .MuiPaper-root {
+    background: var(--guardian-bg-secondary) !important;
+    border-color: rgba(245, 166, 35, 0.3) !important;
+  }
+}
+
+/* ===== ♿ ACCESIBILIDAD GUARDIAN - INCLUSIÓN UNIVERSAL ===== */
+@media (prefers-contrast: high) {
+  :root {
+    --guardian-text-primary: #000000 !important;
+    --guardian-text-heading: #000000 !important;
+    --guardian-text-body: #000000 !important;
+    --guardian-bg-primary: #ffffff !important;
+  }
+
+  .MuiCard-root,
+  .MuiPaper-root {
+    border: 3px solid #000000 !important;
+  }
+
+  .MuiButton-contained {
+    background: #000000 !important;
+    color: #ffffff !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ===== 🎯 FOCUS STATES GUARDIAN - NAVEGACIÓN ACCESIBLE ===== */
+.enhanced-focus:focus-visible,
+.MuiButton-root:focus-visible,
+.MuiIconButton-root:focus-visible,
+.MuiChip-root:focus-visible {
+  outline: 3px solid var(--guardian-fuego-500) !important;
+  outline-offset: 3px !important;
+  box-shadow:
+    0 0 0 6px rgba(245, 166, 35, 0.3),
+    0 4px 12px rgba(0, 0, 0, 0.15) !important;
+  z-index: 1000 !important;
+}
+
+/* ===== 🔧 UTILIDADES GUARDIAN - HERRAMIENTAS RÁPIDAS ===== */
+.guardian-text-primary { color: var(--guardian-text-primary) !important; }
+.guardian-text-heading { color: var(--guardian-text-heading) !important; }
+.guardian-text-reciprocidad { color: var(--guardian-text-reciprocidad) !important; }
+.guardian-text-meritos { color: var(--guardian-text-meritos) !important; }
+.guardian-text-ondas { color: var(--guardian-text-ondas) !important; }
+.guardian-text-lukas { color: var(--guardian-text-lukas) !important; }
+
+.guardian-bg-primary { background: var(--guardian-bg-primary) !important; }
+.guardian-bg-soft { background: var(--guardian-gradient-soft) !important; }
+
+.guardian-border { border: 2px solid var(--guardian-fuego-200) !important; }
+.guardian-shadow { box-shadow: 0 4px 12px rgba(245, 166, 35, 0.15) !important; }
+
+.guardian-transition { transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1) !important; }
+
+/* ===== 🎨 DEBUGGING GUARDIAN - HERRAMIENTAS DE DESARROLLO ===== */
+.guardian-debug * {
+  outline: 1px solid red !important;
+  background: rgba(255, 0, 0, 0.1) !important;
+}
+
+.guardian-debug-colors::before {
+  content: 'Guardian Colors Active' !important;
+  position: fixed !important;
+  top: 10px !important;
+  right: 10px !important;
+  background: var(--guardian-fuego-500) !important;
+  color: white !important;
+  padding: 8px 16px !important;
+  border-radius: 8px !important;
+  font-weight: bold !important;
+  z-index: 9999 !important;
+}
+
+/* ===============================================================================
+   🌟 FIN DE LA ARMONÍA VISUAL GUARDIAN
+   Los agentes guardianes han sido invocados. La transformación visual está completa.
+   Que la sabiduría ancestral guíe cada pixel hacia el Bien Común.
+   =============================================================================== */

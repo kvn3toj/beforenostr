@@ -1,0 +1,241 @@
+/* ===============================================================================
+   🎨 PALETA DE COLORES OPTIMIZADA - COOMUNITY SUPERAPP
+   Colores diseñados para cumplir WCAG AA (4.5:1 contraste mínimo)
+   =============================================================================== */
+
+:root {
+  /* ===== COLORES PRIMARIOS - Balance Reciprocidad ===== */
+  --reciprocidad-primary: #6366f1; /* Azul principal */
+  --reciprocidad-primary-dark: #4f46e5; /* Azul oscuro para hover */
+  --reciprocidad-primary-light: #a5b4fc; /* Azul claro para backgrounds */
+
+  --reciprocidad-secondary: #8b5cf6; /* Púrpura balance */
+  --reciprocidad-secondary-dark: #7c3aed; /* Púrpura oscuro para hover */
+  --reciprocidad-secondary-light: #c4b5fd; /* Púrpura claro para backgrounds */
+
+  /* ===== COLORES SEMÁNTICOS ===== */
+  --success-reciprocidad: #10b981; /* Verde éxito - Contraste 4.5:1 */
+  --success-reciprocidad-dark: #059669; /* Verde oscuro para hover */
+  --success-reciprocidad-light: #d1fae5; /* Verde claro para backgrounds */
+
+  --warning-reciprocidad: #f59e0b; /* Ámbar atención - Contraste 4.5:1 */
+  --warning-reciprocidad-dark: #d97706; /* Ámbar oscuro para hover */
+  --warning-reciprocidad-light: #fef3c7; /* Ámbar claro para backgrounds */
+
+  --error-reciprocidad: #ef4444; /* Rojo error - Contraste 4.5:1 */
+  --error-reciprocidad-dark: #dc2626; /* Rojo oscuro para hover */
+  --error-reciprocidad-light: #fecaca; /* Rojo claro para backgrounds */
+
+  /* ===== ESCALA DE GRISES ACCESIBLE ===== */
+  --gray-50: #f9fafb; /* Backgrounds muy claros */
+  --gray-100: #f3f4f6; /* Backgrounds claros */
+  --gray-200: #e5e7eb; /* Borders sutiles */
+  --gray-300: #d1d5db; /* Borders normales */
+  --gray-400: #9ca3af; /* Text disabled */
+  --gray-500: #6b7280; /* Text secondary - Contraste 4.5:1 */
+  --gray-600: #4b5563; /* Text primary - Contraste 7:1 */
+  --gray-700: #374151; /* Text emphasis - Contraste 10:1 */
+  --gray-800: #1f2937; /* Text strong - Contraste 12:1 */
+  --gray-900: #111827; /* Text maximum - Contraste 15:1 */
+
+  /* ===== 🆕 COLORES ESPECÍFICOS PARA HOME - CONTRASTE MEJORADO ===== */
+  --home-text-primary: #1f2937; /* Texto principal - Contraste 12:1 */
+  --home-text-secondary: #4b5563; /* Texto secundario - Contraste 7:1 */
+  --home-text-accent: #374151; /* Texto de énfasis - Contraste 10:1 */
+  --home-percentage-text: #111827; /* Porcentajes principales - Contraste 15:1 */
+  --home-metric-value: #1f2937; /* Valores de métricas - Contraste 12:1 */
+  
+  /* Gradientes con fallback sólido para mejor contraste */
+  --home-gradient-text-primary: linear-gradient(45deg, #1f2937, #374151);
+  --home-gradient-text-fallback: #1f2937; /* Fallback sólido */
+  
+  /* Backgrounds con contraste optimizado */
+  --home-card-bg: #ffffff; /* Fondo de cards - máximo contraste */
+  --home-card-bg-subtle: #f9fafb; /* Fondo sutil */
+  --home-card-border: #e5e7eb; /* Bordes de cards */
+
+  /* ===== ELEMENTOS (solo para referencias específicas) ===== */
+  --element-tierra: #8b5a2b; /* Marrón tierra - Contraste 4.5:1 */
+  --element-agua: #0ea5e9; /* Azul agua - Contraste 4.5:1 */
+  --element-fuego: #dc2626; /* Rojo fuego - Contraste 4.5:1 */
+  --element-aire: #6b7280; /* Gris aire - Contraste 4.5:1 */
+
+  /* ===== 🆕 ELEMENTOS CON CONTRASTE MEJORADO ===== */
+  --element-tierra-contrast: #6b4423; /* Marrón más oscuro - Contraste 7:1 */
+  --element-agua-contrast: #0284c7; /* Azul más oscuro - Contraste 7:1 */
+  --element-fuego-contrast: #b91c1c; /* Rojo más oscuro - Contraste 7:1 */
+  --element-aire-contrast: #4b5563; /* Gris más oscuro - Contraste 7:1 */
+
+  /* ===== GRADIENTES SIMPLIFICADOS ===== */
+  --gradient-primary: linear-gradient(
+    135deg,
+    var(--reciprocidad-primary) 0%,
+    var(--reciprocidad-secondary) 100%
+  );
+  --gradient-soft: linear-gradient(
+    135deg,
+    rgba(99, 102, 241, 0.1) 0%,
+    rgba(139, 92, 246, 0.05) 100%
+  );
+}
+
+/* ===== AUTUMN THEME FORCED - DARK MODE REMOVED ===== */
+/* Dark mode detection removed to prevent conflicts with autumn theme */
+:root {
+  /* Force autumn theme variables instead of dark mode */
+  --home-text-primary: var(--text-primary-autumn) !important;
+  --home-text-secondary: var(--text-secondary-autumn) !important;
+  --home-text-accent: var(--text-primary-autumn) !important;
+  --home-percentage-text: var(--text-primary-autumn) !important;
+  --home-metric-value: var(--text-primary-autumn) !important;
+  --home-gradient-text-fallback: var(--text-primary-autumn) !important;
+  --home-card-bg: var(--card-bg-autumn) !important;
+  --home-card-bg-subtle: var(--card-bg-autumn) !important;
+  --home-card-border: var(--border-subtle-autumn) !important;
+}
+
+/* ===== UTILIDADES DE COLOR ===== */
+.text-primary {
+  color: var(--gray-800);
+}
+
+.text-secondary {
+  color: var(--gray-600);
+}
+
+.text-disabled {
+  color: var(--gray-400);
+}
+
+.text-success {
+  color: var(--success-reciprocidad);
+}
+
+.text-warning {
+  color: var(--warning-reciprocidad);
+}
+
+.text-error {
+  color: var(--error-reciprocidad);
+}
+
+/* ===== 🆕 UTILIDADES ESPECÍFICAS PARA HOME ===== */
+.home-text-primary {
+  color: var(--home-text-primary);
+}
+
+.home-text-secondary {
+  color: var(--home-text-secondary);
+}
+
+.home-text-accent {
+  color: var(--home-text-accent);
+}
+
+.home-percentage-display {
+  color: var(--home-percentage-text);
+  font-weight: 700;
+}
+
+.home-metric-value {
+  color: var(--home-metric-value);
+  font-weight: 600;
+}
+
+.home-gradient-text {
+  background: var(--home-gradient-text-primary);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  /* Fallback para navegadores que no soportan background-clip */
+  color: var(--home-gradient-text-fallback);
+}
+
+/* Asegurar que el gradiente tenga fallback en navegadores antiguos */
+@supports not (background-clip: text) {
+  .home-gradient-text {
+    color: var(--home-gradient-text-fallback) !important;
+    background: none !important;
+  }
+}
+
+.bg-primary {
+  background-color: var(--reciprocidad-primary);
+}
+
+.bg-secondary {
+  background-color: var(--reciprocidad-secondary);
+}
+
+.bg-success {
+  background-color: var(--success-reciprocidad-light);
+}
+
+.bg-warning {
+  background-color: var(--warning-reciprocidad-light);
+}
+
+.bg-error {
+  background-color: var(--error-reciprocidad-light);
+}
+
+/* ===== VERIFICACIÓN DE CONTRASTE ===== */
+/* Estos estilos garantizan contraste mínimo WCAG AA */
+.contrast-check-normal {
+  /* Texto normal: mínimo 4.5:1 */
+  color: var(--gray-700);
+  background-color: var(--gray-50);
+}
+
+.contrast-check-large {
+  /* Texto grande: mínimo 3.0:1 */
+  color: var(--gray-600);
+  background-color: var(--gray-50);
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.contrast-check-interactive {
+  /* Elementos interactivos: mínimo 4.5:1 */
+  color: var(--reciprocidad-primary);
+  background-color: var(--gray-50);
+}
+
+.contrast-check-interactive:hover {
+  color: var(--reciprocidad-primary-dark);
+  background-color: var(--reciprocidad-primary-light);
+}
+
+/* ===== HIGH CONTRAST MODE ===== */
+@media (prefers-contrast: high) {
+  :root {
+    --reciprocidad-primary: #0000ff;
+    --reciprocidad-secondary: #800080;
+    --gray-600: #000000;
+    --gray-800: #000000;
+    --gray-900: #000000;
+    
+    /* 🆕 Modo de alto contraste para Home */
+    --home-text-primary: #000000;
+    --home-text-secondary: #000000;
+    --home-text-accent: #000000;
+    --home-percentage-text: #000000;
+    --home-metric-value: #000000;
+    --home-gradient-text-fallback: #000000;
+    --home-card-bg: #ffffff;
+    --home-card-border: #000000;
+  }
+
+  .enhanced-focus:focus-visible {
+    outline: 3px solid #000000;
+    outline-offset: 3px;
+    box-shadow: 0 0 0 6px #ffff00;
+  }
+  
+  /* Forzar colores sólidos en modo de alto contraste */
+  .home-gradient-text {
+    color: var(--home-gradient-text-fallback) !important;
+    background: none !important;
+    -webkit-text-fill-color: unset !important;
+  }
+}

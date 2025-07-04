@@ -1,0 +1,16 @@
+/* Extracted from: merchant_home_06_internal_link__place_matches_view_5ec50c53a993c83a_2025-06-03T02-13-05-196Z.html */
+/* Block index: 8 */
+/* Extracted at: 2025-06-03T02:16:25.452Z */
+
+function goBack() {
+			window.history.back();
+		}
+	$( '.hide-modal_3' ).click( function() {
+		$( '.md_id_3' ).removeClass( 'is-active' );
+	});
+	$( '.show-modal_3' ).click( function() {
+		$( '.md_id_3' ).addClass( 'is-active' );
+	});
+		jQuery(document).ready(function(){
+			showTourBySlug("tutorial-matches"); 
+		});

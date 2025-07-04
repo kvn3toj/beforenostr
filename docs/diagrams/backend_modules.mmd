@@ -1,0 +1,111 @@
+graph TD
+    C[Desarrollo de Módulos]
+    C --> admin
+    subgraph admin
+        adminauditlogs[audit-logs]
+        admin --> adminauditlogs
+        adminconfig[config]
+        admin --> adminconfig
+        adminsystem[system]
+        admin --> adminsystem
+    end
+    C --> analytics
+    subgraph analytics
+        analyticsdto[dto]
+        analytics --> analyticsdto
+    end
+    C --> assets[assets]
+    C --> auth
+    subgraph auth
+        authdto[dto]
+        auth --> authdto
+        authstrategies[strategies]
+        auth --> authstrategies
+        authtypes[types]
+        auth --> authtypes
+    end
+    C --> challenges
+    subgraph challenges
+        challengesdto[dto]
+        challenges --> challengesdto
+        challengestypes[types]
+        challenges --> challengestypes
+        challengesuserchallenges[user-challenges]
+        challenges --> challengesuserchallenges
+    end
+    C --> components
+    subgraph components
+        componentscommon[common]
+        components --> componentscommon
+        componentsfeatures[features]
+        components --> componentsfeatures
+        componentsfolders[folders]
+        components --> componentsfolders
+        componentsmundos[mundos]
+        components --> componentsmundos
+        componentsnostr[nostr]
+        components --> componentsnostr
+        componentsplaylists[playlists]
+        components --> componentsplaylists
+    end
+    C --> config[config]
+    C --> constants[constants]
+    C --> content
+    subgraph content
+        contentitemtypes[item-types]
+        content --> contentitemtypes
+        contentitems[items]
+        content --> contentitems
+        contentmundos[mundos]
+        content --> contentmundos
+        contentplaylists[playlists]
+        content --> contentplaylists
+    end
+    C --> contexts[contexts]
+    C --> e2e[e2e]
+    C --> enums[enums]
+    C --> hooks
+    subgraph hooks
+        hooksanalytics[analytics]
+        hooks --> hooksanalytics
+        hooksfeatures[features]
+        hooks --> hooksfeatures
+        hookssystem[system]
+        hooks --> hookssystem
+    end
+    C --> layouts[layouts]
+    C --> lib[lib]
+    C --> merits-and-wallet
+    subgraph merits-and-wallet
+        meritsandwalletmerits[merits]
+        merits-and-wallet --> meritsandwalletmerits
+        meritsandwallettransactions[transactions]
+        merits-and-wallet --> meritsandwallettransactions
+        meritsandwalletwallets[wallets]
+        merits-and-wallet --> meritsandwalletwallets
+    end
+    C --> pages[pages]
+    C --> prisma[prisma]
+    C --> rbac
+    subgraph rbac
+        rbacdecorators[decorators]
+        rbac --> rbacdecorators
+        rbacguards[guards]
+        rbac --> rbacguards
+        rbacpermissions[permissions]
+        rbac --> rbacpermissions
+        rbacroles[roles]
+        rbac --> rbacroles
+    end
+    C --> router[router]
+    C --> services[services]
+    C --> store[store]
+    C --> styles[styles]
+    C --> types[types]
+    C --> users
+    subgraph users
+        usersdto[dto]
+        users --> usersdto
+    end
+    C --> utils[utils]
+

@@ -1,0 +1,57 @@
+# ================================================================
+# CoomÜnity Backend NestJS - Dockerfile Simplificado Final
+# Para deployment con generación de Prisma en contenedor
+# ================================================================
+
+FROM node:18-alpine
+
+# Instalar dependencias del sistema necesarias
+RUN apk add --no-cache libc6-compat openssl
+
+# Metadatos del contenedor
+LABEL maintainer="CoomÜnity Team"
+LABEL version="1.0.3"
+LABEL description="CoomÜnity Backend NestJS - Final Version"
+
+# Establecer directorio de trabajo
+WORKDIR /app
+
+# Copiar archivos de configuración de dependencias desde la raíz del monorepo
+COPY package*.json ./
+
+# Instalar TODAS las dependencias (incluyendo devDependencies para Prisma)
+RUN npm ci --legacy-peer-deps
+
+# Copiar el código ya compilado
+COPY dist/ ./dist/
+COPY prisma/ ./prisma/
+
+# Generar cliente de Prisma con todas las dependencias disponibles
+RUN npx prisma generate
+
+# Verificar que el cliente de Prisma se generó correctamente
+RUN ls -la node_modules/@prisma/ && ls -la node_modules/.prisma/
+
+# Crear usuario no-root para seguridad
+RUN addgroup -g 1001 -S nodejs && \
+    adduser -S backend -u 1001 -G nodejs
+
+# Cambiar ownership del directorio de la app
+RUN chown -R backend:nodejs /app
+
+# Cambiar a usuario no-root
+USER backend
+
+# Exponer puerto de la aplicación
+EXPOSE 3002
+
+# Variables de entorno por defecto
+ENV NODE_ENV=production
+ENV PORT=3002
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
+  CMD node -e "require('http').get('http://localhost:3002/health', (res) => { process.exit(res.statusCode === 200 ? 0 : 1) })" || exit 1
+
+# Comando de inicio usando el archivo compilado correcto
+CMD ["node", "dist/main.js"]

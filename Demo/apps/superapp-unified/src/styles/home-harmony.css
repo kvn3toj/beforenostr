@@ -1,0 +1,477 @@
+/* 🎨 HOME HARMONY - ESPACIADO Y TAMAÑOS COHERENTES
+   Sistema de diseño unificado para armonía visual */
+
+/* ===== SISTEMA DE ESPACIADO COHERENTE ===== */
+
+:root {
+  /* Espaciado base - Sistema 8px */
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+  --spacing-xxl: 48px;
+  --spacing-xxxl: 64px;
+
+  /* Tamaños de contenedores coherentes */
+  --container-sm: 320px;
+  --container-md: 480px;
+  --container-lg: 640px;
+  --container-xl: 800px;
+
+  /* Alturas estándar */
+  --height-compact: 60px;
+  --height-normal: 80px;
+  --height-expanded: 120px;
+  --height-hero: 280px;
+
+  /* Radios de border coherentes */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+
+  /* Sombras graduales */
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.15);
+  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.2);
+  --shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.25);
+
+  /* Transiciones estándar */
+  --transition-fast: 0.2s ease;
+  --transition-normal: 0.3s ease;
+  --transition-slow: 0.4s ease;
+}
+
+/* ===== ESPACIADO COHERENTE EN CONTENEDORES ===== */
+
+.home-container {
+  padding: var(--spacing-lg) !important;
+}
+
+@media (max-width: 768px) {
+  .home-container {
+    padding: var(--spacing-md) !important;
+  }
+}
+
+/* ===== TARJETAS CON ESPACIADO UNIFORME ===== */
+
+.harmony-card {
+  padding: var(--spacing-lg) !important;
+  margin-bottom: var(--spacing-lg) !important;
+  border-radius: var(--radius-lg) !important;
+  box-shadow: var(--shadow-md) !important;
+  transition: all var(--transition-normal) !important;
+}
+
+.harmony-card:hover {
+  transform: translateY(-4px) !important;
+  box-shadow: var(--shadow-lg) !important;
+}
+
+.harmony-card-compact {
+  padding: var(--spacing-md) !important;
+  margin-bottom: var(--spacing-md) !important;
+  border-radius: var(--radius-md) !important;
+}
+
+.harmony-card-hero {
+  padding: var(--spacing-xxl) var(--spacing-xl) !important;
+  margin-bottom: var(--spacing-xl) !important;
+  border-radius: var(--radius-xl) !important;
+  min-height: var(--height-hero) !important;
+}
+
+/* ===== ESPACIADO ENTRE SECCIONES ===== */
+
+.harmony-section {
+  margin-bottom: var(--spacing-xl) !important;
+}
+
+.harmony-section-hero {
+  margin-bottom: var(--spacing-xxl) !important;
+}
+
+.harmony-section-compact {
+  margin-bottom: var(--spacing-lg) !important;
+}
+
+/* ===== GRID SPACING COHERENTE ===== */
+
+.harmony-grid {
+  gap: var(--spacing-lg) !important;
+}
+
+.harmony-grid-compact {
+  gap: var(--spacing-md) !important;
+}
+
+.harmony-grid-spacious {
+  gap: var(--spacing-xl) !important;
+}
+
+/* ===== TÍTULOS Y TEXTOS CON ESPACIADO UNIFORME ===== */
+
+.harmony-title {
+  margin-bottom: var(--spacing-lg) !important;
+  line-height: 1.2 !important;
+}
+
+.harmony-subtitle {
+  margin-bottom: var(--spacing-md) !important;
+  line-height: 1.4 !important;
+}
+
+.harmony-text {
+  margin-bottom: var(--spacing-md) !important;
+  line-height: 1.6 !important;
+}
+
+.harmony-caption {
+  margin-bottom: var(--spacing-sm) !important;
+  line-height: 1.4 !important;
+}
+
+/* ===== WIDGETS CON TAMAÑOS COHERENTES ===== */
+
+.harmony-widget {
+  min-height: 200px !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+.harmony-widget-compact {
+  min-height: 150px !important;
+}
+
+.harmony-widget-expanded {
+  min-height: 300px !important;
+}
+
+.harmony-widget-hero {
+  min-height: var(--height-hero) !important;
+}
+
+/* ===== BOTONES CON ESPACIADO CONSISTENTE ===== */
+
+.harmony-button {
+  padding: var(--spacing-md) var(--spacing-lg) !important;
+  border-radius: var(--radius-md) !important;
+  transition: all var(--transition-fast) !important;
+}
+
+.harmony-button-sm {
+  padding: var(--spacing-sm) var(--spacing-md) !important;
+  border-radius: var(--radius-sm) !important;
+}
+
+.harmony-button-lg {
+  padding: var(--spacing-lg) var(--spacing-xl) !important;
+  border-radius: var(--radius-lg) !important;
+}
+
+/* ===== CHIPS Y BADGES COHERENTES ===== */
+
+.harmony-chip {
+  height: var(--spacing-xl) !important;
+  border-radius: var(--radius-md) !important;
+  padding: 0 var(--spacing-md) !important;
+}
+
+.harmony-chip-sm {
+  height: 24px !important;
+  border-radius: var(--radius-sm) !important;
+  padding: 0 var(--spacing-sm) !important;
+}
+
+/* ===== AVATARES CON TAMAÑOS ESTÁNDAR ===== */
+
+.harmony-avatar-sm {
+  width: 32px !important;
+  height: 32px !important;
+}
+
+.harmony-avatar-md {
+  width: 48px !important;
+  height: 48px !important;
+}
+
+.harmony-avatar-lg {
+  width: 64px !important;
+  height: 64px !important;
+}
+
+.harmony-avatar-xl {
+  width: 80px !important;
+  height: 80px !important;
+}
+
+/* ===== PROGRESS BARS COHERENTES ===== */
+
+.harmony-progress {
+  height: 8px !important;
+  border-radius: var(--radius-sm) !important;
+  margin: var(--spacing-sm) 0 !important;
+}
+
+.harmony-progress-thick {
+  height: 12px !important;
+  border-radius: var(--radius-md) !important;
+}
+
+/* ===== FLOATING ACTIONS CON ESPACIADO COHERENTE ===== */
+
+.harmony-fab-container {
+  position: fixed !important;
+  bottom: var(--spacing-lg) !important;
+  right: var(--spacing-lg) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: var(--spacing-md) !important;
+  z-index: 1000 !important;
+}
+
+@media (max-width: 768px) {
+  .harmony-fab-container {
+    bottom: var(--spacing-xl) !important;
+    right: var(--spacing-md) !important;
+  }
+}
+
+/* ===== DIVIDERS CON ESPACIADO CONSISTENTE ===== */
+
+.harmony-divider {
+  margin: var(--spacing-lg) 0 !important;
+}
+
+.harmony-divider-compact {
+  margin: var(--spacing-md) 0 !important;
+}
+
+.harmony-divider-spacious {
+  margin: var(--spacing-xl) 0 !important;
+}
+
+/* ===== RESPONSIVE SPACING ===== */
+
+@media (max-width: 1200px) {
+  .harmony-card {
+    padding: var(--spacing-md) !important;
+  }
+
+  .harmony-card-hero {
+    padding: var(--spacing-xl) var(--spacing-lg) !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .harmony-card {
+    padding: var(--spacing-md) !important;
+    margin-bottom: var(--spacing-md) !important;
+  }
+
+  .harmony-card-hero {
+    padding: var(--spacing-lg) !important;
+    min-height: 200px !important;
+  }
+
+  .harmony-section {
+    margin-bottom: var(--spacing-lg) !important;
+  }
+
+  .harmony-grid {
+    gap: var(--spacing-md) !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .home-container {
+    padding: var(--spacing-sm) !important;
+  }
+
+  .harmony-card {
+    padding: var(--spacing-sm) !important;
+    margin-bottom: var(--spacing-sm) !important;
+  }
+
+  .harmony-section {
+    margin-bottom: var(--spacing-md) !important;
+  }
+
+  .harmony-grid {
+    gap: var(--spacing-sm) !important;
+  }
+}
+
+/* ===== TIPOGRAFÍA COHERENTE ===== */
+
+.harmony-h1 {
+  font-size: clamp(2rem, 5vw, 3rem) !important;
+  font-weight: 800 !important;
+  line-height: 1.1 !important;
+  margin-bottom: var(--spacing-lg) !important;
+}
+
+.harmony-h2 {
+  font-size: clamp(1.5rem, 4vw, 2.5rem) !important;
+  font-weight: 700 !important;
+  line-height: 1.2 !important;
+  margin-bottom: var(--spacing-md) !important;
+}
+
+.harmony-h3 {
+  font-size: clamp(1.25rem, 3vw, 2rem) !important;
+  font-weight: 600 !important;
+  line-height: 1.3 !important;
+  margin-bottom: var(--spacing-md) !important;
+}
+
+.harmony-h4 {
+  font-size: clamp(1.125rem, 2.5vw, 1.5rem) !important;
+  font-weight: 600 !important;
+  line-height: 1.4 !important;
+  margin-bottom: var(--spacing-sm) !important;
+}
+
+.harmony-body {
+  font-size: clamp(0.875rem, 2vw, 1rem) !important;
+  line-height: 1.6 !important;
+  margin-bottom: var(--spacing-md) !important;
+}
+
+.harmony-caption {
+  font-size: clamp(0.75rem, 1.5vw, 0.875rem) !important;
+  line-height: 1.4 !important;
+  margin-bottom: var(--spacing-sm) !important;
+}
+
+/* ===== EFECTOS VISUALES ARMÓNICOS ===== */
+
+.harmony-glow {
+  box-shadow: 0 0 20px rgba(79, 195, 247, 0.3) !important;
+  transition: box-shadow var(--transition-normal) !important;
+}
+
+.harmony-glow:hover {
+  box-shadow: 0 0 30px rgba(79, 195, 247, 0.5) !important;
+}
+
+.harmony-elevation {
+  box-shadow: var(--shadow-md) !important;
+  transition: all var(--transition-normal) !important;
+}
+
+.harmony-elevation:hover {
+  box-shadow: var(--shadow-lg) !important;
+  transform: translateY(-2px) !important;
+}
+
+/* ===== CONTENEDORES FLEXIBLES COHERENTES ===== */
+
+.harmony-flex-center {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: var(--spacing-md) !important;
+}
+
+.harmony-flex-between {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: var(--spacing-md) !important;
+}
+
+.harmony-flex-start {
+  display: flex !important;
+  align-items: flex-start !important;
+  gap: var(--spacing-md) !important;
+}
+
+.harmony-flex-column {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: var(--spacing-md) !important;
+}
+
+/* ===== UTILITARIAS DE ESPACIADO ===== */
+
+.harmony-mt-xs {
+  margin-top: var(--spacing-xs) !important;
+}
+.harmony-mt-sm {
+  margin-top: var(--spacing-sm) !important;
+}
+.harmony-mt-md {
+  margin-top: var(--spacing-md) !important;
+}
+.harmony-mt-lg {
+  margin-top: var(--spacing-lg) !important;
+}
+.harmony-mt-xl {
+  margin-top: var(--spacing-xl) !important;
+}
+
+.harmony-mb-xs {
+  margin-bottom: var(--spacing-xs) !important;
+}
+.harmony-mb-sm {
+  margin-bottom: var(--spacing-sm) !important;
+}
+.harmony-mb-md {
+  margin-bottom: var(--spacing-md) !important;
+}
+.harmony-mb-lg {
+  margin-bottom: var(--spacing-lg) !important;
+}
+.harmony-mb-xl {
+  margin-bottom: var(--spacing-xl) !important;
+}
+
+.harmony-p-xs {
+  padding: var(--spacing-xs) !important;
+}
+.harmony-p-sm {
+  padding: var(--spacing-sm) !important;
+}
+.harmony-p-md {
+  padding: var(--spacing-md) !important;
+}
+.harmony-p-lg {
+  padding: var(--spacing-lg) !important;
+}
+.harmony-p-xl {
+  padding: var(--spacing-xl) !important;
+}
+
+/* ===== MEJORAS DE ACCESIBILIDAD ===== */
+
+.harmony-focus:focus-visible {
+  outline: 2px solid #4fc3f7 !important;
+  outline-offset: 2px !important;
+}
+
+.harmony-interactive {
+  cursor: pointer !important;
+  transition: all var(--transition-fast) !important;
+}
+
+.harmony-interactive:hover {
+  transform: translateY(-1px) !important;
+}
+
+.harmony-interactive:active {
+  transform: translateY(0) !important;
+}
+
+/* ===== OPTIMIZACIONES PARA MODO OSCURO ===== */
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
+    --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.5);
+    --shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.6);
+  }
+}

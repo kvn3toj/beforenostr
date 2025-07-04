@@ -1,6 +1,11 @@
 {
-  "name": "GAMIFIER",
-  "short_name": "GAMIFIER",
+  "name": "CoomÜnity SuperApp",
+  "short_name": "CoomÜnity",
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#005CA9",
+  "background_color": "#0a1929",
+  "description": "Plataforma interactiva de aprendizaje gamificado para el bien común.",
   "icons": [
     {
       "src": "/pwa-192x192.png",
@@ -12,8 +17,5 @@
       "sizes": "512x512",
       "type": "image/png"
     }
-  ],
-  "theme_color": "#ffffff",
-  "background_color": "#ffffff",
-  "display": "standalone"
-} 
+  ]
+}

@@ -1,1 +1,0 @@
-alter table mundos add column version integer not null default 1; 

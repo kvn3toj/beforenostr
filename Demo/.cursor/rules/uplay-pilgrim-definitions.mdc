@@ -1,0 +1,40 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# ÜPlay and Pilgrim Journey Definitions
+
+This rule clarifies the specific roles and functionalities of the ÜPlay and Pilgrim Journey sections within the `apps/superapp-unified/` directory.
+
+**Instructions:**
+
+1.  **ÜPlay Module (GPL Gamified Play List):**
+    *   This is the **primary interactive gamified video player module** for **regular, everyday use** within the application.
+    *   Users access ÜPlay regularly to consume educational and experiential video content.
+    *   It is a core, frequently visited module that implements the gamified playlist experience.
+    *   Focuses on continuous learning and engagement through interactive video experiences.
+    *   Part of the main navigation and user workflow.
+
+2.  **Pilgrim Journey:**
+    *   This is a **one-time, initial Discovery and Onboarding experience** for new users upon receiving an invitation.
+    *   It is **NOT a regular module** that users access repeatedly from the main navigation after the initial onboarding.
+    *   Its purpose is to introduce the user to the platform and its concepts during their first interaction.
+    *   Provides guided discovery of CoomÜnity philosophy, values, and basic functionality.
+    *   Acts as a bridge between invitation and full platform access.
+
+3.  **Key Distinctions:**
+    *   **Frequency:** ÜPlay = Regular use | Pilgrim Journey = One-time onboarding
+    *   **Purpose:** ÜPlay = Content consumption & learning | Pilgrim Journey = Platform introduction
+    *   **Navigation:** ÜPlay = Main module | Pilgrim Journey = Initial experience only
+    *   **User Stage:** ÜPlay = Active users | Pilgrim Journey = New invited users
+
+4.  **Development Considerations:**
+    *   When implementing video functionality, default to ÜPlay unless specifically working on onboarding.
+    *   Pilgrim Journey should focus on simplicity and clear guidance for first-time users.
+    *   ÜPlay should emphasize rich interactive features and gamification elements.
+    *   Ensure clear separation of concerns between these two video-related experiences.
+
+**Philosophical Alignment:**
+- **ÜPlay:** Embodies continuous learning and growth (Fuego/Action), building knowledge through repetition and engagement.
+- **Pilgrim Journey:** Represents the initial awakening and discovery (Aire/Vision), introducing users to the CoomÜnity ecosystem with clarity and inspiration.

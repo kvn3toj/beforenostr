@@ -1,0 +1,532 @@
+/* ===============================================================================
+   🌟 UNIVERSAL GUARDIAN SYSTEM - COOMUNITY SUPERAPP
+   Sistema visual completamente unificado que garantiza coherencia absoluta
+   entre todos los entornos y módulos de la aplicación CoomÜnity
+   =============================================================================== */
+
+/* ===== 🌌 VARIABLES UNIVERSALES BASE ===== */
+:root {
+  /* 🔥 FUEGO (Fire) - Energía, Pasión, Acción */
+  --universal-fuego-primary: #f59e0b;
+  --universal-fuego-secondary: #fbbf24;
+  --universal-fuego-light: #fef3c7;
+  --universal-fuego-dark: #d97706;
+  --universal-fuego-gradient: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%);
+
+  /* 💧 AGUA (Water) - Fluidez, Adaptabilidad, Conexión */
+  --universal-agua-primary: #0891b2;
+  --universal-agua-secondary: #06b6d4;
+  --universal-agua-light: #cffafe;
+  --universal-agua-dark: #0e7490;
+  --universal-agua-gradient: linear-gradient(135deg, #0891b2 0%, #06b6d4 100%);
+
+  /* 🌱 TIERRA (Earth) - Estabilidad, Crecimiento, Abundancia */
+  --universal-tierra-primary: #16a34a;
+  --universal-tierra-secondary: #22c55e;
+  --universal-tierra-light: #dcfce7;
+  --universal-tierra-dark: #15803d;
+  --universal-tierra-gradient: linear-gradient(135deg, #16a34a 0%, #22c55e 100%);
+
+  /* 🌪️ AIRE (Air) - Sabiduría, Comunicación, Transformación */
+  --universal-aire-primary: #a855f7;
+  --universal-aire-secondary: #c084fc;
+  --universal-aire-light: #f3e8ff;
+  --universal-aire-dark: #9333ea;
+  --universal-aire-gradient: linear-gradient(135deg, #a855f7 0%, #c084fc 100%);
+
+  /* ⚡ ÉTER (Ether) - Trascendencia, Unidad, Consciencia */
+  --universal-eter-primary: #6b7280;
+  --universal-eter-secondary: #9ca3af;
+  --universal-eter-light: #f9fafb;
+  --universal-eter-dark: #4b5563;
+  --universal-eter-gradient: linear-gradient(135deg, #6b7280 0%, #9ca3af 100%);
+
+  /* 🎯 CONCEPTOS COOMUNITY */
+  --universal-reciprocidad: #10b981;        /* Reciprocidad */
+  --universal-meritos: #f59e0b;     /* Méritos */
+  --universal-ondas: #8b5cf6;       /* Energía vibracional */
+  --universal-lukas: #06b6d4;       /* Moneda interna */
+  --universal-bien-comun: #ef4444;  /* Bien común */
+
+  /* 🎨 FONDOS UNIVERSALES */
+  --universal-bg-default: #ffffff;
+  --universal-bg-paper: #fefefe;
+  --universal-bg-surface: #f9fafb;
+  --universal-bg-elevated: #f3f4f6;
+
+  /* 📝 TEXTOS UNIVERSALES */
+  --universal-text-primary: #111827;
+  --universal-text-secondary: #374151;
+  --universal-text-muted: #6b7280;
+  --universal-text-inverse: #ffffff;
+
+  /* 🌈 GRADIENTES UNIVERSALES ESPECIALES */
+  --universal-gradient-harmony: linear-gradient(135deg,
+    var(--universal-fuego-primary) 0%,
+    var(--universal-agua-primary) 25%,
+    var(--universal-tierra-primary) 50%,
+    var(--universal-aire-primary) 75%,
+    var(--universal-eter-primary) 100%);
+
+  --universal-gradient-concepts: linear-gradient(135deg,
+    var(--universal-reciprocidad) 0%,
+    var(--universal-meritos) 25%,
+    var(--universal-ondas) 50%,
+    var(--universal-lukas) 75%,
+    var(--universal-bien-comun) 100%);
+
+  /* ✨ EFECTOS UNIVERSALES */
+  --universal-effect-glow: 0 0 20px rgba(168, 85, 247, 0.3);
+  --universal-effect-cosmic-glow: 0 0 30px rgba(59, 130, 246, 0.4);
+  --universal-effect-elemental-glow: 0 0 25px rgba(16, 185, 129, 0.35);
+  --universal-effect-reciprocidad-glow: 0 0 20px rgba(16, 185, 129, 0.5);
+
+  /* 📏 ESPACIADO UNIVERSAL (Golden Ratio) */
+  --universal-space-xs: 0.5rem;    /* 8px */
+  --universal-space-sm: 0.75rem;   /* 12px */
+  --universal-space-md: 1rem;      /* 16px */
+  --universal-space-lg: 1.618rem;  /* 26px - Golden ratio */
+  --universal-space-xl: 2.618rem;  /* 42px - Golden ratio */
+  --universal-space-2xl: 4.236rem; /* 68px - Golden ratio */
+
+  /* 🔄 TRANSICIONES UNIVERSALES */
+  --universal-transition-fast: 0.15s ease-out;
+  --universal-transition-normal: 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --universal-transition-slow: 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+
+  /* 📐 BORDES UNIVERSALES */
+  --universal-border-radius-sm: 0.5rem;
+  --universal-border-radius-md: 0.75rem;
+  --universal-border-radius-lg: 1rem;
+  --universal-border-radius-xl: 1.5rem;
+
+  /* 🎭 SOMBRAS UNIVERSALES */
+  --universal-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+  --universal-shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --universal-shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+  --universal-shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.15);
+}
+
+/* ===== 🌟 COMPONENTES UNIVERSALES BASE ===== */
+
+/* Universal Card */
+.universal-card {
+  background: var(--universal-bg-paper);
+  border: 2px solid rgba(245, 158, 11, 0.1);
+  border-radius: var(--universal-border-radius-xl);
+  box-shadow: var(--universal-shadow-lg);
+  padding: var(--universal-space-lg);
+  position: relative;
+  overflow: hidden;
+  transition: var(--universal-transition-normal);
+}
+
+.universal-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--universal-gradient-harmony);
+  border-radius: var(--universal-border-radius-xl) var(--universal-border-radius-xl) 0 0;
+}
+
+.universal-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--universal-shadow-xl), var(--universal-effect-glow);
+  border-color: rgba(245, 158, 11, 0.3);
+}
+
+/* Universal Button */
+.universal-button {
+  background: var(--universal-fuego-gradient);
+  color: var(--universal-text-inverse);
+  border: none;
+  border-radius: var(--universal-border-radius-lg);
+  padding: var(--universal-space-md) var(--universal-space-lg);
+  font-weight: 700;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: var(--universal-transition-normal);
+  box-shadow: var(--universal-shadow-md);
+  text-transform: none;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--universal-space-sm);
+}
+
+.universal-button:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--universal-shadow-lg), var(--universal-effect-glow);
+}
+
+.universal-button:active {
+  transform: translateY(0);
+}
+
+/* Universal Input */
+.universal-input {
+  background: var(--universal-bg-paper);
+  border: 2px solid rgba(107, 114, 128, 0.2);
+  border-radius: var(--universal-border-radius-md);
+  padding: var(--universal-space-md);
+  font-size: 1rem;
+  color: var(--universal-text-primary);
+  transition: var(--universal-transition-normal);
+  width: 100%;
+}
+
+.universal-input:focus {
+  outline: none;
+  border-color: var(--universal-fuego-primary);
+  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.1);
+}
+
+/* Universal Chip */
+.universal-chip {
+  background: rgba(245, 158, 11, 0.1);
+  color: var(--universal-fuego-dark);
+  border: 1px solid rgba(245, 158, 11, 0.2);
+  border-radius: var(--universal-border-radius-md);
+  padding: var(--universal-space-xs) var(--universal-space-md);
+  font-weight: 600;
+  font-size: 0.75rem;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--universal-space-xs);
+  transition: var(--universal-transition-normal);
+}
+
+.universal-chip:hover {
+  transform: translateY(-1px);
+  background: rgba(245, 158, 11, 0.2);
+}
+
+/* ===== 🎨 VARIANTES POR ELEMENTO CÓSMICO ===== */
+
+/* Fuego Variants */
+.universal-fuego-card {
+  border-color: rgba(245, 158, 11, 0.3);
+  box-shadow: var(--universal-shadow-lg), 0 0 20px rgba(245, 158, 11, 0.1);
+}
+
+.universal-fuego-card::before {
+  background: var(--universal-fuego-gradient);
+}
+
+.universal-fuego-button {
+  background: var(--universal-fuego-gradient);
+}
+
+.universal-fuego-chip {
+  background: rgba(245, 158, 11, 0.1);
+  border-color: rgba(245, 158, 11, 0.2);
+  color: var(--universal-fuego-dark);
+}
+
+/* Agua Variants */
+.universal-agua-card {
+  border-color: rgba(8, 145, 178, 0.3);
+  box-shadow: var(--universal-shadow-lg), 0 0 20px rgba(8, 145, 178, 0.1);
+}
+
+.universal-agua-card::before {
+  background: var(--universal-agua-gradient);
+}
+
+.universal-agua-button {
+  background: var(--universal-agua-gradient);
+}
+
+.universal-agua-chip {
+  background: rgba(8, 145, 178, 0.1);
+  border-color: rgba(8, 145, 178, 0.2);
+  color: var(--universal-agua-dark);
+}
+
+/* Tierra Variants */
+.universal-tierra-card {
+  border-color: rgba(22, 163, 74, 0.3);
+  box-shadow: var(--universal-shadow-lg), 0 0 20px rgba(22, 163, 74, 0.1);
+}
+
+.universal-tierra-card::before {
+  background: var(--universal-tierra-gradient);
+}
+
+.universal-tierra-button {
+  background: var(--universal-tierra-gradient);
+}
+
+.universal-tierra-chip {
+  background: rgba(22, 163, 74, 0.1);
+  border-color: rgba(22, 163, 74, 0.2);
+  color: var(--universal-tierra-dark);
+}
+
+/* Aire Variants */
+.universal-aire-card {
+  border-color: rgba(168, 85, 247, 0.3);
+  box-shadow: var(--universal-shadow-lg), 0 0 20px rgba(168, 85, 247, 0.1);
+}
+
+.universal-aire-card::before {
+  background: var(--universal-aire-gradient);
+}
+
+.universal-aire-button {
+  background: var(--universal-aire-gradient);
+}
+
+.universal-aire-chip {
+  background: rgba(168, 85, 247, 0.1);
+  border-color: rgba(168, 85, 247, 0.2);
+  color: var(--universal-aire-dark);
+}
+
+/* Éter Variants */
+.universal-eter-card {
+  border-color: rgba(107, 114, 128, 0.3);
+  box-shadow: var(--universal-shadow-lg), 0 0 20px rgba(107, 114, 128, 0.1);
+}
+
+.universal-eter-card::before {
+  background: var(--universal-eter-gradient);
+}
+
+.universal-eter-button {
+  background: var(--universal-eter-gradient);
+}
+
+.universal-eter-chip {
+  background: rgba(107, 114, 128, 0.1);
+  border-color: rgba(107, 114, 128, 0.2);
+  color: var(--universal-eter-dark);
+}
+
+/* ===== 🎯 VARIANTES POR CONCEPTO COOMUNITY ===== */
+
+/* Reciprocidad (Reciprocidad) */
+.universal-reciprocidad-card {
+  border-color: rgba(16, 185, 129, 0.3);
+}
+
+.universal-reciprocidad-card::before {
+  background: linear-gradient(135deg, var(--universal-reciprocidad) 0%, var(--universal-agua-primary) 100%);
+}
+
+.universal-reciprocidad-chip {
+  background: rgba(16, 185, 129, 0.1);
+  border-color: rgba(16, 185, 129, 0.2);
+  color: var(--universal-reciprocidad);
+}
+
+/* Méritos */
+.universal-meritos-card {
+  border-color: rgba(245, 158, 11, 0.3);
+}
+
+.universal-meritos-card::before {
+  background: linear-gradient(135deg, var(--universal-meritos) 0%, var(--universal-fuego-primary) 100%);
+}
+
+.universal-meritos-chip {
+  background: rgba(245, 158, 11, 0.1);
+  border-color: rgba(245, 158, 11, 0.2);
+  color: var(--universal-meritos);
+}
+
+/* Ondas */
+.universal-ondas-card {
+  border-color: rgba(139, 92, 246, 0.3);
+}
+
+.universal-ondas-card::before {
+  background: linear-gradient(135deg, var(--universal-ondas) 0%, var(--universal-aire-primary) 100%);
+}
+
+.universal-ondas-chip {
+  background: rgba(139, 92, 246, 0.1);
+  border-color: rgba(139, 92, 246, 0.2);
+  color: var(--universal-ondas);
+}
+
+/* Lukas */
+.universal-lukas-card {
+  border-color: rgba(6, 182, 212, 0.3);
+}
+
+.universal-lukas-card::before {
+  background: linear-gradient(135deg, var(--universal-lukas) 0%, var(--universal-agua-primary) 100%);
+}
+
+.universal-lukas-chip {
+  background: rgba(6, 182, 212, 0.1);
+  border-color: rgba(6, 182, 212, 0.2);
+  color: var(--universal-lukas);
+}
+
+/* Bien Común */
+.universal-bien-comun-card {
+  border-color: rgba(239, 68, 68, 0.3);
+}
+
+.universal-bien-comun-card::before {
+  background: var(--universal-gradient-concepts);
+}
+
+.universal-bien-comun-chip {
+  background: rgba(239, 68, 68, 0.1);
+  border-color: rgba(239, 68, 68, 0.2);
+  color: var(--universal-bien-comun);
+}
+
+/* ===== 🏗️ LAYOUT UNIVERSALES ===== */
+
+/* Universal Grid */
+.universal-grid {
+  display: grid;
+  gap: var(--universal-space-lg);
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+
+.universal-grid-2 { grid-template-columns: repeat(2, 1fr); }
+.universal-grid-3 { grid-template-columns: repeat(3, 1fr); }
+.universal-grid-4 { grid-template-columns: repeat(4, 1fr); }
+
+/* Universal Flex */
+.universal-flex {
+  display: flex;
+  gap: var(--universal-space-md);
+}
+
+.universal-flex-column { flex-direction: column; }
+.universal-flex-center { align-items: center; justify-content: center; }
+.universal-flex-between { justify-content: space-between; }
+.universal-flex-wrap { flex-wrap: wrap; }
+
+/* ===== 📱 RESPONSIVE UNIVERSALES ===== */
+
+@media (max-width: 768px) {
+  .universal-grid {
+    grid-template-columns: 1fr;
+    gap: var(--universal-space-md);
+  }
+
+  .universal-card {
+    padding: var(--universal-space-md);
+  }
+
+  .universal-button {
+    padding: var(--universal-space-sm) var(--universal-space-md);
+    font-size: 0.8rem;
+  }
+}
+
+/* ===== 🎭 ANIMACIONES UNIVERSALES ===== */
+
+@keyframes universal-fade-in {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes universal-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+@keyframes universal-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes universal-cosmic-glow {
+  0%, 100% { box-shadow: var(--universal-effect-glow); }
+  50% { box-shadow: var(--universal-effect-cosmic-glow); }
+}
+
+/* Clases de animación */
+.universal-fade-in { animation: universal-fade-in 0.5s ease-out; }
+.universal-pulse { animation: universal-pulse 2s ease-in-out infinite; }
+.universal-float { animation: universal-float 3s ease-in-out infinite; }
+.universal-cosmic-glow { animation: universal-cosmic-glow 2s ease-in-out infinite; }
+
+/* ===== 🌙 MODO OSCURO UNIVERSAL ===== */
+
+.universal-guardian-theme-cosmic-vision {
+  --universal-bg-default: #0f172a;
+  --universal-bg-paper: #1e293b;
+  --universal-bg-surface: #334155;
+  --universal-bg-elevated: #475569;
+
+  --universal-text-primary: #f8fafc;
+  --universal-text-secondary: #e2e8f0;
+  --universal-text-muted: #94a3b8;
+  --universal-text-inverse: #0f172a;
+}
+
+/* ===== 🎨 UTILITY CLASSES UNIVERSALES ===== */
+
+/* Spacing */
+.u-p-xs { padding: var(--universal-space-xs); }
+.u-p-sm { padding: var(--universal-space-sm); }
+.u-p-md { padding: var(--universal-space-md); }
+.u-p-lg { padding: var(--universal-space-lg); }
+.u-p-xl { padding: var(--universal-space-xl); }
+
+.u-m-xs { margin: var(--universal-space-xs); }
+.u-m-sm { margin: var(--universal-space-sm); }
+.u-m-md { margin: var(--universal-space-md); }
+.u-m-lg { margin: var(--universal-space-lg); }
+.u-m-xl { margin: var(--universal-space-xl); }
+
+/* Text */
+.u-text-primary { color: var(--universal-text-primary); }
+.u-text-secondary { color: var(--universal-text-secondary); }
+.u-text-muted { color: var(--universal-text-muted); }
+.u-text-center { text-align: center; }
+.u-text-bold { font-weight: 700; }
+
+/* Background */
+.u-bg-fuego { background: var(--universal-fuego-gradient); }
+.u-bg-agua { background: var(--universal-agua-gradient); }
+.u-bg-tierra { background: var(--universal-tierra-gradient); }
+.u-bg-aire { background: var(--universal-aire-gradient); }
+.u-bg-eter { background: var(--universal-eter-gradient); }
+
+/* ===== 🌟 INTEGRACIÓN GLOBAL ===== */
+
+/* Aplicar el sistema universal a toda la aplicación */
+.universal-guardian-system {
+  font-family: 'Inter', 'Roboto', 'Helvetica', 'Arial', sans-serif;
+  line-height: 1.6;
+  color: var(--universal-text-primary);
+  background: var(--universal-bg-default);
+}
+
+/* Sobrescribir estilos de Material-UI para coherencia total */
+.universal-guardian-system .MuiCard-root {
+  @extend .universal-card;
+}
+
+.universal-guardian-system .MuiButton-contained {
+  @extend .universal-button;
+}
+
+.universal-guardian-system .MuiChip-root {
+  @extend .universal-chip;
+}
+
+/* Aplicar efectos cósmicos a elementos interactivos */
+.universal-guardian-system button:hover,
+.universal-guardian-system .MuiButton-root:hover {
+  transform: translateY(-2px);
+  transition: var(--universal-transition-normal);
+}
+
+.universal-guardian-system .MuiCard-root:hover {
+  transform: translateY(-4px);
+  transition: var(--universal-transition-normal);
+}
+

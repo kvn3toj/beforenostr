@@ -1,0 +1,343 @@
+/* Minimal Analytics Dashboard Styles for ÜStats */
+
+/* Clean transitions and hover effects */
+.ustats-card {
+  transition: all 0.2s ease-in-out;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.ustats-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+/* Smooth animations for metrics */
+.metric-value {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.metric-trend-up {
+  color: #2e7d32;
+}
+
+.metric-trend-down {
+  color: #d32f2f;
+}
+
+.metric-trend-stable {
+  color: #757575;
+}
+
+/* Progress bars with app-like styling */
+.minimal-progress {
+  height: 8px;
+  border-radius: 4px;
+  background-color: rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+}
+
+.minimal-progress-bar {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.5s ease-out;
+}
+
+/* Clean category chips */
+.category-chip {
+  border-radius: 16px;
+  font-weight: 500;
+  font-size: 0.875rem;
+  padding: 4px 12px;
+}
+
+/* Subtle hover effects for interactive elements */
+.interactive-element {
+  transition: all 0.2s ease-in-out;
+  cursor: pointer;
+}
+
+.interactive-element:hover {
+  background-color: rgba(0, 0, 0, 0.04);
+}
+
+/* Clean section headers */
+.section-header {
+  margin-bottom: 24px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+/* Spacing utilities for consistent layout */
+.spacing-xs {
+  margin: 8px;
+}
+
+.spacing-sm {
+  margin: 16px;
+}
+
+.spacing-md {
+  margin: 24px;
+}
+
+.spacing-lg {
+  margin: 32px;
+}
+
+/* Typography consistency */
+.metric-title {
+  font-weight: 500;
+  color: rgba(0, 0, 0, 0.6);
+  font-size: 0.875rem;
+  text-transform: none;
+  letter-spacing: 0.1px;
+}
+
+.metric-number {
+  font-weight: 600;
+  font-size: 2rem;
+  line-height: 1.2;
+  margin: 4px 0;
+}
+
+.metric-description {
+  font-size: 0.75rem;
+  color: rgba(0, 0, 0, 0.5);
+  margin: 0;
+}
+
+/* Subtle animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in-up {
+  animation: fadeInUp 0.4s ease-out;
+}
+
+@keyframes pulseSubtle {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+
+.pulse-subtle {
+  animation: pulseSubtle 3s ease-in-out infinite;
+}
+
+/* Card layouts */
+.stats-grid {
+  display: grid;
+  gap: 24px;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+}
+
+.chart-container {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .stats-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .chart-container {
+    padding: 16px;
+  }
+
+  .metric-number {
+    font-size: 1.75rem;
+  }
+}
+
+/* Status indicators with subtle colors */
+.status-optimal {
+  color: #2e7d32;
+  background-color: rgba(46, 125, 50, 0.08);
+}
+
+.status-warning {
+  color: #f57c00;
+  background-color: rgba(245, 124, 0, 0.08);
+}
+
+.status-critical {
+  color: #d32f2f;
+  background-color: rgba(211, 47, 47, 0.08);
+}
+
+/* Clean tabs styling */
+.minimal-tabs {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  margin-bottom: 24px;
+}
+
+.minimal-tab {
+  text-transform: none;
+  font-weight: 500;
+  font-size: 1rem;
+  color: rgba(0, 0, 0, 0.6);
+  padding: 12px 24px;
+  min-height: 48px;
+}
+
+.minimal-tab.active {
+  color: #6366f1;
+  border-bottom: 2px solid #6366f1;
+}
+
+/* Loading states */
+.skeleton-text {
+  background: linear-gradient(
+    90deg,
+    rgba(0, 0, 0, 0.08) 25%,
+    rgba(0, 0, 0, 0.04) 50%,
+    rgba(0, 0, 0, 0.08) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 4px;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* Clean search result styling */
+.search-result-item {
+  background: rgba(0, 0, 0, 0.02);
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 12px;
+  transition: background-color 0.2s ease;
+}
+
+.search-result-item:hover {
+  background: rgba(0, 0, 0, 0.04);
+}
+
+/* Performance indicators */
+.performance-indicator {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.performance-excellent {
+  background: rgba(46, 125, 50, 0.1);
+  color: #2e7d32;
+}
+
+.performance-good {
+  background: rgba(56, 142, 60, 0.1);
+  color: #388e3c;
+}
+
+.performance-fair {
+  background: rgba(245, 124, 0, 0.1);
+  color: #f57c00;
+}
+
+.performance-poor {
+  background: rgba(211, 47, 47, 0.1);
+  color: #d32f2f;
+}
+
+/* Consistent spacing system */
+.p-1 {
+  padding: 8px;
+}
+.p-2 {
+  padding: 16px;
+}
+.p-3 {
+  padding: 24px;
+}
+.p-4 {
+  padding: 32px;
+}
+
+.m-1 {
+  margin: 8px;
+}
+.m-2 {
+  margin: 16px;
+}
+.m-3 {
+  margin: 24px;
+}
+.m-4 {
+  margin: 32px;
+}
+
+.mb-1 {
+  margin-bottom: 8px;
+}
+.mb-2 {
+  margin-bottom: 16px;
+}
+.mb-3 {
+  margin-bottom: 24px;
+}
+.mb-4 {
+  margin-bottom: 32px;
+}
+
+.mt-1 {
+  margin-top: 8px;
+}
+.mt-2 {
+  margin-top: 16px;
+}
+.mt-3 {
+  margin-top: 24px;
+}
+.mt-4 {
+  margin-top: 32px;
+}
+
+/* Focus states for accessibility */
+.ustats-focusable:focus {
+  outline: 2px solid #6366f1;
+  outline-offset: 2px;
+}
+
+/* Print styles */
+@media print {
+  .ustats-card {
+    box-shadow: none;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+  }
+
+  .chart-container {
+    break-inside: avoid;
+  }
+}

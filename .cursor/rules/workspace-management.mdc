@@ -1,0 +1,650 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# 🏗️ REGLAS CRÍTICAS DE GESTIÓN DE WORKSPACE - PROYECTO COOMUNITY
+
+# ===============================================================================
+# REGLAS BASADAS EN APRENDIZAJES COSTOSOS Y EXPERIENCIAS REALES
+# Estas reglas previenen errores que han causado reprocesos significativos
+# ===============================================================================
+
+## 🚨 **REGLA DE ORO FUNDAMENTAL - CRÍTICA**
+
+### **"TODOS LOS COMANDOS DESDE LA RAÍZ DEL MONOREPO"**
+
+**UBICACIÓN DE LA RAÍZ:** `/Users/kevinp/Movies/GAMIFIER-copy/`
+
+**REGLA OBLIGATORIA:**
+```bash
+# ✅ CORRECTO - SIEMPRE desde la raíz
+pwd  # Debe mostrar: /Users/kevinp/Movies/GAMIFIER-copy
+npm run dev
+npm run test:e2e --workspace=Demo/apps/superapp-unified
+
+# ❌ PROHIBIDO - NUNCA desde subdirectorios
+cd Demo/apps/superapp-unified/ && npm run dev  # ❌ CAUSA ERRORES
+cd backend/ && npm run dev                      # ❌ CAUSA ERRORES
+```
+
+**RAZÓN CRÍTICA:** Ejecutar comandos desde subdirectorios causa:
+- Errores de contexto e importaciones rotas
+- Configuraciones incorrectas 
+- Fallos fantasma en tests
+- Pérdida de orquestación del monorepo
+
+---
+
+## 🗄️ **DEPENDENCIAS CRÍTICAS DEL BACKEND - OBLIGATORIAS**
+
+### **APRENDIZAJES COSTOSOS RESUELTOS - JUNIO 2025:**
+
+#### **1. POSTGRESQL (CRÍTICO):**
+**PROBLEMA:** Backend NestJS falló al iniciar con error `Can't reach database server at localhost:5432`
+**SÍNTOMA:** Error P1001 - PostgreSQL database server not running
+**SOLUCIÓN:** PostgreSQL debe estar ejecutándose ANTES de iniciar el backend
+
+#### **2. REDIS (CRÍTICO):**
+**PROBLEMA:** Backend NestJS falló con errores ECONNREFUSED a localhost:6379
+**SÍNTOMA:** Multiple "Redis Client Error" en logs, CacheService connection failed
+**SOLUCIÓN:** Redis debe estar ejecutándose ANTES de iniciar el backend
+
+### **REGLAS DE DEPENDENCIAS CRÍTICAS:**
+
+**AMBAS DEPENDENCIAS SON OBLIGATORIAS para el funcionamiento del backend:**
+```bash
+# ✅ VERIFICAR ESTADO DE POSTGRESQL
+brew services list | grep postgresql
+
+# ✅ VERIFICAR ESTADO DE REDIS
+brew services list | grep redis
+
+# ✅ INICIAR POSTGRESQL (si no está ejecutándose)
+brew services start postgresql@15
+
+# ✅ INICIAR REDIS (si no está ejecutándose)
+brew services start redis
+
+# ✅ VERIFICAR CONECTIVIDAD
+lsof -i :5432  # PostgreSQL escuchando
+lsof -i :6379  # Redis escuchando
+
+# ✅ VERIFICAR LOGS DE CONEXIÓN
+# En logs del backend buscar: "Database connection established" y "Redis connection established"
+```
+
+**PROTOCOLO DE RESOLUCIÓN DE PROBLEMAS DE BD:**
+```bash
+# 1. VERIFICAR SERVICIO POSTGRESQL
+brew services list | grep postgresql
+
+# 2. INICIAR SI ESTÁ DETENIDO
+brew services start postgresql@15
+
+# 3. VERIFICAR PUERTO 5432
+lsof -i :5432
+
+# 4. REINTENTAR BACKEND
+npm run dev:backend
+
+# 5. VERIFICAR LOGS DE CONEXIÓN
+# Buscar: "PrismaService onModuleInit - Database connection established"
+```
+
+**SÍNTOMAS DE FALLO DE BD:**
+- Backend se inicia pero no responde en puerto 3002
+- Error P1001 en logs del backend
+- Mensaje "Can't reach database server at localhost:5432"
+- Health check falla con "connection refused"
+
+---
+
+## 🔄 **GESTIÓN DE PROCESOS MÚLTIPLES - CRÍTICA**
+
+### **PROBLEMA IDENTIFICADO:**
+Múltiples procesos `npm run dev` y `vite` ejecutándose simultáneamente causan:
+- Conflictos de puerto
+- Errores de compilación
+- Comportamiento impredecible
+- Consumo excesivo de recursos
+
+### **PROTOCOLO DE LIMPIEZA OBLIGATORIO:**
+
+**Antes de CUALQUIER comando de desarrollo:**
+```bash
+# 1. DETECTAR PROCESOS MÚLTIPLES
+ps aux | grep -E "(vite|npm run dev)" | grep -v grep
+
+# 2. LIMPIAR PROCESOS CONFLICTIVOS
+pkill -f "vite" 2>/dev/null || true
+pkill -f "npm run dev" 2>/dev/null || true
+
+# 3. LIMPIAR PUERTOS OCUPADOS
+lsof -ti:3000,3001,3002,3003,5173 | xargs kill -9 2>/dev/null || true
+
+# 4. VERIFICAR LIMPIEZA
+lsof -i :3001 || echo "Puerto 3001 libre ✅"
+lsof -i :3002 || echo "Puerto 3002 libre ✅"
+
+# 5. INICIAR SERVICIOS LIMPIOS
+npm run dev  # Desde la raíz
+```
+
+**REGLA DE UN SOLO PROCESO:** NUNCA ejecutar múltiples instancias de `npm run dev` simultáneamente.
+
+---
+
+## 🏛️ **SEPARACIÓN ARQUITECTÓNICA CRÍTICA**
+
+### **APRENDIZAJE COSTOSO RESUELTO:**
+**PROBLEMA:** 151 archivos React (.tsx/.jsx) estaban mezclados en `./src/` del backend NestJS
+**SÍNTOMA:** Error "Failed to resolve import ../pages/AnalyticsPage"
+**SOLUCIÓN:** Archivos movidos a `./_temp_frontend_src_files/` para aislarlos
+
+### **REGLAS DE SEPARACIÓN ESTRICTA:**
+
+**Directorios Backend:**
+```bash
+./src/                    # SOLO archivos NestJS (controllers, services, modules)
+./prisma/                 # SOLO esquemas y migraciones de base de datos
+./dist/                   # SOLO builds del backend compilado
+```
+
+**Directorios Frontend:**
+```bash
+Demo/apps/superapp-unified/src/    # SOLO archivos React de SuperApp
+admin-frontend/src/                # SOLO archivos React de Admin
+```
+
+**PROHIBIDO ABSOLUTAMENTE:**
+- Archivos `.tsx/.jsx` en directorios del backend
+- Archivos de backend en directorios de frontend
+- Importaciones cruzadas entre backend y frontend
+- Dependencias compartidas sin workspace específico
+
+---
+
+## 🔗 **ERRORES DE IMPORTACIONES LAZY LOADING - CRÍTICO**
+
+### **APRENDIZAJE COSTOSO RESUELTO - JUNIO 2025:**
+**PROBLEMA:** Errores Vite 504 "Outdated Optimize Dep" y "Failed to resolve import"
+**SÍNTOMA:** 
+- `No matching export in "src/utils/lazyComponents.ts" for import "preloadCriticalComponents"`
+- `Failed to resolve import "../pages/UPlayPage" from "src/utils/lazyComponents.ts"`
+**SOLUCIÓN:** Mapear correctamente nombres de archivos reales a importaciones lazy
+
+### **REGLAS DE LAZY LOADING CRÍTICAS:**
+
+**Verificar SIEMPRE que las importaciones coincidan con archivos reales:**
+```bash
+# ✅ VERIFICAR ARCHIVOS EXISTENTES
+ls Demo/apps/superapp-unified/src/pages/
+
+# ❌ ERRORES COMUNES DE MAPEO:
+UPlayPage → import('../pages/UPlayPage')     # ❌ No existe
+ProfilePage → import('../pages/ProfilePage') # ❌ No existe
+WalletPage → import('../pages/WalletPage')   # ❌ No existe
+
+# ✅ MAPEO CORRECTO:
+UPlayPage → import('../pages/UPlay')         # ✅ UPlay.tsx existe
+ProfilePage → import('../pages/Profile')     # ✅ Profile.tsx existe
+WalletPage → import('../pages/Wallet')       # ✅ Wallet.tsx existe
+```
+
+**FUNCIONES OBLIGATORIAS en lazyComponents.ts:**
+```typescript
+// ✅ SIEMPRE INCLUIR estas funciones
+export const preloadCriticalComponents = () => { ... };
+export const preloadRouteComponents = (pathname: string) => { ... };
+```
+
+**SÍNTOMAS DE IMPORTACIONES ROTAS:**
+- Errores Vite 504 "Outdated Optimize Dep" 
+- "Failed to scan for dependencies from entries"
+- "No matching export" en lazyComponents.ts
+- SuperApp no carga correctamente
+
+---
+
+## 📂 **ORGANIZACIÓN DE DIRECTORIO RAÍZ**
+
+### **REORGANIZACIÓN MASIVA COMPLETADA:**
+- **ANTES:** 483 archivos en directorio raíz (caos total)
+- **DESPUÉS:** 27 archivos en directorio raíz (94% reducción)
+
+### **ESTRUCTURA ORGANIZADA OBLIGATORIA:**
+
+**Directorio Raíz (SOLO archivos esenciales):**
+```bash
+/Users/kevinp/Movies/GAMIFIER copy/
+├── package.json          # Orquestador principal
+├── turbo.json           # Configuración Turborepo
+├── .env                 # Variables globales
+├── tsconfig.json        # Configuración TypeScript global
+├── .gitignore          # Exclusiones Git
+└── README.md           # Documentación principal
+```
+
+**Directorios Organizacionales:**
+```bash
+logs/                    # 31 archivos organizados (auth/, backend/, testing/)
+config/                  # 16 archivos de configuración (json/, backup/)
+docs/diagrams/           # 6 archivos de diagramas (.mmd)
+scripts/database/        # 7 archivos SQL y scripts de DB
+```
+
+**REGLA DE MANTENIMIENTO:** El directorio raíz NUNCA debe exceder 30 archivos.
+
+---
+
+## 🎯 **PROTOCOLO PRE-FLIGHT CHECK EXPANDIDO**
+
+### **VERIFICACIÓN OBLIGATORIA antes de cualquier tarea:**
+
+```bash
+#!/bin/bash
+echo "🔍 INICIANDO PRE-FLIGHT CHECK CRÍTICO..."
+
+# 1. VERIFICAR UBICACIÓN CORRECTA
+CURRENT_DIR=$(pwd)
+EXPECTED_DIR="/Users/kevinp/Movies/GAMIFIER-copy"
+if [ "$CURRENT_DIR" != "$EXPECTED_DIR" ]; then
+  echo "❌ ERROR: Ubicación incorrecta"
+  echo "📍 Actual: $CURRENT_DIR"
+  echo "📍 Esperada: $EXPECTED_DIR"
+  echo "🔧 Ejecuta: cd '$EXPECTED_DIR'"
+  exit 1
+fi
+echo "✅ Ubicación correcta verificada"
+
+# 2. 🆕 VERIFICAR DEPENDENCIAS CRÍTICAS DEL BACKEND
+echo "🗄️ Verificando PostgreSQL..."
+POSTGRES_STATUS=$(brew services list | grep postgresql@15 | awk '{print $2}')
+if [ "$POSTGRES_STATUS" != "started" ]; then
+  echo "❌ ERROR: PostgreSQL no está ejecutándose"
+  echo "🔧 Ejecutando: brew services start postgresql@15"
+  brew services start postgresql@15
+  sleep 3
+fi
+
+# Verificar conectividad PostgreSQL
+POSTGRES_RUNNING=$(lsof -i :5432 | grep LISTEN | wc -l)
+if [ $POSTGRES_RUNNING -eq 0 ]; then
+  echo "❌ ERROR: PostgreSQL no está escuchando en puerto 5432"
+  echo "🔧 Reiniciando PostgreSQL..."
+  brew services restart postgresql@15
+  sleep 5
+else
+  echo "✅ PostgreSQL ejecutándose en puerto 5432"
+fi
+
+echo "🔧 Verificando Redis..."
+REDIS_STATUS=$(brew services list | grep redis | awk '{print $2}')
+if [ "$REDIS_STATUS" != "started" ]; then
+  echo "❌ ERROR: Redis no está ejecutándose"
+  echo "🔧 Ejecutando: brew services start redis"
+  brew services start redis
+  sleep 3
+fi
+
+# Verificar conectividad Redis
+REDIS_RUNNING=$(lsof -i :6379 | grep LISTEN | wc -l)
+if [ $REDIS_RUNNING -eq 0 ]; then
+  echo "❌ ERROR: Redis no está escuchando en puerto 6379"
+  echo "🔧 Reiniciando Redis..."
+  brew services restart redis
+  sleep 3
+else
+  echo "✅ Redis ejecutándose en puerto 6379"
+fi
+
+# 3. LIMPIAR PROCESOS MÚLTIPLES
+echo "🧹 Limpiando procesos múltiples..."
+pkill -f "vite" 2>/dev/null || true
+pkill -f "npm run dev" 2>/dev/null || true
+pkill -f "turbo" 2>/dev/null || true
+sleep 2
+
+# 4. VERIFICAR LIMPIEZA DE PROCESOS
+RUNNING_PROCESSES=$(ps aux | grep -E "(vite|npm run dev)" | grep -v grep | wc -l)
+if [ $RUNNING_PROCESSES -gt 0 ]; then
+  echo "⚠️ ADVERTENCIA: Procesos aún ejecutándose:"
+  ps aux | grep -E "(vite|npm run dev)" | grep -v grep
+fi
+
+# 5. LIMPIAR PUERTOS OCUPADOS
+echo "🔧 Liberando puertos ocupados..."
+lsof -ti:3000,3001,3002,3003,5173 | xargs kill -9 2>/dev/null || true
+
+# 6. VERIFICAR CONFIGURACIÓN DE PUERTOS
+echo "📋 Verificando configuración de puertos..."
+if [ -f "Demo/apps/superapp-unified/.env" ]; then
+  SUPERAPP_PORT=$(grep VITE_BASE_URL Demo/apps/superapp-unified/.env | cut -d':' -f3 | cut -d'/' -f1)
+  if [ "$SUPERAPP_PORT" != "3001" ]; then
+    echo "⚠️ ADVERTENCIA: Puerto SuperApp no es 3001 (actual: $SUPERAPP_PORT)"
+  fi
+fi
+
+# 7. VERIFICAR TURBOREPO LOCAL
+echo "🔧 Verificando Turborepo local..."
+TURBO_LOCAL=$(npm ls turbo 2>/dev/null | grep turbo@ | cut -d@ -f2)
+if [ -z "$TURBO_LOCAL" ]; then
+  echo "⚠️ RECOMENDADO: Instalar Turborepo localmente"
+  echo "🔧 Ejecuta: npm install turbo --save-dev --legacy-peer-deps"
+else
+  echo "✅ Turborepo local: v$TURBO_LOCAL"
+fi
+
+# 8. VERIFICAR DEPENDENCIAS CRÍTICAS
+echo "📦 Verificando dependencias críticas..."
+cd Demo/apps/superapp-unified/
+npm ls @sentry/react >/dev/null 2>&1 || echo "⚠️ FALTA: @sentry/react"
+npm ls web-vitals >/dev/null 2>&1 || echo "⚠️ FALTA: web-vitals"
+npm ls @playwright/test >/dev/null 2>&1 || echo "⚠️ FALTA: @playwright/test"
+cd ../../../
+
+# 9. 🆕 VERIFICAR SERVICIOS CON DEPENDENCIA DE BD
+echo "🌐 Verificando servicios disponibles..."
+echo "🗄️ Verificando backend con PostgreSQL..."
+curl -s http://localhost:3002/health >/dev/null && echo "✅ Backend (3002) disponible" || echo "⚠️ Backend (3002) no disponible - verificar PostgreSQL"
+curl -s -I http://localhost:3001 >/dev/null && echo "✅ SuperApp (3001) disponible" || echo "ℹ️ SuperApp (3001) no iniciada"
+
+echo "🏁 PRE-FLIGHT CHECK COMPLETADO"
+echo "▶️ Listo para ejecutar: turbo run dev"
+```
+
+---
+
+## 🎮 **COMANDOS CANÓNICOS DEFINITIVOS**
+
+### **Comandos de Desarrollo (desde la raíz ÚNICAMENTE):**
+
+```bash
+# 🚀 INICIAR ECOSISTEMA COMPLETO (Comando Principal) ✅ VERIFICADO
+turbo run dev
+# o alternativamente:
+npm run dev
+
+# 🎯 WORKSPACE ESPECÍFICO ✅ VERIFICADO
+npm run dev:backend              # Backend NestJS (puerto 3002)
+npm run dev:superapp             # SuperApp (puerto 3001)
+
+# 🔍 FILTROS TURBOREPO ✅ FUNCIONAL
+turbo run dev --filter=...backend*
+turbo run dev --filter=...superapp*
+
+# 📊 TESTS ESPECÍFICOS
+npm run test:e2e --workspace=coomunity-superapp
+```
+
+### **Comandos de Verificación ✅ PROBADOS:**
+
+```bash
+# 📍 VERIFICAR UBICACIÓN
+pwd  # Debe mostrar: /Users/kevinp/Movies/GAMIFIER copy
+
+# 🔍 DETECTAR PROCESOS MÚLTIPLES
+ps aux | grep -E "(vite|npm)" | grep -v grep
+
+# 🌐 VERIFICAR SERVICIOS ✅ CONFIRMADOS
+curl http://localhost:3002/health  # Backend: {"status":"ok","message":"Backend is running"}
+curl http://localhost:3001 -I      # SuperApp: HTTP/1.1 200 OK
+
+# 📋 VERIFICAR CONFIGURACIÓN
+cat Demo/apps/superapp-unified/.env | grep VITE_BASE_URL
+```
+
+### **🆕 CONFIGURACIÓN TURBOREPO EXITOSA:**
+
+**package.json raíz (OBLIGATORIO):**
+```json
+{
+  "packageManager": "npm@10.0.0",
+  "workspaces": [
+    "Demo/apps/*",
+    "apps/*", 
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "turbo run dev",
+    "dev:backend": "npm run start:backend:dev",
+    "dev:superapp": "npm run dev --workspace=coomunity-superapp"
+  }
+}
+```
+
+**turbo.json (OBLIGATORIO):**
+```json
+{
+  "$schema": "https://turbo.build/schema.json",
+  "tasks": {
+    "dev": {
+      "cache": false,
+      "persistent": true
+    }
+  }
+}
+```
+
+---
+
+## 🚨 **ERRORES CRÍTICOS A EVITAR ABSOLUTAMENTE**
+
+### **❌ PROHIBIDO:**
+
+1. **Comandos desde subdirectorios:**
+   ```bash
+   # ❌ NUNCA HACER ESTO:
+   cd Demo/apps/superapp-unified/ && npm run dev
+   cd backend/ && npm run dev
+   ```
+
+2. **Múltiples procesos simultáneos:**
+   ```bash
+   # ❌ NUNCA ejecutar múltiples instancias
+   npm run dev  # Ya ejecutándose
+   npm run dev  # ❌ Segunda instancia causa conflictos
+   ```
+
+3. **🆕 Iniciar backend sin dependencias críticas:**
+   ```bash
+   # ❌ NUNCA iniciar backend sin verificar PostgreSQL Y Redis
+   npm run dev:backend  # Sin verificar brew services list | grep postgresql
+   npm run dev:backend  # Sin verificar brew services list | grep redis
+   ```
+
+4. **Mezclar archivos backend/frontend:**
+   ```bash
+   # ❌ NUNCA poner archivos React en:
+   ./src/components/          # ❌ Es directorio de backend
+   ./src/pages/              # ❌ Es directorio de backend
+   ```
+
+5. **Ignorar limpieza de procesos:**
+   ```bash
+   # ❌ NUNCA iniciar sin limpiar:
+   npm run dev  # Sin pkill previo causa conflictos
+   ```
+
+6. **Usar solo Turborepo global:**
+   ```bash
+   # ❌ EVITAR: Solo instalación global (causa advertencias)
+   # WARNING: No locally installed `turbo` found
+   ```
+
+7. **🆕 Importaciones lazy loading incorrectas:**
+   ```bash
+   # ❌ NUNCA usar nombres que no coincidan con archivos reales
+   import('../pages/UPlayPage')    # ❌ Si UPlay.tsx es el archivo real
+   import('../pages/ProfilePage')  # ❌ Si Profile.tsx es el archivo real
+   ```
+
+### **✅ OBLIGATORIO:**
+
+1. **🆕 Siempre verificar dependencias críticas primero:**
+   ```bash
+   brew services list | grep postgresql  # Verificar PostgreSQL
+   brew services list | grep redis       # Verificar Redis
+   brew services start postgresql@15     # Iniciar PostgreSQL si es necesario
+   brew services start redis            # Iniciar Redis si es necesario
+   lsof -i :5432                        # Verificar conectividad PostgreSQL
+   lsof -i :6379                        # Verificar conectividad Redis
+   ```
+
+2. **Siempre verificar ubicación:**
+   ```bash
+   pwd  # Debe mostrar: /Users/kevinp/Movies/GAMIFIER-copy
+   ```
+
+3. **Siempre limpiar procesos:**
+   ```bash
+   pkill -f "vite" && pkill -f "npm run dev" && pkill -f "turbo"
+   ```
+
+4. **Instalar Turborepo localmente:**
+   ```bash
+   npm install turbo --save-dev --legacy-peer-deps
+   npm ls turbo  # Verificar instalación local
+   ```
+
+5. **Siempre usar workspace sintaxis:**
+   ```bash
+   npm run <script> --workspace=<nombre_del_paquete>
+   ```
+
+6. **Siempre mantener separación arquitectónica:**
+   ```bash
+   # Backend: ./src/ - SOLO NestJS
+   # Frontend: Demo/apps/superapp-unified/src/ - SOLO React
+   ```
+
+7. **🆕 Verificar importaciones lazy loading:**
+   ```bash
+   ls Demo/apps/superapp-unified/src/pages/  # Verificar archivos reales
+   # Mapear correctamente: UPlay.tsx → import('../pages/UPlay')
+   ```
+
+---
+
+## 📈 **BENEFICIOS COMPROBADOS**
+
+### **Implementando estas reglas se logró:**
+
+- ✅ **Tests E2E al 100%** (3/3 exitosos)
+- ✅ **Eliminación completa de errores de importación**
+- ✅ **Arquitectura limpia y mantenible**
+- ✅ **Desarrollo sin conflictos de puerto**
+- ✅ **Reducción 94% de archivos en directorio raíz**
+- ✅ **Orquestación eficiente con Turborepo** ⭐ **CONFIRMADO ENERO 2025**
+- ✅ **Separación estricta backend/frontend**
+- ✅ **Backend NestJS operacional** (puerto 3002, health check exitoso)
+- ✅ **SuperApp funcional** (puerto 3001, HTTP/1.1 200 OK)
+- ✅ **Base de datos Prisma conectada** (todas las rutas mapeadas)
+- ✅ **Configuración Turborepo corregida** (tasks, packageManager, workspaces)
+- ✅ **🆕 PostgreSQL + Redis como dependencias críticas identificadas** ⭐ **JUNIO 2025**
+- ✅ **🆕 Errores de importaciones lazy loading resueltos** ⭐ **JUNIO 2025**
+
+### **Costos evitados:**
+- 🚫 Reprocesos por errores de contexto
+- 🚫 Debugging de importaciones rotas
+- 🚫 Conflictos de puerto y procesos
+- 🚫 Confusión arquitectónica
+- 🚫 Pérdida de tiempo en configuración
+- 🚫 **🆕 Fallos de backend por PostgreSQL no disponible**
+- 🚫 **🆕 Fallos de backend por Redis no disponible**
+- 🚫 **🆕 Errores Vite por importaciones lazy loading incorrectas**
+
+---
+
+## 🎯 **RESUMEN EJECUTIVO**
+
+### **REGLA FUNDAMENTAL:**
+> **"El directorio raíz del monorepo es el centro de comando. Todo se ejecuta desde ahí, todo se organiza desde ahí, y todo se controla desde ahí. PostgreSQL Y Redis deben estar ejecutándose ANTES que el backend."**
+
+### **PROTOCOLO OBLIGATORIO:**
+1. **Verificar ubicación** (`pwd`)
+2. **🆕 Verificar PostgreSQL** (`brew services list | grep postgresql`)
+3. **🆕 Verificar Redis** (`brew services list | grep redis`)
+4. **🆕 Iniciar PostgreSQL si es necesario** (`brew services start postgresql@15`)
+5. **🆕 Iniciar Redis si es necesario** (`brew services start redis`)
+6. **Limpiar procesos** (`pkill -f "vite" && pkill -f "turbo"`)
+7. **Verificar puertos** (`lsof -i :3001`)
+8. **Ejecutar desde raíz** (`turbo run dev`)
+9. **Usar workspace sintaxis** (`--workspace=<name>`)
+
+### **PROHIBICIONES ABSOLUTAS:**
+- ❌ Comandos desde subdirectorios
+- ❌ Múltiples procesos simultáneos
+- ❌ **🆕 Iniciar backend sin PostgreSQL Y Redis ejecutándose**
+- ❌ Mezclar archivos backend/frontend
+- ❌ Más de 30 archivos en directorio raíz
+- ❌ Ignorar limpieza de procesos
+
+**Estas reglas son el resultado de aprendizajes costosos y DEBEN seguirse para mantener la estabilidad y eficiencia del proyecto CoomÜnity.**
+
+---
+
+## 🎉 **CONFIGURACIÓN EXITOSA - JUNIO 2025**
+
+### **✅ ESTADO CONFIRMADO:**
+
+- **Turborepo**: Funcionando correctamente con configuración corregida
+- **🆕 PostgreSQL + Redis**: Identificados como dependencias críticas obligatorias
+- **Backend NestJS**: Operacional en puerto 3002 (health check exitoso)
+- **SuperApp**: Operacional en puerto 3001 (HTTP/1.1 200 OK)
+- **Base de datos**: Prisma conectada, todas las rutas mapeadas
+- **Configuración**: package.json y turbo.json corregidos y funcionales
+
+### **🚀 COMANDOS PRINCIPALES VERIFICADOS:**
+
+```bash
+# 🆕 COMANDOS COMPLETOS CON VERIFICACIÓN DE DEPENDENCIAS CRÍTICAS
+brew services start postgresql@15   # ✅ OBLIGATORIO PRIMERO
+brew services start redis          # ✅ OBLIGATORIO SEGUNDO
+turbo run dev                       # ✅ FUNCIONAL
+
+# Servicios individuales
+npm run dev:backend                 # ✅ FUNCIONAL (puerto 3002) - REQUIERE POSTGRESQL
+npm run dev:superapp               # ✅ FUNCIONAL (puerto 3001)
+
+# Verificación de servicios
+curl http://localhost:3002/health  # ✅ RESPONDE (solo si PostgreSQL está activo)
+curl http://localhost:3001 -I     # ✅ RESPONDE
+```
+
+### **📋 CONFIGURACIÓN CLAVE EXITOSA:**
+
+- **packageManager**: "npm@10.0.0" ✅
+- **workspaces**: ["Demo/apps/*", "apps/*", "packages/*"] ✅
+- **turbo.json**: "tasks" en lugar de "pipeline" ✅
+- **Scripts de orquestación**: Configurados y funcionales ✅
+- **Turborepo local**: v2.5.4 instalado localmente ✅ (eliminó advertencias)
+- **🆕 PostgreSQL**: Dependencia crítica documentada y verificada ✅
+
+### **🔧 INSTALACIÓN TURBOREPO LOCAL RECOMENDADA:**
+
+```bash
+# Instalar Turborepo localmente para eliminar advertencias
+npm install turbo --save-dev --legacy-peer-deps
+
+# Verificar instalación local
+npm ls turbo  # Debe mostrar: turbo@2.5.4
+
+# Verificar que no hay advertencias
+turbo --version  # Debe mostrar solo: 2.5.4 (sin warnings)
+```
+
+**Beneficios de la instalación local:**
+- ✅ **Sin advertencias** sobre versión global
+- ✅ **Consistencia** entre desarrolladores del equipo
+- ✅ **Caching optimizado** específico del proyecto
+- ✅ **CI/CD determinístico** con versión fija
+- ✅ **Configuración robusta** para producción
+
+### **🆕 BENEFICIOS DE LA REGLA POSTGRESQL:**
+- ✅ **Prevención de fallos de backend** por dependencia faltante
+- ✅ **Diagnóstico rápido** de problemas de conectividad de BD
+- ✅ **Protocolo claro** para resolución de problemas
+- ✅ **Documentación del aprendizaje** para futuros desarrolladores
+- ✅ **Integración en pre-flight check** para verificación automática

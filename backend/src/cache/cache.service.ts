@@ -1,0 +1,434 @@
+import {
+  Injectable,
+  OnModuleInit,
+  OnModuleDestroy,
+  Logger,
+  Inject,
+} from '@nestjs/common';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { createClient, RedisClientType } from 'redis';
+import { MetricsService } from '../common/metrics/metrics.service';
+import { Cache } from 'cache-manager';
+
+@Injectable()
+export class CacheService implements OnModuleInit, OnModuleDestroy {
+  private client: RedisClientType | null = null;
+  private useRedis = true;
+  private readonly defaultTTL = 7 * 24 * 60 * 60; // 7 días en segundos
+  private cacheStats = { hits: 0, misses: 0 };
+  private readonly logger = new Logger(CacheService.name);
+
+  constructor(
+    private readonly metricsService: MetricsService,
+    @Inject(CACHE_MANAGER) private cacheManager: Cache
+  ) {
+    this.logger.log('Initializing Redis client...', 'CacheService');
+
+    this.client = createClient({ url: process.env.REDIS_URL });
+
+    this.client.on('error', (err) => {
+      console.error('Redis Client Error:', err);
+      this.useRedis = false;
+    });
+
+    // Remover la llamada automática para evitar doble conexión
+    // La conexión se manejará en onModuleInit()
+  }
+
+  async connect() {
+    try {
+      // Verificar si ya está conectado antes de intentar conectar
+      if (this.client?.isReady) {
+        this.logger.log(
+          'Redis already connected, skipping connection attempt',
+          'CacheService'
+        );
+        return;
+      }
+
+      await this.client?.connect();
+      this.logger.log('Connected to Redis', 'CacheService');
+    } catch (err) {
+      console.error('Redis Connection Failed:', err);
+      this.useRedis = false;
+    }
+  }
+
+  async onModuleInit() {
+    try {
+      this.logger.log('Connecting to Redis...', 'CacheService');
+
+      // Verificar estado antes de conectar
+      if (this.client?.isReady) {
+        this.logger.log('Redis already connected', 'CacheService');
+        return;
+      }
+
+      await this.client?.connect();
+      this.logger.log('Redis connection established', 'CacheService');
+    } catch (error) {
+      this.logger.error('Failed to connect to Redis', error, 'CacheService');
+      // No lanzar error para permitir que la aplicación funcione sin caché
+    }
+  }
+
+  async onModuleDestroy() {
+    try {
+      this.logger.log('Disconnecting from Redis...', 'CacheService');
+      await this.client?.disconnect();
+      this.logger.log('Redis disconnected', 'CacheService');
+    } catch (error) {
+      this.logger.error(
+        'Error disconnecting from Redis',
+        error,
+        'CacheService'
+      );
+    }
+  }
+
+  /**
+   * Obtiene la duración de un video desde el caché
+   * @param videoId ID del video de YouTube
+   * @returns Duración en segundos o null si no está en caché
+   */
+  async getDuration(videoId: string): Promise<number | null> {
+    try {
+      if (!this.client || !this.client.isReady) {
+        this.logger.log(
+          'Redis client not ready, skipping cache',
+          'CacheService'
+        );
+        return null;
+      }
+
+      const key = this.generateCacheKey(videoId);
+      this.logger.log(`Checking cache for key: ${key}`, 'CacheService');
+
+      const cachedValue = await this.client.get(key);
+
+      if (cachedValue !== null && typeof cachedValue === 'string') {
+        const duration = parseInt(cachedValue, 10);
+        this.cacheStats.hits++;
+
+        // Actualizar métricas de Prometheus
+        this.metricsService.incrementCacheOperations('get', 'hit');
+        this.metricsService.setCacheHitRatio(
+          this.cacheStats.hits / (this.cacheStats.hits + this.cacheStats.misses)
+        );
+
+        this.logger.log(
+          `Cache HIT for ${videoId}: ${duration}s`,
+          'CacheService'
+        );
+        return duration;
+      }
+
+      this.cacheStats.misses++;
+
+      // Actualizar métricas de Prometheus
+      this.metricsService.incrementCacheOperations('get', 'miss');
+      this.metricsService.setCacheHitRatio(
+        this.cacheStats.hits / (this.cacheStats.hits + this.cacheStats.misses)
+      );
+
+      this.logger.log(`Cache MISS for ${videoId}`, 'CacheService');
+      return null;
+    } catch (error) {
+      this.metricsService.incrementCacheOperations('get', 'error');
+      this.logger.error('Error accessing cache', error, 'CacheService');
+      return null;
+    }
+  }
+
+  /**
+   * Almacena la duración de un video en el caché
+   * @param videoId ID del video de YouTube
+   * @param duration Duración en segundos
+   * @param ttl Tiempo de vida en segundos (opcional, por defecto 7 días)
+   */
+  async setDuration(
+    videoId: string,
+    duration: number,
+    ttl?: number
+  ): Promise<void> {
+    try {
+      if (!this.client || !this.client.isReady) {
+        this.logger.log(
+          'Redis client not ready, skipping cache',
+          'CacheService'
+        );
+        return;
+      }
+
+      const key = this.generateCacheKey(videoId);
+      const timeToLive = ttl || this.defaultTTL;
+
+      this.logger.log(
+        `Setting cache for ${videoId}: ${duration}s (TTL: ${timeToLive}s)`,
+        'CacheService'
+      );
+
+      await this.client.setEx(key, timeToLive, duration.toString());
+
+      // Actualizar métricas de Prometheus
+      this.metricsService.incrementCacheOperations('set', 'success');
+
+      this.logger.log(`Cache SET for ${videoId}: ${duration}s`, 'CacheService');
+    } catch (error) {
+      this.metricsService.incrementCacheOperations('set', 'error');
+      this.logger.error('Error setting cache', error, 'CacheService');
+      // No lanzar error para permitir que la aplicación funcione sin caché
+    }
+  }
+
+  /**
+   * Elimina una entrada del caché
+   * @param videoId ID del video de YouTube
+   */
+  async deleteDuration(videoId: string): Promise<void> {
+    try {
+      if (!this.client || !this.client.isReady) {
+        this.logger.log(
+          'Redis client not ready, skipping cache',
+          'CacheService'
+        );
+        return;
+      }
+
+      const key = this.generateCacheKey(videoId);
+      this.logger.log(`Deleting cache for key: ${key}`, 'CacheService');
+
+      await this.client.del(key);
+
+      this.logger.log(`Cache DELETED for ${videoId}`, 'CacheService');
+    } catch (error) {
+      this.logger.error('Error deleting from cache', error, 'CacheService');
+    }
+  }
+
+  /**
+   * Verifica si Redis está disponible y funcionando
+   */
+  async isHealthy(): Promise<boolean> {
+    try {
+      if (!this.client || !this.client.isReady) {
+        return false;
+      }
+
+      await this.client.ping();
+      return true;
+    } catch (error) {
+      this.logger.error('Redis health check failed', error, 'CacheService');
+      return false;
+    }
+  }
+
+  /**
+   * Obtiene estadísticas del caché
+   */
+  async getCacheStats(): Promise<{ totalKeys: number; memoryUsage: string }> {
+    try {
+      if (!this.client || !this.client.isReady) {
+        return { totalKeys: 0, memoryUsage: 'N/A - Redis not connected' };
+      }
+
+      const keys = await this.client.keys(this.generateCacheKey('*'));
+      const info = await this.client.info('memory');
+
+      // Extraer uso de memoria de la respuesta de INFO
+      const memoryMatch = info.match(/used_memory_human:([^\r\n]+)/);
+      const memoryUsage = memoryMatch ? memoryMatch[1] : 'Unknown';
+
+      return {
+        totalKeys: keys.length,
+        memoryUsage: memoryUsage.trim(),
+      };
+    } catch (error) {
+      this.logger.error('Error getting cache stats', error, 'CacheService');
+      return { totalKeys: 0, memoryUsage: 'Error retrieving stats' };
+    }
+  }
+
+  /**
+   * Genera la clave de caché para un video ID
+   * @param videoId ID del video de YouTube
+   * @returns Clave de caché formateada
+   */
+  private generateCacheKey(videoId: string): string {
+    return `gamifier:video:duration:${videoId}`;
+  }
+
+  // ===== MÉTODOS DE CACHÉ PARA METADATOS (Fase 4.2) =====
+
+  /**
+   * Almacena metadatos de un video en el caché.
+   * La función es genérica para aceptar cualquier tipo de objeto como metadatos.
+   * @param videoId ID del video
+   * @param metadata Objeto con los metadatos a almacenar
+   * @param ttl Tiempo de vida en segundos (opcional)
+   */
+  async setMetadata<T extends object>(
+    videoId: string,
+    metadata: T,
+    ttl?: number
+  ): Promise<void> {
+    try {
+      const key = this.generateMetadataCacheKey(videoId);
+      const value = JSON.stringify(metadata);
+      const cacheTTL = ttl || this.defaultTTL;
+
+      await this.client?.setEx(key, cacheTTL, value);
+
+      this.logger.log(`Metadata cached for video ${videoId}`, 'CacheService', {
+        key,
+        ttl: cacheTTL,
+        metadataSize: value.length,
+      });
+    } catch (error) {
+      this.logger.error(
+        'Error setting metadata cache:',
+        error,
+        'CacheService',
+        { videoId }
+      );
+    }
+  }
+
+  /**
+   * Obtiene metadatos de un video desde el caché.
+   * La función es genérica para castear el resultado al tipo esperado.
+   * @param videoId ID del video
+   * @returns Objeto con los metadatos o null si no se encuentra
+   */
+  async getMetadata<T extends object>(videoId: string): Promise<T | null> {
+    try {
+      const key = this.generateMetadataCacheKey(videoId);
+      const cachedValue = await this.client?.get(key);
+
+      if (cachedValue) {
+        this.cacheStats.hits++;
+        this.metricsService.incrementCacheOperations('get', 'hit');
+        return JSON.parse(String(cachedValue)) as T;
+      } else {
+        this.cacheStats.misses++;
+        this.metricsService.incrementCacheOperations('get', 'miss');
+
+        this.logger.log(
+          `Metadata cache miss for video ${videoId}`,
+          'CacheService',
+          { key }
+        );
+        return null;
+      }
+    } catch (error) {
+      this.logger.error(
+        'Error getting metadata cache:',
+        error,
+        'CacheService',
+        { videoId }
+      );
+      this.cacheStats.misses++;
+      this.metricsService.incrementCacheOperations('get', 'error');
+      return null;
+    }
+  }
+
+  /**
+   * Elimina metadatos de video del caché
+   * @param videoId ID del video
+   */
+  async deleteMetadata(videoId: string): Promise<void> {
+    try {
+      const key = this.generateMetadataCacheKey(videoId);
+      await this.client?.del(key);
+
+      this.logger.log(
+        `Metadata cache deleted for video ${videoId}`,
+        'CacheService',
+        { key }
+      );
+    } catch (error) {
+      this.logger.error(
+        'Error deleting metadata cache:',
+        error,
+        'CacheService',
+        { videoId }
+      );
+    }
+  }
+
+  /**
+   * Verifica si existen metadatos en caché para un video
+   * @param videoId ID del video
+   * @returns true si existen metadatos en caché
+   */
+  async hasMetadata(videoId: string): Promise<boolean> {
+    try {
+      const key = this.generateMetadataCacheKey(videoId);
+      const exists = await this.client?.exists(key);
+      return exists === 1;
+    } catch (error) {
+      this.logger.error(
+        'Error checking metadata cache existence:',
+        error,
+        'CacheService',
+        { videoId }
+      );
+      return false;
+    }
+  }
+
+  /**
+   * Genera la clave de caché para metadatos de video
+   * @param videoId ID del video
+   * @returns Clave de caché formateada para metadatos
+   */
+  private generateMetadataCacheKey(videoId: string): string {
+    return `gamifier:video:metadata:${videoId}`;
+  }
+
+  /**
+   * Obtiene estadísticas del caché incluyendo metadatos
+   */
+  async getCacheStatsWithMetadata(): Promise<CacheStatsWithMetadata> {
+    const [durationKeys, metadataKeys] = await Promise.all([
+      this.client.keys(this.generateCacheKey('*')),
+      this.client.keys(this.generateMetadataCacheKey('*')),
+    ]);
+
+    const basicStats = await this.getCacheStats();
+
+    return {
+      totalKeys: durationKeys.length + metadataKeys.length,
+      durationKeys: durationKeys.length,
+      metadataKeys: metadataKeys.length,
+      memoryUsage: basicStats.memoryUsage,
+    };
+  }
+
+  async get(key: string) {
+    if (this.useRedis && this.client) {
+      return await this.client.get(key);
+    }
+    return await this.cacheManager.get(key);
+  }
+
+  async set(key: string, value: string, ttl?: number) {
+    if (this.useRedis && this.client && this.client.isReady) {
+      if (ttl) {
+        await this.client.setEx(key, ttl, value);
+      } else {
+        await this.client.set(key, value);
+      }
+    } else {
+      await this.cacheManager.set(key, value, ttl ? ttl * 1000 : undefined);
+    }
+  }
+}
+
+interface CacheStatsWithMetadata {
+  totalKeys: number;
+  durationKeys: number;
+  metadataKeys: number;
+  memoryUsage: string;
+}

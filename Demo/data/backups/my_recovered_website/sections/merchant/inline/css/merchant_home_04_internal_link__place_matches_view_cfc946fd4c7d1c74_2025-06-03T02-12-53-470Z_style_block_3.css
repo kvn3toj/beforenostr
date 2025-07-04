@@ -1,0 +1,23 @@
+/* Extracted from: merchant_home_04_internal_link__place_matches_view_cfc946fd4c7d1c74_2025-06-03T02-12-53-470Z.html */
+/* Block index: 3 */
+/* Extracted at: 2025-06-03T02:16:25.375Z */
+
+.container-fluid{
+		padding: 0;
+	}
+	.has-navbar-fixed-top{
+		padding: 0 !important;
+	} 
+	.white{
+		color: #fff;
+	}
+	.content-black{
+		background: #000;
+		min-height: 100vh;
+		overflow: hidden;
+	}
+	p{
+		font-weight: 100;
+		color: #fff;
+		font-size: 1.2em;
+	}

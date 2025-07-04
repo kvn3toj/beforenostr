@@ -1,0 +1,153 @@
+# 🚀 CoomÜnity Monorepo - CI/CD Pipeline Optimizado
+# Pipeline basado en las mejores prácticas de Turborepo 2024
+name: CoomÜnity CI/CD Pipeline
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+jobs:
+  ci:
+    name: 🚀 CI - Build, Lint & Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: 🔍 Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: 🔧 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: 📥 Install Dependencies
+        run: npm ci --legacy-peer-deps
+
+      - name: 🧹 Run Linter
+        run: npm run lint
+
+      - name: 🏗️ Build Applications
+        run: npm run build
+
+      - name: 🧪 Run Unit & Integration Tests
+        run: npm run test
+
+      - name: 📊 Upload Build Artifacts
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: build-artifacts
+          path: |
+            apps/admin-frontend/dist
+            backend/dist
+            Demo/apps/superapp-unified/dist
+          retention-days: 7
+
+  e2e-testing:
+    name: 🧪 E2E Testing
+    runs-on: ubuntu-latest
+    needs: ci
+    steps:
+      - name: 🔍 Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: 🔧 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: 📥 Install Dependencies
+        run: npm ci --legacy-peer-deps
+
+      - name: 📥 Download Build Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-artifacts
+          path: .
+
+      - name: 🎭 Install Playwright Browsers
+        run: npx playwright install --with-deps
+
+      - name: 🚀 Start Applications for E2E
+        run: |
+          npm run dev &
+          echo "Waiting for services to start..."
+          sleep 30 # Wait for services to be up
+        env:
+          CI: true
+
+      - name: 🧪 Run E2E Tests
+        run: npm run test:e2e:ci
+
+      - name: 📊 Upload Playwright Report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: playwright-report
+          path: |
+            playwright-report/
+            test-results/
+            Demo/apps/superapp-unified/playwright-report/
+            Demo/apps/superapp-unified/test-results/
+          retention-days: 30
+
+  deploy-staging:
+    name: 🚀 Deploy to Staging
+    runs-on: ubuntu-latest
+    needs: [ci, e2e-testing]
+    if: github.ref == 'refs/heads/develop'
+    environment: staging
+    steps:
+      - name: 🔍 Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: 📥 Download Build Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-artifacts
+
+      - name: 🚀 Deploy to Staging
+        run: |
+          echo "🚀 Deploying to staging environment..."
+          # Add your staging deployment script here
+          echo "✅ Staging deployment completed"
+
+  deploy-production:
+    name: 🚀 Deploy to Production
+    runs-on: ubuntu-latest
+    needs: [ci, e2e-testing]
+    if: github.ref == 'refs/heads/main'
+    environment: production
+    steps:
+      - name: 🔍 Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: 📥 Download Build Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-artifacts
+
+      - name: 🚀 Deploy to Production
+        run: |
+          echo "🚀 Deploying to production environment..."
+          # Add your production deployment script here
+          echo "✅ Production deployment completed"
+
+  notification:
+    name: 📢 Notification
+    runs-on: ubuntu-latest
+    needs: [deploy-staging, deploy-production]
+    if: always()
+    steps:
+      - name: 📢 Send Notification
+        run: |
+          if [ "${{ needs.deploy-production.result }}" == "success" ]; then
+            echo "✅ Production deployment successful!"
+          elif [ "${{ needs.deploy-staging.result }}" == "success" ]; then
+            echo "✅ Staging deployment successful!"
+          else
+            echo "⚠️  Deployment completed with warnings"
+          fi

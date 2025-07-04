@@ -1,0 +1,479 @@
+/* ===============================================================================
+   🍂 REFINAMIENTOS SUTILES OTOÑALES - COOMUNITY SUPERAPP
+   Aplicación más elegante y sutil de la paleta otoño verdadero
+   =============================================================================== */
+
+/* ===== HEADER SUTIL Y ELEGANTE ===== */
+[data-testid='app-header'],
+header[class*='MuiAppBar'],
+.MuiAppBar-root {
+  /* Gradiente muy sutil otoñal */
+  background: linear-gradient(
+    135deg,
+    #f8fafc 0%,
+    #f1f5f9 50%,
+    #e2e8f0 100%
+  ) !important;
+  color: var(--warm-neutral-800) !important;
+  border-bottom: 1px solid var(--autumn-primary-200) !important;
+  box-shadow:
+    0 1px 3px rgba(124, 45, 18, 0.05),
+    0 1px 2px rgba(124, 45, 18, 0.03) !important;
+}
+
+/* Logo con colores otoñales sutiles */
+.brand-logo {
+  background: linear-gradient(
+    45deg,
+    var(--autumn-primary-600) 30%,
+    var(--autumn-gold-600) 90%
+  ) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+  color: var(--autumn-primary-600) !important; /* Fallback */
+  text-shadow: none !important;
+  font-weight: 800 !important;
+}
+
+/* Iconos del header más sutiles */
+.MuiAppBar-root .MuiIconButton-root {
+  color: var(--autumn-primary-600) !important;
+  background: rgba(249, 115, 22, 0.05) !important;
+  border: 1px solid rgba(249, 115, 22, 0.1) !important;
+  border-radius: 12px !important;
+  transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.MuiAppBar-root .MuiIconButton-root:hover {
+  background: var(--autumn-primary-50) !important;
+  color: var(--autumn-primary-700) !important;
+  border-color: var(--autumn-primary-200) !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 2px 8px rgba(249, 115, 22, 0.15) !important;
+}
+
+/* ===== SMART HEADER MÁS SUTIL ===== */
+[data-loc*='SmartHeader'],
+.smart-header,
+.home-welcome-header {
+  /* Fondo muy sutil con toque otoñal */
+  background: linear-gradient(
+    135deg,
+    #fffefb 0%,
+    #fef8f4 50%,
+    #fff7ed 100%
+  ) !important;
+  color: var(--warm-neutral-800) !important;
+  border: 2px solid var(--autumn-primary-100) !important;
+  box-shadow:
+    0 4px 12px rgba(124, 45, 18, 0.08),
+    0 2px 4px rgba(124, 45, 18, 0.04) !important;
+}
+
+/* Eliminar gradientes escandalosos del SmartHeader */
+[data-loc*='SmartHeader'] h4,
+[data-loc*='SmartHeader'] h1 {
+  color: var(--home-heading-primary-autumn) !important;
+  text-shadow: none !important;
+  background: none !important;
+  -webkit-text-fill-color: unset !important;
+}
+
+[data-loc*='SmartHeader'] p {
+  color: var(--home-text-secondary-autumn) !important;
+  opacity: 1 !important;
+  text-shadow: none !important;
+}
+
+/* Botones del SmartHeader más sutiles */
+[data-loc*='SmartHeader'] button {
+  background: var(--autumn-primary-100) !important;
+  color: var(--autumn-primary-700) !important;
+  border: 1px solid var(--autumn-primary-200) !important;
+  border-radius: 12px !important;
+}
+
+[data-loc*='SmartHeader'] button:hover {
+  background: var(--autumn-primary-200) !important;
+  color: var(--autumn-primary-800) !important;
+  transform: translateY(-1px) !important;
+}
+
+/* ===== ELIMINAR MORADOS RESTANTES ===== */
+/* Buscar y reemplazar todos los colores morados */
+*[style*='rgb(99, 102, 241)'],
+*[style*='rgb(139, 92, 246)'],
+*[style*='#6366f1'],
+*[style*='#8b5cf6'] {
+  background: var(--autumn-primary-500) !important;
+  border-color: var(--autumn-primary-500) !important;
+  color: var(--autumn-primary-500) !important;
+}
+
+/* Outlines morados a otoñales */
+*[style*='outline: rgb(99, 102, 241)'],
+*[style*='outline-color: rgb(99, 102, 241)'] {
+  outline-color: var(--autumn-primary-400) !important;
+}
+
+/* ===== FONDOS OSCUROS A CLAROS ===== */
+/* Elementos con fondos oscuros cambiarlos a claros */
+*[style*='background-color: rgb(55, 65, 81)'],
+*[style*='background-color: rgb(31, 41, 55)'],
+*[style*='background-color: rgb(17, 24, 39)'],
+*[style*='backgroundColor: rgb(55, 65, 81)'],
+*[style*='backgroundColor: rgb(31, 41, 55)'],
+*[style*='backgroundColor: rgb(17, 24, 39)'] {
+  background-color: var(--warm-neutral-50) !important;
+  color: var(--warm-neutral-800) !important;
+}
+
+/* Cards oscuras a claras */
+.MuiCard-root[style*='background-color: rgb(31, 41, 55)'],
+.MuiCard-root[style*='background-color: rgb(55, 65, 81)'] {
+  background-color: var(--card-bg-autumn) !important;
+  color: var(--home-text-primary-autumn) !important;
+  border: 1px solid var(--card-border-autumn) !important;
+}
+
+/* ===== PROGRESS BARS SUTILES ===== */
+.MuiLinearProgress-root {
+  background-color: var(--autumn-primary-100) !important;
+  border-radius: 9999px !important;
+  height: 6px !important;
+}
+
+.MuiLinearProgress-bar {
+  background: linear-gradient(
+    90deg,
+    var(--autumn-primary-400) 0%,
+    var(--autumn-gold-400) 100%
+  ) !important;
+  border-radius: 9999px !important;
+}
+
+/* ===== BOTONES MÁS SUTILES ===== */
+.MuiButton-contained {
+  background: linear-gradient(
+    135deg,
+    var(--autumn-primary-500) 0%,
+    var(--autumn-gold-500) 100%
+  ) !important;
+  color: #ffffff !important;
+  box-shadow:
+    0 2px 4px rgba(124, 45, 18, 0.1),
+    0 1px 2px rgba(124, 45, 18, 0.06) !important;
+  border: none !important;
+}
+
+.MuiButton-contained:hover {
+  background: linear-gradient(
+    135deg,
+    var(--autumn-primary-600) 0%,
+    var(--autumn-gold-600) 100%
+  ) !important;
+  box-shadow:
+    0 4px 8px rgba(124, 45, 18, 0.15),
+    0 2px 4px rgba(124, 45, 18, 0.08) !important;
+  transform: translateY(-1px) !important;
+}
+
+.MuiButton-outlined {
+  color: var(--autumn-primary-600) !important;
+  border-color: var(--autumn-primary-300) !important;
+  background: transparent !important;
+}
+
+.MuiButton-outlined:hover {
+  background: var(--autumn-primary-50) !important;
+  border-color: var(--autumn-primary-400) !important;
+  color: var(--autumn-primary-700) !important;
+}
+
+/* ===== SIDEBAR MÁS SUTIL ===== */
+.MuiDrawer-paper {
+  background: linear-gradient(
+    180deg,
+    #fefefe 0%,
+    var(--warm-neutral-50) 100%
+  ) !important;
+  border-right: 1px solid var(--autumn-primary-100) !important;
+  box-shadow: 2px 0 8px rgba(124, 45, 18, 0.06) !important;
+}
+
+.MuiListItemButton-root {
+  color: var(--warm-neutral-700) !important;
+  border-radius: 12px !important;
+  margin: 4px 8px !important;
+}
+
+.MuiListItemButton-root:hover {
+  background: var(--autumn-primary-50) !important;
+  color: var(--autumn-primary-700) !important;
+  transform: translateX(2px) !important;
+}
+
+.MuiListItemButton-root.Mui-selected {
+  background: var(--autumn-primary-100) !important;
+  color: var(--autumn-primary-800) !important;
+  border-left: 3px solid var(--autumn-primary-500) !important;
+}
+
+/* ===== NOTIFICACIONES SUTILES ===== */
+.MuiBadge-badge {
+  background: var(--autumn-secondary-500) !important;
+  color: #ffffff !important;
+  font-weight: 600 !important;
+  box-shadow: 0 1px 3px rgba(220, 38, 38, 0.3) !important;
+  border: 1px solid #ffffff !important;
+}
+
+/* ===== BÚSQUEDA SUTIL ===== */
+.search-container {
+  background: var(--warm-neutral-100) !important;
+  border: 1px solid var(--autumn-primary-200) !important;
+  border-radius: 12px !important;
+}
+
+.search-container:hover {
+  background: var(--warm-neutral-50) !important;
+  border-color: var(--autumn-primary-300) !important;
+}
+
+.search-container input {
+  color: var(--warm-neutral-800) !important;
+}
+
+.search-container input::placeholder {
+  color: var(--warm-neutral-500) !important;
+}
+
+/* ===== TABS SUTILES ===== */
+.MuiTabs-root {
+  background: var(--warm-neutral-100) !important;
+  border: 1px solid var(--autumn-primary-100) !important;
+}
+
+.MuiTab-root {
+  color: var(--warm-neutral-600) !important;
+}
+
+.MuiTab-root.Mui-selected {
+  background: var(--autumn-primary-500) !important;
+  color: #ffffff !important;
+  box-shadow: 0 1px 3px rgba(124, 45, 18, 0.2) !important;
+}
+
+.MuiTab-root:hover:not(.Mui-selected) {
+  background: var(--autumn-primary-50) !important;
+  color: var(--autumn-primary-700) !important;
+}
+
+/* ===== AVATARES SUTILES ===== */
+.MuiAvatar-root,
+.user-avatar {
+  border: 2px solid var(--autumn-primary-200) !important;
+  box-shadow: 0 2px 4px rgba(124, 45, 18, 0.1) !important;
+}
+
+.user-avatar:hover {
+  border-color: var(--autumn-primary-300) !important;
+  box-shadow: 0 4px 8px rgba(124, 45, 18, 0.15) !important;
+}
+
+/* ===== FORMULARIOS SUTILES ===== */
+.MuiTextField-root .MuiOutlinedInput-root {
+  background: var(--warm-neutral-50) !important;
+}
+
+.MuiTextField-root .MuiOutlinedInput-notchedOutline {
+  border-color: var(--autumn-primary-200) !important;
+}
+
+.MuiTextField-root
+  .MuiOutlinedInput-root:hover
+  .MuiOutlinedInput-notchedOutline {
+  border-color: var(--autumn-primary-300) !important;
+}
+
+.MuiTextField-root
+  .MuiOutlinedInput-root.Mui-focused
+  .MuiOutlinedInput-notchedOutline {
+  border-color: var(--autumn-primary-500) !important;
+  box-shadow: 0 0 0 2px rgba(249, 115, 22, 0.1) !important;
+}
+
+/* ===== ALERTS SUTILES ===== */
+.MuiAlert-standardSuccess {
+  background: var(--autumn-success-light) !important;
+  color: var(--autumn-success-dark) !important;
+  border: 1px solid var(--autumn-success) !important;
+}
+
+.MuiAlert-standardWarning {
+  background: var(--autumn-gold-100) !important;
+  color: var(--autumn-gold-800) !important;
+  border: 1px solid var(--autumn-gold-300) !important;
+}
+
+.MuiAlert-standardError {
+  background: var(--autumn-secondary-100) !important;
+  color: var(--autumn-secondary-800) !important;
+  border: 1px solid var(--autumn-secondary-300) !important;
+}
+
+.MuiAlert-standardInfo {
+  background: var(--autumn-primary-100) !important;
+  color: var(--autumn-primary-800) !important;
+  border: 1px solid var(--autumn-primary-300) !important;
+}
+
+/* ===== CHIPS SUTILES ===== */
+.MuiChip-root {
+  background: var(--warm-neutral-100) !important;
+  color: var(--warm-neutral-700) !important;
+  border: 1px solid var(--autumn-primary-200) !important;
+}
+
+.MuiChip-filled {
+  background: var(--autumn-primary-100) !important;
+  color: var(--autumn-primary-800) !important;
+  border-color: var(--autumn-primary-200) !important;
+}
+
+/* ===== TOOLTIPS SUTILES ===== */
+.MuiTooltip-tooltip {
+  background: var(--warm-neutral-800) !important;
+  color: #ffffff !important;
+  font-size: 0.75rem !important;
+  box-shadow: 0 2px 8px rgba(124, 45, 18, 0.2) !important;
+}
+
+/* ===== SCROLLBARS SUTILES ===== */
+::-webkit-scrollbar-thumb {
+  background: var(--autumn-primary-200) !important;
+  border-radius: 4px !important;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--autumn-primary-300) !important;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--warm-neutral-100) !important;
+}
+
+/* ===== EFECTOS DE CARGA SUTILES ===== */
+.MuiCircularProgress-root {
+  color: var(--autumn-primary-500) !important;
+}
+
+.MuiSkeleton-root {
+  background: linear-gradient(
+    90deg,
+    var(--warm-neutral-100) 0%,
+    var(--warm-neutral-50) 50%,
+    var(--warm-neutral-100) 100%
+  ) !important;
+}
+
+/* ===== BOTTOM NAVIGATION SUTIL ===== */
+.MuiBottomNavigation-root {
+  background: var(--warm-neutral-50) !important;
+  border-top: 1px solid var(--autumn-primary-100) !important;
+  box-shadow: 0 -2px 8px rgba(124, 45, 18, 0.05) !important;
+}
+
+.MuiBottomNavigationAction-root {
+  color: var(--warm-neutral-600) !important;
+}
+
+.MuiBottomNavigationAction-root.Mui-selected {
+  color: var(--autumn-primary-600) !important;
+  background: var(--autumn-primary-50) !important;
+}
+
+.MuiBottomNavigationAction-root:hover {
+  color: var(--autumn-primary-500) !important;
+  background: var(--autumn-primary-50) !important;
+}
+
+/* ===== MENÚS SUTILES ===== */
+.MuiMenu-paper,
+.MuiPopover-paper {
+  background: var(--card-bg-autumn) !important;
+  border: 1px solid var(--autumn-primary-100) !important;
+  box-shadow: 0 4px 16px rgba(124, 45, 18, 0.1) !important;
+}
+
+.MuiMenuItem-root {
+  color: var(--warm-neutral-700) !important;
+}
+
+.MuiMenuItem-root:hover {
+  background: var(--autumn-primary-50) !important;
+  color: var(--autumn-primary-700) !important;
+}
+
+/* ===== CORRECCIONES ESPECÍFICAS PARA ELEMENTOS CON INLINE STYLES ===== */
+/* Para elementos que tienen estilos inline, usar !important más específico */
+[data-loc*='SmartHeader'][style*='linear-gradient'] {
+  background: linear-gradient(
+    135deg,
+    #fffefb 0%,
+    #fef8f4 50%,
+    #fff7ed 100%
+  ) !important;
+}
+
+/* Para elementos con colores inline específicos */
+[style*='color: rgb(248, 250, 252)'] {
+  color: var(--home-heading-primary-autumn) !important;
+}
+
+[style*='backgroundColor: rgb(99, 102, 241)'],
+[style*='background-color: rgb(99, 102, 241)'] {
+  background-color: var(--autumn-primary-500) !important;
+}
+
+[style*='backgroundColor: rgb(139, 92, 246)'],
+[style*='background-color: rgb(139, 92, 246)'] {
+  background-color: var(--autumn-secondary-500) !important;
+}
+
+/* ===== MODO OSCURO SUTIL ===== */
+@media (prefers-color-scheme: dark) {
+  .MuiAppBar-root {
+    background: linear-gradient(
+      135deg,
+      var(--warm-neutral-800) 0%,
+      var(--warm-neutral-700) 100%
+    ) !important;
+    color: var(--warm-neutral-100) !important;
+  }
+
+  [data-loc*='SmartHeader'] {
+    background: linear-gradient(
+      135deg,
+      var(--warm-neutral-800) 0%,
+      var(--warm-neutral-700) 100%
+    ) !important;
+    color: var(--warm-neutral-100) !important;
+  }
+}
+
+/* ===== FOCUS STATES SUTILES ===== */
+*:focus-visible {
+  outline: 2px solid var(--autumn-primary-400) !important;
+  outline-offset: 2px !important;
+  border-radius: 4px !important;
+}
+
+/* ===== REDUCIR MOVIMIENTO ===== */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+}

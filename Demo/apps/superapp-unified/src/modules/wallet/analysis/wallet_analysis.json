@@ -1,0 +1,17 @@
+{
+  "pageType": "wallet_public",
+  "accessMethod": "dev_environment_first",
+  "walletFeatures": {
+    "balanceVisible": false,
+    "transactionCount": 0,
+    "rechargeOptionsCount": 0,
+    "paymentMethodsCount": 0
+  },
+  "functionality": {
+    "hasWalletForms": false,
+    "totalForms": 0,
+    "totalInputs": 0,
+    "totalButtons": 5
+  },
+  "contentAccess": "accessible"
+}

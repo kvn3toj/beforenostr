@@ -1,0 +1,81 @@
+name: 🌟 Backend Lint & Test - Purificación Cósmica
+
+on:
+  push:
+    branches: [main, develop]
+    paths:
+      - 'backend/**'
+  pull_request:
+    branches: [main, develop]
+    paths:
+      - 'backend/**'
+
+jobs:
+  lint-and-test:
+    name: 🔍 Lint & Test Backend
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: ./backend
+
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+
+      - name: 🔧 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: backend/package-lock.json
+
+      - name: 📦 Install dependencies
+        run: npm ci
+
+      - name: 🎯 Generate Prisma Client
+        run: npm run db:generate
+
+      - name: 🌟 Run ESLint (Strict - Zero Tolerance)
+        run: npm run lint:check
+
+      - name: 🔨 Check TypeScript compilation
+        run: npm run build
+
+      - name: 🧪 Run tests
+        run: npm test
+
+      - name: 📊 Generate test coverage
+        run: npm run test:cov
+
+      - name: 📈 Upload coverage to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          file: ./backend/coverage/lcov.info
+          flags: backend
+          name: backend-coverage
+          fail_ci_if_error: false
+
+  purification-report:
+    name: 📋 Purificación Report
+    runs-on: ubuntu-latest
+    needs: lint-and-test
+    if: always()
+
+    steps:
+      - name: 🎉 Purificación Exitosa
+        if: needs.lint-and-test.result == 'success'
+        run: |
+          echo "✨ PURIFICACIÓN CÓSMICA COMPLETADA ✨"
+          echo "🌟 Código backend libre de 'any' y variables no usadas"
+          echo "🎯 Reglas ESLint estrictas aplicadas exitosamente"
+          echo "💎 Calidad de código: NIVEL DIAMANTE"
+
+      - name: ⚠️ Purificación Requiere Atención
+        if: needs.lint-and-test.result != 'success'
+        run: |
+          echo "🔥 ALERTA DE PURIFICACIÓN 🔥"
+          echo "⚡ Se requiere intervención para completar la purificación"
+          echo "🎯 Revisar errores de ESLint y corregir antes de merge"
+          echo "💡 Ejecutar 'npm run lint' localmente para auto-fix"
+          exit 1

@@ -1,0 +1,9 @@
+{
+  "playerType": "Vimeo",
+  "hasCustomPlayer": true,
+  "hasVimeoIntegration": true,
+  "hasVideoConfig": true,
+  "floatingButtonsCount": 4,
+  "interactiveElementsCount": 5,
+  "overlayElementsCount": 2
+}

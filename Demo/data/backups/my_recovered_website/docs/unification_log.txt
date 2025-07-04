@@ -1,0 +1,102 @@
+[2025-06-03T05:31:47.943Z] ✅ Estructura de directorios creada
+[2025-06-03T05:31:47.943Z] 
+🔄 Procesando sección: pilgrim
+[2025-06-03T05:31:47.948Z] ❌ Error crítico durante la unificación: TypeError: cssFiles is not iterable
+[2025-06-03T05:32:17.039Z] 🚀 Iniciando proceso de unificación del sitio web CoomÜnity...
+
+[2025-06-03T05:32:17.040Z] 📁 Creando estructura de directorios...
+[2025-06-03T05:32:17.042Z] ✅ Estructura de directorios creada
+[2025-06-03T05:32:17.042Z] 
+🔄 Procesando sección: pilgrim
+[2025-06-03T05:32:17.050Z] ⚠️  Error al buscar archivos CSS en my_recovered_website/sections/pilgrim/assets/css: TypeError: cssFiles is not iterable
+[2025-06-03T05:32:17.050Z]   📄 Copiados assets/css
+[2025-06-03T05:32:17.070Z] ⚠️  Error al buscar archivos JS en my_recovered_website/sections/pilgrim/assets/js: TypeError: jsFiles is not iterable
+[2025-06-03T05:32:17.070Z]   📄 Copiados assets/js
+[2025-06-03T05:32:17.075Z]   📄 Copiados assets/images
+[2025-06-03T05:32:17.079Z]   📄 Copiados assets/fonts
+[2025-06-03T05:32:17.084Z]   📄 Copiados assets/other
+[2025-06-03T05:32:17.089Z]   📄 Copiados inline_css
+[2025-06-03T05:32:17.092Z]   📄 Copiados inline_js
+[2025-06-03T05:32:17.093Z]     🔄 CSS absoluto a relativo: 4 reemplazos
+[2025-06-03T05:32:17.093Z]     🔄 JS absoluto a relativo: 9 reemplazos
+[2025-06-03T05:32:17.093Z]   📄 Procesado HTML principal: index.html
+[2025-06-03T05:32:17.094Z] ✅ Sección pilgrim procesada
+[2025-06-03T05:32:17.094Z] 
+🔄 Procesando sección: merchant
+[2025-06-03T05:32:17.106Z] ⚠️  Error al buscar archivos CSS en my_recovered_website/sections/merchant/assets/css: TypeError: cssFiles is not iterable
+[2025-06-03T05:32:17.106Z]   📄 Copiados assets/css
+[2025-06-03T05:32:17.123Z] ⚠️  Error al buscar archivos JS en my_recovered_website/sections/merchant/assets/js: TypeError: jsFiles is not iterable
+[2025-06-03T05:32:17.123Z]   📄 Copiados assets/js
+[2025-06-03T05:32:17.130Z]   📄 Copiados assets/images
+[2025-06-03T05:32:17.134Z]   📄 Copiados assets/fonts
+[2025-06-03T05:32:17.136Z]   📄 Copiados assets/data
+[2025-06-03T05:32:17.139Z]   📄 Copiados assets/other
+[2025-06-03T05:32:17.150Z]   📄 Copiados inline_css
+[2025-06-03T05:32:17.158Z]   📄 Copiados inline_js
+[2025-06-03T05:32:17.159Z]     🔄 JS absoluto a relativo: 1 reemplazos
+[2025-06-03T05:32:17.159Z]   📄 Procesado HTML principal: index.html
+[2025-06-03T05:32:17.160Z]     🔄 JS absoluto a relativo: 1 reemplazos
+[2025-06-03T05:32:17.162Z]   📄 Procesada variación: initial_load.html
+[2025-06-03T05:32:17.176Z]     🔄 JS absoluto a relativo: 1 reemplazos
+[2025-06-03T05:32:17.180Z]   📄 Procesada variación: after_scroll.html
+[2025-06-03T05:32:17.197Z]     🔄 JS absoluto a relativo: 1 reemplazos
+[2025-06-03T05:32:17.221Z]   📄 Procesada variación: button_clicked.html
+[2025-06-03T05:32:17.224Z] ✅ Sección merchant procesada
+[2025-06-03T05:32:17.224Z] 
+🔄 Procesando sección: red-pill
+[2025-06-03T05:32:17.228Z] ⚠️  Error al buscar archivos CSS en my_recovered_website/sections/red-pill/assets/css: TypeError: cssFiles is not iterable
+[2025-06-03T05:32:17.228Z]   📄 Copiados assets/css
+[2025-06-03T05:32:17.248Z] ⚠️  Error al buscar archivos JS en my_recovered_website/sections/red-pill/assets/js: TypeError: jsFiles is not iterable
+[2025-06-03T05:32:17.248Z]   📄 Copiados assets/js
+[2025-06-03T05:32:17.251Z]   📄 Copiados assets/images
+[2025-06-03T05:32:17.252Z]   📄 Copiados assets/fonts
+[2025-06-03T05:32:17.256Z]   📄 Copiados assets/videos
+[2025-06-03T05:32:17.257Z]   📄 Copiados assets/data
+[2025-06-03T05:32:17.258Z]   📄 Copiados assets/other
+[2025-06-03T05:32:17.258Z]   📄 Copiados inline_css
+[2025-06-03T05:32:17.258Z]   📄 Copiados inline_js
+[2025-06-03T05:32:17.259Z]     🔄 CSS absoluto a relativo: 3 reemplazos
+[2025-06-03T05:32:17.259Z]     🔄 JS absoluto a relativo: 10 reemplazos
+[2025-06-03T05:32:17.259Z]     🔄 Videos absoluto a relativo: 2 reemplazos
+[2025-06-03T05:32:17.259Z]   📄 Procesado HTML principal: index.html
+[2025-06-03T05:32:17.260Z]     🔄 CSS absoluto a relativo: 3 reemplazos
+[2025-06-03T05:32:17.260Z]     🔄 JS absoluto a relativo: 10 reemplazos
+[2025-06-03T05:32:17.260Z]     🔄 Videos absoluto a relativo: 2 reemplazos
+[2025-06-03T05:32:17.260Z]   📄 Procesado journey: initial.html
+[2025-06-03T05:32:17.261Z]     🔄 CSS absoluto a relativo: 3 reemplazos
+[2025-06-03T05:32:17.261Z]     🔄 JS absoluto a relativo: 10 reemplazos
+[2025-06-03T05:32:17.261Z]     🔄 Videos absoluto a relativo: 2 reemplazos
+[2025-06-03T05:32:17.261Z]   📄 Procesado journey: video_ended.html
+[2025-06-03T05:32:17.262Z]     🔄 CSS absoluto a relativo: 3 reemplazos
+[2025-06-03T05:32:17.262Z]     🔄 JS absoluto a relativo: 10 reemplazos
+[2025-06-03T05:32:17.262Z]     🔄 Videos absoluto a relativo: 2 reemplazos
+[2025-06-03T05:32:17.263Z]   📄 Procesado journey: left_path.html
+[2025-06-03T05:32:17.263Z]     🔄 CSS absoluto a relativo: 3 reemplazos
+[2025-06-03T05:32:17.263Z]     🔄 JS absoluto a relativo: 10 reemplazos
+[2025-06-03T05:32:17.263Z]     🔄 Videos absoluto a relativo: 2 reemplazos
+[2025-06-03T05:32:17.263Z]   📄 Procesado journey: response_1.html
+[2025-06-03T05:32:17.264Z]     🔄 CSS absoluto a relativo: 3 reemplazos
+[2025-06-03T05:32:17.264Z]     🔄 JS absoluto a relativo: 10 reemplazos
+[2025-06-03T05:32:17.264Z]     🔄 Videos absoluto a relativo: 2 reemplazos
+[2025-06-03T05:32:17.264Z]   📄 Procesado journey: response_2.html
+[2025-06-03T05:32:17.265Z]     🔄 CSS absoluto a relativo: 3 reemplazos
+[2025-06-03T05:32:17.265Z]     🔄 JS absoluto a relativo: 10 reemplazos
+[2025-06-03T05:32:17.265Z]     🔄 Videos absoluto a relativo: 2 reemplazos
+[2025-06-03T05:32:17.265Z]   📄 Procesado journey: right_path.html
+[2025-06-03T05:32:17.266Z]     🔄 CSS absoluto a relativo: 3 reemplazos
+[2025-06-03T05:32:17.266Z]     🔄 JS absoluto a relativo: 10 reemplazos
+[2025-06-03T05:32:17.266Z]     🔄 Videos absoluto a relativo: 2 reemplazos
+[2025-06-03T05:32:17.266Z]   📄 Procesado journey: final.html
+[2025-06-03T05:32:17.268Z]   📊 Copiados analytics/interaction_maps
+[2025-06-03T05:32:17.269Z]   📊 Copiados analytics/interaction_paths
+[2025-06-03T05:32:17.270Z]   📊 Copiados analytics/sessions
+[2025-06-03T05:32:17.270Z] ✅ Sección red-pill procesada
+[2025-06-03T05:32:17.270Z] 
+📝 Creando archivos de configuración...
+[2025-06-03T05:32:17.270Z] ✅ Archivos de configuración creados
+[2025-06-03T05:32:17.298Z] ✅ Página de navegación creada
+[2025-06-03T05:32:17.299Z] ✅ Reporte de unificación generado
+[2025-06-03T05:32:17.299Z] 
+✅ Unificación completada exitosamente!
+[2025-06-03T05:32:17.299Z] 📁 Proyecto unificado disponible en: ./my_recovered_website
+[2025-06-03T05:32:17.299Z] 📊 Archivos procesados: 13

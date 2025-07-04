@@ -1,0 +1,21 @@
+{
+  "pageType": "gossip_chat",
+  "accessMethod": "dev_environment_first",
+  "gossipFeatures": {
+    "hasChatInterface": true,
+    "communicationToolsCount": 9,
+    "messageElementsCount": 7,
+    "userInteractionsCount": 4,
+    "hasMatchConnection": true
+  },
+  "matchId": "38000e9aad777d56",
+  "functionality": {
+    "hasChatForms": true,
+    "totalForms": 1,
+    "totalInputs": 2,
+    "totalTextareas": 0,
+    "totalButtons": 4,
+    "hasImages": true
+  },
+  "contentAccess": "accessible"
+}

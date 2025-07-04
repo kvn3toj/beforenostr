@@ -1,0 +1,481 @@
+/* ===== UPLAY CORPORATE DESIGN SYSTEM ===== */
+/* Implementación de la Guía de Rediseño Visual Corporativo */
+/* Colores Corporativos: #142C46, #005CA9, #392768, #5C2483 */
+
+/* ============ HEADER PRINCIPAL - REDISEÑO COMPLETO ============ */
+.uplay-header-corporate {
+  background: var(--gradient-header-uplay);
+  border-bottom: 3px solid var(--uplay-purple);
+  box-shadow: var(--shadow-navy-uplay);
+  border-radius: 20px;
+  overflow: hidden;
+  margin-bottom: 2rem;
+  padding: 2rem;
+  position: relative;
+}
+
+.uplay-header-corporate::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    45deg,
+    rgba(255, 255, 255, 0.1) 0%,
+    transparent 50%,
+    rgba(255, 255, 255, 0.05) 100%
+  );
+  pointer-events: none;
+}
+
+.uplay-header-badge {
+  background: rgba(255, 255, 255, 0.15);
+  border: 2px solid rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(10px);
+  color: white;
+  border-radius: 16px;
+  padding: 12px 24px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 4px 12px rgba(255, 255, 255, 0.2);
+}
+
+.uplay-header-title {
+  color: white !important;
+  font-weight: 900 !important;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  margin-bottom: 1rem !important;
+}
+
+.uplay-header-subtitle {
+  color: rgba(255, 255, 255, 0.9) !important;
+  font-weight: 500 !important;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* ============ CARDS DE MÉTRICAS - MARCOS DEFINIDOS ============ */
+.uplay-metric-card-corporate {
+  background: var(--gradient-card-uplay);
+  border: 2px solid var(--uplay-gray-200);
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: var(--shadow-md-uplay);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.uplay-metric-card-corporate::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: var(--gradient-primary-uplay);
+  transform: scaleY(0);
+  transform-origin: bottom;
+  transition: transform 0.3s ease;
+}
+
+.uplay-metric-card-corporate:hover::before {
+  transform: scaleY(1);
+}
+
+.uplay-metric-card-corporate:hover {
+  border-color: var(--uplay-blue);
+  box-shadow: var(--shadow-lg-uplay);
+  transform: translateY(-4px);
+}
+
+.uplay-metric-card-corporate.type-blue {
+  border-left: 4px solid var(--uplay-blue);
+}
+
+.uplay-metric-card-corporate.type-purple {
+  border-left: 4px solid var(--uplay-purple);
+}
+
+.uplay-metric-card-corporate.type-navy {
+  border-left: 4px solid var(--uplay-navy);
+}
+
+/* Iconos con colores corporativos */
+.uplay-metric-icon-blue {
+  background: linear-gradient(135deg, var(--uplay-blue), var(--uplay-blue-light));
+  color: white;
+  border-radius: 12px;
+  padding: 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+  box-shadow: var(--shadow-blue-uplay);
+}
+
+.uplay-metric-icon-purple {
+  background: linear-gradient(135deg, var(--uplay-purple), var(--uplay-purple-light));
+  color: white;
+  border-radius: 12px;
+  padding: 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+  box-shadow: var(--shadow-purple-uplay);
+}
+
+.uplay-metric-icon-navy {
+  background: linear-gradient(135deg, var(--uplay-navy), var(--uplay-navy-light));
+  color: white;
+  border-radius: 12px;
+  padding: 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+  box-shadow: var(--shadow-navy-uplay);
+}
+
+.uplay-metric-value {
+  font-size: 2.5rem !important;
+  font-weight: 800 !important;
+  color: var(--uplay-navy) !important;
+  line-height: 1 !important;
+  margin-bottom: 0.5rem !important;
+}
+
+.uplay-metric-label {
+  font-size: 0.875rem !important;
+  font-weight: 600 !important;
+  color: var(--uplay-gray-600) !important;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* ============ NAVEGACIÓN TABS - ESTILO CORPORATIVO ============ */
+.uplay-tabs-container-corporate {
+  background: white;
+  border: 2px solid var(--uplay-gray-200);
+  border-radius: 16px;
+  padding: 6px;
+  box-shadow: var(--shadow-md-uplay);
+  margin-bottom: 2rem;
+}
+
+.uplay-tab-button-corporate {
+  border-radius: 12px !important;
+  padding: 16px 24px !important;
+  font-weight: 600 !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  border: 2px solid transparent !important;
+  text-transform: none !important;
+  min-height: auto !important;
+}
+
+.uplay-tab-button-corporate.active {
+  background: var(--gradient-primary-uplay) !important;
+  color: white !important;
+  box-shadow: var(--shadow-blue-uplay), inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+  border-color: var(--uplay-purple) !important;
+}
+
+.uplay-tab-button-corporate.inactive {
+  color: var(--uplay-gray-600) !important;
+  background: transparent !important;
+}
+
+.uplay-tab-button-corporate.inactive:hover {
+  background: var(--uplay-gray-50) !important;
+  color: var(--uplay-navy) !important;
+  border-color: var(--uplay-gray-300) !important;
+}
+
+.uplay-tab-badge {
+  background: linear-gradient(135deg, #ef4444, #dc2626) !important;
+  color: white !important;
+  border: 2px solid white !important;
+  box-shadow: 0 2px 4px rgba(239, 68, 68, 0.3) !important;
+  font-size: 0.75rem !important;
+  font-weight: 700 !important;
+  min-width: 20px !important;
+  height: 20px !important;
+}
+
+/* ============ SECCIÓN DE PROGRESO - REDISEÑO COMPLETO ============ */
+.uplay-progress-section-corporate {
+  background: var(--gradient-card-uplay);
+  border: 2px solid var(--uplay-gray-200);
+  border-radius: 20px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6), var(--shadow-md-uplay);
+  overflow: hidden;
+  margin-bottom: 2rem;
+}
+
+.uplay-progress-header-corporate {
+  background: var(--gradient-header-uplay);
+  color: white;
+  padding: 1.5rem 2rem;
+  border-bottom: 3px solid var(--uplay-purple);
+  position: relative;
+}
+
+.uplay-progress-header-corporate::after {
+  content: "";
+  position: absolute;
+  bottom: -3px;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--uplay-purple), var(--uplay-blue));
+}
+
+.uplay-progress-header-title {
+  font-weight: 800 !important;
+  font-size: 1.5rem !important;
+  margin-bottom: 0.5rem !important;
+}
+
+.uplay-progress-content {
+  padding: 2rem;
+}
+
+.uplay-progress-bar-container {
+  background: var(--uplay-gray-200);
+  border-radius: 12px;
+  height: 12px;
+  overflow: hidden;
+  margin: 1rem 0;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.uplay-progress-bar-fill {
+  background: var(--gradient-primary-uplay);
+  height: 100%;
+  border-radius: 12px;
+  box-shadow: var(--shadow-blue-uplay);
+  transition: width 0.6s ease;
+  position: relative;
+}
+
+.uplay-progress-bar-fill::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.3) 50%,
+    transparent 100%
+  );
+  animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.uplay-progress-day-completed {
+  background: var(--gradient-primary-uplay) !important;
+  border: 2px solid white !important;
+  box-shadow: var(--shadow-blue-uplay) !important;
+  color: white !important;
+}
+
+.uplay-progress-day-pending {
+  background: var(--uplay-gray-200) !important;
+  border: 2px solid var(--uplay-gray-300) !important;
+  color: var(--uplay-gray-500) !important;
+}
+
+/* ============ BOTONES DE ACCIÓN - JERARQUÍA VISUAL ============ */
+.uplay-btn-primary-corporate {
+  background: var(--gradient-primary-uplay) !important;
+  color: white !important;
+  border: 2px solid var(--uplay-purple) !important;
+  border-radius: 12px !important;
+  padding: 16px 24px !important;
+  font-weight: 700 !important;
+  box-shadow: var(--shadow-blue-uplay), inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  text-transform: none !important;
+}
+
+.uplay-btn-primary-corporate:hover {
+  background: linear-gradient(135deg, var(--uplay-blue-light), var(--uplay-purple-light)) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 8px 25px rgba(0, 92, 169, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.25) !important;
+}
+
+.uplay-btn-secondary-corporate {
+  background: white !important;
+  color: var(--uplay-navy) !important;
+  border: 2px solid var(--uplay-blue) !important;
+  border-radius: 12px !important;
+  padding: 16px 24px !important;
+  font-weight: 600 !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  text-transform: none !important;
+}
+
+.uplay-btn-secondary-corporate:hover {
+  background: var(--uplay-blue) !important;
+  color: white !important;
+  transform: translateY(-1px) !important;
+  box-shadow: var(--shadow-blue-uplay) !important;
+}
+
+/* ============ SECCIÓN DE LOGROS - MARCOS DEFINIDOS ============ */
+.uplay-achievement-card-corporate {
+  background: var(--gradient-card-uplay);
+  border: 2px solid var(--uplay-gray-200);
+  border-left: 5px solid var(--uplay-purple);
+  border-radius: 16px;
+  box-shadow: var(--shadow-md-uplay), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.uplay-achievement-card-corporate:hover {
+  border-left-color: var(--uplay-blue);
+  box-shadow: var(--shadow-lg-uplay), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  transform: translateY(-3px);
+}
+
+.uplay-achievement-icon-corporate {
+  background: var(--gradient-primary-uplay);
+  border: 3px solid white;
+  box-shadow: var(--shadow-purple-uplay);
+  border-radius: 12px;
+  width: 48px;
+  height: 48px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  margin-bottom: 1rem;
+}
+
+.uplay-achievement-icon-corporate.completed {
+  background: linear-gradient(135deg, #10b981, #059669);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+}
+
+/* ============ GALERÍA PRINCIPAL - REORGANIZACIÓN VISUAL ============ */
+.uplay-gallery-section-corporate {
+  background: var(--uplay-gray-50);
+  border: 2px solid var(--uplay-gray-200);
+  border-radius: 20px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.uplay-gallery-header-corporate {
+  background: var(--gradient-header-uplay);
+  color: white;
+  padding: 1rem 1.5rem;
+  border-radius: 12px;
+  margin-bottom: 1.5rem;
+  border: 3px solid var(--uplay-purple);
+}
+
+.uplay-category-tag-corporate {
+  background: var(--gradient-primary-uplay) !important;
+  color: white !important;
+  border: 2px solid white !important;
+  border-radius: 20px !important;
+  padding: 6px 16px !important;
+  font-size: 0.75rem !important;
+  font-weight: 600 !important;
+  box-shadow: var(--shadow-blue-uplay) !important;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.uplay-content-item-corporate {
+  background: white;
+  border: 2px solid var(--uplay-gray-200);
+  border-radius: 12px;
+  padding: 1rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+}
+
+.uplay-content-item-corporate:hover {
+  border-color: var(--uplay-blue);
+  box-shadow: var(--shadow-lg-uplay);
+  transform: translateY(-2px);
+}
+
+/* ============ RESPONSIVE ADAPTATIONS ============ */
+@media (max-width: 768px) {
+  .uplay-header-corporate {
+    background: var(--uplay-navy);
+    border-bottom: 2px solid var(--uplay-purple);
+    padding: 1.5rem;
+  }
+
+  .uplay-metric-card-corporate {
+    border-left-width: 3px;
+    padding: 1rem;
+  }
+
+  .uplay-tab-button-corporate {
+    padding: 12px 16px !important;
+    font-size: 0.875rem !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .uplay-header-corporate {
+    background: var(--uplay-blue);
+    padding: 1rem;
+  }
+
+  .uplay-metric-card-corporate {
+    border-left-width: 2px;
+    padding: 0.75rem;
+  }
+
+  .uplay-metric-value {
+    font-size: 2rem !important;
+  }
+}
+
+/* ============ ACCESSIBILITY ENHANCEMENTS ============ */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@media (prefers-contrast: high) {
+  .uplay-metric-card-corporate {
+    border-width: 3px;
+  }
+
+  .uplay-tab-button-corporate.active {
+    border-width: 3px !important;
+  }
+}
+
+/* ============ FOCUS STATES FOR ACCESSIBILITY ============ */
+.uplay-metric-card-corporate:focus-visible,
+.uplay-tab-button-corporate:focus-visible,
+.uplay-btn-primary-corporate:focus-visible,
+.uplay-btn-secondary-corporate:focus-visible {
+  outline: 3px solid var(--uplay-blue);
+  outline-offset: 2px;
+}

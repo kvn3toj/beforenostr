@@ -1,0 +1,65 @@
+# Dependencies
+node_modules
+dist
+.git
+.env.local
+.env.*.local
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.DS_Store
+coverage
+.nyc_output
+*.tgz
+*.tar.gz
+.cache
+.parcel-cache
+.vscode
+.idea
+*.swp
+*.swo
+*~
+e2e/test-results
+e2e/playwright-report
+playwright-report
+test-results
+
+# Build artifacts
+dist/
+build/
+.output/
+.vite/
+
+# Environment files
+.env*
+*.env
+
+# Logs
+*.log
+
+# Testing
+test-results/
+playwright-report/
+e2e-results/
+coverage/
+
+# Cache
+.cache
+.eslintcache
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Git
+.git/
+
+# Documentation
+*.md
+debug-*.png
+
+# Development
+scripts/
+*.spec.*
+*.test.*

@@ -1,0 +1,55 @@
+name: 🤖 Gemini Modular Code Review
+
+on:
+  push:
+    branches:
+      - main
+      - master
+      - develop
+  pull_request:
+    branches:
+      - main
+      - master
+      - develop
+  workflow_dispatch:
+
+jobs:
+  review:
+    name: 🔬 Modular Code Review
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: ⬇️ Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: 🟢 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: 📦 Install Dependencies
+        run: npm install --legacy-peer-deps
+
+      - name: 🔑 Configure Gemini API Key
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        if: env.GEMINI_API_KEY == ''
+        run: echo "GEMINI_API_KEY not set in secrets. Skipping review."
+
+      - name: 🚀 Run Gemini Modular Review
+        if: secrets.GEMINI_API_KEY != ''
+        run: node scripts/utilities/gemini-modular-review.js --all --delay 1000
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+
+      - name: 📤 Upload Review Reports
+        if: always() && secrets.GEMINI_API_KEY != ''
+        uses: actions/upload-artifact@v4
+        with:
+          name: gemini-review-reports
+          path: reports/
+
+      - name: 🔔 Analyze and Send Alerts
+        if: always() && secrets.GEMINI_API_KEY != ''
+        run: node scripts/utilities/send-alerts.js

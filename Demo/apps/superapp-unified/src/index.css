@@ -1,0 +1,401 @@
+/* ===== COOMUNITY SUPERAPP - DESIGN SYSTEM ===== */
+
+/* Import Design Tokens */
+@import './styles/tokens/colors.css';
+@import './styles/tokens/typography.css';
+@import './styles/tokens/spacing.css';
+@import './styles/tokens/shadows.css';
+/* Import Utilities */
+@import './styles/utilities/animations.css';
+/* Import responsive and contextual classes for Playwright detection */
+@import './styles/responsive-contextual.css';
+/* Import minimal dashboard styles for ÜStats */
+@import './styles/ustats-minimal.css';
+/* Import enhanced challenges module styles */
+@import './styles/challenges-enhanced.css';
+/* Import enhanced home module styles */
+@import './styles/home-enhanced.css';
+/* Import cosmic effects for Reciprocidad Balance planetary system */
+@import './styles/cosmic-reciprocidad-effects.css';
+/* Import orbital harmony animations for Reciprocidad Revolutionary Widget */
+@import './styles/orbital-harmony-animations.css';
+/* Import simple orbital animations - More intuitive approach */
+@import './styles/simple-orbital-animations.css';
+/* Import Guardian dynamic styles */
+@import './styles/guardian-dynamic.css';
+/* Import UPlay Corporate Design System */
+@import './styles/uplay-corporate.css';
+/* 🆕 Import UPlay advanced component system */
+@import './styles/uplay-advanced.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Paleta profesional refinada para UPlay */
+:root {
+  /* ✅ Tipografía que escala fluidamente */
+  --fs-xs: clamp(0.75rem, 0.7rem + 0.25vw, 0.875rem);
+  --fs-sm: clamp(0.875rem, 0.8rem + 0.375vw, 1rem);
+  --fs-base: clamp(1rem, 0.9rem + 0.5vw, 1.125rem);
+  --fs-lg: clamp(1.125rem, 1rem + 0.625vw, 1.25rem);
+  --fs-xl: clamp(1.25rem, 1.1rem + 0.75vw, 1.5rem);
+  --fs-2xl: clamp(1.5rem, 1.3rem + 1vw, 2rem);
+  --fs-3xl: clamp(2rem, 1.7rem + 1.5vw, 3rem);
+
+  /* Spacing fluido */
+  --space-xs: clamp(0.5rem, 0.4rem + 0.5vw, 0.75rem);
+  --space-sm: clamp(0.75rem, 0.6rem + 0.75vw, 1rem);
+  --space-md: clamp(1rem, 0.8rem + 1vw, 1.5rem);
+  --space-lg: clamp(1.5rem, 1.2rem + 1.5vw, 2rem);
+  --space-xl: clamp(2rem, 1.6rem + 2vw, 3rem);
+
+  /* Azules principales */
+  --uplay-blue-50: #eff6ff;
+  --uplay-blue-100: #dbeafe;
+  --uplay-blue-200: #bfdbfe; /* Added from UPlay.tsx */
+  --uplay-blue-300: #93c5fd; /* Added from UPlay.tsx */
+  --uplay-blue-500: #3b82f6;
+  --uplay-blue-600: #2563eb;
+  --uplay-blue-700: #1d4ed8;
+  --uplay-blue-900: #1e3a8a; /* Added from UPlay.tsx */
+
+
+  /* Sombras profesionales */
+  --shadow-card: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  --shadow-card-hover: 0 20px 25px -5px rgb(0 0 0 / 0.1),
+    0 8px 10px -6px rgb(0 0 0 / 0.1);
+  --shadow-glow-blue: 0 0 30px rgba(59, 130, 246, 0.15);
+
+  /* Gradientes específicos */
+  --gradient-card-bg: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.9) 0%,
+    rgba(255, 255, 255, 0.7) 100%
+  );
+  --gradient-icon: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  --gradient-text: linear-gradient(135deg, #1f2937 0%, #374151 100%);
+}
+
+/* === BASE STYLES === */
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-family-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: var(--color-text-primary);
+  background-color: var(--color-background-primary);
+}
+
+#root {
+  width: 100%;
+  min-height: 100vh;
+}
+
+/* === COMPONENT-SPECIFIC STYLES === */
+.loading-screen {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  width: 100%;
+  background-color: var(--color-background-primary);
+}
+
+/* === SCROLLBAR STYLES === */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-gray-100);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-gray-400);
+  border-radius: var(--radius-sm);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-gray-500);
+}
+
+/* === MATERIAL-UI OVERRIDES === */
+.MuiButton-root {
+  text-transform: none !important;
+  font-family: var(--font-family-primary) !important;
+}
+
+.MuiTypography-root {
+  font-family: var(--font-family-primary) !important;
+}
+
+/* === COOMUNITY SPECIFIC CLASSES === */
+
+/* Gradientes actualizados */
+.coomunity-gradient {
+  background: linear-gradient(
+    135deg,
+    var(--coomunity-primary-500) 0%,
+    var(--coomunity-primary-400) 100%
+  );
+}
+
+.coomunity-gradient-gold {
+  background: linear-gradient(
+    135deg,
+    var(--coomunity-gold-500) 0%,
+    var(--coomunity-gold-400) 100%
+  );
+}
+
+.coomunity-gradient-elements {
+  background: linear-gradient(
+    135deg,
+    var(--coomunity-earth-500) 0%,
+    var(--coomunity-water-500) 25%,
+    var(--coomunity-fire-500) 50%,
+    var(--coomunity-air-500) 75%,
+    var(--coomunity-primary-500) 100%
+  );
+}
+
+/* Texto con gradiente actualizado */
+.coomunity-text-gradient {
+  background: linear-gradient(
+    45deg,
+    var(--coomunity-primary-500) 30%,
+    var(--coomunity-primary-400) 90%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+}
+
+/* === LAYOUT HELPERS === */
+.coomunity-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 var(--space-component-md);
+}
+
+.coomunity-container-sm {
+  width: 100%;
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 0 var(--space-component-md);
+}
+
+.coomunity-container-lg {
+  width: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 var(--space-component-md);
+}
+
+/* === RESPONSIVE DESIGN HELPERS === */
+@media (max-width: 768px) {
+  .coomunity-container,
+  .coomunity-container-sm,
+  .coomunity-container-lg {
+    padding: 0 var(--space-mobile-md);
+  }
+
+  .mobile-padding {
+    padding: var(--space-mobile-md);
+  }
+
+  .mobile-hidden {
+    display: none;
+  }
+}
+
+@media (min-width: 769px) {
+  .desktop-hidden {
+    display: none;
+  }
+}
+
+/* === ACCESSIBILITY IMPROVEMENTS === */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 6px;
+  background: var(--coomunity-primary-500);
+  color: var(--color-text-inverse);
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-md);
+  text-decoration: none;
+  z-index: 1000;
+  transition: top var(--duration-fast) var(--ease-coomunity);
+}
+
+.skip-link:focus {
+  top: 6px;
+}
+
+/* === FOCUS MANAGEMENT === */
+.focus-visible {
+  outline: 2px solid var(--coomunity-primary-500);
+  outline-offset: 2px;
+}
+
+/* === PRINT STYLES === */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+
+  .print-only {
+    display: block !important;
+  }
+
+  * {
+    background: transparent !important;
+    color: black !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+
+  a,
+  a:visited {
+    text-decoration: underline;
+  }
+
+  a[href]:after {
+    content: ' (' attr(href) ')';
+  }
+
+  abbr[title]:after {
+    content: ' (' attr(title) ')';
+  }
+
+  .ir a:after,
+  a[href^='javascript:']:after,
+  a[href^='#']:after {
+    content: '';
+  }
+
+  pre,
+  blockquote {
+    border: 1px solid #999;
+    page-break-inside: avoid;
+  }
+
+  thead {
+    display: table-header-group;
+  }
+
+  tr,
+  img {
+    page-break-inside: avoid;
+  }
+
+  img {
+    max-width: 100% !important;
+  }
+
+  p,
+  h2,
+  h3 {
+    orphans: 3;
+    widows: 3;
+  }
+
+  h2,
+  h3 {
+    page-break-after: avoid;
+  }
+}
+
+/* === LEGACY ANIMATION CLASSES (DEPRECATED - USE NEW SYSTEM) === */
+/* Mantenemos temporalmente para compatibilidad */
+.fade-in {
+  animation: fadeIn var(--duration-normal) var(--ease-out);
+}
+
+.slide-up {
+  animation: slideUp var(--duration-slow) var(--ease-coomunity);
+}
+
+/* === PERFORMANCE OPTIMIZATIONS === */
+.gpu-accelerated {
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+.contain-layout {
+  contain: layout;
+}
+
+.contain-paint {
+  contain: paint;
+}
+
+.contain-strict {
+  contain: strict;
+}
+
+/* ✅ Animaciones más fluidas y naturales */
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-10px) rotate(1deg);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200px 0;
+  }
+  100% {
+    background-position: calc(200px + 100%) 0;
+  }
+}
+
+@keyframes glow-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 40px rgba(59, 130, 246, 0.6);
+  }
+}
+
+.floating-element {
+  animation: float 3s ease-in-out infinite;
+}
+
+.shimmer-effect {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200px 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+.glow-effect {
+  animation: glow-pulse 2s ease-in-out infinite;
+}

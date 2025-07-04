@@ -1,0 +1,376 @@
+/* ===============================================================================
+   🎨 TOKENS DE COLOR MEJORADOS - COOMUNITY SUPERAPP
+   Optimización específica para contraste WCAG AAA y performance
+   =============================================================================== */
+
+:root {
+  /* ===== CONTRASTE MEJORADO PARA HOME - VERSIÓN 2.0 ===== */
+  /* Porcentajes principales - Contraste máximo 21:1 */
+  --home-percentage-primary: #000000; /* Negro puro para máximo contraste */
+  --home-percentage-text: #000000; /* Asegurar el porcentaje sea negro */
+  --home-percentage-shadow: rgba(0, 0, 0, 0.08); /* Sombra más visible */
+  --home-percentage-bg: #ffffff; /* Fondo blanco puro */
+
+  /* Textos principales - Contraste 15:1+ optimizado */
+  --home-heading-primary: #0f172a; /* Slate-900 más oscuro - 19:1 contraste */
+  --home-heading-secondary: #1e293b; /* Slate-800 - 15:1 contraste */
+  --home-heading-accent: #1e293b; /* Mejorado de slate-700 a slate-800 */
+
+  /* Textos de contenido - Contraste 7:1+ mejorado */
+  --home-text-primary: #0f172a; /* Texto principal máximo contraste */
+  --home-text-strong: #1e293b; /* Texto fuerte - mejorado */
+  --home-text-medium: #1e293b; /* Texto medio - mejorado de #334155 */
+  --home-text-secondary: #334155; /* Texto secundario - mínimo 7:1 */
+  --home-text-light: #334155; /* Texto suave pero legible - mejorado */
+  --home-text-subtle: #475569; /* Texto sutil - mejorado de #64748b */
+
+  /* Valores de métricas - Contraste optimizado mejorado 8:1+ */
+  --metric-ondas-text: #1e3a8a; /* Blue-900 - Contraste 8.2:1 */
+  --metric-meritos-text: #92400e; /* Orange-800 - Contraste 8.1:1 */
+  --metric-reciprocidad-text: #14532d; /* Green-900 - Contraste 8.3:1 */
+  --metric-bien-comun-text: #7c2d12; /* Red-800 - Contraste 7.8:1 */
+  --metric-value: #0f172a; /* Para valores numéricos principales */
+
+  /* Backgrounds con contraste mejorado */
+  --home-card-bg-pure: #ffffff; /* Blanco puro */
+  --home-card-bg-soft: #fefefe; /* Blanco muy suave */
+  --home-card-bg-subtle: #fdfdfd; /* Blanco sutil */
+  --home-card-border-enhanced: #e2e8f0; /* Slate-200 */
+  --home-card-border-focus: #cbd5e1; /* Slate-300 */
+
+  /* Gradientes optimizados con fallback sólido mejorados */
+  --home-gradient-primary-optimized: linear-gradient(
+    135deg,
+    #1e3a8a 0%,
+    #6d28d9 100%
+  );
+  --home-gradient-primary-fallback: #1e3a8a; /* Blue-900 sólido para mejor contraste */
+  --home-gradient-text-primary: linear-gradient(
+    135deg,
+    #1e3a8a 0%,
+    #6d28d9 100%
+  );
+
+  --home-gradient-secondary-optimized: linear-gradient(
+    135deg,
+    #6d28d9 0%,
+    #be185d 100%
+  );
+  --home-gradient-secondary-fallback: #6d28d9; /* Purple-800 sólido para mejor contraste */
+
+  /* Estados interactivos mejorados */
+  --home-interactive-default: #1e40af; /* Blue-800 */
+  --home-interactive-hover: #1d4ed8; /* Blue-700 */
+  --home-interactive-active: #2563eb; /* Blue-600 */
+  --home-interactive-focus: #3b82f6; /* Blue-500 */
+
+  /* Elementos específicos con contraste optimizado */
+  --element-fuego-enhanced: #991b1b; /* Red-800 - Contraste 7:1 */
+  --element-agua-enhanced: #1e40af; /* Blue-800 - Contraste 7:1 */
+  --element-tierra-enhanced: #92400e; /* Amber-800 - Contraste 7:1 */
+  --element-aire-enhanced: #374151; /* Gray-700 - Contraste 10:1 */
+
+  /* Componentes específicos - Contraste mejorado */
+  --welcome-header-text: #0f172a; /* Slate-900 - Máximo contraste */
+  --module-card-title: #0f172a; /* Títulos de módulos - Contraste 19:1 */
+  --module-card-subtitle: #1e293b; /* Subtítulos - Contraste 15:1 */
+  --module-card-description: #334155; /* Descripciones - Contraste 7:1 */
+  --action-card-text: #1e293b; /* Texto en tarjetas de acción - Contraste 15:1 */
+  --stats-numbers: #0f172a; /* Números de estadísticas - Máximo contraste */
+  --caption-text: #475569; /* Texto pequeño mejorado - Contraste 6:1 */
+
+  /* Progress bars con mejor visibilidad */
+  --progress-bg-enhanced: #f1f5f9; /* Slate-100 */
+  --progress-fill-enhanced: #1e40af; /* Blue-800 */
+  --progress-fill-success: #166534; /* Green-800 */
+  --progress-fill-warning: #b45309; /* Orange-700 */
+  --progress-fill-error: #991b1b; /* Red-800 */
+
+  /* Sombras optimizadas para profundidad sin afectar contraste */
+  --shadow-card-enhanced:
+    0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+  --shadow-card-hover:
+    0 4px 12px rgba(0, 0, 0, 0.15), 0 2px 4px rgba(0, 0, 0, 0.12);
+  --shadow-card-focus: 0 0 0 2px #ffffff, 0 0 0 4px #3b82f6;
+
+  /* Estados de carga optimizados */
+  --skeleton-base-enhanced: #f8fafc; /* Slate-50 */
+  --skeleton-wave-enhanced: #e2e8f0; /* Slate-200 */
+  --skeleton-shimmer: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.4) 50%,
+    transparent 100%
+  );
+}
+
+/* ===== VARIABLES ESPECÍFICAS PARA PERFORMANCE ===== */
+:root {
+  /* Transiciones optimizadas */
+  --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-normal: 200ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Animaciones con will-change para GPU */
+  --animation-fade-in: fadeInOptimized 0.3s ease-out;
+  --animation-slide-up: slideUpOptimized 0.4s ease-out;
+  --animation-scale-in: scaleInOptimized 0.2s ease-out;
+}
+
+/* ===== AUTUMN THEME FORCED - NO DARK MODE ===== */
+/* Dark mode detection removed to prevent conflicts with autumn theme */
+:root {
+  /* Force autumn theme backgrounds instead of dark mode */
+  --home-card-bg-pure: var(--card-bg-autumn) !important;
+  --home-card-bg-soft: var(--card-bg-soft-autumn) !important;
+  --home-card-bg-subtle: var(--card-bg-autumn) !important;
+  --home-card-border-enhanced: var(--border-subtle-autumn) !important;
+  --home-card-border-focus: var(--border-accent-autumn) !important;
+
+  /* Force autumn theme elements */
+  --element-fuego-enhanced: var(--element-fuego-autumn) !important;
+  --element-agua-enhanced: var(--element-agua-autumn) !important;
+  --element-tierra-enhanced: var(--element-tierra-autumn) !important;
+  --element-aire-enhanced: var(--element-aire-autumn) !important;
+
+  /* Force autumn theme loading states */
+  --skeleton-base-enhanced: var(--warm-neutral-100) !important;
+  --skeleton-wave-enhanced: var(--warm-neutral-200) !important;
+
+  /* Force autumn theme text colors */
+  --home-percentage-primary: var(--text-primary-autumn) !important;
+  --home-heading-primary: var(--text-primary-autumn) !important;
+  --home-text-strong: var(--text-primary-autumn) !important;
+}
+
+/* ===== MODO DE ALTO CONTRASTE ===== */
+@media (prefers-contrast: high) {
+  :root {
+    /* Forzar máximo contraste */
+    --home-percentage-primary: #000000 !important;
+    --home-heading-primary: #000000 !important;
+    --home-text-strong: #000000 !important;
+    --home-card-bg-pure: #ffffff !important;
+    --home-card-border-enhanced: #000000 !important;
+
+    /* Eliminar gradientes en alto contraste */
+    --home-gradient-primary-optimized: #000000 !important;
+    --home-gradient-secondary-optimized: #000000 !important;
+
+    /* Elementos con máximo contraste */
+    --element-fuego-enhanced: #000000 !important;
+    --element-agua-enhanced: #000000 !important;
+    --element-tierra-enhanced: #000000 !important;
+    --element-aire-enhanced: #000000 !important;
+  }
+
+  /* High contrast dark mode removed - autumn theme only */
+}
+
+/* ===== ANIMACIONES OPTIMIZADAS PARA GPU ===== */
+@keyframes fadeInOptimized {
+  from {
+    opacity: 0;
+    transform: translateZ(0);
+  }
+  to {
+    opacity: 1;
+    transform: translateZ(0);
+  }
+}
+
+@keyframes slideUpOptimized {
+  from {
+    opacity: 0;
+    transform: translateY(20px) translateZ(0);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) translateZ(0);
+  }
+}
+
+@keyframes scaleInOptimized {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateZ(0);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateZ(0);
+  }
+}
+
+@keyframes shimmerOptimized {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* ===== CLASES UTILITARIAS OPTIMIZADAS ===== */
+.home-percentage-display {
+  color: var(--home-percentage-primary) !important;
+  font-weight: 800 !important;
+  text-shadow: 0 1px 2px var(--home-percentage-shadow);
+  /* GPU acceleration */
+  will-change: transform;
+  transform: translateZ(0);
+}
+
+.home-heading-enhanced {
+  color: var(--home-heading-primary) !important;
+  font-weight: 700 !important;
+  line-height: 1.2;
+}
+
+.home-text-enhanced {
+  color: var(--home-text-strong) !important;
+  font-weight: 600 !important;
+}
+
+.home-metric-enhanced {
+  color: var(--home-text-strong) !important;
+  font-weight: 700 !important;
+  font-variant-numeric: tabular-nums;
+}
+
+.home-card-enhanced {
+  background-color: var(--home-card-bg-pure) !important;
+  border: 1px solid var(--home-card-border-enhanced) !important;
+  border-radius: 24px !important;
+  box-shadow: var(--shadow-card-enhanced);
+  /* GPU acceleration */
+  will-change: transform;
+  transform: translateZ(0);
+  transition: var(--transition-normal);
+}
+
+.home-card-enhanced:hover {
+  box-shadow: var(--shadow-card-hover);
+  transform: translateY(-2px) translateZ(0);
+}
+
+.home-card-enhanced:focus-within {
+  box-shadow: var(--shadow-card-focus);
+}
+
+.home-interactive-enhanced {
+  color: var(--home-interactive-default) !important;
+  transition: var(--transition-fast);
+  cursor: pointer;
+}
+
+.home-interactive-enhanced:hover {
+  color: var(--home-interactive-hover) !important;
+}
+
+.home-interactive-enhanced:active {
+  color: var(--home-interactive-active) !important;
+}
+
+.home-interactive-enhanced:focus-visible {
+  color: var(--home-interactive-focus) !important;
+  outline: 2px solid var(--home-interactive-focus);
+  outline-offset: 2px;
+}
+
+/* ===== OPTIMIZACIONES ESPECÍFICAS POR MÉTRICA ===== */
+.metric-ondas {
+  color: var(--metric-ondas-text) !important;
+}
+
+.metric-meritos {
+  color: var(--metric-meritos-text) !important;
+}
+
+.metric-reciprocidad {
+  color: var(--metric-reciprocidad-text) !important;
+}
+
+.metric-bien-comun {
+  color: var(--metric-bien-comun-text) !important;
+}
+
+/* ===== ELEMENTOS CON CONTRASTE MEJORADO ===== */
+.element-fuego-enhanced {
+  color: var(--element-fuego-enhanced) !important;
+}
+
+.element-agua-enhanced {
+  color: var(--element-agua-enhanced) !important;
+}
+
+.element-tierra-enhanced {
+  color: var(--element-tierra-enhanced) !important;
+}
+
+.element-aire-enhanced {
+  color: var(--element-aire-enhanced) !important;
+}
+
+/* ===== PROGRESS BARS OPTIMIZADOS ===== */
+.progress-enhanced {
+  background-color: var(--progress-bg-enhanced) !important;
+  border-radius: 9999px !important;
+  overflow: hidden;
+}
+
+.progress-fill-enhanced {
+  background-color: var(--progress-fill-enhanced) !important;
+  border-radius: 9999px !important;
+  transition: var(--transition-normal);
+  will-change: width;
+}
+
+/* ===== SKELETON LOADERS OPTIMIZADOS ===== */
+.skeleton-enhanced {
+  background-color: var(--skeleton-base-enhanced) !important;
+  border-radius: 8px;
+  position: relative;
+  overflow: hidden;
+  will-change: transform;
+}
+
+.skeleton-enhanced::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--skeleton-shimmer);
+  animation: shimmerOptimized 1.5s infinite;
+  will-change: transform;
+}
+
+/* ===== REDUCIR MOVIMIENTO ===== */
+@media (prefers-reduced-motion: reduce) {
+  .home-percentage-display,
+  .home-card-enhanced,
+  .home-interactive-enhanced,
+  .progress-fill-enhanced,
+  .skeleton-enhanced::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* ===== OPTIMIZACIÓN PARA PRINT ===== */
+@media print {
+  .home-percentage-display,
+  .home-heading-enhanced,
+  .home-text-enhanced,
+  .home-metric-enhanced {
+    color: #000000 !important;
+    text-shadow: none !important;
+    background: none !important;
+  }
+
+  .home-card-enhanced {
+    box-shadow: none !important;
+    border: 1px solid #000000 !important;
+  }
+}

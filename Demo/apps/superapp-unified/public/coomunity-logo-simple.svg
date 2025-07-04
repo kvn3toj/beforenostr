@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 50">
+  <!-- Logo CoomÜnity Simplificado -->
+  <g>
+    <!-- Símbolo C dorado simplificado -->
+    <path fill="#CEA93A" d="M15,25 C15,15 20,10 30,10 C35,10 40,12 42,16 L38,18 C36,14 33,12 30,12 C23,12 18,17 18,25 C18,33 23,38 30,38 C33,38 36,36 38,32 L42,34 C40,38 35,40 30,40 C20,40 15,35 15,25 Z"/>
+    
+    <!-- Texto con color visible -->
+    <text x="55" y="32" font-family="Arial, sans-serif" font-weight="bold" font-size="20" fill="#333333">
+      CoomÜnity
+    </text>
+  </g>
+</svg>

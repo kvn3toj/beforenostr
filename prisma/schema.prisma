@@ -1,0 +1,1059 @@
+generator client {
+  provider      = "prisma-client-js"
+  output        = "../src/generated/prisma"
+  binaryTargets = ["native", "rhel-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model activities {
+  id                 String               @id
+  experienceId       String
+  title              String
+  description        String?
+  type               String
+  multimediaType     String?
+  contentUrl         String?
+  duration           Int?
+  order              Int                  @default(0)
+  status             String               @default("ACTIVE")
+  creatorId          String
+  createdAt          DateTime             @default(now())
+  updatedAt          DateTime
+  videoItemId        Int?
+  users              users                @relation(fields: [creatorId], references: [id])
+  experiences        experiences          @relation(fields: [experienceId], references: [id], onDelete: Cascade)
+  video_items        video_items?         @relation(fields: [videoItemId], references: [id])
+  activity_questions activity_questions[]
+  gamified_playlists gamified_playlists[]
+
+  @@index([creatorId])
+  @@index([experienceId])
+  @@index([order])
+  @@index([status])
+  @@index([videoItemId])
+}
+
+model activity_questions {
+  id                     String         @id
+  activityId             String
+  type                   String
+  questionType           String
+  questionText           String
+  options                String?
+  correctAnswer          String?
+  ondasList              String?
+  displayTimeSeconds     Int?
+  optionalDisplaySeconds Int?
+  createdAt              DateTime       @default(now())
+  activities             activities     @relation(fields: [activityId], references: [id], onDelete: Cascade)
+  user_answers           user_answers[]
+
+  @@index([activityId])
+}
+
+model analytics_data {
+  id          String   @id
+  userId      String?
+  eventType   String
+  videoItemId String?
+  playlistId  String?
+  mundoId     String?
+  sessionId   String?
+  eventData   String?
+  metadata    String?
+  timestamp   DateTime @default(now())
+  createdAt   DateTime @default(now())
+
+  @@index([createdAt])
+  @@index([eventType])
+  @@index([playlistId])
+  @@index([sessionId])
+  @@index([timestamp])
+  @@index([userId])
+  @@index([videoItemId])
+}
+
+model answer_options {
+  id         Int       @id @default(autoincrement())
+  questionId Int
+  text       String
+  isCorrect  Boolean   @default(false)
+  order      Int       @default(0)
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime
+  questions  questions @relation(fields: [questionId], references: [id], onDelete: Cascade)
+
+  @@index([questionId])
+}
+
+model challenge_rewards {
+  id          String     @id
+  challengeId String
+  type        String
+  amount      Float?
+  description String?
+  metadata    String?
+  createdAt   DateTime   @default(now())
+  challenges  challenges @relation(fields: [challengeId], references: [id], onDelete: Cascade)
+
+  @@index([challengeId])
+  @@index([type])
+}
+
+model challenges {
+  id                String              @id
+  title             String
+  description       String?
+  type              String
+  status            String              @default("ACTIVE")
+  startDate         DateTime
+  endDate           DateTime
+  config            String              @default("{}")
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime
+  challenge_rewards challenge_rewards[]
+  user_challenges   user_challenges[]
+
+  @@index([endDate])
+  @@index([startDate])
+  @@index([status])
+  @@index([type])
+}
+
+model comments {
+  id            String        @id
+  userId        String
+  publicationId String?
+  activityId    String?
+  text          String
+  createdAt     DateTime      @default(now())
+  publications  publications? @relation(fields: [publicationId], references: [id])
+  users         users         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([activityId])
+  @@index([publicationId])
+  @@index([userId])
+}
+
+model configurations {
+  id        String   @id
+  key       String   @unique
+  value     String
+  type      String
+  updatedAt DateTime
+
+  @@index([type])
+}
+
+model content_items {
+  id          String     @id
+  title       String
+  description String?
+  content     String
+  playlistId  String
+  itemTypeId  String
+  order       Int        @default(0)
+  isActive    Boolean    @default(true)
+  isDeleted   Boolean    @default(false)
+  deletedAt   DateTime?
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime
+  item_types  item_types @relation(fields: [itemTypeId], references: [id])
+  playlists   playlists  @relation(fields: [playlistId], references: [id])
+
+  @@index([isDeleted])
+  @@index([itemTypeId])
+  @@index([playlistId])
+}
+
+model experiences {
+  id                    String       @id
+  stageId               String
+  title                 String
+  description           String?
+  type                  String
+  gamificationFramework String?      @default("Octalysis")
+  creatorId             String
+  createdAt             DateTime     @default(now())
+  updatedAt             DateTime
+  activities            activities[]
+  users                 users        @relation(fields: [creatorId], references: [id])
+  stages                stages       @relation(fields: [stageId], references: [id], onDelete: Cascade)
+
+  @@index([creatorId])
+  @@index([stageId])
+}
+
+model feedback_reports {
+  id                                        String           @id
+  userId                                    String
+  type                                      FeedbackType
+  title                                     String
+  description                               String
+  priority                                  FeedbackPriority @default(MEDIUM)
+  category                                  String
+  status                                    FeedbackStatus   @default(SUBMITTED)
+  elementContext                            Json
+  technicalContext                          Json
+  codeAnalysis                              Json?
+  aiSuggestions                             Json?
+  adminResponse                             String?
+  adminUserId                               String?
+  resolvedAt                                DateTime?
+  upvotes                                   Int              @default(0)
+  downvotes                                 Int              @default(0)
+  duplicateOf                               String?
+  createdAt                                 DateTime         @default(now())
+  updatedAt                                 DateTime
+  users_feedback_reports_adminUserIdTousers users?           @relation("feedback_reports_adminUserIdTousers", fields: [adminUserId], references: [id])
+  users_feedback_reports_userIdTousers      users            @relation("feedback_reports_userIdTousers", fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([createdAt])
+  @@index([priority])
+  @@index([status])
+  @@index([type])
+  @@index([userId])
+}
+
+model gamified_playlists {
+  id           String      @id
+  activityId   String?
+  playlistId   String?
+  name         String
+  type         String
+  sequenceType String
+  status       String      @default("ACTIVE")
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime
+  activities   activities? @relation(fields: [activityId], references: [id])
+  playlists    playlists?  @relation(fields: [playlistId], references: [id])
+
+  @@index([activityId])
+  @@index([playlistId])
+  @@index([status])
+}
+
+model gift_cards {
+  id               String             @id
+  inviterId        String
+  invitedName      String
+  invitedEmail     String
+  token            String             @unique
+  unitsAmount      Float
+  suggestions      String?
+  status           String             @default("SENT")
+  createdAt        DateTime           @default(now())
+  users            users              @relation(fields: [inviterId], references: [id])
+  user_invitations user_invitations[]
+
+  @@index([inviterId])
+  @@index([status])
+  @@index([token])
+}
+
+model groups {
+  id          String        @id
+  name        String
+  description String?
+  ownerId     String
+  type        String
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime
+  users       users         @relation(fields: [ownerId], references: [id])
+  user_groups user_groups[]
+
+  @@index([ownerId])
+  @@index([type])
+}
+
+model invitation_templates {
+  id        String   @id
+  name      String
+  content   String
+  creatorId String
+  createdAt DateTime @default(now())
+  users     users    @relation(fields: [creatorId], references: [id])
+
+  @@index([creatorId])
+}
+
+model item_types {
+  id            String          @id
+  name          String          @unique
+  description   String?
+  isActive      Boolean         @default(true)
+  isDeleted     Boolean         @default(false)
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime
+  content_items content_items[]
+
+  @@index([isActive])
+  @@index([isDeleted])
+}
+
+model likes {
+  id            String       @id
+  userId        String
+  publicationId String
+  createdAt     DateTime     @default(now())
+  publications  publications @relation(fields: [publicationId], references: [id], onDelete: Cascade)
+  users         users        @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, publicationId])
+  @@index([publicationId])
+  @@index([userId])
+}
+
+model logs {
+  id        String   @id
+  level     String
+  message   String
+  context   String?
+  timestamp DateTime @default(now())
+  metadata  String?
+
+  @@index([level])
+  @@index([timestamp])
+}
+
+model marketplace_items {
+  id                  String                @id
+  name                String
+  description         String?
+  fullDescription     String?
+  itemType            MarketplaceItemType   @default(SERVICE)
+  price               Float                 @default(0)
+  priceToins          Float                 @default(0)
+  currency            Currency              @default(LUKAS)
+  category            String?
+  tags                String[]
+  images              String[]
+  stock               Int                   @default(0)
+  rating              Float                 @default(0)
+  reviewCount         Int                   @default(0)
+  location            String?
+  status              MarketplaceItemStatus @default(ACTIVE)
+  isActive            Boolean               @default(true)
+  isDeleted           Boolean               @default(false)
+  deletedAt           DateTime?
+  createdAt           DateTime              @default(now())
+  updatedAt           DateTime
+  viewCount           Int                   @default(0)
+  favoriteCount       Int                   @default(0)
+  sellerId            String
+  metadata            String?
+  users               users                 @relation(fields: [sellerId], references: [id])
+  marketplace_matches marketplace_matches[]
+  reviews             reviews[]
+
+  @@index([category])
+  @@index([createdAt])
+  @@index([currency])
+  @@index([favoriteCount])
+  @@index([isActive])
+  @@index([isDeleted])
+  @@index([itemType])
+  @@index([location])
+  @@index([priceToins])
+  @@index([price])
+  @@index([sellerId])
+  @@index([status])
+  @@index([updatedAt])
+  @@index([viewCount])
+}
+
+model marketplace_matches {
+  id                                        String            @id
+  marketplaceItemId                         String
+  buyerId                                   String
+  sellerId                                  String
+  buyerConfirmed                            Boolean           @default(false)
+  sellerConfirmed                           Boolean           @default(false)
+  status                                    MatchStatus       @default(PENDING)
+  createdAt                                 DateTime          @default(now())
+  updatedAt                                 DateTime
+  users_marketplace_matches_buyerIdTousers  users             @relation("marketplace_matches_buyerIdTousers", fields: [buyerId], references: [id])
+  marketplace_items                         marketplace_items @relation(fields: [marketplaceItemId], references: [id])
+  users_marketplace_matches_sellerIdTousers users             @relation("marketplace_matches_sellerIdTousers", fields: [sellerId], references: [id])
+  match_messages                            match_messages[]
+
+  @@index([buyerId])
+  @@index([marketplaceItemId])
+  @@index([sellerId])
+}
+
+model match_messages {
+  id                  String              @id
+  matchId             String
+  senderId            String
+  content             String
+  createdAt           DateTime            @default(now())
+  marketplace_matches marketplace_matches @relation(fields: [matchId], references: [id])
+  users               users               @relation(fields: [senderId], references: [id])
+
+  @@index([matchId])
+  @@index([senderId])
+}
+
+model merits {
+  id              String   @id
+  userId          String
+  amount          Float
+  type            String
+  source          String
+  relatedEntityId String?
+  createdAt       DateTime @default(now())
+  users           users    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([source])
+  @@index([type])
+  @@index([userId])
+}
+
+model mundos {
+  id          String      @id
+  name        String
+  description String?
+  imageUrl    String?
+  isActive    Boolean     @default(true)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime
+  createdById String?
+  version     Int         @default(1)
+  playlists   playlists[]
+  worlds      worlds[]
+
+  @@index([createdById])
+  @@index([isActive])
+}
+
+model notifications {
+  id        String   @id
+  userId    String
+  type      String
+  message   String
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+  users     users    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([read])
+  @@index([type])
+  @@index([userId])
+}
+
+model permissions {
+  id               String             @id
+  name             String             @unique
+  description      String?
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime
+  role_permissions role_permissions[]
+}
+
+model personalities {
+  id          String   @id
+  name        String   @unique
+  description String?
+  traits      String
+  createdAt   DateTime @default(now())
+  users       users[]
+}
+
+model playlists {
+  id                 String               @id
+  mundoId            String
+  name               String
+  description        String?
+  imageUrl           String?
+  orderInMundo       Int?                 @default(0)
+  isActive           Boolean              @default(true)
+  createdAt          DateTime             @default(now())
+  updatedAt          DateTime
+  createdById        String?
+  version            Int                  @default(1)
+  content_items      content_items[]
+  gamified_playlists gamified_playlists[]
+  mundos             mundos               @relation(fields: [mundoId], references: [id])
+  video_items        video_items[]
+
+  @@index([createdById])
+  @@index([isActive])
+  @@index([mundoId])
+  @@index([orderInMundo])
+}
+
+model profiles {
+  id                     String   @id
+  userId                 String   @unique
+  bio                    String?
+  location               String?
+  website                String?
+  skills                 String[]
+  interests              String[]
+  isEmprendedorConfiable Boolean  @default(false)
+  socialLinks            Json?
+  createdAt              DateTime @default(now())
+  updatedAt              DateTime
+  avatar                 String?
+  users                  users    @relation(fields: [userId], references: [id])
+}
+
+model publications {
+  id        String     @id
+  userId    String
+  content   String
+  type      String
+  createdAt DateTime   @default(now())
+  updatedAt DateTime
+  comments  comments[]
+  likes     likes[]
+  users     users      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([type])
+  @@index([userId])
+}
+
+model questions {
+  id             Int              @id @default(autoincrement())
+  videoItemId    Int
+  timestamp      Int
+  type           String
+  text           String
+  languageCode   String
+  isActive       Boolean          @default(true)
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime
+  endTimestamp   Int?
+  answer_options answer_options[]
+  video_items    video_items      @relation(fields: [videoItemId], references: [id])
+  user_answers   user_answers[]
+
+  @@index([endTimestamp])
+  @@index([timestamp])
+  @@index([videoItemId])
+}
+
+model rankings {
+  id        String   @id
+  name      String
+  type      String
+  period    String
+  data      String
+  createdAt DateTime @default(now())
+
+  @@index([period])
+  @@index([type])
+}
+
+model reports {
+  id          String   @id
+  name        String
+  type        String
+  parameters  String?
+  generatedAt DateTime @default(now())
+  data        String
+  creatorId   String
+  users       users    @relation(fields: [creatorId], references: [id])
+
+  @@index([creatorId])
+  @@index([type])
+}
+
+model reviews {
+  id                String            @id
+  marketplaceItemId String
+  userId            String
+  rating            Int
+  comment           String?
+  communication     Int?
+  quality           Int?
+  delivery          Int?
+  value             Int?
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime
+  marketplace_items marketplace_items @relation(fields: [marketplaceItemId], references: [id])
+  users             users             @relation(fields: [userId], references: [id])
+
+  @@index([marketplaceItemId])
+  @@index([userId])
+}
+
+model role_permissions {
+  roleId       String
+  permissionId String
+  assignedAt   DateTime    @default(now())
+  assignedById String?
+  users        users?      @relation(fields: [assignedById], references: [id])
+  permissions  permissions @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+  roles        roles       @relation(fields: [roleId], references: [id], onDelete: Cascade)
+
+  @@id([roleId, permissionId])
+  @@index([assignedById])
+  @@index([permissionId])
+  @@index([roleId])
+}
+
+model roles {
+  id               String             @id
+  name             String             @unique
+  description      String?
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime
+  role_permissions role_permissions[]
+  user_roles       user_roles[]
+}
+
+model stages {
+  id          String        @id
+  worldId     String
+  name        String
+  order       Int
+  description String?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime
+  experiences experiences[]
+  worlds      worlds        @relation(fields: [worldId], references: [id], onDelete: Cascade)
+
+  @@index([order])
+  @@index([worldId])
+}
+
+model study_room_messages {
+  id          String      @id
+  studyRoomId String
+  userId      String
+  message     String
+  messageType String      @default("CHAT")
+  metadata    String?
+  createdAt   DateTime    @default(now())
+  study_rooms study_rooms @relation(fields: [studyRoomId], references: [id], onDelete: Cascade)
+  users       users       @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([createdAt])
+  @@index([messageType])
+  @@index([studyRoomId])
+  @@index([userId])
+}
+
+model study_room_participants {
+  id          String      @id
+  studyRoomId String
+  userId      String
+  isHost      Boolean     @default(false)
+  joinedAt    DateTime    @default(now())
+  leftAt      DateTime?
+  isActive    Boolean     @default(true)
+  study_rooms study_rooms @relation(fields: [studyRoomId], references: [id], onDelete: Cascade)
+  users       users       @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([studyRoomId, userId])
+  @@index([isActive])
+  @@index([studyRoomId])
+  @@index([userId])
+}
+
+model study_rooms {
+  id                      String                    @id
+  name                    String
+  description             String?
+  videoId                 Int
+  hostId                  String
+  maxParticipants         Int                       @default(10)
+  status                  StudyRoomStatus           @default(ACTIVE)
+  currentTime             Float                     @default(0)
+  isPaused                Boolean                   @default(false)
+  isActive                Boolean                   @default(true)
+  createdAt               DateTime                  @default(now())
+  updatedAt               DateTime
+  study_room_messages     study_room_messages[]
+  study_room_participants study_room_participants[]
+  users                   users                     @relation(fields: [hostId], references: [id])
+  video_items             video_items               @relation(fields: [videoId], references: [id])
+
+  @@index([createdAt])
+  @@index([hostId])
+  @@index([isActive])
+  @@index([status])
+  @@index([videoId])
+}
+
+model subtitles {
+  id           Int         @id @default(autoincrement())
+  videoItemId  Int
+  languageCode String
+  format       String      @default("srt")
+  content      String?
+  contentUrl   String?
+  isActive     Boolean     @default(true)
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime
+  video_items  video_items @relation(fields: [videoItemId], references: [id])
+
+  @@index([videoItemId])
+}
+
+model tokens {
+  id           String    @id
+  userId       String
+  amount       Float
+  type         String
+  status       String    @default("ACTIVE")
+  caducityDate DateTime?
+  source       String
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime
+  users        users     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([caducityDate])
+  @@index([status])
+  @@index([type])
+  @@index([userId])
+}
+
+model transactions {
+  id                                       String   @id
+  fromUserId                               String?
+  toUserId                                 String
+  amount                                   Float
+  tokenType                                String
+  type                                     String
+  status                                   String   @default("PENDING")
+  description                              String?
+  createdAt                                DateTime @default(now())
+  metadata                                 Json?
+  users_transactions_fromUserIdTousers     users?   @relation("transactions_fromUserIdTousers", fields: [fromUserId], references: [id], map: "transaction_from_user_fkey")
+  wallets_transactions_fromUserIdTowallets wallets? @relation("transactions_fromUserIdTowallets", fields: [fromUserId], references: [userId], map: "transaction_from_wallet_fkey")
+  users_transactions_toUserIdTousers       users    @relation("transactions_toUserIdTousers", fields: [toUserId], references: [id], map: "transaction_to_user_fkey")
+  wallets_transactions_toUserIdTowallets   wallets  @relation("transactions_toUserIdTowallets", fields: [toUserId], references: [userId], map: "transaction_to_wallet_fkey")
+
+  @@index([fromUserId])
+  @@index([status])
+  @@index([toUserId])
+  @@index([type])
+}
+
+model ui_component_templates {
+  id           String   @id
+  name         String
+  type         String
+  templateJson String
+  creatorId    String
+  createdAt    DateTime @default(now())
+  users        users    @relation(fields: [creatorId], references: [id])
+
+  @@index([creatorId])
+  @@index([type])
+}
+
+model user_answers {
+  id                 String              @id
+  userId             String
+  questionId         Int?
+  activityQuestionId String?
+  answerGiven        String
+  isCorrect          Boolean?
+  ondasEarned        Int                 @default(0)
+  createdAt          DateTime            @default(now())
+  activity_questions activity_questions? @relation(fields: [activityQuestionId], references: [id])
+  questions          questions?          @relation(fields: [questionId], references: [id])
+  users              users               @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([activityQuestionId])
+  @@index([questionId])
+  @@index([userId])
+}
+
+model user_challenges {
+  id          String     @id
+  userId      String
+  challengeId String
+  status      String     @default("ACTIVE")
+  progress    Float      @default(0)
+  startedAt   DateTime   @default(now())
+  completedAt DateTime?
+  metadata    String?
+  challenges  challenges @relation(fields: [challengeId], references: [id], onDelete: Cascade)
+  users       users      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, challengeId])
+  @@index([challengeId])
+  @@index([status])
+  @@index([userId])
+}
+
+model user_groups {
+  userId      String
+  groupId     String
+  roleInGroup String   @default("MEMBER")
+  joinedAt    DateTime @default(now())
+  groups      groups   @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  users       users    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([userId, groupId])
+  @@index([groupId])
+  @@index([userId])
+}
+
+model user_invitations {
+  id            String     @id
+  giftCardId    String
+  invitedUserId String?
+  status        String     @default("PENDING")
+  createdAt     DateTime   @default(now())
+  gift_cards    gift_cards @relation(fields: [giftCardId], references: [id])
+  users         users?     @relation(fields: [invitedUserId], references: [id])
+
+  @@index([giftCardId])
+  @@index([invitedUserId])
+  @@index([status])
+}
+
+model user_roles {
+  userId                               String
+  roleId                               String
+  assignedAt                           DateTime @default(now())
+  assignedById                         String?
+  users_user_roles_assignedByIdTousers users?   @relation("user_roles_assignedByIdTousers", fields: [assignedById], references: [id])
+  roles                                roles    @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  users_user_roles_userIdTousers       users    @relation("user_roles_userIdTousers", fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([userId, roleId])
+  @@index([assignedById])
+  @@index([roleId])
+  @@index([userId])
+}
+
+model users {
+  id                                                      String                    @id
+  email                                                   String                    @unique
+  password                                                String
+  name                                                    String?
+  avatarUrl                                               String?
+  isActive                                                Boolean                   @default(true)
+  createdAt                                               DateTime                  @default(now())
+  updatedAt                                               DateTime
+  username                                                String?                   @unique
+  firstName                                               String?
+  lastName                                                String?
+  documentType                                            String?
+  documentNumber                                          String?
+  phone                                                   String?
+  country                                                 String?
+  address                                                 String?
+  status                                                  String                    @default("ACTIVE")
+  topUserCount                                            Int                       @default(0)
+  personalityId                                           String?
+  currentStage                                            String                    @default("BUYER")
+  activities                                              activities[]
+  comments                                                comments[]
+  experiences                                             experiences[]
+  feedback_reports_feedback_reports_adminUserIdTousers    feedback_reports[]        @relation("feedback_reports_adminUserIdTousers")
+  feedback_reports_feedback_reports_userIdTousers         feedback_reports[]        @relation("feedback_reports_userIdTousers")
+  gift_cards                                              gift_cards[]
+  groups                                                  groups[]
+  invitation_templates                                    invitation_templates[]
+  likes                                                   likes[]
+  marketplace_items                                       marketplace_items[]
+  marketplace_matches_marketplace_matches_buyerIdTousers  marketplace_matches[]     @relation("marketplace_matches_buyerIdTousers")
+  marketplace_matches_marketplace_matches_sellerIdTousers marketplace_matches[]     @relation("marketplace_matches_sellerIdTousers")
+  match_messages                                          match_messages[]
+  merits                                                  merits[]
+  notifications                                           notifications[]
+  profiles                                                profiles?
+  publications                                            publications[]
+  reports                                                 reports[]
+  reviews                                                 reviews[]
+  role_permissions                                        role_permissions[]
+  study_room_messages                                     study_room_messages[]
+  study_room_participants                                 study_room_participants[]
+  study_rooms                                             study_rooms[]
+  tokens                                                  tokens[]
+  transactions_transactions_fromUserIdTousers             transactions[]            @relation("transactions_fromUserIdTousers")
+  transactions_transactions_toUserIdTousers               transactions[]            @relation("transactions_toUserIdTousers")
+  ui_component_templates                                  ui_component_templates[]
+  user_answers                                            user_answers[]
+  user_challenges                                         user_challenges[]
+  user_groups                                             user_groups[]
+  user_invitations                                        user_invitations[]
+  user_roles_user_roles_assignedByIdTousers               user_roles[]              @relation("user_roles_assignedByIdTousers")
+  user_roles_user_roles_userIdTousers                     user_roles[]              @relation("user_roles_userIdTousers")
+  personalities                                           personalities?            @relation(fields: [personalityId], references: [id])
+  video_permissions                                       video_permissions[]
+  wallets                                                 wallets?
+  worlds                                                  worlds[]
+
+  @@index([email])
+  @@index([isActive])
+  @@index([status])
+  @@index([username])
+}
+
+model video_items {
+  id                Int                @id @default(autoincrement())
+  title             String
+  description       String?
+  content           String
+  url               String?
+  platform          String             @default("youtube")
+  externalId        String?
+  playlistId        String
+  itemTypeId        String
+  order             Int                @default(0)
+  isActive          Boolean            @default(true)
+  isDeleted         Boolean            @default(false)
+  deletedAt         DateTime?
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime
+  duration          Int?
+  categories        String?
+  language          String?
+  quality           String?
+  tags              String?
+  thumbnailUrl      String?
+  activities        activities[]
+  questions         questions[]
+  study_rooms       study_rooms[]
+  subtitles         subtitles[]
+  playlists         playlists          @relation(fields: [playlistId], references: [id])
+  video_permissions video_permissions?
+
+  @@index([externalId])
+  @@index([isDeleted])
+  @@index([itemTypeId])
+  @@index([language])
+  @@index([platform])
+  @@index([playlistId])
+}
+
+model video_permissions {
+  id                     String      @id
+  videoItemId            Int         @unique
+  showWaveCount          Boolean     @default(true)
+  showVideos             Boolean     @default(true)
+  showVideoSubtitles     Boolean     @default(true)
+  showComments           Boolean     @default(true)
+  showPublishDate        Boolean     @default(true)
+  showVideoDuration      Boolean     @default(true)
+  showLikeButton         Boolean     @default(true)
+  allowRewindForward     Boolean     @default(false)
+  allowViewComments      Boolean     @default(true)
+  allowMakeComments      Boolean     @default(true)
+  showLikeComments       Boolean     @default(true)
+  sortCommentsByAffinity Boolean     @default(false)
+  showCommenterName      Boolean     @default(false)
+  playlistPosition       String      @default("position1")
+  isDraft                Boolean     @default(false)
+  createdAt              DateTime    @default(now())
+  updatedAt              DateTime
+  createdById            String?
+  users                  users?      @relation(fields: [createdById], references: [id])
+  video_items            video_items @relation(fields: [videoItemId], references: [id], onDelete: Cascade)
+
+  @@index([createdById])
+  @@index([isDraft])
+  @@index([videoItemId])
+}
+
+model wallets {
+  id                                            String         @id
+  userId                                        String         @unique
+  blockchainAddress                             String?        @unique
+  balanceUnits                                  Float          @default(0)
+  balanceToins                                  Float          @default(0)
+  status                                        String         @default("ACTIVE")
+  createdAt                                     DateTime       @default(now())
+  updatedAt                                     DateTime
+  transactions_transactions_fromUserIdTowallets transactions[] @relation("transactions_fromUserIdTowallets")
+  transactions_transactions_toUserIdTowallets   transactions[] @relation("transactions_toUserIdTowallets")
+  users                                         users          @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([blockchainAddress])
+  @@index([status])
+  @@index([userId])
+}
+
+model worlds {
+  id          String   @id
+  name        String
+  description String?
+  type        String
+  creatorId   String
+  status      String   @default("ACTIVE")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime
+  mundoId     String?
+  stages      stages[]
+  users       users    @relation(fields: [creatorId], references: [id])
+  mundos      mundos?  @relation(fields: [mundoId], references: [id])
+
+  @@index([creatorId])
+  @@index([mundoId])
+  @@index([status])
+}
+
+enum Currency {
+  LUKAS
+  USD
+  EUR
+  BTC
+  ETH
+}
+
+enum FeedbackPriority {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+enum FeedbackStatus {
+  SUBMITTED
+  REVIEWING
+  IN_PROGRESS
+  RESOLVED
+  REJECTED
+  DUPLICATE
+}
+
+enum FeedbackType {
+  BUG
+  IMPROVEMENT
+  MISSING_FEATURE
+  PERFORMANCE
+  UX_ISSUE
+  CODE_ANALYSIS
+}
+
+enum MarketplaceItemStatus {
+  DRAFT
+  ACTIVE
+  INACTIVE
+  SOLD
+  EXPIRED
+  SUSPENDED
+}
+
+enum MarketplaceItemType {
+  PRODUCT
+  SERVICE
+  EXPERIENCE
+  SKILL_EXCHANGE
+  DIGITAL_CONTENT
+}
+
+enum MatchStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+  COMPLETED
+}
+
+enum StudyRoomStatus {
+  ACTIVE
+  PAUSED
+  ENDED
+}

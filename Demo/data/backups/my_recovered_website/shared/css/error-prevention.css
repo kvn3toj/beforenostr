@@ -1,0 +1,741 @@
+/* ================================================
+   ERROR PREVENTION SYSTEM
+   Heurística 7: Prevención de errores y validación en tiempo real
+   ================================================ */
+
+/* ================================================
+   SISTEMA DE VALIDACIÓN DE FORMULARIOS
+   ================================================ */
+.form-validation {
+    position: relative;
+}
+
+.form-field {
+    position: relative;
+    margin-bottom: var(--spacing-lg);
+}
+
+.form-input {
+    width: 100%;
+    padding: var(--spacing-sm) var(--spacing-md);
+    border: 2px solid var(--gray-300);
+    border-radius: var(--border-radius);
+    font-size: var(--font-size-base);
+    transition: all var(--duration-normal) var(--ease-out);
+    background: var(--white);
+    font-family: inherit;
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: var(--primary-500);
+    box-shadow: 0 0 0 3px var(--primary-100);
+}
+
+/* Estados de validación */
+.form-input.valid {
+    border-color: var(--success-500);
+    background: var(--success-50);
+}
+
+.form-input.invalid {
+    border-color: var(--error-500);
+    background: var(--error-50);
+    animation: shake 0.5s ease-in-out;
+}
+
+.form-input.warning {
+    border-color: var(--warning-500);
+    background: var(--warning-50);
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+}
+
+/* Indicadores visuales de validación */
+.validation-indicator {
+    position: absolute;
+    right: var(--spacing-sm);
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1.2em;
+    pointer-events: none;
+    transition: all var(--duration-normal) var(--ease-out);
+}
+
+.form-input.valid + .validation-indicator::after {
+    content: '✓';
+    color: var(--success-600);
+}
+
+.form-input.invalid + .validation-indicator::after {
+    content: '✗';
+    color: var(--error-600);
+}
+
+.form-input.warning + .validation-indicator::after {
+    content: '⚠';
+    color: var(--warning-600);
+}
+
+/* Mensajes de validación */
+.validation-message {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    margin-top: var(--spacing-xs);
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+    transition: all var(--duration-normal) var(--ease-out);
+    opacity: 0;
+    transform: translateY(-10px);
+}
+
+.validation-message.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.validation-message.success {
+    color: var(--success-700);
+}
+
+.validation-message.error {
+    color: var(--error-700);
+}
+
+.validation-message.warning {
+    color: var(--warning-700);
+}
+
+.validation-message .message-icon {
+    font-size: 1em;
+    flex-shrink: 0;
+}
+
+/* ================================================
+   CONFIRMACIONES Y DIÁLOGOS
+   ================================================ */
+.confirmation-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: all var(--duration-normal) var(--ease-out);
+}
+
+.confirmation-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.confirmation-dialog {
+    background: var(--white);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--elevation-4);
+    max-width: 500px;
+    width: 90%;
+    padding: var(--spacing-xl);
+    transform: scale(0.9) translateY(20px);
+    transition: all var(--duration-normal) var(--ease-out);
+}
+
+.confirmation-overlay.active .confirmation-dialog {
+    transform: scale(1) translateY(0);
+}
+
+.confirmation-header {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-lg);
+}
+
+.confirmation-icon {
+    font-size: 2em;
+    color: var(--warning-500);
+}
+
+.confirmation-icon.danger {
+    color: var(--error-500);
+}
+
+.confirmation-icon.info {
+    color: var(--primary-500);
+}
+
+.confirmation-title {
+    font-size: var(--font-size-lg);
+    font-weight: 600;
+    color: var(--gray-800);
+    margin: 0;
+}
+
+.confirmation-message {
+    color: var(--gray-600);
+    line-height: 1.6;
+    margin-bottom: var(--spacing-lg);
+}
+
+.confirmation-actions {
+    display: flex;
+    gap: var(--spacing-md);
+    justify-content: flex-end;
+}
+
+.confirmation-btn {
+    padding: var(--spacing-sm) var(--spacing-lg);
+    border: 2px solid;
+    border-radius: var(--border-radius);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--duration-normal) var(--ease-out);
+    min-width: 100px;
+}
+
+.confirmation-btn.primary {
+    background: var(--primary-500);
+    border-color: var(--primary-500);
+    color: var(--white);
+}
+
+.confirmation-btn.primary:hover {
+    background: var(--primary-600);
+    border-color: var(--primary-600);
+}
+
+.confirmation-btn.danger {
+    background: var(--error-500);
+    border-color: var(--error-500);
+    color: var(--white);
+}
+
+.confirmation-btn.danger:hover {
+    background: var(--error-600);
+    border-color: var(--error-600);
+}
+
+.confirmation-btn.secondary {
+    background: transparent;
+    border-color: var(--gray-400);
+    color: var(--gray-700);
+}
+
+.confirmation-btn.secondary:hover {
+    background: var(--gray-100);
+    border-color: var(--gray-500);
+}
+
+/* ================================================
+   SISTEMA DE AUTOGUARDADO
+   ================================================ */
+.auto-save-indicator {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    font-size: var(--font-size-sm);
+    color: var(--gray-600);
+    transition: all var(--duration-normal) var(--ease-out);
+}
+
+.auto-save-indicator.saving {
+    color: var(--warning-600);
+}
+
+.auto-save-indicator.saved {
+    color: var(--success-600);
+}
+
+.auto-save-indicator.error {
+    color: var(--error-600);
+}
+
+.auto-save-icon {
+    font-size: 1em;
+    animation-duration: 1s;
+    animation-iteration-count: infinite;
+}
+
+.auto-save-indicator.saving .auto-save-icon {
+    animation-name: spin;
+}
+
+.auto-save-indicator.saved .auto-save-icon {
+    animation-name: checkmark;
+    animation-duration: 0.6s;
+    animation-iteration-count: 1;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+@keyframes checkmark {
+    0% { transform: scale(0.5); }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+}
+
+/* ================================================
+   INDICADORES DE CAMPOS OBLIGATORIOS
+   ================================================ */
+.required-field::after {
+    content: '*';
+    color: var(--error-500);
+    font-weight: bold;
+    margin-left: var(--spacing-xs);
+}
+
+.field-help {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    margin-top: var(--spacing-xs);
+    font-size: var(--font-size-sm);
+    color: var(--gray-600);
+}
+
+.field-help-icon {
+    color: var(--primary-500);
+    cursor: help;
+}
+
+.field-character-count {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: var(--spacing-xs);
+    font-size: var(--font-size-xs);
+    color: var(--gray-500);
+}
+
+.character-count {
+    font-weight: 500;
+}
+
+.character-count.warning {
+    color: var(--warning-600);
+}
+
+.character-count.error {
+    color: var(--error-600);
+}
+
+/* ================================================
+   VALIDACIÓN EN TIEMPO REAL
+   ================================================ */
+.real-time-feedback {
+    position: relative;
+}
+
+.password-strength {
+    margin-top: var(--spacing-xs);
+}
+
+.strength-meter {
+    height: 4px;
+    background: var(--gray-200);
+    border-radius: 2px;
+    overflow: hidden;
+    margin-bottom: var(--spacing-xs);
+}
+
+.strength-bar {
+    height: 100%;
+    transition: all var(--duration-normal) var(--ease-out);
+    border-radius: 2px;
+}
+
+.strength-bar.weak {
+    width: 25%;
+    background: var(--error-500);
+}
+
+.strength-bar.fair {
+    width: 50%;
+    background: var(--warning-500);
+}
+
+.strength-bar.good {
+    width: 75%;
+    background: var(--primary-500);
+}
+
+.strength-bar.strong {
+    width: 100%;
+    background: var(--success-500);
+}
+
+.strength-text {
+    font-size: var(--font-size-xs);
+    font-weight: 500;
+}
+
+.strength-text.weak { color: var(--error-600); }
+.strength-text.fair { color: var(--warning-600); }
+.strength-text.good { color: var(--primary-600); }
+.strength-text.strong { color: var(--success-600); }
+
+/* Checklist de requisitos */
+.password-requirements {
+    margin-top: var(--spacing-sm);
+    padding: var(--spacing-sm);
+    background: var(--gray-50);
+    border-radius: var(--border-radius);
+    border-left: 3px solid var(--gray-300);
+}
+
+.requirement-item {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    font-size: var(--font-size-xs);
+    margin-bottom: var(--spacing-xs);
+    color: var(--gray-600);
+}
+
+.requirement-item:last-child {
+    margin-bottom: 0;
+}
+
+.requirement-item.met {
+    color: var(--success-600);
+}
+
+.requirement-item.met .requirement-icon::before {
+    content: '✓';
+}
+
+.requirement-item:not(.met) .requirement-icon::before {
+    content: '○';
+}
+
+/* ================================================
+   NAVEGACIÓN CON CONFIRMACIÓN
+   ================================================ */
+.unsaved-changes-warning {
+    position: fixed;
+    bottom: var(--spacing-lg);
+    right: var(--spacing-lg);
+    background: var(--warning-500);
+    color: var(--white);
+    padding: var(--spacing-md) var(--spacing-lg);
+    border-radius: var(--border-radius);
+    box-shadow: var(--elevation-3);
+    z-index: 9998;
+    transform: translateY(100px);
+    opacity: 0;
+    transition: all var(--duration-normal) var(--ease-out);
+    max-width: 300px;
+}
+
+.unsaved-changes-warning.show {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+.unsaved-changes-content {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.unsaved-changes-icon {
+    font-size: 1.2em;
+    flex-shrink: 0;
+}
+
+.unsaved-changes-text {
+    flex: 1;
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+}
+
+/* ================================================
+   TOOLTIPS DE AYUDA Y PREVENCIÓN
+   ================================================ */
+.help-tooltip {
+    position: relative;
+    display: inline-block;
+    cursor: help;
+}
+
+.tooltip-content {
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--gray-900);
+    color: var(--white);
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: var(--border-radius);
+    font-size: var(--font-size-sm);
+    white-space: nowrap;
+    max-width: 250px;
+    white-space: normal;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: all var(--duration-normal) var(--ease-out);
+    pointer-events: none;
+}
+
+.tooltip-content::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 4px solid transparent;
+    border-top-color: var(--gray-900);
+}
+
+.help-tooltip:hover .tooltip-content {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(-4px);
+}
+
+/* ================================================
+   FORMULARIOS CON MÚLTIPLES PASOS
+   ================================================ */
+.multi-step-form {
+    position: relative;
+}
+
+.step-progress {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: var(--spacing-xl);
+    position: relative;
+}
+
+.step-progress::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: var(--gray-300);
+    z-index: 1;
+}
+
+.progress-line {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    height: 2px;
+    background: var(--primary-500);
+    transition: width var(--duration-slow) var(--ease-out);
+    z-index: 2;
+}
+
+.step-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-xs);
+    position: relative;
+    z-index: 3;
+}
+
+.step-circle {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--white);
+    border: 3px solid var(--gray-300);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: var(--font-size-sm);
+    transition: all var(--duration-normal) var(--ease-out);
+}
+
+.step-item.completed .step-circle {
+    background: var(--success-500);
+    border-color: var(--success-500);
+    color: var(--white);
+}
+
+.step-item.current .step-circle {
+    background: var(--primary-500);
+    border-color: var(--primary-500);
+    color: var(--white);
+    animation: pulse 2s infinite;
+}
+
+.step-item.error .step-circle {
+    background: var(--error-500);
+    border-color: var(--error-500);
+    color: var(--white);
+}
+
+.step-label {
+    font-size: var(--font-size-xs);
+    color: var(--gray-600);
+    text-align: center;
+    max-width: 80px;
+}
+
+.step-item.completed .step-label {
+    color: var(--success-600);
+    font-weight: 500;
+}
+
+.step-item.current .step-label {
+    color: var(--primary-600);
+    font-weight: 600;
+}
+
+.step-item.error .step-label {
+    color: var(--error-600);
+    font-weight: 500;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+/* ================================================
+   DRAG AND DROP CON VALIDACIÓN
+   ================================================ */
+.file-drop-zone {
+    border: 2px dashed var(--gray-300);
+    border-radius: var(--border-radius);
+    padding: var(--spacing-xl);
+    text-align: center;
+    transition: all var(--duration-normal) var(--ease-out);
+    background: var(--gray-50);
+    cursor: pointer;
+}
+
+.file-drop-zone.dragover {
+    border-color: var(--primary-500);
+    background: var(--primary-50);
+    transform: scale(1.02);
+}
+
+.file-drop-zone.error {
+    border-color: var(--error-500);
+    background: var(--error-50);
+    animation: shake 0.5s ease-in-out;
+}
+
+.drop-zone-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.drop-zone-icon {
+    font-size: 3em;
+    color: var(--gray-400);
+    transition: color var(--duration-normal) var(--ease-out);
+}
+
+.file-drop-zone.dragover .drop-zone-icon {
+    color: var(--primary-500);
+}
+
+.drop-zone-text {
+    color: var(--gray-600);
+    font-weight: 500;
+}
+
+.drop-zone-hint {
+    font-size: var(--font-size-sm);
+    color: var(--gray-500);
+}
+
+/* ================================================
+   RESPONSIVE ADAPTATIONS
+   ================================================ */
+@media (max-width: 768px) {
+    .confirmation-dialog {
+        margin: var(--spacing-md);
+        width: calc(100% - 2rem);
+    }
+    
+    .confirmation-actions {
+        flex-direction: column;
+    }
+    
+    .confirmation-btn {
+        width: 100%;
+    }
+    
+    .step-progress {
+        overflow-x: auto;
+        padding-bottom: var(--spacing-sm);
+    }
+    
+    .step-item {
+        flex-shrink: 0;
+    }
+    
+    .unsaved-changes-warning {
+        bottom: var(--spacing-sm);
+        right: var(--spacing-sm);
+        left: var(--spacing-sm);
+        max-width: none;
+    }
+}
+
+/* ================================================
+   DARK MODE ADAPTATIONS
+   ================================================ */
+html.dark-mode .confirmation-dialog {
+    background: var(--gray-800);
+    color: var(--gray-100);
+}
+
+html.dark-mode .confirmation-title {
+    color: var(--gray-100);
+}
+
+html.dark-mode .confirmation-message {
+    color: var(--gray-300);
+}
+
+html.dark-mode .form-input {
+    background: var(--gray-700);
+    border-color: var(--gray-600);
+    color: var(--gray-100);
+}
+
+html.dark-mode .form-input:focus {
+    border-color: var(--primary-400);
+    box-shadow: 0 0 0 3px var(--primary-800);
+}
+
+html.dark-mode .password-requirements {
+    background: var(--gray-800);
+    border-left-color: var(--gray-600);
+}
+
+html.dark-mode .file-drop-zone {
+    background: var(--gray-800);
+    border-color: var(--gray-600);
+}
+
+html.dark-mode .file-drop-zone.dragover {
+    background: var(--primary-900);
+    border-color: var(--primary-400);
+} 

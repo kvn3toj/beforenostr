@@ -1,0 +1,365 @@
+/* ===============================================================================
+   🍂 CORRECCIONES ESPECÍFICAS DE COLOR - COOMUNITY SUPERAPP
+   Eliminar morados y fondos oscuros restantes
+   =============================================================================== */
+
+/* ===== CORRECCIONES PARA ESTILOS INLINE PROBLEMÁTICOS ===== */
+
+/* Eliminar todos los morados específicos */
+*[style*='rgb(99, 102, 241)'],
+*[style*='#6366f1'],
+*[style*='color: rgb(99, 102, 241)'],
+*[style*='background-color: rgb(99, 102, 241)'],
+*[style*='backgroundColor: rgb(99, 102, 241)'],
+*[style*='border-color: rgb(99, 102, 241)'],
+*[style*='borderColor: rgb(99, 102, 241)'] {
+  color: var(--autumn-primary-600) !important;
+  background-color: var(--autumn-primary-500) !important;
+  border-color: var(--autumn-primary-500) !important;
+}
+
+*[style*='rgb(139, 92, 246)'],
+*[style*='#8b5cf6'],
+*[style*='color: rgb(139, 92, 246)'],
+*[style*='background-color: rgb(139, 92, 246)'],
+*[style*='backgroundColor: rgb(139, 92, 246)'],
+*[style*='border-color: rgb(139, 92, 246)'],
+*[style*='borderColor: rgb(139, 92, 246)'] {
+  color: var(--autumn-secondary-600) !important;
+  background-color: var(--autumn-secondary-500) !important;
+  border-color: var(--autumn-secondary-500) !important;
+}
+
+/* Fondos oscuros a claros */
+*[style*='background-color: rgb(55, 65, 81)'],
+*[style*='backgroundColor: rgb(55, 65, 81)'],
+*[style*='background-color: rgb(31, 41, 55)'],
+*[style*='backgroundColor: rgb(31, 41, 55)'],
+*[style*='background-color: rgb(17, 24, 39)'],
+*[style*='backgroundColor: rgb(17, 24, 39)'],
+*[style*='background-color: rgb(15, 23, 42)'],
+*[style*='backgroundColor: rgb(15, 23, 42)'] {
+  background-color: var(--warm-neutral-50) !important;
+  color: var(--warm-neutral-800) !important;
+}
+
+/* Textos muy claros en fondos claros */
+*[style*='color: rgb(248, 250, 252)'],
+*[style*='color: rgb(241, 245, 249)'],
+*[style*='color: rgb(226, 232, 240)'] {
+  color: var(--home-text-primary-autumn) !important;
+}
+
+/* ===== GRADIENTES PROBLEMÁTICOS ===== */
+*[style*='linear-gradient(135deg, rgb(99, 102, 241)'],
+*[style*='linear-gradient(45deg, rgb(99, 102, 241)'],
+*[style*='background-image: linear-gradient(135deg, rgb(99, 102, 241)'] {
+  background: linear-gradient(
+    135deg,
+    var(--autumn-primary-500) 0%,
+    var(--autumn-gold-500) 100%
+  ) !important;
+}
+
+*[style*='linear-gradient(135deg, rgb(139, 92, 246)'],
+*[style*='linear-gradient(45deg, rgb(139, 92, 246)'],
+*[style*='background-image: linear-gradient(135deg, rgb(139, 92, 246)'] {
+  background: linear-gradient(
+    135deg,
+    var(--autumn-secondary-500) 0%,
+    var(--autumn-primary-500) 100%
+  ) !important;
+}
+
+/* ===== COMPONENTES ESPECÍFICOS POR CLASE ===== */
+
+/* Smart Components */
+.smart-header,
+.primary-dashboard,
+.smart-actions,
+.module-focus {
+  background: var(--card-bg-autumn) !important;
+  color: var(--home-text-primary-autumn) !important;
+  border: 1px solid var(--card-border-autumn) !important;
+}
+
+/* Componentes con background oscuro específico */
+.dark-background,
+.bg-gray-700,
+.bg-gray-800,
+.bg-gray-900,
+.bg-slate-700,
+.bg-slate-800,
+.bg-slate-900 {
+  background-color: var(--warm-neutral-50) !important;
+  color: var(--warm-neutral-800) !important;
+}
+
+/* Bordes oscuros a otoñales */
+.border-gray-700,
+.border-gray-800,
+.border-slate-700,
+.border-slate-800 {
+  border-color: var(--autumn-primary-200) !important;
+}
+
+/* Textos claros en fondos que ahora son claros */
+.text-white,
+.text-gray-50,
+.text-gray-100 {
+  color: var(--home-text-primary-autumn) !important;
+}
+
+/* ===== CORRECCIONES PARA MATERIAL-UI ESPECÍFICAS ===== */
+
+/* AppBar con fondo oscuro */
+.MuiAppBar-colorPrimary,
+.MuiAppBar-colorSecondary {
+  background: linear-gradient(
+    135deg,
+    #f8fafc 0%,
+    #f1f5f9 50%,
+    #e2e8f0 100%
+  ) !important;
+  color: var(--warm-neutral-800) !important;
+}
+
+/* Drawer con fondo oscuro */
+.MuiDrawer-paperAnchorLeft,
+.MuiDrawer-paperAnchorRight {
+  background: linear-gradient(
+    180deg,
+    #fefefe 0%,
+    var(--warm-neutral-50) 100%
+  ) !important;
+}
+
+/* Cards con fondo oscuro */
+.MuiCard-root {
+  background: var(--card-bg-autumn) !important;
+  color: var(--home-text-primary-autumn) !important;
+}
+
+/* Paper con fondo oscuro */
+.MuiPaper-root {
+  background: var(--card-bg-autumn) !important;
+  color: var(--home-text-primary-autumn) !important;
+}
+
+/* Botones con colores problemáticos */
+.MuiButton-containedPrimary {
+  background: linear-gradient(
+    135deg,
+    var(--autumn-primary-500) 0%,
+    var(--autumn-gold-500) 100%
+  ) !important;
+  color: #ffffff !important;
+}
+
+.MuiButton-containedSecondary {
+  background: linear-gradient(
+    135deg,
+    var(--autumn-secondary-500) 0%,
+    var(--autumn-primary-500) 100%
+  ) !important;
+  color: #ffffff !important;
+}
+
+.MuiButton-outlinedPrimary {
+  color: var(--autumn-primary-600) !important;
+  border-color: var(--autumn-primary-300) !important;
+}
+
+.MuiButton-outlinedSecondary {
+  color: var(--autumn-secondary-600) !important;
+  border-color: var(--autumn-secondary-300) !important;
+}
+
+/* Iconos con colores problemáticos */
+.MuiSvgIcon-colorPrimary {
+  color: var(--autumn-primary-600) !important;
+}
+
+.MuiSvgIcon-colorSecondary {
+  color: var(--autumn-secondary-600) !important;
+}
+
+/* Progress bars con colores problemáticos */
+.MuiLinearProgress-colorPrimary .MuiLinearProgress-bar {
+  background: linear-gradient(
+    90deg,
+    var(--autumn-primary-400) 0%,
+    var(--autumn-gold-400) 100%
+  ) !important;
+}
+
+.MuiLinearProgress-colorSecondary .MuiLinearProgress-bar {
+  background: linear-gradient(
+    90deg,
+    var(--autumn-secondary-400) 0%,
+    var(--autumn-primary-400) 100%
+  ) !important;
+}
+
+/* ===== CORRECCIONES PARA CLASES TAILWIND ESPECÍFICAS ===== */
+
+/* Fondos Tailwind oscuros */
+.bg-gray-50 {
+  background-color: var(--warm-neutral-50) !important;
+}
+.bg-gray-100 {
+  background-color: var(--warm-neutral-100) !important;
+}
+.bg-gray-200 {
+  background-color: var(--warm-neutral-200) !important;
+}
+
+/* Textos Tailwind */
+.text-gray-900 {
+  color: var(--home-text-primary-autumn) !important;
+}
+.text-gray-800 {
+  color: var(--home-text-primary-autumn) !important;
+}
+.text-gray-700 {
+  color: var(--home-text-secondary-autumn) !important;
+}
+.text-gray-600 {
+  color: var(--home-text-secondary-autumn) !important;
+}
+
+/* Bordes Tailwind */
+.border-gray-200 {
+  border-color: var(--autumn-primary-100) !important;
+}
+.border-gray-300 {
+  border-color: var(--autumn-primary-200) !important;
+}
+
+/* ===== CORRECCIONES PARA DATA-ATTRIBUTES ===== */
+
+/* Elementos con data-testid específicos */
+[data-testid*='header'],
+[data-testid*='navigation'],
+[data-testid*='sidebar'] {
+  background: linear-gradient(
+    135deg,
+    #f8fafc 0%,
+    #f1f5f9 50%,
+    #e2e8f0 100%
+  ) !important;
+  color: var(--warm-neutral-800) !important;
+}
+
+[data-testid*='card'],
+[data-testid*='panel'] {
+  background: var(--card-bg-autumn) !important;
+  color: var(--home-text-primary-autumn) !important;
+  border: 1px solid var(--card-border-autumn) !important;
+}
+
+/* ===== CORRECCIONES POR POSICIÓN/CONTEXTO ===== */
+
+/* Headers en general */
+header,
+[role='banner'] {
+  background: linear-gradient(
+    135deg,
+    #f8fafc 0%,
+    #f1f5f9 50%,
+    #e2e8f0 100%
+  ) !important;
+  color: var(--warm-neutral-800) !important;
+}
+
+/* Navegación */
+nav,
+[role='navigation'] {
+  background: var(--warm-neutral-50) !important;
+  color: var(--warm-neutral-800) !important;
+}
+
+/* Main content */
+main,
+[role='main'] {
+  background: var(--bg-primary-autumn) !important;
+  color: var(--home-text-primary-autumn) !important;
+}
+
+/* Sidebars */
+aside {
+  background: var(--warm-neutral-50) !important;
+  color: var(--warm-neutral-800) !important;
+}
+
+/* ===== CORRECCIONES PARA PSEUDO-ELEMENTOS ===== */
+
+/* Before y after con colores problemáticos */
+*::before,
+*::after {
+  background: unset !important;
+}
+
+/* Elementos que tienen gradientes en pseudo-elementos */
+.gradient-before::before,
+.gradient-after::after {
+  background: var(--gradient-autumn-warm) !important;
+}
+
+/* ===== CORRECCIONES RESPONSIVE ===== */
+@media (max-width: 768px) {
+  /* En mobile, asegurar que no haya fondos oscuros */
+  * {
+    background-color: var(--bg-primary-autumn) !important;
+    color: var(--home-text-primary-autumn) !important;
+  }
+
+  .MuiAppBar-root,
+  header {
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%) !important;
+  }
+}
+
+/* ===== CORRECCIONES PARA MODO OSCURO ===== */
+@media (prefers-color-scheme: dark) {
+  /* En modo oscuro, usar colores otoñales oscuros pero no negros puros */
+  *[style*='background-color: rgb(0, 0, 0)'],
+  *[style*='backgroundColor: rgb(0, 0, 0)'] {
+    background-color: var(--warm-neutral-800) !important;
+  }
+
+  *[style*='color: rgb(255, 255, 255)'] {
+    color: var(--warm-neutral-100) !important;
+  }
+}
+
+/* ===== OVERRIDE FINAL PARA ELEMENTOS MUY ESPECÍFICOS ===== */
+/* Para elementos que siguen siendo problemáticos, usar máxima especificidad */
+body *[style*='rgb(99, 102, 241)'] {
+  color: var(--autumn-primary-600) !important;
+  background-color: var(--autumn-primary-500) !important;
+  border-color: var(--autumn-primary-500) !important;
+}
+
+body *[style*='rgb(139, 92, 246)'] {
+  color: var(--autumn-secondary-600) !important;
+  background-color: var(--autumn-secondary-500) !important;
+  border-color: var(--autumn-secondary-500) !important;
+}
+
+body *[style*='background-color: rgb(55, 65, 81)'],
+body *[style*='backgroundColor: rgb(55, 65, 81)'] {
+  background-color: var(--warm-neutral-50) !important;
+  color: var(--warm-neutral-800) !important;
+}
+
+/* ===== CORRECCIONES PARA ELEMENTOS DINÁMICOS ===== */
+/* Para elementos que se generan dinámicamente */
+.dynamic-content *,
+.generated-content *,
+[data-dynamic] *,
+[data-generated] * {
+  background-color: var(--card-bg-autumn) !important;
+  color: var(--home-text-primary-autumn) !important;
+  border-color: var(--card-border-autumn) !important;
+}
