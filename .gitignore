@@ -132,3 +132,5 @@ ehthumbs.db
 .settings/
 .vscode/settings.json.bak
 .vercel
+*.backup
+**/*.backup
