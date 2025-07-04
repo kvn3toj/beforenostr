@@ -17,11 +17,11 @@ services:
     name: god-backend
     plan: free
     runtime: docker
-    repo: https://github.com/kvn3toj/beforenostr
-    branch: main
-    rootDir: backend
-    dockerfilePath: Dockerfile
-    healthCheckPath: /health
+    repo: https://github.com/Coomuny/Coomunity-Nest-React
+    dockerContext: .
+    dockerfilePath: ./backend/Dockerfile
+    healthCheck:
+      path: /health
     envVars:
       - key: PORT
         value: 3002
@@ -30,7 +30,7 @@ services:
           property: connectionString
         key: DATABASE_URL
       - key: REDIS_URL
-        value: "redis://red-d1ain6fdiees73ddnpi0:6379"
+        value: 'redis://red-d1ain6fdiees73ddnpi0:6379'
       - key: JWT_SECRET
         generateValue: true
       - key: NODE_ENV
@@ -50,30 +50,30 @@ services:
     repo: https://github.com/kvn3toj/beforenostr
     branch: main
     rootDir: Demo/apps/superapp-unified
-    buildCommand: "npm install --legacy-peer-deps && npm run build"
-    startCommand: "npx serve -s dist"
+    buildCommand: 'npm install --legacy-peer-deps && npm run build'
+    startCommand: 'npx serve -s dist'
     healthCheckPath: /
     envVars:
       - key: NODE_ENV
         value: production
       - key: VITE_API_BASE_URL
-        value: "https://god-backend-j4b6.onrender.com"
+        value: 'https://god-backend-j4b6.onrender.com'
       - key: VITE_BASE_URL
-        value: "https://coomunity-superapp.onrender.com"
+        value: 'https://coomunity-superapp.onrender.com'
       - key: VITE_NETWORK_API_URL
-        value: "https://god-backend-j4b6.onrender.com"
+        value: 'https://god-backend-j4b6.onrender.com'
       - key: VITE_NETWORK_BASE_URL
-        value: "https://coomunity-superapp.onrender.com"
+        value: 'https://coomunity-superapp.onrender.com'
       - key: VITE_ENABLE_MOCK_AUTH
-        value: "false"
+        value: 'false'
       - key: VITE_ENABLE_ANALYTICS
-        value: "true"
+        value: 'true'
       - key: VITE_BETA_TRACKING
-        value: "false"
+        value: 'false'
       - key: VITE_GA_TRACKING_ID
-        value: "G-XXXXXXXXXX"
+        value: 'G-XXXXXXXXXX'
       - key: VITE_HOTJAR_ID
-        value: "0000000"
+        value: '0000000'
     buildFilter:
       paths:
         - Demo/apps/superapp-unified/**
