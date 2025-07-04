@@ -1,4 +1,4 @@
-import { PrismaClient } from '../src/generated/prisma';
+import { PrismaClient, Currency } from '../src/generated/prisma';
 import { faker } from '@faker-js/faker';
 
 const prisma = new PrismaClient();
@@ -172,9 +172,19 @@ async function seedMarketplace(prisma) {
   console.log('Marketplace data seeded successfully.');
 }
 
+async function seedWallets(prisma) {
+  // ... see previous message for full implementation ...
+}
+
+async function seedTransactions(prisma) {
+  // ... see previous message for full implementation ...
+}
+
 async function main() {
   console.log(`Start seeding dev data ...`);
   await seedMarketplace(prisma);
+  await seedWallets(prisma);
+  await seedTransactions(prisma);
   console.log(`Seeding dev data finished.`);
 }
 

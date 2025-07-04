@@ -12,7 +12,7 @@ import {
   LetsTransactionType,
   LetsTransactionStatus,
 } from './dto/lets.dto';
-import type { Token, Transaction, User, Wallet } from '../generated/prisma';
+import type { Token, Transaction, User, Wallet, Currency } from '../generated/prisma';
 
 @Injectable()
 export class LetsService {
@@ -77,7 +77,8 @@ export class LetsService {
     return {
       userId: dto.userId,
       walletBalance: {
-        units: user.wallet?.balance || 0,
+        units: user.wallet?.balanceUnits || 0,
+        toins: user.wallet?.balanceToins || 0,
       },
       tokenBalance: balanceByType,
       totalActiveTokens: user.tokens.reduce(
@@ -133,23 +134,29 @@ export class LetsService {
         data: {
           fromUserId: dto.fromUserId,
           toUserId: dto.toUserId,
+          fromWalletId: fromUser.wallet.id,
+          toWalletId: toUser.wallet.id,
           amount: dto.amount,
-          currency: 'USD',
-          type: 'EXCHANGE',
+          currency: Currency.UNITS,
           description:
             dto.description || `Intercambio LETS de ${dto.amount} Ünits`,
+          metadata: {
+            type: 'LETS_EXCHANGE',
+            source: 'user_initiated',
+            timestamp: new Date().toISOString(),
+          },
         },
       });
 
       // 2. Actualizar balances en wallets
       await tx.wallet.update({
         where: { userId: dto.fromUserId },
-        data: { balance: { decrement: dto.amount } },
+        data: { balanceUnits: { decrement: dto.amount }, balanceToins: { decrement: dto.amount } },
       });
 
       await tx.wallet.update({
         where: { userId: dto.toUserId },
-        data: { balance: { increment: dto.amount } },
+        data: { balanceUnits: { increment: dto.amount }, balanceToins: { increment: dto.amount } },
       });
 
       // 3. Manejar tokens del remitente (usar FIFO - primero los que caducan antes)
@@ -242,7 +249,7 @@ export class LetsService {
       // Actualizar balance en wallet
       await tx.wallet.update({
         where: { userId: dto.userId },
-        data: { balance: { decrement: totalExpiredAmount } },
+        data: { balanceUnits: { decrement: totalExpiredAmount }, balanceToins: { decrement: totalExpiredAmount } },
       });
 
       // Crear registro de transacción para auditoría
@@ -250,9 +257,14 @@ export class LetsService {
         data: {
           toUserId: dto.userId,
           amount: totalExpiredAmount,
-          currency: 'USD',
+          currency: Currency.UNITS,
           type: 'RECEIVE', // Transacción negativa por caducidad
           description: `Caducidad automática de ${expiredTokens.length} tokens`,
+          metadata: {
+            type: 'CADUCITY_EXPIRATION',
+            source: 'system',
+            timestamp: new Date().toISOString(),
+          },
         },
       });
     });
@@ -340,7 +352,7 @@ export class LetsService {
       accountAge,
       successfulTransactions,
       maxNegativeBalance,
-      currentBalance: user.wallet?.balance || 0,
+      currentBalance: user.wallet?.balanceUnits || 0,
     };
   }
 

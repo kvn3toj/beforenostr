@@ -5,7 +5,7 @@ import {
   Inject,
 } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
-import { Wallet } from '../../generated/prisma';
+import { Wallet, Currency } from '../../generated/prisma';
 
 // Define a basic type for the authenticated user passed from the controller
 type AuthenticatedUser = { id: string; roles: string[] /* other properties */ };
@@ -18,34 +18,53 @@ export class WalletsService {
   async updateWalletBalance(
     userId: string,
     amount: number,
-    currency: string = 'USD'
+    currency: Currency = Currency.UNITS
   ): Promise<Wallet> {
-    // Find or create the wallet for the user
+    if (amount < 0) {
+      throw new Error('La cantidad no puede ser negativa en una actualización de balance');
+    }
+    const updateData: any = {};
+    const createData: any = {
+      userId,
+      status: 'ACTIVE',
+    };
+    switch (currency) {
+      case Currency.UNITS:
+        updateData.balanceUnits = { increment: amount };
+        createData.balanceUnits = amount;
+        createData.balanceToins = 0;
+        break;
+      case Currency.TOINS:
+        updateData.balanceToins = { increment: amount };
+        createData.balanceToins = amount;
+        createData.balanceUnits = 0;
+        break;
+      case Currency.ONDAS:
+      case Currency.MERITOS:
+        updateData.balanceUnits = { increment: amount };
+        createData.balanceUnits = amount;
+        createData.balanceToins = 0;
+        break;
+      default:
+        throw new Error(`Moneda no soportada: ${currency}`);
+    }
     const wallet = await this.prisma.wallet.upsert({
       where: { userId },
-      update: {
-        balance: { increment: amount },
-      },
-      create: {
-        userId,
-        balance: amount,
-        currency,
-      },
+      update: updateData,
+      create: createData,
     });
     return wallet;
   }
 
   async getWalletForUser(
     userId: string,
-    user: AuthenticatedUser // Accept authenticated user object
-  ) {
-    // Ownership check: User must be the owner OR have the 'admin' role
+    user: AuthenticatedUser
+  ): Promise<Wallet> {
     if (userId !== user.id && !user.roles.includes('admin')) {
       throw new ForbiddenException(
         "You do not have permission to view this user's wallet."
       );
     }
-
     const wallet = await this.prisma.wallet.findUnique({
       where: { userId },
       include: {
@@ -59,14 +78,13 @@ export class WalletsService {
         },
       },
     });
-
-    // If wallet doesn't exist, create one with zero balances
     if (!wallet) {
       return this.prisma.wallet.create({
         data: {
           userId,
-          balance: 0,
-          currency: 'USD',
+          balanceUnits: 0,
+          balanceToins: 0,
+          status: 'ACTIVE',
         },
         include: {
           user: {
@@ -80,7 +98,6 @@ export class WalletsService {
         },
       });
     }
-
     return wallet;
   }
 
@@ -126,7 +143,11 @@ export class WalletsService {
     // Assuming this method is called internally or only by authorized services/controllers.
     // If exposed directly via a user endpoint, add ownership/permission checks.
 
-    return this.updateWalletBalance(userId, amount, currency);
+    // Convertir string a enum Currency de Prisma de forma segura
+    const currencyEnum = (Object.values(Currency) as string[]).includes(currency)
+      ? (currency as Currency)
+      : Currency.UNITS;
+    return this.updateWalletBalance(userId, amount, currencyEnum);
   }
 
   // Admin method to get wallet for any user (no ownership check)
@@ -150,8 +171,9 @@ export class WalletsService {
       return this.prisma.wallet.create({
         data: {
           userId,
-          balance: 0,
-          currency: 'USD',
+          balanceUnits: 0,
+          balanceToins: 0,
+          status: 'ACTIVE',
         },
         include: {
           user: {
@@ -190,5 +212,50 @@ export class WalletsService {
         totalAmount: group._sum.amount || 0,
       })),
     };
+  }
+
+  async hasSufficientBalance(
+    userId: string,
+    amount: number,
+    currency: Currency = Currency.UNITS
+  ): Promise<boolean> {
+    const wallet = await this.prisma.wallet.findUnique({
+      where: { userId },
+    });
+    if (!wallet) {
+      return false;
+    }
+    switch (currency) {
+      case Currency.UNITS:
+      case Currency.ONDAS:
+      case Currency.MERITOS:
+        return wallet.balanceUnits >= amount;
+      case Currency.TOINS:
+        return wallet.balanceToins >= amount;
+      default:
+        return false;
+    }
+  }
+
+  async getBalanceByCurrency(
+    userId: string,
+    currency: Currency
+  ): Promise<number> {
+    const wallet = await this.prisma.wallet.findUnique({
+      where: { userId },
+    });
+    if (!wallet) {
+      return 0;
+    }
+    switch (currency) {
+      case Currency.UNITS:
+      case Currency.ONDAS:
+      case Currency.MERITOS:
+        return wallet.balanceUnits;
+      case Currency.TOINS:
+        return wallet.balanceToins;
+      default:
+        return 0;
+    }
   }
 }

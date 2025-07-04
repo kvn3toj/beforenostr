@@ -122,6 +122,24 @@ export class WalletsController {
     return wallet;
   }
 
+  @Get('/me/balance/:currency')
+  @ApiOperation({
+    summary: 'Get balance for a specific currency for the authenticated user',
+    description: 'Retorna el balance de una moneda específica (UNITS, TOINS, ONDAS, MERITOS) para el usuario autenticado.',
+  })
+  @ApiResponse({ status: 200, description: 'Balance de la moneda especificada.' })
+  @ApiParam({ name: 'currency', description: 'Tipo de moneda (UNITS, TOINS, ONDAS, MERITOS)' })
+  async getMyBalanceByCurrency(
+    @Req() req: AuthenticatedRequest,
+    @Param('currency') currency: string
+  ) {
+    const balance = await this.walletsService.getBalanceByCurrency(
+      req.user.id,
+      currency as any
+    );
+    return { currency, balance };
+  }
+
   // Update balance endpoint would typically be internal or admin-only
   // Keeping it internal for now.
 }

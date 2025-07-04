@@ -7,6 +7,7 @@ import {
   IsObject,
   IsString,
 } from 'class-validator';
+import { Currency } from '../../../generated/prisma';
 
 /**
  * Tipos específicos para metadata de transacciones alquímicamente purificada
@@ -22,6 +23,11 @@ export enum TransactionCurrency {
   UNITS = 'Ünits',
   MERITS = 'Mëritos',
 }
+
+export const TRANSACTION_CURRENCY_TO_CURRENCY_MAP: Record<TransactionCurrency, Currency> = {
+  [TransactionCurrency.UNITS]: Currency.UNITS,
+  [TransactionCurrency.MERITS]: Currency.MERITOS,
+};
 
 export class SendTransactionDto {
   @IsUUID()
@@ -43,4 +49,35 @@ export class SendTransactionDto {
   @IsOptional()
   @IsObject()
   metadata?: Record<string, MetadataValue>; // Metadata filosófica opcional con tipos específicos
+}
+
+export class TransactionResponseDto {
+  id: string;
+  fromUserId: string;
+  toUserId: string;
+  amount: number;
+  currency: Currency;
+  description?: string;
+  metadata?: Record<string, MetadataValue>;
+  createdAt: Date;
+  updatedAt: Date;
+  fromUser?: {
+    id: string;
+    name?: string;
+    email: string;
+    avatarUrl?: string;
+  };
+  toUser?: {
+    id: string;
+    name?: string;
+    email: string;
+    avatarUrl?: string;
+  };
+}
+
+export class TransactionStatsDto {
+  totalSent: number;
+  totalReceived: number;
+  transactionCount: number;
+  currencyBreakdown: Record<Currency, { sent: number; received: number }>;
 }

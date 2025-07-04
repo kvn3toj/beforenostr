@@ -23,7 +23,7 @@ import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '@/rbac/guards/roles.guard';
 import { Roles } from '@/rbac/decorators/roles.decorator';
 import { Request } from 'express';
-import { SendTransactionDto } from './dto/send-transaction.dto';
+import { SendTransactionDto, TransactionResponseDto, TransactionStatsDto } from './dto/send-transaction.dto';
 
 // Define a basic type for the authenticated user
 interface AuthenticatedRequest extends Request {
@@ -139,6 +139,30 @@ export class TransactionsController {
       senderId,
       sendTransactionDto
     );
+  }
+
+  @Get('/user/:userId/stats')
+  @ApiOperation({
+    summary: 'Get transaction statistics for a user (Owner or Admin only)',
+    description: 'Retorna estadísticas detalladas de las transacciones del usuario, proporcionando insights sobre su participación en el ecosistema CoomÜnity.',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Estadísticas de transacciones del usuario.',
+    type: TransactionStatsDto
+  })
+  @ApiResponse({ status: 403, description: 'Forbidden resource.' })
+  @ApiParam({ name: 'userId', description: 'ID del usuario' })
+  async getUserTransactionStats(
+    @Req() req: AuthenticatedRequest,
+    @Param('userId') userId: string
+  ): Promise<TransactionStatsDto> {
+    if (req.user.id !== userId && !req.user.roles.includes('admin')) {
+      throw new ForbiddenException(
+        'You do not have permission to view transaction stats for this user.'
+      );
+    }
+    return this.transactionsService.getUserTransactionStats(userId);
   }
 
   // Create transaction endpoint would typically be internal or triggered by other modules (e.g., challenges)

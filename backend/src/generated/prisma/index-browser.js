@@ -226,9 +226,9 @@ exports.Prisma.UserScalarFieldEnum = {
   topUserCount: 'topUserCount',
   personalityId: 'personalityId',
   currentStage: 'currentStage',
+  stageCompletionData: 'stageCompletionData',
   stageProgressedAt: 'stageProgressedAt',
-  stageStartedAt: 'stageStartedAt',
-  stageCompletionData: 'stageCompletionData'
+  stageStartedAt: 'stageStartedAt'
 };
 
 exports.Prisma.RoleScalarFieldEnum = {
@@ -397,8 +397,10 @@ exports.Prisma.MeritScalarFieldEnum = {
 exports.Prisma.WalletScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
-  balance: 'balance',
-  currency: 'currency',
+  blockchainAddress: 'blockchainAddress',
+  balanceUnits: 'balanceUnits',
+  balanceToins: 'balanceToins',
+  status: 'status',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   lastTransaction: 'lastTransaction'
@@ -411,11 +413,11 @@ exports.Prisma.TransactionScalarFieldEnum = {
   description: 'description',
   fromUserId: 'fromUserId',
   toUserId: 'toUserId',
-  transactionDate: 'transactionDate',
+  fromWalletId: 'fromWalletId',
+  toWalletId: 'toWalletId',
+  metadata: 'metadata',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  type: 'type',
-  metadata: 'metadata'
+  updatedAt: 'updatedAt'
 };
 
 exports.Prisma.GroupScalarFieldEnum = {
@@ -735,7 +737,6 @@ exports.Prisma.FeedbackReportScalarFieldEnum = {
 exports.Prisma.ProfileScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
-  avatar: 'avatar',
   bio: 'bio',
   location: 'location',
   website: 'website',
@@ -744,7 +745,8 @@ exports.Prisma.ProfileScalarFieldEnum = {
   isEmprendedorConfiable: 'isEmprendedorConfiable',
   socialLinks: 'socialLinks',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  avatar: 'avatar'
 };
 
 exports.Prisma.ReviewScalarFieldEnum = {
@@ -810,6 +812,13 @@ exports.Prisma.JsonNullValueFilter = {
   JsonNull: Prisma.JsonNull,
   AnyNull: Prisma.AnyNull
 };
+exports.Currency = exports.$Enums.Currency = {
+  UNITS: 'UNITS',
+  TOINS: 'TOINS',
+  ONDAS: 'ONDAS',
+  MERITOS: 'MERITOS'
+};
+
 exports.CustomerJourneyStage = exports.$Enums.CustomerJourneyStage = {
   BUYER: 'BUYER',
   SEEKER: 'SEEKER',
@@ -823,13 +832,6 @@ exports.MarketplaceItemType = exports.$Enums.MarketplaceItemType = {
   EXPERIENCE: 'EXPERIENCE',
   SKILL_EXCHANGE: 'SKILL_EXCHANGE',
   DIGITAL_CONTENT: 'DIGITAL_CONTENT'
-};
-
-exports.Currency = exports.$Enums.Currency = {
-  UNITS: 'UNITS',
-  TOINS: 'TOINS',
-  ONDAS: 'ONDAS',
-  MERITOS: 'MERITOS'
 };
 
 exports.MarketplaceItemStatus = exports.$Enums.MarketplaceItemStatus = {

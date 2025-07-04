@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { WalletsService } from '../wallets/wallets.service';
-import { Transaction } from '../../generated/prisma';
+import { Transaction, Currency } from '../../generated/prisma';
 import {
   SendTransactionDto,
   TransactionCurrency,
@@ -31,34 +31,49 @@ export class TransactionsService {
     fromUserId?: string;
     toUserId: string;
     amount: number;
-    type: string; // e.g., 'EARN', 'SPEND', 'ADJUST'
+    currency: Currency;
     description?: string;
+    metadata?: Record<string, unknown>;
   }): Promise<Transaction> {
-    // Use a transaction to ensure atomicity
+    if (data.amount <= 0) {
+      throw new Error('El monto debe ser mayor a 0');
+    }
+    const [fromWallet, toWallet] = await Promise.all([
+      data.fromUserId
+        ? this.walletsService.getWalletForUserAdmin(data.fromUserId)
+        : null,
+      this.walletsService.getWalletForUserAdmin(data.toUserId)
+    ]);
     const transaction = await this.prisma.$transaction(async (prisma) => {
-      // 1. Create the transaction record with specific typed data
       const transactionData: Prisma.TransactionCreateInput = {
         fromUser: data.fromUserId
           ? { connect: { id: data.fromUserId } }
           : undefined,
         toUser: { connect: { id: data.toUserId } },
+        fromWallet: fromWallet ? { connect: { id: fromWallet.id } } : undefined,
+        toWallet: { connect: { id: toWallet.id } },
         amount: data.amount,
-        currency: 'USD',
-        type: data.type,
+        currency: data.currency,
         description: data.description,
+        metadata: data.metadata ? JSON.stringify(data.metadata) : undefined,
       };
-
       const newTransaction = await prisma.transaction.create({
         data: transactionData,
       });
-
-      // 2. Update the corresponding wallet balance if needed
-      // Note: This may need adjustment based on your wallet logic
-      // await this.walletsService.updateWalletBalance(data.toUserId, data.amount);
-
+      if (data.fromUserId) {
+        await this.walletsService.updateBalance(
+          data.fromUserId,
+          -data.amount,
+          data.currency
+        );
+      }
+      await this.walletsService.updateBalance(
+        data.toUserId,
+        data.amount,
+        data.currency
+      );
       return newTransaction;
     });
-
     return transaction;
   }
 
@@ -117,6 +132,19 @@ export class TransactionsService {
     });
   }
 
+  private mapTransactionCurrencyToCurrency(
+    transactionCurrency: TransactionCurrency
+  ): Currency {
+    switch (transactionCurrency) {
+      case TransactionCurrency.UNITS:
+        return Currency.UNITS;
+      case TransactionCurrency.MERITS:
+        return Currency.MERITOS;
+      default:
+        throw new Error(`Moneda no soportada: ${transactionCurrency}`);
+    }
+  }
+
   /**
    * Procesa una transacción de envío de valor (Ünits o Mëritos) entre jugadores,
    * encarnando los principios de Confianza y Reciprocidad de CoomÜnity.
@@ -134,8 +162,6 @@ export class TransactionsService {
     dto: SendTransactionDto
   ): Promise<Transaction> {
     const { recipientId, amount, currency, description, metadata } = dto;
-
-    // 1. Validaciones Preliminares: Asegurar la coherencia del acto de dar.
     if (recipientId === senderId) {
       throw new ForbiddenException(
         'Un acto de dar requiere de otro. No puedes enviarte valor a ti mismo.'
@@ -149,55 +175,65 @@ export class TransactionsService {
         `El destinatario con id '${recipientId}' no fue encontrado en el ecosistema.`
       );
     }
-
-    // 2. Verificación de Fondos (Principio de Reciprocidad)
-    // Se asegura que el dar no cree una deuda inexistente en el sistema.
-    // Usamos el método de admin para una llamada interna entre servicios confiables.
-    const senderWallet =
-      await this.walletsService.getWalletForUserAdmin(senderId);
-    if (!senderWallet || senderWallet.balance < amount) {
+    const prismaCurrency = this.mapTransactionCurrencyToCurrency(currency);
+    const hasSufficientBalance = await this.walletsService.hasSufficientBalance(
+      senderId,
+      amount,
+      prismaCurrency
+    );
+    if (!hasSufficientBalance) {
       throw new ForbiddenException(
         'Fondos insuficientes. La reciprocidad requiere un balance para poder dar.'
       );
     }
-
-    // 3. Transacción Atómica (Corazón de la Confianza)
-    // Usamos $transaction de Prisma para garantizar que el intercambio completo
-    // (dar y recibir) ocurra exitosamente, o no ocurra en absoluto.
     return this.prisma.$transaction(async (prisma) => {
-      // Deducir del emisor: Un acto de desprendimiento.
+      const [senderWallet, recipientWallet] = await Promise.all([
+        this.walletsService.getWalletForUserAdmin(senderId),
+        this.walletsService.getWalletForUserAdmin(recipientId),
+      ]);
+      const updateSenderData: any = {};
+      const updateRecipientData: any = {};
+      const createRecipientData: any = {
+        userId: recipientId,
+        status: 'ACTIVE',
+      };
+      switch (prismaCurrency) {
+        case Currency.UNITS:
+        case Currency.ONDAS:
+        case Currency.MERITOS:
+          updateSenderData.balanceUnits = { decrement: amount };
+          updateRecipientData.balanceUnits = { increment: amount };
+          createRecipientData.balanceUnits = amount;
+          createRecipientData.balanceToins = 0;
+          break;
+        case Currency.TOINS:
+          updateSenderData.balanceToins = { decrement: amount };
+          updateRecipientData.balanceToins = { increment: amount };
+          createRecipientData.balanceToins = amount;
+          createRecipientData.balanceUnits = 0;
+          break;
+      }
       await prisma.wallet.update({
         where: { userId: senderId },
-        data: { balance: { decrement: amount } },
+        data: updateSenderData,
       });
-
-      // Acreditar al receptor: Un acto de recepción.
-      // Usamos upsert para crear una wallet si el receptor es nuevo en el flujo económico.
       await prisma.wallet.upsert({
         where: { userId: recipientId },
-        update: { balance: { increment: amount } },
-        create: {
-          userId: recipientId,
-          balance: amount,
-          currency,
-        },
+        update: updateRecipientData,
+        create: createRecipientData,
       });
-
-      // Registrar la memoria de la transacción para la posteridad.
-      // NOTA: El error de linter sobre 'metadata' es esperado si Prisma Client
-      // no se ha regenerado tras el cambio en schema.prisma. El código es correcto.
       const newTransaction = await prisma.transaction.create({
         data: {
           fromUserId: senderId,
           toUserId: recipientId,
+          fromWalletId: senderWallet.id,
+          toWalletId: recipientWallet.id,
           amount,
-          currency,
+          currency: prismaCurrency,
           description,
-          metadata,
-          type: 'TRANSFER', // Este tipo podría evolucionar con la filosofía.
+          metadata: metadata ? JSON.stringify(metadata) : undefined,
         },
       });
-
       return newTransaction;
     });
   }
