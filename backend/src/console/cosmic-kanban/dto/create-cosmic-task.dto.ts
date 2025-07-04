@@ -189,5 +189,5 @@ export class CreateCosmicTaskDto {
     example: { projectType: 'infrastructure', realWorldImpact: 'high' },
   })
   @IsOptional()
-  metadata?: any;
+  metadata?: Record<string, unknown>;
 }

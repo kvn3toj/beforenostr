@@ -1,6 +1,22 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { PrismaService } from '../prisma/prisma.service';
+import {
+  VideoItem,
+  Subtitle,
+  Question,
+  AnswerOption,
+} from '../generated/prisma';
+
+// Tipo para VideoItem con subtítulos incluidos
+type VideoItemWithSubtitles = VideoItem & {
+  subtitles: Subtitle[];
+};
+
+// Tipo para Question con opciones incluidas (para el retorno de saveGeneratedQuestions)
+type QuestionWithOptions = Question & {
+  answerOptions?: AnswerOption[];
+};
 
 export interface QuestionGenerationConfig {
   numberOfQuestions: number;
@@ -28,21 +44,16 @@ export class QuestionGeneratorService {
   constructor(@Inject(PrismaService) private readonly prisma: PrismaService) {
     // //     console.log('>>> QuestionGeneratorService CONSTRUCTOR: this.prisma IS', this.prisma ? 'DEFINED' : 'UNDEFINED');
 
-    try {
-      const apiKey = process.env.VITE_GOOGLE_AI_API_KEY;
-      // //       console.log('>>> QuestionGeneratorService CONSTRUCTOR: API key exists:', !!apiKey);
-      // //       console.log('>>> QuestionGeneratorService CONSTRUCTOR: API key length:', apiKey?.length || 0);
+    const apiKey = process.env.VITE_GOOGLE_AI_API_KEY;
+    // //       console.log('>>> QuestionGeneratorService CONSTRUCTOR: API key exists:', !!apiKey);
+    // //       console.log('>>> QuestionGeneratorService CONSTRUCTOR: API key length:', apiKey?.length || 0);
 
-      if (!apiKey) {
-        throw new Error('Google AI API key not found in environment variables');
-      }
-
-      this.genAI = new GoogleGenerativeAI(apiKey);
-      // // //       console.log('>>> QuestionGeneratorService CONSTRUCTOR: Google AI initialized successfully');
-    } catch (error) {
-      //       console.error('>>> QuestionGeneratorService CONSTRUCTOR: ERROR initializing Google AI:', error);
-      throw error;
+    if (!apiKey) {
+      throw new Error('Google AI API key not found in environment variables');
     }
+
+    this.genAI = new GoogleGenerativeAI(apiKey);
+    // // //       console.log('>>> QuestionGeneratorService CONSTRUCTOR: Google AI initialized successfully');
   }
 
   async generateAttentionQuestions(
@@ -52,53 +63,47 @@ export class QuestionGeneratorService {
     //     console.log('>>> QuestionGeneratorService.generateAttentionQuestions: Starting with videoItemId:', videoItemId);
     //     console.log('>>> QuestionGeneratorService.generateAttentionQuestions: Config:', JSON.stringify(config, null, 2));
 
-    try {
-      // 1. Obtener información del video y subtítulos
-      //       console.log('>>> QuestionGeneratorService: Step 1 - Getting video data...');
-      const videoData = await this.getVideoData(videoItemId);
-      //       console.log('>>> QuestionGeneratorService: Video data retrieved:', !!videoData);
-      //       console.log('>>> QuestionGeneratorService: Video title:', videoData?.title);
-      //       console.log('>>> QuestionGeneratorService: Video subtitles count:', videoData?.subtitles?.length || 0);
+    // 1. Obtener información del video y subtítulos
+    //       console.log('>>> QuestionGeneratorService: Step 1 - Getting video data...');
+    const videoData = await this.getVideoData(videoItemId);
+    //       console.log('>>> QuestionGeneratorService: Video data retrieved:', !!videoData);
+    //       console.log('>>> QuestionGeneratorService: Video title:', videoData?.title);
+    //       console.log('>>> QuestionGeneratorService: Video subtitles count:', videoData?.subtitles?.length || 0);
 
-      if (!videoData) {
-        throw new Error(`Video with ID ${videoItemId} not found`);
-      }
-
-      // 2. Construir el prompt especializado
-      //       console.log('>>> QuestionGeneratorService: Step 2 - Building prompt...');
-      const prompt = this.buildAttentionQuestionsPrompt(videoData, config);
-      //       console.log('>>> QuestionGeneratorService: Prompt length:', prompt.length);
-      //       console.log('>>> QuestionGeneratorService: Prompt preview:', prompt.substring(0, 200) + '...');
-
-      // 3. Llamar a Google AI
-      //       console.log('>>> QuestionGeneratorService: Step 3 - Calling Google AI...');
-      const model = this.genAI.getGenerativeModel({
-        model: 'gemini-1.5-flash',
-      });
-      //       console.log('>>> QuestionGeneratorService: Model created successfully');
-
-      const result = await model.generateContent(prompt);
-      //       console.log('>>> QuestionGeneratorService: AI call completed');
-
-      const response = await result.response;
-      //       console.log('>>> QuestionGeneratorService: Response received');
-
-      const text = response.text();
-      //       console.log('>>> QuestionGeneratorService: Response text length:', text.length);
-      //       console.log('>>> QuestionGeneratorService: Response text preview:', text.substring(0, 300) + '...');
-
-      // 4. Parsear la respuesta JSON
-      //       console.log('>>> QuestionGeneratorService: Step 4 - Parsing AI response...');
-      const questions = this.parseAIResponse(text);
-
-      //       console.log('>>> QuestionGeneratorService: Generated', questions.length, 'questions');
-      //       console.log('>>> QuestionGeneratorService: Questions preview:', JSON.stringify(questions, null, 2));
-      return questions;
-    } catch (error) {
-      //       console.error('>>> QuestionGeneratorService.generateAttentionQuestions: ERROR:', error);
-      //       console.error('>>> QuestionGeneratorService.generateAttentionQuestions: Error stack:', error.stack);
-      throw error;
+    if (!videoData) {
+      throw new Error(`Video with ID ${videoItemId} not found`);
     }
+
+    // 2. Construir el prompt especializado
+    //       console.log('>>> QuestionGeneratorService: Step 2 - Building prompt...');
+    const prompt = this.buildAttentionQuestionsPrompt(videoData, config);
+    //       console.log('>>> QuestionGeneratorService: Prompt length:', prompt.length);
+    //       console.log('>>> QuestionGeneratorService: Prompt preview:', prompt.substring(0, 200) + '...');
+
+    // 3. Llamar a Google AI
+    //       console.log('>>> QuestionGeneratorService: Step 3 - Calling Google AI...');
+    const model = this.genAI.getGenerativeModel({
+      model: 'gemini-1.5-flash',
+    });
+    //       console.log('>>> QuestionGeneratorService: Model created successfully');
+
+    const result = await model.generateContent(prompt);
+    //       console.log('>>> QuestionGeneratorService: AI call completed');
+
+    const response = await result.response;
+    //       console.log('>>> QuestionGeneratorService: Response received');
+
+    const text = response.text();
+    //       console.log('>>> QuestionGeneratorService: Response text length:', text.length);
+    //       console.log('>>> QuestionGeneratorService: Response text preview:', text.substring(0, 300) + '...');
+
+    // 4. Parsear la respuesta JSON
+    //       console.log('>>> QuestionGeneratorService: Step 4 - Parsing AI response...');
+    const questions = this.parseAIResponse(text);
+
+    //       console.log('>>> QuestionGeneratorService: Generated', questions.length, 'questions');
+    //       console.log('>>> QuestionGeneratorService: Questions preview:', JSON.stringify(questions, null, 2));
+    return questions;
   }
 
   private async getVideoData(videoItemId: number) {
@@ -114,7 +119,7 @@ export class QuestionGeneratorService {
   }
 
   private buildAttentionQuestionsPrompt(
-    videoData: any,
+    videoData: VideoItemWithSubtitles,
     config: QuestionGenerationConfig
   ): string {
     const subtitlesText =
@@ -187,7 +192,7 @@ FORMATO DE RESPUESTA (JSON válido):
   ]
 }
 
-IMPORTANTE: 
+IMPORTANTE:
 - Las preguntas deben ser sobre detalles específicos de ESTE video en particular
 - Deben requerir que el usuario haya visto ESA parte específica de ESTE video
 - NO preguntes sobre conocimiento general de gamificación, educación o cualquier otro tema
@@ -213,8 +218,8 @@ IMPORTANTE:
       }
 
       return null;
-    } catch (error) {
-      //       console.log('>>> QuestionGeneratorService: Error extracting video URL:', error);
+    } catch {
+      // Error extracting video URL - returning null as fallback
       return null;
     }
   }
@@ -240,7 +245,7 @@ IMPORTANTE:
   }
 
   private getNoSubtitleInstructions(
-    videoData: any,
+    videoData: VideoItemWithSubtitles,
     videoId: string | null
   ): string {
     const durationMinutes = videoData.duration
@@ -277,7 +282,7 @@ EJEMPLOS DE ENFOQUES VÁLIDOS PARA ESTE VIDEO:
 DISTRIBUCIÓN DE TIMESTAMPS:
 - Para un video de ${durationSeconds} segundos, distribuye las preguntas así:
   * Primera pregunta: alrededor de ${Math.floor(durationSeconds * 0.2)} segundos
-  * Segunda pregunta: alrededor de ${Math.floor(durationSeconds * 0.5)} segundos  
+  * Segunda pregunta: alrededor de ${Math.floor(durationSeconds * 0.5)} segundos
   * Tercera pregunta: alrededor de ${Math.floor(durationSeconds * 0.8)} segundos
 
 NO HAGAS:
@@ -294,7 +299,7 @@ SÍ PUEDES HACER:
 `;
   }
 
-  private extractCategory(videoData: any): string | null {
+  private extractCategory(videoData: VideoItemWithSubtitles): string | null {
     try {
       const jsonMatch = videoData.content?.match(/\{.*\}/);
       if (jsonMatch) {
@@ -302,12 +307,12 @@ SÍ PUEDES HACER:
         return parsed.category || null;
       }
       return null;
-    } catch (error) {
+    } catch {
       return null;
     }
   }
 
-  private extractAuthor(videoData: any): string | null {
+  private extractAuthor(videoData: VideoItemWithSubtitles): string | null {
     try {
       const jsonMatch = videoData.content?.match(/\{.*\}/);
       if (jsonMatch) {
@@ -315,7 +320,7 @@ SÍ PUEDES HACER:
         return parsed.author || null;
       }
       return null;
-    } catch (error) {
+    } catch {
       return null;
     }
   }
@@ -405,9 +410,8 @@ EJEMPLOS DE PREGUNTAS APROPIADAS:
 
       const parsed = JSON.parse(jsonMatch[0]);
       return parsed.questions || [];
-    } catch (error) {
-      //       console.error('>>> QuestionGeneratorService.parseAIResponse: Error parsing AI response:', error);
-      //       console.error('>>> AI Response text:', text);
+    } catch {
+      // Error parsing AI response - invalid JSON format
       throw new Error('Failed to parse AI response');
     }
   }
@@ -416,9 +420,7 @@ EJEMPLOS DE PREGUNTAS APROPIADAS:
     videoItemId: number,
     questions: GeneratedQuestion[],
     languageCode: string
-  ): Promise<any[]> {
-    //     console.log('>>> QuestionGeneratorService.saveGeneratedQuestions: Saving', questions.length, 'questions');
-
+  ): Promise<QuestionWithOptions[]> {
     const savedQuestions = [];
 
     for (const question of questions) {
@@ -457,13 +459,11 @@ EJEMPLOS DE PREGUNTAS APROPIADAS:
         } else {
           savedQuestions.push(savedQuestion);
         }
-      } catch (error) {
-        //         console.error('>>> QuestionGeneratorService.saveGeneratedQuestions: Error saving question:', error);
-        // Continuar con las siguientes preguntas
+      } catch {
+        // Error saving individual question - continue with remaining questions
       }
     }
 
-    //     console.log('>>> QuestionGeneratorService: Successfully saved', savedQuestions.length, 'questions');
     return savedQuestions;
   }
 }

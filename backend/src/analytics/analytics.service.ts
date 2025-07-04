@@ -103,7 +103,7 @@ export class AnalyticsService {
   }
 
   async getUsersCreatedOverTime(
-    params: TimeRangeParams
+    _params: TimeRangeParams
   ): Promise<TimeSeriesDataPoint[]> {
     try {
       // Por ahora devolvemos datos mock, pero aquí se implementaría la lógica real
@@ -124,7 +124,7 @@ export class AnalyticsService {
   }
 
   async getPlaylistsCreatedOverTime(
-    params: TimeRangeParams
+    _params: TimeRangeParams
   ): Promise<TimeSeriesDataPoint[]> {
     try {
       const mockData: TimeSeriesDataPoint[] = [
@@ -143,7 +143,7 @@ export class AnalyticsService {
   }
 
   async getMundosCreatedOverTime(
-    params: TimeRangeParams
+    _params: TimeRangeParams
   ): Promise<TimeSeriesDataPoint[]> {
     try {
       const mockData: TimeSeriesDataPoint[] = [
@@ -174,7 +174,7 @@ export class AnalyticsService {
         },
       });
 
-      return playlists.map((playlist, index) => ({
+      return playlists.map((playlist, _index) => ({
         id: playlist.id,
         name: playlist.name,
         view_count: Math.floor(Math.random() * 100) + 10, // Mock view count
@@ -201,7 +201,7 @@ export class AnalyticsService {
         },
       });
 
-      return mundos.map((mundo, index) => ({
+      return mundos.map((mundo, _index) => ({
         id: mundo.id,
         name: mundo.name,
         view_count: Math.floor(Math.random() * 100) + 10, // Mock view count
@@ -217,7 +217,7 @@ export class AnalyticsService {
   }
 
   async getActiveUsersOverTime(
-    params: TimeRangeParams
+    _params: TimeRangeParams
   ): Promise<TimeSeriesDataPoint[]> {
     try {
       const mockData: TimeSeriesDataPoint[] = [
@@ -439,7 +439,7 @@ export class AnalyticsService {
       try {
         const videoCount = await this.prisma.contentItem.count();
         totalVideos = videoCount > 0 ? videoCount : 42;
-      } catch (dbError) {
+      } catch (_dbError) {
         console.warn(
           '[AnalyticsService] Could not fetch video count from DB, using mock data'
         );
@@ -621,10 +621,10 @@ export class AnalyticsService {
         } else if (dbResponseTime > 2000) {
           databaseStatus = 'critical';
         }
-      } catch (dbError) {
+      } catch (_dbError) {
         console.error(
           '[AnalyticsService] Database health check failed:',
-          dbError
+          _dbError
         );
         databaseStatus = 'critical';
         dbResponseTime = -1;

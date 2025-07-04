@@ -30,8 +30,8 @@ export interface PlaylistVersion {
 
 export interface PlaylistVersionDiff {
   field: keyof Playlist;
-  oldValue: any;
-  newValue: any;
+  oldValue: unknown;
+  newValue: unknown;
 }
 
 export type CreatePlaylistData = Pick<

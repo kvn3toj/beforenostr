@@ -4,7 +4,7 @@ export interface AuditLog {
   action: string;
   entity_type: string;
   entity_id: string;
-  changes: Record<string, any> | null;
+  changes: Record<string, unknown> | null;
   created_at: string;
 }
 

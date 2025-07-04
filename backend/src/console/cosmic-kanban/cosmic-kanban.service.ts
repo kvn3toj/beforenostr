@@ -17,12 +17,28 @@ import {
 } from './dto/create-cosmic-task.dto';
 import { UpdateCosmicTaskDto } from './dto/update-cosmic-task.dto';
 import { CosmicTaskResponseDto } from './dto/cosmic-task.response.dto';
+import { Challenge } from '../../generated/prisma';
 
 export interface CosmicTaskFilter {
   guardian?: string;
   element?: string;
   status?: string;
   phase?: number;
+}
+
+interface ModuleStatus {
+  modules: Record<string, number>;
+  [key: string]: unknown;
+}
+
+interface IntegrationStatus {
+  status: Record<string, number>;
+  [key: string]: unknown;
+}
+
+interface InfrastructureStatus {
+  recommendations: string[];
+  [key: string]: unknown;
 }
 
 @Injectable()
@@ -266,7 +282,7 @@ export class CosmicKanbanService {
       // Invalidar caché de estadísticas usando el patrón del CacheService
       if (this.cache && typeof this.cache['client'] !== 'undefined') {
         // Acceso al cliente Redis interno del CacheService
-        const redisClient = (this.cache as any).client;
+        const redisClient = (this.cache as unknown as { client?: any }).client;
         if (redisClient?.isReady) {
           await redisClient.del('cosmic:stats');
 
@@ -569,7 +585,7 @@ export class CosmicKanbanService {
   /**
    * 🚀 Generar tareas para SuperApp
    */
-  private async generateTasksForSuperApp(superAppStatus: any) {
+  private async generateTasksForSuperApp(superAppStatus: ModuleStatus) {
     const createdTasks = [];
 
     // Identificar módulos con menos de 95% de completitud
@@ -607,7 +623,9 @@ export class CosmicKanbanService {
   /**
    * 🔌 Generar tareas para integración
    */
-  private async generateTasksForIntegration(integrationStatus: any) {
+  private async generateTasksForIntegration(
+    integrationStatus: IntegrationStatus
+  ) {
     const createdTasks = [];
 
     // Identificar integraciones incompletas
@@ -649,7 +667,9 @@ export class CosmicKanbanService {
    * 🏗️ Generar tareas para infraestructura
    * 🌟 GRAN PURIFICACIÓN CÓSMICA - Alineación correcta de Guardianes según arquitectura fractal
    */
-  private async generateTasksForInfrastructure(infrastructureStatus: any) {
+  private async generateTasksForInfrastructure(
+    infrastructureStatus: InfrastructureStatus
+  ) {
     const createdTasks = [];
 
     // Crear tareas basadas en recomendaciones con asignación correcta de Guardianes
@@ -774,7 +794,7 @@ export class CosmicKanbanService {
   /**
    * 🔄 Mapear modelo de base de datos a DTO de respuesta
    */
-  private mapToResponseDto(task: any): CosmicTaskResponseDto {
+  private mapToResponseDto(task: Challenge): CosmicTaskResponseDto {
     const config = JSON.parse(task.config || '{}');
 
     return {
@@ -789,7 +809,7 @@ export class CosmicKanbanService {
       estimatedHours: config.estimatedHours || 0,
       philosophicalKpi: config.philosophicalKpi || 'VIC',
       tags: config.tags || [],
-      status: task.status || ColumnStatus.BACKLOG,
+      status: (task.status as ColumnStatus) || ColumnStatus.BACKLOG,
       assignee: config.assignee,
       actualHours: config.actualHours,
       completionDate: config.completionDate

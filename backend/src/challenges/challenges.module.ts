@@ -4,7 +4,6 @@ import { ChallengesController } from './challenges.controller';
 import { UserChallengesService } from './user-challenges/user-challenges.service';
 import { UserChallengesController } from './user-challenges/user-challenges.controller';
 import { PrismaModule } from '../prisma/prisma.module'; // Assuming PrismaModule is available
-import { TransactionsService } from '../merits-and-wallet/transactions/transactions.service'; // Adjust path as necessary
 import { MeritsAndWalletModule } from '../merits-and-wallet/merits-and-wallet.module';
 import { AdminModule } from '../admin/admin.module'; // Import AdminModule for AuditLogsService
 

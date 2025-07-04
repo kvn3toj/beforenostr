@@ -8,6 +8,41 @@ import {
   PhilosophicalKpi,
 } from './create-cosmic-task.dto';
 
+/**
+ * Metadatos específicos para las tareas cósmicas
+ * Siguiendo los principios de purificación alquímica de SAGE
+ */
+interface CosmicTaskMetadata {
+  /** Información del guardián digital responsable */
+  guardianInfo?: {
+    name: string;
+    role: string;
+    lastActivity?: string;
+  };
+  /** Enlaces y referencias adicionales */
+  links?: {
+    documentation?: string;
+    design?: string;
+    repository?: string;
+  };
+  /** Configuraciones específicas del elemento temático */
+  elementConfig?: Record<string, unknown>;
+  /** Historial de cambios y decisiones */
+  changelog?: Array<{
+    date: string;
+    action: string;
+    by: string;
+    reason?: string;
+  }>;
+  /** Métricas de progreso cósmico */
+  cosmicMetrics?: {
+    negentropy?: number;
+    harmony?: number;
+    transformation?: number;
+  };
+  [key: string]: unknown;
+}
+
 export class CosmicTaskResponseDto {
   @ApiProperty({
     description: 'ID único de la tarea cósmica',
@@ -111,10 +146,16 @@ export class CosmicTaskResponseDto {
   completionDate?: Date;
 
   @ApiProperty({
-    description: 'Metadatos adicionales',
+    description: 'Metadatos adicionales de la tarea cósmica',
     required: false,
+    type: 'object',
+    example: {
+      guardianInfo: { name: 'ANA', role: 'Chief Innovation Officer' },
+      links: { documentation: 'https://docs.coomunity.com/cosmic-tasks' },
+      cosmicMetrics: { negentropy: 0.85, harmony: 0.92 },
+    },
   })
-  metadata?: any;
+  metadata?: CosmicTaskMetadata;
 
   @ApiProperty({
     description: 'Fecha de creación',

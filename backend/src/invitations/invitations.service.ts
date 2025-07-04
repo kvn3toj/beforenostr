@@ -91,7 +91,7 @@ export class InvitationsService {
           currency: 'USD',
           type: 'SEND',
           description: `Gift card creada para ${dto.invitedName} (${dto.invitedEmail})`,
-        } as any,
+        },
       });
 
       return card;
@@ -211,7 +211,7 @@ export class InvitationsService {
           currency: 'USD',
           type: 'RECEIVE',
           description: `Canje de gift card de bienvenida`,
-        } as any,
+        },
       });
 
       return { newUser, wallet };
@@ -314,7 +314,14 @@ export class InvitationsService {
   async getInvitationStats(dto: InvitationStatsDto) {
     //     console.log('>>> InvitationsService.getInvitationStats: Getting invitation statistics', dto);
 
-    const where: any = { type: 'GIFT_CARD' };
+    const where: {
+      type: string;
+      userId?: string;
+      createdAt?: {
+        gte?: Date;
+        lte?: Date;
+      };
+    } = { type: 'GIFT_CARD' };
 
     if (dto.userId) {
       where.userId = dto.userId;
@@ -427,7 +434,7 @@ export class InvitationsService {
           currency: 'USD',
           type: 'RECEIVE',
           description: `Devolución por cancelación de gift card`,
-        } as any,
+        },
       });
     });
 

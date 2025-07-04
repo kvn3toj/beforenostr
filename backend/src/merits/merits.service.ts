@@ -15,57 +15,52 @@ export class MeritsService {
   }
 
   async create(createMeritDto: CreateMeritDto): Promise<Merit> {
-    try {
-      // Validar que el usuario existe
-      const user = await this.prisma.user.findUnique({
-        where: { id: createMeritDto.userId },
-      });
+    // Validar que el usuario existe
+    const user = await this.prisma.user.findUnique({
+      where: { id: createMeritDto.userId },
+    });
 
-      if (!user) {
-        throw new NotFoundException(
-          `User with ID ${createMeritDto.userId} not found`
-        );
-      }
-
-      // Validar tipos de merit válidos
-      const validMeritTypes = ['MERITO', 'ONDA', 'VIBRA'];
-      if (!validMeritTypes.includes(createMeritDto.type)) {
-        throw new BadRequestException(
-          `Invalid merit type: ${createMeritDto.type}`
-        );
-      }
-
-      // Validar fuentes válidas
-      const validSources = [
-        'INTERACTION',
-        'CONTRIBUTION',
-        'INVITATION_PERFORMANCE',
-        'CHALLENGE_COMPLETION',
-        'COMMUNITY_PARTICIPATION',
-        'CONTENT_CREATION',
-      ];
-      if (!validSources.includes(createMeritDto.source)) {
-        throw new BadRequestException(
-          `Invalid merit source: ${createMeritDto.source}`
-        );
-      }
-
-      const merit = await this.prisma.merit.create({
-        data: {
-          userId: createMeritDto.userId,
-          amount: createMeritDto.amount,
-          type: createMeritDto.type,
-          source: createMeritDto.source,
-          relatedEntityId: createMeritDto.relatedEntityId,
-        },
-      });
-
-      //       console.log(`>>> MeritsService: Created merit ${merit.id} for user ${createMeritDto.userId}`);
-      return merit;
-    } catch (error) {
-      //       console.error('>>> MeritsService create error:', error);
-      throw error;
+    if (!user) {
+      throw new NotFoundException(
+        `User with ID ${createMeritDto.userId} not found`
+      );
     }
+
+    // Validar tipos de merit válidos
+    const validMeritTypes = ['MERITO', 'ONDA', 'VIBRA'];
+    if (!validMeritTypes.includes(createMeritDto.type)) {
+      throw new BadRequestException(
+        `Invalid merit type: ${createMeritDto.type}`
+      );
+    }
+
+    // Validar fuentes válidas
+    const validSources = [
+      'INTERACTION',
+      'CONTRIBUTION',
+      'INVITATION_PERFORMANCE',
+      'CHALLENGE_COMPLETION',
+      'COMMUNITY_PARTICIPATION',
+      'CONTENT_CREATION',
+    ];
+    if (!validSources.includes(createMeritDto.source)) {
+      throw new BadRequestException(
+        `Invalid merit source: ${createMeritDto.source}`
+      );
+    }
+
+    const merit = await this.prisma.merit.create({
+      data: {
+        userId: createMeritDto.userId,
+        amount: createMeritDto.amount,
+        type: createMeritDto.type,
+        source: createMeritDto.source,
+        relatedEntityId: createMeritDto.relatedEntityId,
+      },
+    });
+
+    //       console.log(`>>> MeritsService: Created merit ${merit.id} for user ${createMeritDto.userId}`);
+    return merit;
   }
 
   async findAll(): Promise<Merit[]> {

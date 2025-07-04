@@ -1,0 +1,23 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+echo "🌟 Iniciando Purificación Pre-commit..."
+
+# Cambiar al directorio del backend
+cd backend
+
+# Ejecutar linting con auto-fix
+echo "🔍 Ejecutando ESLint con auto-fix..."
+npm run lint
+
+# Verificar que no hay errores críticos
+echo "🎯 Verificando purificación completa..."
+npm run lint:check
+
+if [ $? -eq 0 ]; then
+  echo "✨ PURIFICACIÓN EXITOSA - Commit permitido ✨"
+else
+  echo "🚫 PURIFICACIÓN FALLIDA - Commit bloqueado"
+  echo "💡 Ejecuta 'npm run lint' para corregir errores automáticamente"
+  exit 1
+fi

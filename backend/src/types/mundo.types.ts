@@ -43,8 +43,8 @@ export interface MundoVersion {
 
 export interface MundoVersionDiff {
   field: keyof Mundo;
-  oldValue: any;
-  newValue: any;
+  oldValue: unknown;
+  newValue: unknown;
 }
 
 export interface CreateMundoData {

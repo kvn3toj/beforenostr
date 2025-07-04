@@ -3,14 +3,10 @@ import { AppService } from './app.service';
 
 @Controller()
 export class AppController {
-  constructor(private readonly appService?: AppService) {
-    // //     console.log('>>> AppController CONSTRUCTOR: appService is', this.appService ? 'DEFINED' : 'UNDEFINED');
-  }
+  constructor(private readonly appService?: AppService) {}
 
   @Get()
   getHello() {
-    //     console.log('>>> AppController.getHello: appService is', this.appService ? 'DEFINED' : 'UNDEFINED');
-
     // Fallback si AppService no está disponible
     if (!this.appService) {
       return {
@@ -27,8 +23,8 @@ export class AppController {
         message: this.appService.getHello(),
         timestamp: new Date().toISOString(),
       };
-    } catch (error) {
-      //       console.error('>>> AppController.getHello: Error calling appService.getHello():', error);
+    } catch {
+      // Error calling AppService - returning fallback response
       return {
         status: 'ok',
         message: 'Gamifier API is running! 🚀',

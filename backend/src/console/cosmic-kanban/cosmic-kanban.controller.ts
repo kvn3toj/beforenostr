@@ -32,6 +32,7 @@ import { CosmicKanbanService } from './cosmic-kanban.service';
 import { CreateCosmicTaskDto } from './dto/create-cosmic-task.dto';
 import { UpdateCosmicTaskDto } from './dto/update-cosmic-task.dto';
 import { CosmicTaskResponseDto } from './dto/cosmic-task.response.dto';
+import { WebhookPayloadDto } from './dto/webhook-payload.dto';
 
 @ApiTags('cosmic-kanban')
 @Controller('cosmic-kanban')
@@ -49,7 +50,7 @@ export class CosmicKanbanController {
   })
   @ApiResponse({ status: 201, description: 'Sincronización exitosa' })
   async webhookSync(
-    @Body() payload: any,
+    @Body() payload: WebhookPayloadDto,
     @Headers('x-webhook-token') token: string
   ) {
     // Verificar token de seguridad

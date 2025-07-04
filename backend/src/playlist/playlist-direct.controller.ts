@@ -18,20 +18,15 @@ export class PlaylistDirectController {
   async findAll() {
     //     console.log('>>> PlaylistDirectController.findAll called');
     //     console.log('>>> PlaylistDirectController.findAll - prisma:', !!this.prisma);
-    try {
-      const playlists = await this.prisma.playlist.findMany({
-        where: { isActive: true },
-        include: {
-          mundo: true,
-        },
-        orderBy: { createdAt: 'desc' },
-      });
-      //       console.log('>>> PlaylistDirectController.findAll found:', playlists.length, 'playlists');
-      return playlists;
-    } catch (error) {
-      //       console.error('>>> PlaylistDirectController.findAll error:', error);
-      throw error;
-    }
+    const playlists = await this.prisma.playlist.findMany({
+      where: { isActive: true },
+      include: {
+        mundo: true,
+      },
+      orderBy: { createdAt: 'desc' },
+    });
+    //       console.log('>>> PlaylistDirectController.findAll found:', playlists.length, 'playlists');
+    return playlists;
   }
 
   @Get('test')
