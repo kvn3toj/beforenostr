@@ -31,7 +31,7 @@ COPY backend/src/. ./backend/src/
 
 # 7. Genera cliente Prisma y construye
 WORKDIR /usr/src/app/backend
-RUN npx prisma generate
+RUN npx prisma generate --schema=../prisma/schema.prisma
 RUN npm run build
 
 # -----------------
