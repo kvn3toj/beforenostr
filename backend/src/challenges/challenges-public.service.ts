@@ -1,12 +1,7 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { Challenge } from '../generated/prisma';
-
-interface TestConnectionResponse {
-  success?: boolean;
-  challengeCount?: number;
-  error?: string;
-}
+import { TestConnectionResponse } from './types/test-connection.response';
 
 @Injectable()
 export class ChallengesPublicService {
@@ -31,23 +26,10 @@ export class ChallengesPublicService {
   }
 
   async testConnection(): Promise<TestConnectionResponse> {
-    console.log('[ChallengesPublicService] Testing connection...');
-    console.log('[ChallengesPublicService] this.prisma:', !!this.prisma);
-    console.log(
-      '[ChallengesPublicService] this.prisma.challenge:',
-      !!this.prisma?.challenge
-    );
-
-    if (!this.prisma) {
-      return { error: 'PrismaService not injected' };
-    }
-
-    try {
-      const count = await this.prisma.challenge.count();
-      return { success: true, challengeCount: count };
-    } catch (error) {
-      return { error: error.message };
-    }
+    return {
+      status: 'ok',
+      message: 'Conexión exitosa',
+    };
   }
 
   async findAllActive(): Promise<Challenge[]> {
