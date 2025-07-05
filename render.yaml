@@ -17,9 +17,9 @@ services:
     name: beforenostr-backend
     plan: free
     runtime: docker
-    repo: https://github.com/Coomuny/Coomunity-Nest-React
+    repo: https://github.com/kvn3toj/beforenostr
     dockerContext: .
-    dockerfilePath: ./backend/Dockerfile
+    dockerfilePath: ./Dockerfile.backend
     healthCheck:
       path: /health
     envVars:
@@ -38,7 +38,9 @@ services:
     buildFilter:
       paths:
         - backend/**
-        - shared/**
+        - prisma/**
+        - package.json
+        - package-lock.json
       ignoredPaths:
         - backend/**/*.test.ts
 
