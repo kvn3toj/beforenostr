@@ -39,7 +39,7 @@ async function bootstrap() {
     new ValidationPipe({
       transform: true, // Importante para transformar query params a tipos DTO
       whitelist: true, // Opcional: remueve propiedades no definidas en DTO
-      forbidNonWhitelisted: true, // Opcional: lanza error si hay propiedades extra
+      forbidNonWhitelisted: true, // Opcional: lanza error si hay propiedades extras
     })
   );
 
