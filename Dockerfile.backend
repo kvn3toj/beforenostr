@@ -18,12 +18,12 @@ COPY backend/package.json ./backend/
 # Instala dependencias del monorepo
 RUN npm ci --legacy-peer-deps
 
-# Copia el código fuente del backend y el schema de Prisma
+pwd
+ls backend/Dockerfile.backend# Copia el código fuente del backend (incluyendo su propio prisma)
 COPY backend/. ./backend/
-COPY prisma/. ./prisma/
 
-# Genera Prisma Client
-RUN cd backend && npx prisma generate --schema=../prisma/schema.prisma
+# Genera Prisma Client usando el schema correcto
+RUN cd backend && npx prisma generate
 
 # Build del backend
 RUN npm run build --workspace=backend
@@ -39,7 +39,7 @@ COPY --from=builder /usr/src/app/node_modules ./node_modules
 COPY package.json ./
 COPY --from=builder /usr/src/app/backend/dist ./dist
 COPY --from=builder /usr/src/app/backend/node_modules/.prisma ./node_modules/.prisma
-COPY prisma ./prisma
+COPY --from=builder /usr/src/app/backend/prisma ./prisma
 
 EXPOSE 3002
 
