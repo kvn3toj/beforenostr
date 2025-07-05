@@ -10,20 +10,20 @@ import {
   Req,
   NotFoundException,
 } from '@nestjs/common';
-import { ConfigService } from './config.service.js.js';
-import { CreateConfigDto } from './dto/create-config.dto.js.js';
-import { UpdateConfigDto } from './dto/update-config.dto.js.js';
+import { ConfigService } from './config.service';
+import { CreateConfigDto } from './dto/create-config.dto';
+import { UpdateConfigDto } from './dto/update-config.dto';
 import {
   ApiTags,
   ApiOperation,
   ApiResponse,
   ApiBearerAuth,
 } from '@nestjs/swagger';
-import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard.js.js';
-import { RolesGuard } from '../../rbac/guards/roles.guard.js.js';
-import { Roles } from '../../rbac/decorators/roles.decorator.js.js';
+import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
+import { RolesGuard } from '../../rbac/guards/roles.guard';
+import { Roles } from '../../rbac/decorators/roles.decorator';
 import { Request } from 'express';
-import { AuthenticatedUser } from '../../types/auth.types.js.js';
+import { AuthenticatedUser } from '../../types/auth.types';
 
 interface AuthenticatedRequest extends Request {
   user: AuthenticatedUser;

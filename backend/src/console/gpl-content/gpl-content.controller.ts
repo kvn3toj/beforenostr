@@ -1,6 +1,6 @@
 import { Controller, Get, Put, Param, Body } from '@nestjs/common';
-import { GplContentService } from './gpl-content.service.js.js';
-import { UpdateGplContentDto } from './dto/update-gpl-content.dto.js.js';
+import { GplContentService } from './gpl-content.service';
+import { UpdateGplContentDto } from './dto/update-gpl-content.dto';
 
 @Controller('console/gpl-content')
 export class GplContentController {

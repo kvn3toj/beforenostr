@@ -9,11 +9,11 @@ import {
   Inject,
   // UseGuards,
 } from '@nestjs/common';
-import { PersonalityService } from './personality.service.js.js';
-import { CreatePersonalityDto } from './dto/create-personality.dto.js.js';
-import { UpdatePersonalityDto } from './dto/update-personality.dto.js.js';
-import { AssignPersonalityDto } from './dto/assign-personality.dto.js.js';
-// import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard.js.js';
+import { PersonalityService } from './personality.service';
+import { CreatePersonalityDto } from './dto/create-personality.dto';
+import { UpdatePersonalityDto } from './dto/update-personality.dto';
+import { AssignPersonalityDto } from './dto/assign-personality.dto';
+// import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 // import { RolesGuard } from '@/rbac/guards/roles.guard';
 // import { Roles } from '@/rbac/decorators/roles.decorator';
 import {

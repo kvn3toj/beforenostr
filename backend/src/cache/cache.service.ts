@@ -7,7 +7,7 @@ import {
 } from '@nestjs/common';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { createClient, RedisClientType } from 'redis';
-import { MetricsService } from '../common/metrics/metrics.service.js.js';
+import { MetricsService } from '../common/metrics/metrics.service';
 import { Cache } from 'cache-manager';
 
 @Injectable()
@@ -305,21 +305,10 @@ export class CacheService implements OnModuleInit, OnModuleDestroy {
       const key = this.generateMetadataCacheKey(videoId);
       const cachedValue = await this.client?.get(key);
 
-      if (cachedValue) {
-        this.cacheStats.hits++;
-        this.metricsService.incrementCacheOperations('get', 'hit');
+      if (typeof cachedValue === 'string') {
         return JSON.parse(cachedValue) as T;
-      } else {
-        this.cacheStats.misses++;
-        this.metricsService.incrementCacheOperations('get', 'miss');
-
-        this.logger.log(
-          `Metadata cache miss for video ${videoId}`,
-          'CacheService',
-          { key }
-        );
-        return null;
       }
+      return null;
     } catch (error) {
       this.logger.error(
         'Error getting metadata cache:',

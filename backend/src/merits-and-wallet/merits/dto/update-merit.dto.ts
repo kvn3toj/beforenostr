@@ -1,4 +1,4 @@
 import { PartialType } from '@nestjs/swagger';
-import { CreateMeritDto } from './create-merit.dto.js.js';
+import { CreateMeritDto } from './create-merit.dto';
 
 export class UpdateMeritDto extends PartialType(CreateMeritDto) {}

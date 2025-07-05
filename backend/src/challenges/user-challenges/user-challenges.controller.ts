@@ -10,8 +10,8 @@ import {
   ForbiddenException,
   Query,
 } from '@nestjs/common';
-import { UserChallengesService } from './user-challenges.service.js.js';
-import { UpdateUserChallengeDto } from './dto/update-user-challenge.dto.js.js';
+import { UserChallengesService } from './user-challenges.service';
+import { UpdateUserChallengeDto } from './dto/update-user-challenge.dto';
 import {
   ApiTags,
   ApiOperation,
@@ -21,11 +21,12 @@ import {
   ApiBody,
   ApiQuery,
 } from '@nestjs/swagger';
-import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard.js.js'; // Adjust path as necessary
+import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard'; // Adjust path as necessary
 import { RolesGuard } from '@/rbac/guards/roles.guard'; // Adjust path as necessary
 import { Roles } from '@/rbac/decorators/roles.decorator'; // Adjust path as necessary
 import { Request } from 'express';
-import { AuthenticatedUser } from 'src/types/auth.types';
+import { Cache } from 'cache-manager';
+import { AuthenticatedUser } from '@/types/auth.types';
 
 // Updated interface to include email
 interface AuthenticatedRequest extends Request {

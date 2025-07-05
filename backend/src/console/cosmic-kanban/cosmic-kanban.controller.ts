@@ -25,14 +25,14 @@ import {
   ApiResponse,
   ApiBearerAuth,
 } from '@nestjs/swagger';
-import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard.js.js';
-import { RolesGuard } from '../../rbac/guards/roles.guard.js.js';
-import { Roles } from '../../rbac/decorators/roles.decorator.js.js';
-import { CosmicKanbanService } from './cosmic-kanban.service.js.js';
-import { CreateCosmicTaskDto } from './dto/create-cosmic-task.dto.js.js';
-import { UpdateCosmicTaskDto } from './dto/update-cosmic-task.dto.js.js';
-import { CosmicTaskResponseDto } from './dto/cosmic-task.response.dto.js.js';
-import { WebhookPayloadDto } from './dto/webhook-payload.dto.js.js';
+import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
+import { RolesGuard } from '../../rbac/guards/roles.guard';
+import { Roles } from '../../rbac/decorators/roles.decorator';
+import { CosmicKanbanService } from './cosmic-kanban.service';
+import { CreateCosmicTaskDto } from './dto/create-cosmic-task.dto';
+import { UpdateCosmicTaskDto } from './dto/update-cosmic-task.dto';
+import { CosmicTaskResponseDto } from './dto/cosmic-task.response.dto';
+import { WebhookPayloadDto } from './dto/webhook-payload.dto';
 
 @ApiTags('cosmic-kanban')
 @Controller('cosmic-kanban')

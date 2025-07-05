@@ -10,14 +10,14 @@ import {
   UseGuards,
   Inject,
 } from '@nestjs/common';
-import { NotificationsService } from './notifications.service.js.js';
+import { NotificationsService } from './notifications.service';
 import {
   CreateNotificationDto,
   CreateBulkNotificationDto,
   UpdateNotificationDto,
   NotificationFilterDto,
-} from './dto/notifications.dto.js.js';
-import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard.js.js';
+} from './dto/notifications.dto';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '@/rbac/guards/roles.guard';
 import { Roles } from '@/rbac/decorators/roles.decorator';
 

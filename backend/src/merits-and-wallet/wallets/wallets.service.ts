@@ -4,8 +4,8 @@ import {
   ForbiddenException,
   Inject,
 } from '@nestjs/common';
-import { PrismaService } from '../../prisma/prisma.service.js.js';
-import { Wallet } from '../../generated/prisma.js.js';
+import { PrismaService } from '../../prisma/prisma.service';
+import { Wallet } from '../../generated/prisma';
 
 // Define a basic type for the authenticated user passed from the controller
 type AuthenticatedUser = { id: string; roles: string[] /* other properties */ };

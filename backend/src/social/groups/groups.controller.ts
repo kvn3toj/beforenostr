@@ -8,10 +8,10 @@ import {
   Delete,
   Inject,
 } from '@nestjs/common';
-import { GroupsService } from './groups.service.js.js';
-import { CreateGroupDto } from './dto/create-group.dto.js.js';
-import { UpdateGroupDto } from './dto/update-group.dto.js.js';
-import { JoinGroupDto } from './dto/join-group.dto.js.js';
+import { GroupsService } from './groups.service';
+import { CreateGroupDto } from './dto/create-group.dto';
+import { UpdateGroupDto } from './dto/update-group.dto';
+import { JoinGroupDto } from './dto/join-group.dto';
 
 @Controller('groups')
 export class GroupsController {

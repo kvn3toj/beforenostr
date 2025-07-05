@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEnum } from 'class-validator';
-import { InvitationStatus } from './invitations.dto.js.js';
+import { InvitationStatus } from './invitations.dto';
 
 export class UpdateInvitationStatusDto {
   @ApiProperty({

@@ -1,6 +1,6 @@
 // src/prisma/prisma.service.ts
 import { Injectable, OnModuleInit, INestApplication } from '@nestjs/common';
-import { PrismaClient, MarketplaceItemType } from '../generated/prisma.js.js.js';
+import { PrismaClient, MarketplaceItemType } from '../generated/prisma';
 import * as bcrypt from 'bcryptjs';
 
 @Injectable()

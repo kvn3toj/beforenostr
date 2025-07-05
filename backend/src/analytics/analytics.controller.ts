@@ -9,9 +9,9 @@ import {
   Query,
   Inject,
 } from '@nestjs/common';
-import { AnalyticsService } from './analytics.service.js.js';
-import { CreateUserEngagementDto } from './dto/create-user-engagement.dto.js.js';
-import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard.js.js';
+import { AnalyticsService } from './analytics.service';
+import { CreateUserEngagementDto } from './dto/create-user-engagement.dto';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '@/rbac/guards/roles.guard';
 import { Roles } from '@/rbac/decorators/roles.decorator';
 import {

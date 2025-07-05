@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../../prisma/prisma.service.js.js';
-import { UpdateOctalysisElementDto } from './dto/update-octalysis-element.dto.js.js';
+import { PrismaService } from '../../prisma/prisma.service';
+import { UpdateOctalysisElementDto } from './dto/update-octalysis-element.dto';
 
 @Injectable()
 export class OctalysisService {

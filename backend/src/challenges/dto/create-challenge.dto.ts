@@ -9,8 +9,8 @@ import {
 } from 'class-validator';
 import { Type } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
-import { CreateChallengeRewardDto } from './create-challenge-reward.dto.js.js';
-import { ChallengeConfig } from '../types/challenge-config.interface.js.js';
+import { CreateChallengeRewardDto } from './create-challenge-reward.dto';
+import { ChallengeConfig } from '../types/challenge-config.interface';
 
 export class CreateChallengeDto {
   @ApiProperty({ description: 'The title of the challenge' })

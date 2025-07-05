@@ -1,8 +1,8 @@
 import { Injectable, Inject, NotFoundException } from '@nestjs/common';
-import { PrismaService } from '../prisma/prisma.service.js.js';
-import { CreatePlaylistDto } from './dto/create-playlist.dto.js.js';
-import { UpdatePlaylistDto } from './dto/update-playlist.dto.js.js';
-import { FindAllPlaylistsDto } from './dto/find-all-playlists.dto.js.js';
+import { PrismaService } from '../prisma/prisma.service';
+import { CreatePlaylistDto } from './dto/create-playlist.dto';
+import { UpdatePlaylistDto } from './dto/update-playlist.dto';
+import { FindAllPlaylistsDto } from './dto/find-all-playlists.dto';
 
 @Injectable()
 export class PlaylistService {

@@ -1,6 +1,6 @@
 import { Controller, Get, HttpStatus, Inject } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
-import { PrismaService } from '../prisma/prisma.service.js.js';
+import { PrismaService } from '../prisma/prisma.service';
 
 @ApiTags('playlists-direct')
 @Controller('playlists-direct')

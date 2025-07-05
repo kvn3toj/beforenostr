@@ -1,6 +1,7 @@
 import { Controller, Get, Inject } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
-import { ChallengesPublicService } from './challenges-public.service.js.js';
+import { ChallengesPublicService } from './challenges-public.service';
+import { TestConnectionResponse } from './types/test-connection.response';
 
 @ApiTags('challenges')
 @Controller('challenges')
@@ -21,7 +22,7 @@ export class ChallengesPublicController {
   @Get('test-connection')
   @ApiOperation({ summary: 'Test database connection' })
   @ApiResponse({ status: 200, description: 'Connection test result.' })
-  async testConnection() {
+  async testConnection(): Promise<TestConnectionResponse> {
     console.log('[ChallengesPublicController] testConnection called');
     return await this.challengesPublicService.testConnection();
   }

@@ -4,7 +4,7 @@ dotenv.config();
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
-import { AppModule } from './app.module.js.js';
+import { AppModule } from './app.module';
 
 async function bootstrap() {
   //   console.log('>>> Bootstrap: Starting application...');

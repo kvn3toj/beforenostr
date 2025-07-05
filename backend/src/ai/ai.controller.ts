@@ -1,6 +1,6 @@
 import { Controller, Post, Body, Inject } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
-import { QuestionGeneratorService } from './question-generator.service.js.js';
+import { QuestionGeneratorService } from './question-generator.service';
 import {
   GenerateQuestionsDto,
   SaveQuestionsDto,
@@ -8,7 +8,7 @@ import {
   QuestionType,
   TimeDistribution,
   DifficultyLevel,
-} from './dto/generate-questions.dto.js.js';
+} from './dto/generate-questions.dto';
 
 @ApiTags('ai')
 @Controller('ai')

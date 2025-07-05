@@ -5,13 +5,13 @@ import {
   BadRequestException,
   ForbiddenException,
 } from '@nestjs/common';
-import { PrismaService } from '../prisma/prisma.service.js.js';
-import { CreateStudyRoomDto } from './dto/create-study-room.dto.js.js';
+import { PrismaService } from '../prisma/prisma.service';
+import { CreateStudyRoomDto } from './dto/create-study-room.dto';
 import {
   StudyRoomResponseDto,
   StudyRoomParticipantDto,
-} from './dto/study-room-response.dto.js.js';
-import { StudyRoomStatus, StudyRoom, User } from '../generated/prisma.js.js.js';
+} from './dto/study-room-response.dto';
+import { StudyRoomStatus, StudyRoom, User } from '../generated/prisma';
 
 type StudyRoomWithRelations = StudyRoom & {
   video: { id: number; title: string };

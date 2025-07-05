@@ -6,7 +6,7 @@ import {
   Inject,
   Logger,
 } from '@nestjs/common';
-import { PrismaService } from '../prisma/prisma.service.js.js';
+import { PrismaService } from '../prisma/prisma.service';
 import {
   CreateMarketplaceItemDto,
   UpdateMarketplaceItemDto,
@@ -14,12 +14,12 @@ import {
   CreateMarketplaceOfferDto,
   MarketplaceItemStatus,
   MarketplaceItemType,
-} from './dto/marketplace.dto.js.js';
+} from './dto/marketplace.dto';
 import {
   MarketplaceItemStatus as PrismaMarketplaceItemStatus,
   Prisma,
   MarketplaceItemType as PrismaMarketplaceItemType,
-} from '../generated/prisma.js.js.js';
+} from '../generated/prisma';
 
 // 🔹 ATLAS: Performance Metrics Interface
 interface MarketplaceMetrics {

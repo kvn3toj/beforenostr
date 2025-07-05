@@ -5,10 +5,10 @@
  */
 
 import { Controller, Get, UseGuards } from '@nestjs/common';
-import { ConsoleService } from './console.service.js.js';
-import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard.js.js';
-import { RolesGuard } from '../rbac/guards/roles.guard.js.js';
-import { Roles } from '../rbac/decorators/roles.decorator.js.js';
+import { ConsoleService } from './console.service';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { RolesGuard } from '../rbac/guards/roles.guard';
+import { Roles } from '../rbac/decorators/roles.decorator';
 import { ApiBearerAuth } from '@nestjs/swagger';
 
 @Controller('console')

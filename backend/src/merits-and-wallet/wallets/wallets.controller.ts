@@ -8,7 +8,7 @@ import {
   NotFoundException,
   Inject,
 } from '@nestjs/common';
-import { WalletsService } from './wallets.service.js.js';
+import { WalletsService } from './wallets.service';
 import {
   ApiTags,
   ApiBearerAuth,
@@ -16,7 +16,7 @@ import {
   ApiResponse,
   ApiParam,
 } from '@nestjs/swagger';
-import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard.js.js';
+import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '@/rbac/guards/roles.guard';
 import { Roles } from '@/rbac/decorators/roles.decorator';
 import { Request } from 'express';

@@ -4,10 +4,10 @@ import {
   ConflictException,
   Inject,
 } from '@nestjs/common';
-import { PrismaService } from '../prisma/prisma.service.js.js';
-import { CreateVideoPermissionsDto } from './dto/create-video-permissions.dto.js.js';
-import { UpdateVideoPermissionsDto } from './dto/update-video-permissions.dto.js.js';
-import type { VideoPermissions } from '../generated/prisma.js.js.js';
+import { PrismaService } from '../prisma/prisma.service';
+import { CreateVideoPermissionsDto } from './dto/create-video-permissions.dto';
+import { UpdateVideoPermissionsDto } from './dto/update-video-permissions.dto';
+import type { VideoPermissions } from '../generated/prisma';
 
 @Injectable()
 export class VideoPermissionsService {

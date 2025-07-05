@@ -1,11 +1,11 @@
 import { Injectable, NotFoundException, Inject } from '@nestjs/common';
-import { PrismaService } from '../prisma/prisma.service.js.js';
-import { CreateUserDto } from './dto/create-user.dto.js.js';
-import { UpdateUserDto } from './dto/update-user.dto.js.js';
-// import { AuditLogsService } from '../admin/audit-logs/audit-logs.service.js.js'; // Temporarily commented
-// import { AuthenticatedUser } from '../types/auth.types.js.js'; // Temporarily commented
-// import { UserAuditSnapshot } from '../types/user.types.js.js'; // Temporarily commented
-import { User } from '../generated/prisma.js.js.js';
+import { PrismaService } from '../prisma/prisma.service';
+import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
+// import { AuditLogsService } from '../admin/audit-logs/audit-logs.service'; // Temporarily commented
+// import { AuthenticatedUser } from '../types/auth.types'; // Temporarily commented
+// import { UserAuditSnapshot } from '../types/user.types'; // Temporarily commented
+import { User } from '../generated/prisma';
 import * as bcrypt from 'bcryptjs';
 
 // Tipo explícito para snapshots de usuario en logs de auditoría

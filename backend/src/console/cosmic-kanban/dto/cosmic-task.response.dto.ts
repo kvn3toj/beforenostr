@@ -6,7 +6,7 @@ import {
   ColumnStatus,
   TaskPriority,
   PhilosophicalKpi,
-} from './create-cosmic-task.dto.js.js';
+} from './create-cosmic-task.dto';
 
 /**
  * Metadatos específicos para las tareas cósmicas
@@ -148,7 +148,7 @@ export class CosmicTaskResponseDto {
   @ApiProperty({
     description: 'Metadatos adicionales de la tarea cósmica',
     required: false,
-    type: 'object',
+    type: Object,
     example: {
       guardianInfo: { name: 'ANA', role: 'Chief Innovation Officer' },
       links: { documentation: 'https://docs.coomunity.com/cosmic-tasks' },

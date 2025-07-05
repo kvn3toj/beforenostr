@@ -16,16 +16,16 @@ import {
   ApiBearerAuth,
   ApiBody,
 } from '@nestjs/swagger';
-import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard.js.js';
-import { RolesGuard } from '../rbac/guards/roles.guard.js.js';
-import { Roles } from '../rbac/decorators/roles.decorator.js.js';
-import { PhilosophyService } from './philosophy.service.js.js';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { RolesGuard } from '../rbac/guards/roles.guard';
+import { Roles } from '../rbac/decorators/roles.decorator';
+import { PhilosophyService } from './philosophy.service';
 import {
   HambreMetricDto,
   UpdateHambreDto,
   IEAReciprocidadDto,
   PhilosophyMetricsResponseDto,
-} from './dto/philosophy.dto.js.js';
+} from './dto/philosophy.dto';
 
 /**
  * 🌌 ATLAS: Controlador del Backend Sagrado para Métricas Filosóficas

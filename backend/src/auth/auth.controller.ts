@@ -8,9 +8,9 @@ import {
   Inject,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
-import { AuthService } from './auth.service.js.js'; // Temporarily commented
-import { RegisterDto } from './dto/register.dto.js.js';
-import { LoginDto } from './dto/login.dto.js.js';
+import { AuthService } from './auth.service'; // Temporarily commented
+import { RegisterDto } from './dto/register.dto';
+import { LoginDto } from './dto/login.dto';
 
 @ApiTags('auth')
 @Controller('auth')

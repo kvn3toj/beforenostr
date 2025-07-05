@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
-import { NotificationsController } from './notifications.controller.js.js';
-import { NotificationsService } from './notifications.service.js.js';
-import { PrismaModule } from '../prisma/prisma.module.js.js';
-// import { AuthModule } from '../auth/auth.module.js.js'; // COMENTADO TEMPORALMENTE: PROBLEMA CON RolesGuard
+import { NotificationsController } from './notifications.controller';
+import { NotificationsService } from './notifications.service';
+import { PrismaModule } from '../prisma/prisma.module';
+// import { AuthModule } from '../auth/auth.module'; // COMENTADO TEMPORALMENTE: PROBLEMA CON RolesGuard
 // import { RbacModule } from '@/rbac/rbac.module'; // COMENTADO TEMPORALMENTE: PROBLEMA CON RolesGuard
 
 @Module({

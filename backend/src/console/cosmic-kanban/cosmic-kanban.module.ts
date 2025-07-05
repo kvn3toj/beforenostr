@@ -4,10 +4,10 @@
  */
 
 import { Module, OnModuleInit } from '@nestjs/common';
-import { CosmicKanbanController } from './cosmic-kanban.controller.js.js';
-import { CosmicKanbanService } from './cosmic-kanban.service.js.js';
-import { PrismaModule } from '../../prisma/prisma.module.js.js';
-import { CacheModule } from '../../cache/cache.module.js.js';
+import { CosmicKanbanController } from './cosmic-kanban.controller';
+import { CosmicKanbanService } from './cosmic-kanban.service';
+import { PrismaModule } from '../../prisma/prisma.module';
+import { CacheModule } from '../../cache/cache.module';
 
 @Module({
   imports: [PrismaModule, CacheModule],

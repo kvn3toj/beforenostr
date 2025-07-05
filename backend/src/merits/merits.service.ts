@@ -4,9 +4,9 @@ import {
   NotFoundException,
   BadRequestException,
 } from '@nestjs/common';
-import { PrismaService } from '../prisma/prisma.service.js.js';
-import { CreateMeritDto } from './dto/create-merit.dto.js.js';
-import type { Merit } from '../generated/prisma.js.js.js';
+import { PrismaService } from '../prisma/prisma.service';
+import { CreateMeritDto } from './dto/create-merit.dto';
+import type { Merit } from '../generated/prisma';
 
 @Injectable()
 export class MeritsService {

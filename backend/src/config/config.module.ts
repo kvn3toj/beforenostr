@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { ConfigController } from './config.controller.js.js';
+import { ConfigController } from './config.controller';
 
 @Module({
   controllers: [ConfigController],

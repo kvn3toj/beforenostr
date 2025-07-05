@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
-import { VideoItemsController } from './video-items.controller.js.js';
-import { VideoItemsService } from './video-items.service.js.js';
-import { PrismaModule } from '../prisma/prisma.module.js.js';
-import { CacheModule } from '../cache/cache.module.js.js';
-import { MetricsModule } from '../common/metrics/metrics.module.js.js';
-import { LoggerModule } from '../common/logger/logger.module.js.js';
+import { VideoItemsController } from './video-items.controller';
+import { VideoItemsService } from './video-items.service';
+import { PrismaModule } from '../prisma/prisma.module';
+import { CacheModule } from '../cache/cache.module';
+import { MetricsModule } from '../common/metrics/metrics.module';
+import { LoggerModule } from '../common/logger/logger.module';
 
 @Module({
   imports: [PrismaModule, CacheModule, MetricsModule, LoggerModule],

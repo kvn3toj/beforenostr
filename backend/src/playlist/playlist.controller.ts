@@ -20,11 +20,11 @@ import {
   ApiQuery,
   ApiParam,
 } from '@nestjs/swagger';
-import { PlaylistService } from './playlist.service.js.js';
-import { CreatePlaylistDto } from './dto/create-playlist.dto.js.js';
-import { UpdatePlaylistDto } from './dto/update-playlist.dto.js.js';
-import { FindAllPlaylistsDto } from './dto/find-all-playlists.dto.js.js';
-// import { Playlist } from '../generated/prisma.js.js.js';
+import { PlaylistService } from './playlist.service';
+import { CreatePlaylistDto } from './dto/create-playlist.dto';
+import { UpdatePlaylistDto } from './dto/update-playlist.dto';
+import { FindAllPlaylistsDto } from './dto/find-all-playlists.dto';
+// import { Playlist } from '../generated/prisma';
 
 @ApiTags('playlists')
 @Controller('playlists')

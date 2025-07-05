@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { PrismaService } from '../../prisma/prisma.service.js.js';
-import { GetAuditLogsDto } from './dto/get-audit-logs.dto.js.js';
-import { Log, Prisma } from '../../generated/prisma.js.js';
+import { PrismaService } from '../../prisma/prisma.service';
+import { GetAuditLogsDto } from './dto/get-audit-logs.dto';
+import { Log, Prisma } from '../../generated/prisma';
 
 // Simple audit log interface that maps to the Log model
 export interface CreateAuditLogDto {

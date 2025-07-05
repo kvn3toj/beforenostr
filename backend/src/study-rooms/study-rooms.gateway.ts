@@ -11,8 +11,8 @@ import {
 import { Logger, UseGuards } from '@nestjs/common';
 import { Server, Socket } from 'socket.io';
 import { JwtService } from '@nestjs/jwt';
-import { PrismaService } from '../prisma/prisma.service.js.js';
-import { StudyRoomsService } from './study-rooms.service.js.js';
+import { PrismaService } from '../prisma/prisma.service';
+import { StudyRoomsService } from './study-rooms.service';
 
 interface AuthenticatedSocket extends Socket {
   userId?: string;

@@ -5,7 +5,7 @@ import { IncomingWebhook } from '@slack/webhook';
 import {
   ConsistencyCheckResultDto,
   HealthReportDto,
-} from '../../monitoring/dto/health-report.dto.js.js';
+} from '../../monitoring/dto/health-report.dto';
 
 interface ReportContent {
   subject: string;

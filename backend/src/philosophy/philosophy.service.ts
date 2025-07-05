@@ -1,14 +1,14 @@
 import { Injectable, Logger, Inject } from '@nestjs/common';
-import { PrismaService } from '../prisma/prisma.service.js.js';
-import { CacheService } from '../cache/cache.service.js.js';
-import { MetricsService } from '../common/metrics/metrics.service.js.js';
+import { PrismaService } from '../prisma/prisma.service';
+import { CacheService } from '../cache/cache.service';
+import { MetricsService } from '../common/metrics/metrics.service';
 import {
   HambreMetricDto,
   HambreLevel,
   UpdateHambreDto,
   IEAReciprocidadDto,
   PhilosophyMetricsResponseDto,
-} from './dto/philosophy.dto.js.js';
+} from './dto/philosophy.dto';
 
 /**
  * 🌌 Servicio de Philosophy - Métricas Filosóficas del Ecosistema CoomÜnity
