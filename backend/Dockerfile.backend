@@ -33,7 +33,7 @@ RUN npm run build
 # ETAPA 2: PRODUCTION
 # (Esta etapa no necesita cambios)
 # -----------------
-FROM node:lts-alpine
+FROM node:20-alpine
 
 WORKDIR /usr/src/app
 
