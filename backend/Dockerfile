@@ -32,11 +32,13 @@ RUN apk add --no-cache openssl3
 COPY --from=builder /usr/src/app/package*.json ./
 COPY --from=builder /usr/src/app/backend/package.json ./backend/package.json
 
+# ¡CRÍTICO! Copiar el schema de Prisma ANTES de npm install
+COPY --from=builder /usr/src/app/backend/prisma ./prisma
+
 RUN npm install --omit=dev --legacy-peer-deps
 
 COPY --from=builder /usr/src/app/backend/dist ./dist
-COPY --from=builder /usr/src/app/backend/prisma ./prisma
 
 EXPOSE 3002
 
-CMD ["node", "dist/main.js"]
+CMD ["sh", "-c", "npx prisma migrate deploy && node dist/main.js"]
