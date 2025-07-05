@@ -1,9 +1,5 @@
 import { PrismaClient } from '../generated/prisma';
 import bcrypt from 'bcrypt';
-import dotenv from 'dotenv';
-
-// Cargar variables de entorno del .env
-dotenv.config();
 
 const prisma = new PrismaClient();
 
