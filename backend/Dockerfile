@@ -10,20 +10,22 @@ FROM node:lts-alpine AS builder
 
 WORKDIR /usr/src/app
 
-# Copia solo los archivos de dependencias
+# Copia los archivos de definición de paquetes de la raíz y del backend
 COPY package.json package-lock.json* ./
+COPY backend/package.json ./backend/
 
-# Instala dependencias
+# Instala dependencias del monorepo
 RUN npm ci --legacy-peer-deps
 
-# Copia el resto del código fuente del backend
-COPY . .
+# Copia el código fuente del backend y el schema de Prisma
+COPY backend/. ./backend/
+COPY prisma/. ./prisma/
 
 # Genera Prisma Client
-RUN npx prisma generate --schema=./prisma/schema.prisma
+RUN cd backend && npx prisma generate --schema=../prisma/schema.prisma
 
-# Compila la app
-RUN npm run build
+# Build del backend
+RUN npm run build --workspace=backend
 
 # ================================================================
 # Etapa 2: Producción
@@ -33,11 +35,11 @@ FROM node:lts-alpine
 WORKDIR /usr/src/app
 
 COPY --from=builder /usr/src/app/node_modules ./node_modules
-COPY --from=builder /usr/src/app/package.json ./
-COPY --from=builder /usr/src/app/dist ./dist
-COPY --from=builder /usr/src/app/prisma ./prisma
-COPY --from=builder /usr/src/app/node_modules/.prisma ./node_modules/.prisma
+COPY package.json ./
+COPY --from=builder /usr/src/app/backend/dist ./dist
+COPY --from=builder /usr/src/app/backend/node_modules/.prisma ./node_modules/.prisma
+COPY prisma ./prisma
 
 EXPOSE 3002
 
-CMD ["sh", "-c", "npx prisma migrate deploy --schema=./prisma/schema.prisma && npm run db:seed && node dist/main.js"]
+CMD ["sh", "-c", "npx prisma migrate deploy --schema=./prisma/schema.prisma && npm run db:seed --workspace=backend && node dist/main.js"]

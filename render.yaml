@@ -18,7 +18,7 @@ services:
     plan: free
     runtime: docker
     repo: https://github.com/Coomuny/Coomunity-Nest-React
-    dockerContext: ./backend
+    dockerContext: .
     dockerfilePath: ./backend/Dockerfile
     healthCheck:
       path: /health
