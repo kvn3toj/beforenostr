@@ -1,48 +1,55 @@
-# ================================================================
-# CoomÜnity Backend NestJS - Multi-stage Dockerfile para Render
-# Optimizado para producción con build separado
-# Contexto: Raíz del monorepo (dockerContext: .)
-# ================================================================
+# =================================================================
+# CoomÜnity Backend - DECRETO FINAL v8 (Simplicidad Radical)
+# =================================================================
 
-# ================================================================
-# Etapa 1: Builder - Construir la aplicación (usando lockfile raíz)
-# ================================================================
+# -----------------
+# ETAPA 1: BUILDER
+# -----------------
 FROM node:20-alpine AS builder
 
 WORKDIR /usr/src/app
 
-# Instala dependencias del sistema necesarias para node-gyp y paquetes nativos
+# 1. Herramientas base.
 RUN apk add --no-cache python3 make g++
 
-# Copia los archivos de definición de paquetes de la raíz y del backend
+# 2. Copia TODOS los manifiestos y el schema primero.
 COPY package.json package-lock.json* ./
 COPY backend/package.json ./backend/
+COPY prisma/. ./prisma/
 
-# Copia TODO el monorepo (excepto node_modules y dist, que están en .dockerignore)
-COPY . .
+# 3. Instala TODAS las dependencias.
+RUN npm install --legacy-peer-deps
 
-# Instala dependencias del monorepo
-RUN npm ci --legacy-peer-deps
+# 4. Copia TODO el código fuente y los archivos de configuración.
+COPY backend/. ./backend/
 
-# Genera Prisma Client usando el schema correcto
-RUN cd backend && npx prisma generate
+# 5. ¡LA DIRECTIVA CLAVE! Nos movemos DENTRO del directorio del backend.
+WORKDIR /usr/src/app/backend
 
-# Build del backend
-RUN npm run build --workspace=backend
+# 6. Ejecutamos el build desde su propio hogar.
+RUN npm run build
 
-# ================================================================
-# Etapa 2: Producción
-# ================================================================
-FROM node:20-alpine
+# -----------------
+# ETAPA 2: PRODUCTION
+# (Esta etapa no necesita cambios)
+# -----------------
+FROM node:lts-alpine
 
 WORKDIR /usr/src/app
 
-COPY --from=builder /usr/src/app/node_modules ./node_modules
+# 1. Copia manifiestos.
 COPY package.json ./
-COPY --from=builder /usr/src/app/backend/dist ./dist
-COPY --from=builder /usr/src/app/backend/node_modules/.prisma ./node_modules/.prisma
-COPY --from=builder /usr/src/app/backend/prisma ./prisma
+COPY --from=builder /usr/src/app/backend/package.json ./backend/package.json
 
+# 2. Instala dependencias de PRODUCCIÓN.
+RUN npm ci --omit=dev --legacy-peer-deps
+
+# 3. Copia artefactos compilados desde el Builder.
+COPY --from=builder /usr/src/app/backend/dist ./dist
+COPY --from=builder /usr/src/app/prisma ./prisma
+
+# Expone el puerto
 EXPOSE 3002
 
-CMD ["sh", "-c", "npx prisma migrate deploy --schema=./prisma/schema.prisma && npm run db:seed --workspace=backend && node dist/main.js"]
+# Comando final para migrar, sembrar y ejecutar.
+CMD ["sh", "-c", "npx prisma migrate deploy && npm run db:seed --workspace=backend && node dist/main.js"]
