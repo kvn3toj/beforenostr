@@ -1,42 +1,59 @@
 # =================================================================
-# CoomÜnity Backend - Dockerfile v5 (Versión Definitiva)
+# CoomÜnity Backend - DECRETO DEFINITIVO DE CONSTRUCCIÓN
 # =================================================================
 
-# Etapa 1: Builder
+# -----------------
+# ETAPA 1: BUILDER
+# Un taller con TODAS las herramientas para construir la aplicación.
+# -----------------
 FROM node:20-alpine AS builder
-
-# 1. Herramientas base
-RUN apk add --no-cache python3 make g++
 
 WORKDIR /usr/src/app
 
-# 2. Copia manifiestos y schema ANTES de instalar dependencias
+# 1. Instala Python3 y herramientas de build necesarias para node-gyp
+RUN apk add --no-cache python3 make g++
+
+# 2. Copia manifiestos y schema primero
 COPY package.json package-lock.json* ./
 COPY backend/package.json ./backend/
 COPY prisma/. ./prisma/
 
-# 3. Instala SOLO dependencias de producción (prisma ya es prod)
-RUN npm ci --omit=dev --legacy-peer-deps
+# Verificación temporal
+RUN ls -l ./prisma && cat ./prisma/schema.prisma
 
-# 4. Copia el resto del código fuente
-COPY backend/. ./backend/
+# 3. Instala TODAS las dependencias, incluyendo las de desarrollo.
+#    Esto asegura que `prisma` CLI esté disponible.
+RUN npm install --legacy-peer-deps
 
-# 5. Build del backend
+# 4. Copia TODO el código fuente.
+COPY backend/src/. ./backend/src/
+
+# 5. Construye la aplicación. Esto compilará el TypeScript a JavaScript.
 RUN npm run build --workspace=backend
 
-# ================================================================
-# Etapa 2: Producción
-# ================================================================
+
+# -----------------
+# ETAPA 2: PRODUCTION
+# El templo final, puro y optimizado, solo con lo esencial.
+# -----------------
 FROM node:lts-alpine
 
 WORKDIR /usr/src/app
 
-# Copia solo los artefactos necesarios desde el builder
-COPY --from=builder /usr/src/app/node_modules ./node_modules
+# 1. Copia los manifiestos de dependencias.
 COPY package.json ./
-COPY --from=builder /usr/src/app/dist ./dist
+COPY --from=builder /usr/src/app/backend/package.json ./backend/package.json
+
+# 2. Instala ÚNICAMENTE las dependencias de PRODUCCIÓN.
+#    Esto crea un `node_modules` limpio y ligero.
+RUN npm ci --omit=dev --legacy-peer-deps
+
+# 3. Copia el código ya compilado y los artefactos de Prisma desde el Builder.
+COPY --from=builder /usr/src/app/backend/dist ./dist
 COPY --from=builder /usr/src/app/prisma ./prisma
 
+# Expone el puerto
 EXPOSE 3002
 
+# Comando final para migrar, sembrar y ejecutar la aplicación compilada.
 CMD ["sh", "-c", "npx prisma migrate deploy && npm run db:seed --workspace=backend && node dist/main.js"]
