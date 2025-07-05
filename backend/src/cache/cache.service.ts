@@ -7,7 +7,7 @@ import {
 } from '@nestjs/common';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { createClient, RedisClientType } from 'redis';
-import { MetricsService } from '../common/metrics/metrics.service';
+import { MetricsService } from '../common/metrics/metrics.service.js.js';
 import { Cache } from 'cache-manager';
 
 @Injectable()

@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { PrismaService } from '../prisma/prisma.service';
-import { CreateFeedbackDto } from './dto/create-feedback.dto';
+import { PrismaService } from '../prisma/prisma.service.js.js';
+import { CreateFeedbackDto } from './dto/create-feedback.dto.js.js';
 
 @Injectable()
 export class FeedbackService {

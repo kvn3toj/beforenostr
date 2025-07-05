@@ -5,8 +5,8 @@
  */
 
 import { Injectable } from '@nestjs/common';
-import { CreateContestDto } from './dto/create-contest.dto';
-import { UpdateContestDto } from './dto/update-contest.dto';
+import { CreateContestDto } from './dto/create-contest.dto.js.js';
+import { UpdateContestDto } from './dto/update-contest.dto.js.js';
 
 @Injectable()
 export class ContestsService {

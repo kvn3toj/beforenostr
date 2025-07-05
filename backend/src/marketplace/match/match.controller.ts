@@ -11,7 +11,7 @@ import {
 import { JwtAuthGuard } from '@/auth/guards/jwt-auth.guard';
 import { RolesGuard } from '@/rbac/guards/roles.guard';
 import { Roles } from '@/rbac/decorators/roles.decorator';
-import { MatchService } from './match.service';
+import { MatchService } from './match.service.js.js';
 import { Request } from 'express';
 
 class ConfirmMatchDto {

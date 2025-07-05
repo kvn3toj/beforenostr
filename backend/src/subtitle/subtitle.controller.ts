@@ -24,11 +24,11 @@ import {
 import { AuthGuard } from '@nestjs/passport';
 import { RolesGuard } from '@/rbac/guards/roles.guard';
 import { Roles } from '@/rbac/decorators/roles.decorator';
-import { SubtitleService } from './subtitle.service';
-import { CreateSubtitleDto } from './dto/create-subtitle.dto';
-import { UpdateSubtitleDto } from './dto/update-subtitle.dto';
-import { FindAllSubtitlesDto } from './dto/find-all-subtitles.dto';
-import type { Subtitle } from '../generated/prisma';
+import { SubtitleService } from './subtitle.service.js.js';
+import { CreateSubtitleDto } from './dto/create-subtitle.dto.js.js';
+import { UpdateSubtitleDto } from './dto/update-subtitle.dto.js.js';
+import { FindAllSubtitlesDto } from './dto/find-all-subtitles.dto.js.js';
+import type { Subtitle } from '../generated/prisma.js.js.js';
 
 @ApiTags('subtitles')
 @ApiBearerAuth()

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../../prisma/prisma.service';
-import { UpdateGplContentDto } from './dto/update-gpl-content.dto';
+import { PrismaService } from '../../prisma/prisma.service.js.js';
+import { UpdateGplContentDto } from './dto/update-gpl-content.dto.js.js';
 
 @Injectable()
 export class GplContentService {

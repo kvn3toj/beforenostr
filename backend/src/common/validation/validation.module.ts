@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
-import { QuestionValidationService } from './question-validation.service';
-import { PrismaModule } from '../../prisma/prisma.module';
-import { VideoItemsModule } from '../../video-items/video-items.module';
-import { NotificationModule } from '../notifications/notification.module';
+import { QuestionValidationService } from './question-validation.service.js.js';
+import { PrismaModule } from '../../prisma/prisma.module.js.js';
+import { VideoItemsModule } from '../../video-items/video-items.module.js.js';
+import { NotificationModule } from '../notifications/notification.module.js.js';
 
 @Module({
   imports: [

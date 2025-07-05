@@ -6,10 +6,10 @@ import {
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcryptjs';
-import { RegisterDto } from './dto/register.dto';
-import { LoginDto } from './dto/login.dto';
-import { PrismaService } from '../prisma/prisma.service';
-import { AuditLogsService } from '../admin/audit-logs/audit-logs.service';
+import { RegisterDto } from './dto/register.dto.js.js';
+import { LoginDto } from './dto/login.dto.js.js';
+import { PrismaService } from '../prisma/prisma.service.js.js';
+import { AuditLogsService } from '../admin/audit-logs/audit-logs.service.js.js';
 
 @Injectable()
 export class AuthService {

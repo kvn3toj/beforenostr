@@ -1,12 +1,12 @@
 import { Module } from '@nestjs/common';
-import { ConfigService } from './config/config.service';
-import { ConfigController } from './config/config.controller';
-import { AuditLogsService } from './audit-logs/audit-logs.service';
-import { AuditLogsController } from './audit-logs/audit-logs.controller';
-import { SystemService } from './system/system.service';
-import { SystemController } from './system/system.controller';
-import { PrismaModule } from '../prisma/prisma.module';
-import { AuthModule } from '../auth/auth.module'; // Assuming AuthModule is needed for JwtAuthGuard
+import { ConfigService } from './config/config.service.js.js';
+import { ConfigController } from './config/config.controller.js.js';
+import { AuditLogsService } from './audit-logs/audit-logs.service.js.js';
+import { AuditLogsController } from './audit-logs/audit-logs.controller.js.js';
+import { SystemService } from './system/system.service.js.js';
+import { SystemController } from './system/system.controller.js.js';
+import { PrismaModule } from '../prisma/prisma.module.js.js';
+import { AuthModule } from '../auth/auth.module.js.js'; // Assuming AuthModule is needed for JwtAuthGuard
 import { RbacModule } from '@/rbac/rbac.module'; // Assuming RbacModule is needed for RolesGuard
 
 @Module({

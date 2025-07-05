@@ -1,8 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { PrismaService } from '../../prisma/prisma.service';
-import { CreateMeritDto } from './dto/create-merit.dto';
-import { UpdateMeritDto } from './dto/update-merit.dto';
-import { Merit } from '../../generated/prisma';
+import { PrismaService } from '../../prisma/prisma.service.js.js';
+import { CreateMeritDto } from './dto/create-merit.dto.js.js';
+import { UpdateMeritDto } from './dto/update-merit.dto.js.js';
+import { Merit } from '../../generated/prisma.js.js';
 
 @Injectable()
 export class MeritsService {

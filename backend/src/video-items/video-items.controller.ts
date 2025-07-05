@@ -12,10 +12,10 @@ import {
   ApiResponse,
   ApiBearerAuth,
 } from '@nestjs/swagger';
-import { PrismaService } from '../prisma/prisma.service';
-import { VideoItemsService } from './video-items.service';
-import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-import { VideoItemResponseDto } from './dto/video-item-response.dto';
+import { PrismaService } from '../prisma/prisma.service.js.js';
+import { VideoItemsService } from './video-items.service.js.js';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard.js.js';
+import { VideoItemResponseDto } from './dto/video-item-response.dto.js.js';
 
 @ApiTags('video-items')
 @Controller('video-items')

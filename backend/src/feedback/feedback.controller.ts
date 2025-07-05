@@ -21,9 +21,9 @@ import {
   ApiParam,
   ApiQuery,
 } from '@nestjs/swagger';
-import { FeedbackService } from './feedback.service';
-import { CreateFeedbackDto } from './dto/create-feedback.dto';
-import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { FeedbackService } from './feedback.service.js.js';
+import { CreateFeedbackDto } from './dto/create-feedback.dto.js.js';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard.js.js';
 import { RolesGuard } from '@/rbac/guards/roles.guard';
 import { Roles } from '@/rbac/decorators/roles.decorator';
 

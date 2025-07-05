@@ -1,6 +1,6 @@
 import { Injectable, Inject } from '@nestjs/common';
-import { PrismaService } from '../prisma/prisma.service';
-import { Challenge } from '../generated/prisma';
+import { PrismaService } from '../prisma/prisma.service.js.js';
+import { Challenge } from '../generated/prisma.js.js.js';
 
 interface TestConnectionResponse {
   success?: boolean;

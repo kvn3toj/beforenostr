@@ -1,6 +1,6 @@
 import { Controller, Get, Put, Param, Body } from '@nestjs/common';
-import { OctalysisService } from './octalysis.service';
-import { UpdateOctalysisElementDto } from './dto/update-octalysis-element.dto';
+import { OctalysisService } from './octalysis.service.js.js';
+import { UpdateOctalysisElementDto } from './dto/update-octalysis-element.dto.js.js';
 
 @Controller('console/octalysis')
 export class OctalysisController {

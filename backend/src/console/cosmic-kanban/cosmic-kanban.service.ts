@@ -5,8 +5,8 @@
  */
 
 import { Injectable, NotFoundException, Inject } from '@nestjs/common';
-import { PrismaService } from '../../prisma/prisma.service';
-import { CacheService } from '../../cache/cache.service';
+import { PrismaService } from '../../prisma/prisma.service.js.js';
+import { CacheService } from '../../cache/cache.service.js.js';
 import {
   CreateCosmicTaskDto,
   ThematicElement,
@@ -14,10 +14,10 @@ import {
   ColumnStatus,
   TaskPriority,
   PhilosophicalKpi,
-} from './dto/create-cosmic-task.dto';
-import { UpdateCosmicTaskDto } from './dto/update-cosmic-task.dto';
-import { CosmicTaskResponseDto } from './dto/cosmic-task.response.dto';
-import { Challenge } from '../../generated/prisma';
+} from './dto/create-cosmic-task.dto.js.js';
+import { UpdateCosmicTaskDto } from './dto/update-cosmic-task.dto.js.js';
+import { CosmicTaskResponseDto } from './dto/cosmic-task.response.dto.js.js';
+import { Challenge } from '../../generated/prisma.js.js';
 
 export interface CosmicTaskFilter {
   guardian?: string;

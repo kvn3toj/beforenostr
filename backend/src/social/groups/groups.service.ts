@@ -5,11 +5,11 @@ import {
   BadRequestException,
   ConflictException,
 } from '@nestjs/common';
-import { PrismaService } from '../../prisma/prisma.service';
-import { CreateGroupDto } from './dto/create-group.dto';
-import { UpdateGroupDto } from './dto/update-group.dto';
-import { JoinGroupDto } from './dto/join-group.dto';
-import type { Group, UserGroup } from '../../generated/prisma';
+import { PrismaService } from '../../prisma/prisma.service.js.js';
+import { CreateGroupDto } from './dto/create-group.dto.js.js';
+import { UpdateGroupDto } from './dto/update-group.dto.js.js';
+import { JoinGroupDto } from './dto/join-group.dto.js.js';
+import type { Group, UserGroup } from '../../generated/prisma.js.js';
 
 @Injectable()
 export class GroupsService {

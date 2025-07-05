@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
-import { PlaylistController } from './playlist.controller';
-import { PlaylistDirectController } from './playlist-direct.controller';
-import { PlaylistService } from './playlist.service';
-import { PrismaModule } from '../prisma/prisma.module';
+import { PlaylistController } from './playlist.controller.js.js';
+import { PlaylistDirectController } from './playlist-direct.controller.js.js';
+import { PlaylistService } from './playlist.service.js.js';
+import { PrismaModule } from '../prisma/prisma.module.js.js';
 
 @Module({
   imports: [PrismaModule],

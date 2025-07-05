@@ -1,10 +1,10 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { PrismaService } from '../../prisma/prisma.service';
-import { CreateConfigDto } from './dto/create-config.dto';
-import { UpdateConfigDto } from './dto/update-config.dto';
-import { Configuration } from '../../generated/prisma';
-import { AuditLogsService } from '../audit-logs/audit-logs.service';
-import { AuthenticatedUser } from '../../types/auth.types';
+import { PrismaService } from '../../prisma/prisma.service.js.js';
+import { CreateConfigDto } from './dto/create-config.dto.js.js';
+import { UpdateConfigDto } from './dto/update-config.dto.js.js';
+import { Configuration } from '../../generated/prisma.js.js';
+import { AuditLogsService } from '../audit-logs/audit-logs.service.js.js';
+import { AuthenticatedUser } from '../../types/auth.types.js.js';
 
 @Injectable()
 export class ConfigService {

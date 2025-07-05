@@ -1,6 +1,6 @@
 import { Controller, Get, Inject } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
-import { ChallengesPublicService } from './challenges-public.service';
+import { ChallengesPublicService } from './challenges-public.service.js.js';
 
 @ApiTags('challenges')
 @Controller('challenges')

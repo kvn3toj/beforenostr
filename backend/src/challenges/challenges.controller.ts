@@ -9,9 +9,9 @@ import {
   Req,
   Put,
 } from '@nestjs/common';
-import { ChallengesService } from './challenges.service';
-import { CreateChallengeDto } from './dto/create-challenge.dto';
-import { UpdateChallengeDto } from './dto/update-challenge.dto';
+import { ChallengesService } from './challenges.service.js.js';
+import { CreateChallengeDto } from './dto/create-challenge.dto.js.js';
+import { UpdateChallengeDto } from './dto/update-challenge.dto.js.js';
 import {
   ApiTags,
   ApiOperation,
@@ -21,7 +21,7 @@ import {
 import { JwtAuthGuard } from '@/auth/guards/jwt-auth.guard';
 import { RolesGuard } from '@/rbac/guards/roles.guard';
 import { Roles } from '@/rbac/decorators/roles.decorator';
-import { CreateChallengeRewardDto } from './dto/create-challenge-reward.dto';
+import { CreateChallengeRewardDto } from './dto/create-challenge-reward.dto.js.js';
 
 @ApiTags('challenges')
 @Controller('challenges')

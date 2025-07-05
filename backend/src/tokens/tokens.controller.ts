@@ -9,9 +9,9 @@ import {
   Query,
   Inject,
 } from '@nestjs/common';
-import { TokensService } from './tokens.service';
-import { CreateTokenDto } from './dto/create-token.dto';
-import { UpdateTokenDto } from './dto/update-token.dto';
+import { TokensService } from './tokens.service.js.js';
+import { CreateTokenDto } from './dto/create-token.dto.js.js';
+import { UpdateTokenDto } from './dto/update-token.dto.js.js';
 
 @Controller('tokens')
 export class TokensController {

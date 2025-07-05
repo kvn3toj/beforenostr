@@ -1,5 +1,5 @@
 import { IsString, IsEnum, IsOptional, IsObject } from 'class-validator';
-import { FeedbackStatus } from '../../generated/prisma';
+import { FeedbackStatus } from '../../generated/prisma.js.js';
 
 export class UpdateFeedbackDto {
   @IsOptional()

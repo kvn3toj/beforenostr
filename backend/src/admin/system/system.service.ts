@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../../prisma/prisma.service';
+import { PrismaService } from '../../prisma/prisma.service.js.js';
 import * as os from 'os';
-import { AuditLogsService } from '../audit-logs/audit-logs.service';
-import { AuthenticatedUser } from '../../types/auth.types';
+import { AuditLogsService } from '../audit-logs/audit-logs.service.js.js';
+import { AuthenticatedUser } from '../../types/auth.types.js.js';
 
 @Injectable()
 export class SystemService {

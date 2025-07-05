@@ -4,7 +4,7 @@ import {
   ForbiddenException,
 } from '@nestjs/common';
 import { PrismaService } from '@/prisma/prisma.service';
-import { MatchStatus } from '../../generated/prisma';
+import { MatchStatus } from '../../generated/prisma.js.js';
 
 @Injectable()
 export class MatchService {

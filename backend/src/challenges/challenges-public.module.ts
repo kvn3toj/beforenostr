@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
-import { ChallengesPublicController } from './challenges-public.controller';
-import { ChallengesPublicService } from './challenges-public.service';
-import { PrismaModule } from '../prisma/prisma.module';
+import { ChallengesPublicController } from './challenges-public.controller.js.js';
+import { ChallengesPublicService } from './challenges-public.service.js.js';
+import { PrismaModule } from '../prisma/prisma.module.js.js';
 
 @Module({
   imports: [PrismaModule],

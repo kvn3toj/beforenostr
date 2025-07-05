@@ -4,15 +4,15 @@ import {
   NotFoundException,
   Inject,
 } from '@nestjs/common';
-import { PrismaService } from '../prisma/prisma.service';
+import { PrismaService } from '../prisma/prisma.service.js.js';
 import {
   CreateLetsTransactionDto,
   LetsBalanceDto,
   LetsExpiryCheckDto,
   LetsTransactionType,
   LetsTransactionStatus,
-} from './dto/lets.dto';
-import type { Token, Transaction, User, Wallet } from '../generated/prisma';
+} from './dto/lets.dto.js.js';
+import type { Token, Transaction, User, Wallet } from '../generated/prisma.js.js.js';
 
 @Injectable()
 export class LetsService {

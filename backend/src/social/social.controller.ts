@@ -10,10 +10,10 @@ import {
   Delete,
 } from '@nestjs/common';
 import { Request } from 'express';
-import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-import { SocialService } from './social.service';
-import { CreatePublicationDto } from './dto/create-publication.dto';
-import { CreateCommentDto } from './dto/create-comment.dto';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard.js.js';
+import { SocialService } from './social.service.js.js';
+import { CreatePublicationDto } from './dto/create-publication.dto.js.js';
+import { CreateCommentDto } from './dto/create-comment.dto.js.js';
 
 interface AuthenticatedUser {
   id: string;

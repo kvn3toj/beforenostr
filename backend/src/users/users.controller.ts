@@ -20,9 +20,9 @@ import {
   ApiResponse,
   ApiQuery,
 } from '@nestjs/swagger';
-import { UsersService } from './users.service';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+import { UsersService } from './users.service.js.js';
+import { CreateUserDto } from './dto/create-user.dto.js.js';
+import { UpdateUserDto } from './dto/update-user.dto.js.js';
 import { AuthGuard } from '@nestjs/passport';
 import { RolesGuard } from '@/rbac/guards/roles.guard';
 import { Roles } from '@/rbac/decorators/roles.decorator';

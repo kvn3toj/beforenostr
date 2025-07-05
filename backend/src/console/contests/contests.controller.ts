@@ -7,12 +7,12 @@ import {
   Body,
   UseGuards,
 } from '@nestjs/common';
-import { ContestsService } from './contests.service';
-import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
+import { ContestsService } from './contests.service.js.js';
+import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard.js.js';
 import { RolesGuard } from '@/rbac/guards/roles.guard';
 import { Roles } from '@/rbac/decorators/roles.decorator';
-import { CreateContestDto } from './dto/create-contest.dto';
-import { UpdateContestDto } from './dto/update-contest.dto';
+import { CreateContestDto } from './dto/create-contest.dto.js.js';
+import { UpdateContestDto } from './dto/update-contest.dto.js.js';
 
 @Controller('console/contests')
 @UseGuards(JwtAuthGuard, RolesGuard)

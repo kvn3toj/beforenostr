@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
-import { CacheService } from './cache.service';
-import { MetricsModule } from '../common/metrics/metrics.module';
-import { LoggerModule } from '../common/logger/logger.module';
+import { CacheService } from './cache.service.js.js';
+import { MetricsModule } from '../common/metrics/metrics.module.js.js';
+import { LoggerModule } from '../common/logger/logger.module.js.js';
 
 @Module({
   imports: [MetricsModule, LoggerModule],

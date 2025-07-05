@@ -21,18 +21,18 @@ import {
   ApiOperation,
   ApiResponse,
 } from '@nestjs/swagger';
-import { StagesService } from './stages.service';
-import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
+import { StagesService } from './stages.service.js.js';
+import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard.js.js';
 import { RolesGuard } from '@/rbac/guards/roles.guard';
 import { Roles } from '@/rbac/decorators/roles.decorator';
-import { UpdateStageDto } from './dto/update-stage.dto';
+import { UpdateStageDto } from './dto/update-stage.dto.js.js';
 import {
   StageConfigurationDto,
   StageAnalyticsDto,
   UserProgressionDto,
   ProgressActionResultDto,
-} from './dto/stage-response.dto';
-import { AuthenticatedRequest } from '../../types/auth.types';
+} from './dto/stage-response.dto.js.js';
+import { AuthenticatedRequest } from '../../types/auth.types.js.js';
 
 @ApiTags('stages')
 @Controller('console/stages')

@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
-import { SubtitleController } from './subtitle.controller';
-import { SubtitleService } from './subtitle.service';
-import { PrismaModule } from '../prisma/prisma.module';
+import { SubtitleController } from './subtitle.controller.js.js';
+import { SubtitleService } from './subtitle.service.js.js';
+import { PrismaModule } from '../prisma/prisma.module.js.js';
 
 @Module({
   imports: [PrismaModule],

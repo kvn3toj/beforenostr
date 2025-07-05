@@ -6,7 +6,7 @@ import {
   ColumnStatus,
   TaskPriority,
   PhilosophicalKpi,
-} from './create-cosmic-task.dto';
+} from './create-cosmic-task.dto.js.js';
 
 /**
  * Metadatos específicos para las tareas cósmicas

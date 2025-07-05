@@ -1,6 +1,6 @@
 import { Controller, Get, Put, Body } from '@nestjs/common';
-import { TrustVotingService } from './trust-voting.service';
-import { UpdateTrustVotingDto } from './dto/update-trust-voting.dto';
+import { TrustVotingService } from './trust-voting.service.js.js';
+import { UpdateTrustVotingDto } from './dto/update-trust-voting.dto.js.js';
 
 @Controller('console/trust-voting')
 export class TrustVotingController {

@@ -4,9 +4,9 @@ import {
   NotFoundException,
   ForbiddenException,
 } from '@nestjs/common';
-import { PrismaService } from '../prisma/prisma.service';
-import { CreatePublicationDto } from './dto/create-publication.dto';
-import { CreateCommentDto } from './dto/create-comment.dto';
+import { PrismaService } from '../prisma/prisma.service.js.js';
+import { CreatePublicationDto } from './dto/create-publication.dto.js.js';
+import { CreateCommentDto } from './dto/create-comment.dto.js.js';
 
 @Injectable()
 export class SocialService {

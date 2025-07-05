@@ -5,18 +5,18 @@ import {
   ForbiddenException,
   BadRequestException,
 } from '@nestjs/common';
-import { PrismaService } from '../../prisma/prisma.service';
-import { TransactionsService } from '../../merits-and-wallet/transactions/transactions.service';
+import { PrismaService } from '../../prisma/prisma.service.js.js';
+import { TransactionsService } from '../../merits-and-wallet/transactions/transactions.service.js.js';
 import {
   User,
   Challenge,
   ChallengeReward,
   UserChallenge,
-} from '../../generated/prisma';
-import { UpdateUserChallengeDto } from './dto/update-user-challenge.dto';
-import { ChallengeConfig } from '../types/challenge-config.interface';
-import { AuditLogsService } from '../../admin/audit-logs/audit-logs.service';
-import { AuthenticatedUser } from '../../types/auth.types';
+} from '../../generated/prisma.js.js';
+import { UpdateUserChallengeDto } from './dto/update-user-challenge.dto.js.js';
+import { ChallengeConfig } from '../types/challenge-config.interface.js.js';
+import { AuditLogsService } from '../../admin/audit-logs/audit-logs.service.js.js';
+import { AuthenticatedUser } from '../../types/auth.types.js.js';
 
 @Injectable()
 export class UserChallengesService {

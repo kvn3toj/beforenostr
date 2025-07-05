@@ -13,9 +13,9 @@ import {
   BadRequestException,
   Logger,
 } from '@nestjs/common';
-import { PrismaService } from '../../prisma/prisma.service';
-import { UpdateStageDto } from './dto/update-stage.dto';
-import { CustomerJourneyStage } from '../../../src/generated/prisma';
+import { PrismaService } from '../../prisma/prisma.service.js.js';
+import { UpdateStageDto } from './dto/update-stage.dto.js.js';
+import { CustomerJourneyStage } from '../../../src/generated/prisma.js.js';
 
 // Re-export for controller use
 export { CustomerJourneyStage };

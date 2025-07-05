@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
-import { MarketplaceController } from './marketplace.controller';
-import { MarketplaceService } from './marketplace.service';
-import { PrismaModule } from '../prisma/prisma.module';
-import { AuthModule } from '../auth/auth.module';
+import { MarketplaceController } from './marketplace.controller.js.js';
+import { MarketplaceService } from './marketplace.service.js.js';
+import { PrismaModule } from '../prisma/prisma.module.js.js';
+import { AuthModule } from '../auth/auth.module.js.js';
 import { RbacModule } from '@/rbac/rbac.module';
-import { MatchController } from './match/match.controller';
-import { MatchService } from './match/match.service';
+import { MatchController } from './match/match.controller.js.js';
+import { MatchService } from './match/match.service.js.js';
 
 @Module({
   imports: [PrismaModule, AuthModule, RbacModule],

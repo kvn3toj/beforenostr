@@ -8,16 +8,16 @@ import {
   Delete,
   UseGuards,
 } from '@nestjs/common';
-import { MeritsService } from './merits.service';
-import { CreateMeritDto } from './dto/create-merit.dto';
-import { UpdateMeritDto } from './dto/update-merit.dto';
+import { MeritsService } from './merits.service.js.js';
+import { CreateMeritDto } from './dto/create-merit.dto.js.js';
+import { UpdateMeritDto } from './dto/update-merit.dto.js.js';
 import {
   ApiTags,
   ApiBearerAuth,
   ApiOperation,
   ApiResponse,
 } from '@nestjs/swagger';
-import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard'; // Assuming this path
+import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard.js.js'; // Assuming this path
 import { RolesGuard } from '@/rbac/guards/roles.guard'; // Assuming this path
 import { Roles } from '@/rbac/decorators/roles.decorator'; // Assuming this path
 

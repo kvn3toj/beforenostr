@@ -21,11 +21,11 @@ import {
   ApiParam,
   ApiQuery,
 } from '@nestjs/swagger';
-import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-import { StudyRoomsService } from './study-rooms.service';
-import { CreateStudyRoomDto } from './dto/create-study-room.dto';
-import { JoinStudyRoomDto } from './dto/join-study-room.dto';
-import { StudyRoomResponseDto } from './dto/study-room-response.dto';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard.js.js';
+import { StudyRoomsService } from './study-rooms.service.js.js';
+import { CreateStudyRoomDto } from './dto/create-study-room.dto.js.js';
+import { JoinStudyRoomDto } from './dto/join-study-room.dto.js.js';
+import { StudyRoomResponseDto } from './dto/study-room-response.dto.js.js';
 
 interface AuthenticatedRequest extends Request {
   user: {

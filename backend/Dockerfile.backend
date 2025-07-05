@@ -7,20 +7,22 @@
 # ================================================================
 # Etapa 1: Builder - Construir la aplicación (usando lockfile raíz)
 # ================================================================
-FROM node:lts-alpine AS builder
+FROM node:20-alpine AS builder
 
 WORKDIR /usr/src/app
+
+# Instala dependencias del sistema necesarias para node-gyp y paquetes nativos
+RUN apk add --no-cache python3 make g++
 
 # Copia los archivos de definición de paquetes de la raíz y del backend
 COPY package.json package-lock.json* ./
 COPY backend/package.json ./backend/
 
+# Copia TODO el monorepo (excepto node_modules y dist, que están en .dockerignore)
+COPY . .
+
 # Instala dependencias del monorepo
 RUN npm ci --legacy-peer-deps
-
-pwd
-ls backend/Dockerfile.backend# Copia el código fuente del backend (incluyendo su propio prisma)
-COPY backend/. ./backend/
 
 # Genera Prisma Client usando el schema correcto
 RUN cd backend && npx prisma generate
@@ -31,7 +33,7 @@ RUN npm run build --workspace=backend
 # ================================================================
 # Etapa 2: Producción
 # ================================================================
-FROM node:lts-alpine
+FROM node:20-alpine
 
 WORKDIR /usr/src/app
 

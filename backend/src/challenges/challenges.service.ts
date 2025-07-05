@@ -3,11 +3,11 @@ import {
   NotFoundException,
   BadRequestException,
 } from '@nestjs/common';
-import { PrismaService } from '../prisma/prisma.service';
-import { CreateChallengeDto } from './dto/create-challenge.dto';
-import { UpdateChallengeDto } from './dto/update-challenge.dto';
-import { Challenge } from '../generated/prisma';
-import { AuthenticatedUser } from '../types/auth.types';
+import { PrismaService } from '../prisma/prisma.service.js.js';
+import { CreateChallengeDto } from './dto/create-challenge.dto.js.js';
+import { UpdateChallengeDto } from './dto/update-challenge.dto.js.js';
+import { Challenge } from '../generated/prisma.js.js.js';
+import { AuthenticatedUser } from '../types/auth.types.js.js';
 
 @Injectable()
 export class ChallengesService {

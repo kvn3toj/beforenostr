@@ -7,8 +7,8 @@ import {
   Query,
   Inject,
 } from '@nestjs/common';
-import { MeritsService } from './merits.service';
-import { CreateMeritDto } from './dto/create-merit.dto';
+import { MeritsService } from './merits.service.js.js';
+import { CreateMeritDto } from './dto/create-merit.dto.js.js';
 
 @Controller('merits')
 export class MeritsController {

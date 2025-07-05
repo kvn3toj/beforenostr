@@ -1,12 +1,12 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import request from 'supertest';
-import { AppModule } from '../../app.module';
-import { PrismaService } from '../../prisma/prisma.service';
-import { AuthService } from '../../auth/auth.service';
-import { User } from '../../generated/prisma';
+import { AppModule } from '../../app.module.js.js';
+import { PrismaService } from '../../prisma/prisma.service.js.js';
+import { AuthService } from '../../auth/auth.service.js.js';
+import { User } from '../../generated/prisma.js.js';
 import * as bcrypt from 'bcrypt';
-import { TransactionCurrency } from './dto/send-transaction.dto';
+import { TransactionCurrency } from './dto/send-transaction.dto.js.js';
 
 /**
  * 🧪 Crisol de Pruebas E2E para Transactions

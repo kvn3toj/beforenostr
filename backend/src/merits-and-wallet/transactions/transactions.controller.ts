@@ -10,7 +10,7 @@ import {
   ForbiddenException,
   NotFoundException,
 } from '@nestjs/common';
-import { TransactionsService } from './transactions.service';
+import { TransactionsService } from './transactions.service.js.js';
 import {
   ApiTags,
   ApiBearerAuth,
@@ -19,11 +19,11 @@ import {
   ApiParam,
   ApiBody,
 } from '@nestjs/swagger';
-import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
+import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard.js.js';
 import { RolesGuard } from '@/rbac/guards/roles.guard';
 import { Roles } from '@/rbac/decorators/roles.decorator';
 import { Request } from 'express';
-import { SendTransactionDto } from './dto/send-transaction.dto';
+import { SendTransactionDto } from './dto/send-transaction.dto.js.js';
 
 // Define a basic type for the authenticated user
 interface AuthenticatedRequest extends Request {

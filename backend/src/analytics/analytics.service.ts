@@ -1,7 +1,7 @@
 import { Injectable, Inject } from '@nestjs/common';
-import { PrismaService } from '../prisma/prisma.service';
-import { CreateUserEngagementDto } from './dto/create-user-engagement.dto';
-import { Activity } from '../generated/prisma'; // Use Activity from generated Prisma
+import { PrismaService } from '../prisma/prisma.service.js.js';
+import { CreateUserEngagementDto } from './dto/create-user-engagement.dto.js.js';
+import { Activity } from '../generated/prisma.js.js.js'; // Use Activity from generated Prisma
 
 interface TimeRangeParams {
   interval?: string;

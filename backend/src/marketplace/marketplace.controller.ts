@@ -12,14 +12,14 @@ import {
   Req,
 } from '@nestjs/common';
 import { Request } from 'express';
-import { MarketplaceService } from './marketplace.service';
+import { MarketplaceService } from './marketplace.service.js.js';
 import {
   CreateMarketplaceItemDto,
   UpdateMarketplaceItemDto,
   MarketplaceSearchDto,
   MarketplaceItemType,
-} from './dto/marketplace.dto';
-import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+} from './dto/marketplace.dto.js.js';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard.js.js';
 import { RolesGuard } from '@/rbac/guards/roles.guard';
 import { Roles } from '@/rbac/decorators/roles.decorator';
 

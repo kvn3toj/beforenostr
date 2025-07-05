@@ -1,15 +1,15 @@
 import { Controller, Get, UseGuards, Post, Req } from '@nestjs/common';
-import { SystemService } from './system.service';
+import { SystemService } from './system.service.js.js';
 import {
   ApiTags,
   ApiOperation,
   ApiResponse,
   ApiBearerAuth,
 } from '@nestjs/swagger';
-import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
-import { RolesGuard } from '../../rbac/guards/roles.guard';
-import { Roles } from '../../rbac/decorators/roles.decorator';
-import { AuthenticatedUser } from '../../types/auth.types';
+import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard.js.js';
+import { RolesGuard } from '../../rbac/guards/roles.guard.js.js';
+import { Roles } from '../../rbac/decorators/roles.decorator.js.js';
+import { AuthenticatedUser } from '../../types/auth.types.js.js';
 import { Request } from 'express';
 
 interface AuthenticatedRequest extends Request {

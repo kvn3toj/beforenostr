@@ -1,12 +1,12 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { GoogleGenerativeAI } from '@google/generative-ai';
-import { PrismaService } from '../prisma/prisma.service';
+import { PrismaService } from '../prisma/prisma.service.js.js';
 import {
   VideoItem,
   Subtitle,
   Question,
   AnswerOption,
-} from '../generated/prisma';
+} from '../generated/prisma.js.js.js';
 
 // Tipo para VideoItem con subtítulos incluidos
 type VideoItemWithSubtitles = VideoItem & {

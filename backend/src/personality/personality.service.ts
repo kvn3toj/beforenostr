@@ -4,11 +4,11 @@ import {
   ConflictException,
   Inject,
 } from '@nestjs/common';
-import { PrismaService } from '../prisma/prisma.service';
-import { CreatePersonalityDto } from './dto/create-personality.dto';
-import { UpdatePersonalityDto } from './dto/update-personality.dto';
-import { AssignPersonalityDto } from './dto/assign-personality.dto';
-import type { Personality } from '../generated/prisma';
+import { PrismaService } from '../prisma/prisma.service.js.js';
+import { CreatePersonalityDto } from './dto/create-personality.dto.js.js';
+import { UpdatePersonalityDto } from './dto/update-personality.dto.js.js';
+import { AssignPersonalityDto } from './dto/assign-personality.dto.js.js';
+import type { Personality } from '../generated/prisma.js.js.js';
 
 @Injectable()
 export class PersonalityService {

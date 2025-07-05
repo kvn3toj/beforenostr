@@ -8,13 +8,13 @@ import {
   UseGuards,
   Inject,
 } from '@nestjs/common';
-import { LetsService } from './lets.service';
+import { LetsService } from './lets.service.js.js';
 import {
   CreateLetsTransactionDto,
   LetsBalanceDto,
   LetsExpiryCheckDto,
-} from './dto/lets.dto';
-import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+} from './dto/lets.dto.js.js';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard.js.js';
 import { RolesGuard } from '@/rbac/guards/roles.guard';
 import { Roles } from '@/rbac/decorators/roles.decorator';
 import {

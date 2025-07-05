@@ -4,11 +4,11 @@ import {
   BadRequestException,
   Inject,
 } from '@nestjs/common';
-import { PrismaService } from '../prisma/prisma.service';
-import { CreateSubtitleDto } from './dto/create-subtitle.dto';
-import { UpdateSubtitleDto } from './dto/update-subtitle.dto';
-import { FindAllSubtitlesDto } from './dto/find-all-subtitles.dto';
-import type { Subtitle } from '../generated/prisma';
+import { PrismaService } from '../prisma/prisma.service.js.js';
+import { CreateSubtitleDto } from './dto/create-subtitle.dto.js.js';
+import { UpdateSubtitleDto } from './dto/update-subtitle.dto.js.js';
+import { FindAllSubtitlesDto } from './dto/find-all-subtitles.dto.js.js';
+import type { Subtitle } from '../generated/prisma.js.js.js';
 
 @Injectable()
 export class SubtitleService {

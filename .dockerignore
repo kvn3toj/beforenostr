@@ -50,8 +50,10 @@ e2e-archive/
 playwright-demo-report/
 
 # TypeScript config files from root (use SuperApp-specific configs)
-/tsconfig.json
-/tsconfig.backend.json
+# /tsconfig.json
+# /tsconfig.backend.json
+# /src
+# /src_mixed_backup
 
 # Scripts and verification files
 *.sh
@@ -137,7 +139,7 @@ test-*.vtt
 # /prisma  <-- COMENTADO PARA PERMITIR PRISMA
 /public
 /scripts
-/src
+# /src  <-- COMENTADO PARA PERMITIR BACKEND SRC
 /supabase
 /tests
 /tests-backup
@@ -153,7 +155,7 @@ test-*.vtt
 /Recursos_Wireframes_Gamifier
 /roadmap
 /scripts
-/src
+# /src  <-- COMENTADO PARA PERMITIR BACKEND SRC
 /src_mixed_backup
 /supabase
 /tests
@@ -161,3 +163,4 @@ test-*.vtt
 /Typography:REM_Wireframes_Gamifie
 
 # IMPORTANTE: NO excluir /backend ni /prisma para permitir el build en Render
+# IMPORTANTE: NO excluir /src para permitir que el backend compile correctamente

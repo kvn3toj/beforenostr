@@ -4,9 +4,9 @@ import {
   BadRequestException,
   Inject,
 } from '@nestjs/common';
-import { PrismaService } from '../prisma/prisma.service';
-import { NotificationsService } from '../notifications/notifications.service';
-import { NotificationType } from '../notifications/dto/notifications.dto';
+import { PrismaService } from '../prisma/prisma.service.js.js';
+import { NotificationsService } from '../notifications/notifications.service.js.js';
+import { NotificationType } from '../notifications/dto/notifications.dto.js.js';
 import {
   CreateInvitationTemplateDto,
   CreateGiftCardDto,
@@ -16,7 +16,7 @@ import {
   InvitationStatsDto,
   InvitationStatus,
   UserInvitationStatus,
-} from './dto/invitations.dto';
+} from './dto/invitations.dto.js.js';
 import * as crypto from 'crypto';
 import * as bcrypt from 'bcryptjs';
 

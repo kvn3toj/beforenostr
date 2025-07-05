@@ -1,15 +1,15 @@
 import { Injectable, Inject, NotFoundException, Logger } from '@nestjs/common';
-import { PrismaService } from '../prisma/prisma.service';
-import { CacheService } from '../cache/cache.service';
-import { MetricsService } from '../common/metrics/metrics.service';
-import { VideoPlatform } from '../common/constants/platform.enum';
+import { PrismaService } from '../prisma/prisma.service.js.js';
+import { CacheService } from '../cache/cache.service.js.js';
+import { MetricsService } from '../common/metrics/metrics.service.js.js';
+import { VideoPlatform } from '../common/constants/platform.enum.js.js';
 import {
   VideoQuality,
   VideoMetadata,
-} from '../common/interfaces/video-metadata.interface';
+} from '../common/interfaces/video-metadata.interface.js.js';
 import { AbortController } from 'node-abort-controller';
-import { CreateVideoItemDto } from './dto/create-video-item.dto';
-import { UpdateVideoItemDto } from './dto/update-video-item.dto';
+import { CreateVideoItemDto } from './dto/create-video-item.dto.js.js';
+import { UpdateVideoItemDto } from './dto/update-video-item.dto.js.js';
 
 // Minimal interfaces for API responses
 interface YouTubeApiResponse {

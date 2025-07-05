@@ -10,17 +10,17 @@ import {
   UseGuards,
   Inject,
 } from '@nestjs/common';
-import { InvitationsService } from './invitations.service';
+import { InvitationsService } from './invitations.service.js.js';
 import {
   CreateGiftCardDto,
   RedeemGiftCardDto,
   UpdateGiftCardDto,
   InvitationStatsDto,
-} from './dto/invitations.dto';
+} from './dto/invitations.dto.js.js';
 import { JwtAuthGuard } from '@/auth/guards/jwt-auth.guard';
 import { RolesGuard } from '@/rbac/guards/roles.guard';
 import { Roles } from '@/rbac/decorators/roles.decorator';
-import { UpdateInvitationStatusDto } from './dto/update-invitation-status.dto';
+import { UpdateInvitationStatusDto } from './dto/update-invitation-status.dto.js.js';
 import { AuthenticatedUser } from '@/types/auth.types';
 import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 

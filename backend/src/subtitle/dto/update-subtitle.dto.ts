@@ -1,5 +1,5 @@
 import { PartialType } from '@nestjs/mapped-types';
-import { CreateSubtitleDto } from './create-subtitle.dto';
+import { CreateSubtitleDto } from './create-subtitle.dto.js.js';
 
 export class UpdateSubtitleDto extends PartialType(CreateSubtitleDto) {
   // No se necesita 'id: number;' aquí si el ID viene del parámetro de ruta.

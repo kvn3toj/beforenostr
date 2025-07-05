@@ -13,9 +13,9 @@ import {
   Inject,
   NotFoundException,
 } from '@nestjs/common';
-import { VideoPermissionsService } from './video-permissions.service';
-import { CreateVideoPermissionsDto } from './dto/create-video-permissions.dto';
-import { UpdateVideoPermissionsDto } from './dto/update-video-permissions.dto';
+import { VideoPermissionsService } from './video-permissions.service.js.js';
+import { CreateVideoPermissionsDto } from './dto/create-video-permissions.dto.js.js';
+import { UpdateVideoPermissionsDto } from './dto/update-video-permissions.dto.js.js';
 
 @Controller('video-permissions')
 export class VideoPermissionsController {

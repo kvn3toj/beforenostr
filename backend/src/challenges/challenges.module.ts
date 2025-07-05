@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
-import { ChallengesService } from './challenges.service';
-import { ChallengesController } from './challenges.controller';
-import { UserChallengesService } from './user-challenges/user-challenges.service';
-import { UserChallengesController } from './user-challenges/user-challenges.controller';
-import { PrismaModule } from '../prisma/prisma.module'; // Assuming PrismaModule is available
-import { MeritsAndWalletModule } from '../merits-and-wallet/merits-and-wallet.module';
-import { AdminModule } from '../admin/admin.module'; // Import AdminModule for AuditLogsService
+import { ChallengesService } from './challenges.service.js.js';
+import { ChallengesController } from './challenges.controller.js.js';
+import { UserChallengesService } from './user-challenges/user-challenges.service.js.js';
+import { UserChallengesController } from './user-challenges/user-challenges.controller.js.js';
+import { PrismaModule } from '../prisma/prisma.module.js.js'; // Assuming PrismaModule is available
+import { MeritsAndWalletModule } from '../merits-and-wallet/merits-and-wallet.module.js.js';
+import { AdminModule } from '../admin/admin.module.js.js'; // Import AdminModule for AuditLogsService
 
 @Module({
   imports: [PrismaModule, MeritsAndWalletModule, AdminModule], // Import AdminModule

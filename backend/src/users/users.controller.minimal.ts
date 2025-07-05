@@ -1,5 +1,5 @@
 import { Controller, Get } from '@nestjs/common';
-import { MinimalUsersService } from './users.service.minimal';
+import { MinimalUsersService } from './users.service.minimal.js.js';
 
 @Controller('users-minimal')
 export class MinimalUsersController {

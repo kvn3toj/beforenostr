@@ -4,10 +4,10 @@ import {
   NotFoundException,
   BadRequestException,
 } from '@nestjs/common';
-import { PrismaService } from '../prisma/prisma.service';
-import { CreateTokenDto } from './dto/create-token.dto';
-import { UpdateTokenDto } from './dto/update-token.dto';
-import type { Token } from '../generated/prisma';
+import { PrismaService } from '../prisma/prisma.service.js.js';
+import { CreateTokenDto } from './dto/create-token.dto.js.js';
+import { UpdateTokenDto } from './dto/update-token.dto.js.js';
+import type { Token } from '../generated/prisma.js.js.js';
 
 @Injectable()
 export class TokensService {

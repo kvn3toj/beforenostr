@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
-import { StudyRoomsController } from './study-rooms.controller';
-import { StudyRoomsService } from './study-rooms.service';
-import { StudyRoomsGateway } from './study-rooms.gateway';
-import { PrismaModule } from '../prisma/prisma.module';
-import { AuthModule } from '../auth/auth.module';
+import { StudyRoomsController } from './study-rooms.controller.js.js';
+import { StudyRoomsService } from './study-rooms.service.js.js';
+import { StudyRoomsGateway } from './study-rooms.gateway.js.js';
+import { PrismaModule } from '../prisma/prisma.module.js.js';
+import { AuthModule } from '../auth/auth.module.js.js';
 
 @Module({
   imports: [
