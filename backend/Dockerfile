@@ -1,5 +1,5 @@
 # =================================================================
-# CoomÜnity Backend - DECRETO FINAL v13 (Build Tools Fix)
+# CoomÜnity Backend - DECRETO FINAL v14 (Monorepo Workspace Fix)
 # =================================================================
 
 # ----------------------------------------------------------------
@@ -10,25 +10,27 @@ FROM node:20-slim AS builder
 # 1. Instalar dependencias de sistema operativo para compilación
 RUN apt-get update && apt-get install -y openssl python3 make g++
 
-# 2. Establecer el directorio de trabajo principal
+# 2. Establecer el directorio de trabajo principal (raíz del monorepo)
 WORKDIR /usr/src/app
 
-# 3. Copiar TODOS los archivos de definición de paquetes y el lockfile
+# 3. Copiar archivos clave del monorepo
 COPY package*.json ./
+COPY turbo.json ./
+COPY tsconfig.json ./
 
-# 4. Instalar TODAS las dependencias (incluyendo devDependencies)
-RUN npm install --legacy-peer-deps
+# 4. Copiar el directorio backend completo
+COPY backend ./backend
 
-# 4.1 Instalar NestJS CLI globalmente (necesario para el build)
+# 5. Instalar TODAS las dependencias (incluyendo devDependencies)
+RUN npm install --legacy-peer-deps --ignore-scripts
+
+# 6. Instalar NestJS CLI globalmente (necesario para el build)
 RUN npm install -g @nestjs/cli
 
-# 5. Copiar el resto del código fuente
-COPY . .
+# 7. Generar el cliente Prisma (desde backend)
+RUN npx prisma generate --schema=backend/prisma/schema.prisma
 
-# 6. Generar el cliente Prisma
-RUN npx prisma generate
-
-# 7. Construir la aplicación
+# 8. Construir la aplicación backend usando workspace
 RUN npm run build --workspace=backend
 
 # ----------------------------------------------------------------
@@ -41,21 +43,23 @@ WORKDIR /usr/src/app
 # 1. Instalar solo las dependencias de sistema operativo necesarias para producción
 RUN apk add --no-cache openssl3
 
-# 2. Copiar el package.json de la raíz y el del backend
+# 2. Copiar archivos clave del monorepo
 COPY --from=builder /usr/src/app/package*.json ./
+COPY --from=builder /usr/src/app/turbo.json ./
+COPY --from=builder /usr/src/app/tsconfig.json ./
 COPY --from=builder /usr/src/app/backend/package.json ./backend/package.json
 
-# 3. ¡CRÍTICO! Copiar el schema de Prisma ANTES de npm install
-COPY --from=builder /usr/src/app/backend/prisma ./prisma
+# 3. Copiar el schema de Prisma ANTES de npm install
+COPY --from=builder /usr/src/app/backend/prisma ./backend/prisma
 
 # 4. Instalar ÚNICAMENTE las dependencias de PRODUCCIÓN
-RUN npm install --omit=dev --legacy-peer-deps
+RUN npm install --omit=dev --legacy-peer-deps --ignore-scripts
 
 # 5. Copiar el código compilado
-COPY --from=builder /usr/src/app/backend/dist ./dist
+COPY --from=builder /usr/src/app/backend/dist ./backend/dist
 
 # 6. Exponer el puerto
 EXPOSE 3002
 
 # 7. Comando de inicio
-CMD ["sh", "-c", "npx prisma migrate deploy && node dist/main.js"]
+CMD ["sh", "-c", "npx prisma migrate deploy --schema=backend/prisma/schema.prisma && node backend/dist/main.js"]
