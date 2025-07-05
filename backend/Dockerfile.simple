@@ -3,7 +3,7 @@
 # Para deployment con generación de Prisma en contenedor
 # ================================================================
 
-FROM node:18-alpine
+FROM node:20-alpine
 
 # Instalar dependencias del sistema necesarias
 RUN apk add --no-cache libc6-compat openssl
