@@ -157,6 +157,34 @@ docker run --rm -it \
 
 ---
 
+Your Dockerfile is present at `backend/Dockerfile`, not at the root of your monorepo. That’s why running `docker build -t coomunity-backend-test .` from the root without specifying the Dockerfile path results in:
+
+```
+ERROR: failed to solve: failed to read dockerfile: open Dockerfile: no such file or directory
+```
+
+---
+
+## ✅ How to Build Correctly
+
+From the root of your monorepo (`/Users/kevinp/Movies/GAMIFIER-copy`), run:
+
+```bash
+docker build -f backend/Dockerfile -t coomunity-backend-test .
+```
+
+- `-f backend/Dockerfile` tells Docker to use the Dockerfile in the `backend/` directory.
+- The `.` at the end sets the build context to the root, so all files referenced in the Dockerfile (like `package.json`, `backend/`, etc.) are available.
+
+---
+
+**Summary:**
+
+- Always specify the correct Dockerfile path with `-f` if it’s not in the current directory.
+- The build context (`.`) should be the monorepo root for monorepo Dockerfiles.
+
+Let me know if you want a quick explanation of why this is required in monorepo setups!
+
 # RESUMEN EJECUTIVO
 
 - **Dockerfile**: Multi-etapa, copia explícita del cliente Prisma, build robusto.
