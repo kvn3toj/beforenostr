@@ -125,6 +125,7 @@
     }
   },
   "prisma": {
-    "seed": "ts-node src/prisma/seed.ts"
+    "seed": "ts-node src/prisma/seed.ts",
+    "schema": "backend/prisma/schema.prisma"
   }
 }
