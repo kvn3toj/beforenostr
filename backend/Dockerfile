@@ -62,4 +62,4 @@ COPY --from=builder /usr/src/app/backend/dist ./dist
 EXPOSE 3002
 
 # Comando final con Prisma migrate
-CMD ["sh", "-c", "cd backend && npx prisma migrate deploy && npm run db:seed --workspace=backend && node ../dist/main.js"]
+CMD ["sh", "-c", "npx prisma migrate deploy && cd backend && npm run db:seed && cd .. && node dist/main.js"]
