@@ -1,5 +1,5 @@
 # =================================================================
-# CoomÜnity Backend - Dockerfile v4 (Control Explícito de Prisma)
+# CoomÜnity Backend - Dockerfile v5 (Versión Definitiva)
 # =================================================================
 
 # Etapa 1: Builder
@@ -10,21 +10,18 @@ RUN apk add --no-cache python3 make g++
 
 WORKDIR /usr/src/app
 
-# 2. Copia manifiestos y schema
+# 2. Copia manifiestos y schema ANTES de instalar dependencias
 COPY package.json package-lock.json* ./
 COPY backend/package.json ./backend/
 COPY prisma/. ./prisma/
 
-# 3. Instala dependencias SIN ejecutar scripts automáticos
-RUN npm ci --omit=dev --legacy-peer-deps --ignore-scripts
+# 3. Instala SOLO dependencias de producción (prisma ya es prod)
+RUN npm ci --omit=dev --legacy-peer-deps
 
-# 4. Copia el código fuente
+# 4. Copia el resto del código fuente
 COPY backend/. ./backend/
 
-# 5. AHORA, ejecuta Prisma Generate manualmente con la ruta explícita
-RUN npx prisma generate --schema=./prisma/schema.prisma
-
-# 6. Build del backend
+# 5. Build del backend
 RUN npm run build --workspace=backend
 
 # ================================================================
@@ -38,9 +35,8 @@ WORKDIR /usr/src/app
 COPY --from=builder /usr/src/app/node_modules ./node_modules
 COPY package.json ./
 COPY --from=builder /usr/src/app/dist ./dist
-COPY --from=builder /usr/src/app/node_modules/.prisma ./node_modules/.prisma
 COPY --from=builder /usr/src/app/prisma ./prisma
 
 EXPOSE 3002
 
-CMD ["sh", "-c", "npx prisma migrate deploy --schema=./prisma/schema.prisma && npm run db:seed --workspace=backend && node dist/main.js"]
+CMD ["sh", "-c", "npx prisma migrate deploy && npm run db:seed --workspace=backend && node dist/main.js"]
