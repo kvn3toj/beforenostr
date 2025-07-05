@@ -19,6 +19,9 @@ COPY package*.json ./
 # 4. Instalar TODAS las dependencias (incluyendo devDependencies)
 RUN npm install --legacy-peer-deps
 
+# 4.1 Instalar NestJS CLI globalmente (necesario para el build)
+RUN npm install -g @nestjs/cli
+
 # 5. Copiar el resto del código fuente
 COPY . .
 
