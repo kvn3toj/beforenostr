@@ -58,6 +58,9 @@ RUN npm install --omit=dev --legacy-peer-deps --ignore-scripts
 # 5. Copiar el código compilado
 COPY --from=builder /usr/src/app/backend/dist ./backend/dist
 
+# 5.1 Copiar el cliente Prisma generado (output personalizado)
+COPY --from=builder /usr/src/app/backend/src/generated/prisma ./backend/src/generated/prisma
+
 # 6. Exponer el puerto
 EXPOSE 3002
 
