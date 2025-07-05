@@ -14,11 +14,11 @@ services:
 
   # Backend - NestJS (Docker, recomendado)
   - type: web
-    name: god-backend
+    name: beforenostr-backend
     plan: free
     runtime: docker
     repo: https://github.com/Coomuny/Coomunity-Nest-React
-    dockerContext: .
+    dockerContext: ./backend
     dockerfilePath: ./backend/Dockerfile
     healthCheck:
       path: /health
