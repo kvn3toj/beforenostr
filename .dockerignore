@@ -111,8 +111,8 @@ test-*.vtt
 # These are the most important lines to reduce build context
 #################################################################
 
-# Ignore other apps and the backend
-/backend
+# Ignore other apps but NOT backend
+# /backend  <-- COMENTADO PARA PERMITIR BACKEND
 /apps/admin-frontend
 /apps/guardians-portal-frontend
 /apps/gamifier-admin
@@ -134,7 +134,7 @@ test-*.vtt
 /logs
 /NARRATIVA
 /playwright-report
-/prisma
+# /prisma  <-- COMENTADO PARA PERMITIR PRISMA
 /public
 /scripts
 /src
@@ -149,7 +149,7 @@ test-*.vtt
 /.turbo
 /infrastructure
 /NARRATIVA
-/prisma
+# /prisma  <-- COMENTADO PARA PERMITIR PRISMA
 /Recursos_Wireframes_Gamifier
 /roadmap
 /scripts
@@ -159,3 +159,5 @@ test-*.vtt
 /tests
 /tests-backup
 /Typography:REM_Wireframes_Gamifie
+
+# IMPORTANTE: NO excluir /backend ni /prisma para permitir el build en Render
