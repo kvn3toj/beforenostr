@@ -30,9 +30,6 @@ COPY backend ./backend
 # Install NestJS CLI globally
 RUN npm install -g @nestjs/cli
 
-# Generate Prisma client
-RUN npx prisma generate --schema=backend/prisma/schema.prisma
-
 # Build the application
 RUN npm run build --workspace=backend
 
