@@ -1,21 +1,15 @@
 #!/bin/bash
-# =================================================================
-# CoomÜnity Backend - Script de Inicio Robusto para Producción
-# Manejo de errores P1017 y conexiones PostgreSQL
-# =================================================================
-
+# Salir inmediatamente si un comando falla
 set -e
 
-echo "🚀 Iniciando secuencia de arranque del backend CoomÜnity..."
+# Notificar el inicio del script
+echo "✅ [CoomÜnity-Deploy] Iniciando script de producción..."
 
 # 1. Aplicar migraciones de la base de datos
-echo "📊 Aplicando migraciones de base de datos..."
+echo "▶️ [CoomÜnity-Deploy] Aplicando migraciones de la base de datos..."
 npx prisma migrate deploy --schema=./backend/prisma/schema.prisma
+echo "✔️ [CoomÜnity-Deploy] Migraciones aplicadas con éxito."
 
-# 2. Generar cliente de Prisma (por si acaso)
-echo "🔧 Generando cliente de Prisma..."
-npx prisma generate --schema=./backend/prisma/schema.prisma
-
-# 3. Iniciar la aplicación principal
-echo "🌟 Iniciando aplicación CoomÜnity Backend..."
+# 2. Iniciar la aplicación principal
+echo "🚀 [CoomÜnity-Deploy] Iniciando la aplicación NestJS..."
 node ./backend/dist/main.js
