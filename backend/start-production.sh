@@ -7,7 +7,7 @@ echo "✅ [CoomÜnity-Deploy] Iniciando script de producción..."
 # 1. Aplicar migraciones de la base de datos con reintentos
 echo "▶️ [CoomÜnity-Deploy] Aplicando migraciones de la base de datos..."
 for i in {1..3}; do
-  if npx prisma migrate deploy --schema=./backend/prisma/schema.prisma; then
+  if npx prisma migrate deploy --schema=./prisma/schema.prisma; then
     echo "✔️ [CoomÜnity-Deploy] Migraciones aplicadas exitosamente."
     break
   else
@@ -22,9 +22,9 @@ done
 
 # 2. Ejecutar el sembrado (seed) de la base de datos
 echo "🌱 [CoomÜnity-Deploy] Ejecutando el ritual de seed unificado (JavaScript compilado)..."
-node ./backend/dist/prisma/seed.js
+node ./dist/prisma/seed.js
 echo "✔️ [CoomÜnity-Deploy] Ritual de seed unificado completado."
 
 # 3. Iniciar la aplicación principal
 echo "🚀 [CoomÜnity-Deploy] Iniciando la aplicación NestJS..."
-node ./backend/dist/main.js
+node ./dist/main.js
