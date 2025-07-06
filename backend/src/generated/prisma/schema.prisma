@@ -160,13 +160,10 @@ model User {
   status         String   @default("ACTIVE")
   topUserCount   Int      @default(0)
   personalityId  String?
-
-  // Customer Journey - Stage Progression System
-  // Forcing a re-evaluation for migration generation
-  currentStage        String    @default("BUYER") // BUYER, SEEKER, SOLVER, PROMOTER
-  stageProgressedAt   DateTime? // Timestamp of last stage progression
-  stageStartedAt      DateTime  @default(now()) // When current stage was entered
-  stageCompletionData Json? // Tracks requirements completion
+  // Customer Journey fields have been moved to the StageProgression model
+  // to act as the single source of truth for a user's journey history.
+  // The current stage can be found by querying for the StageProgression
+  // record where `isActive` is true for a given user.
 
   createdActivities          Activity[]             @relation("ActivityCreator")
   comments                   Comment[]
@@ -1157,23 +1154,23 @@ enum MatchStatus {
 }
 
 model MarketplaceMatch {
-  id              String      @id @default(uuid())
-  itemId          String      @map("marketplaceItemId")
-  buyerId         String
-  sellerId        String
-  buyerConfirmed  Boolean     @default(false)
-  sellerConfirmed Boolean     @default(false)
-  status          MatchStatus @default(PENDING)
-  createdAt       DateTime    @default(now())
-  updatedAt       DateTime    @updatedAt
+  id                String      @id @default(uuid())
+  marketplaceItemId String
+  buyerId           String
+  sellerId          String
+  buyerConfirmed    Boolean     @default(false)
+  sellerConfirmed   Boolean     @default(false)
+  status            MatchStatus @default(PENDING)
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @updatedAt
 
   /// Relations
-  item     MarketplaceItem @relation(fields: [itemId], references: [id])
+  item     MarketplaceItem @relation(fields: [marketplaceItemId], references: [id])
   buyer    User            @relation("MatchBuyer", fields: [buyerId], references: [id])
   seller   User            @relation("MatchSeller", fields: [sellerId], references: [id])
   messages MatchMessage[]
 
-  @@index([itemId])
+  @@index([marketplaceItemId])
   @@index([buyerId])
   @@index([sellerId])
   @@map("marketplace_matches")

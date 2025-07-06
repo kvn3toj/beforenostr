@@ -108,45 +108,40 @@ export class StagesService {
   /**
    * 📊 Get comprehensive data for a specific stage
    */
-  async getStageData(stage: CustomerJourneyStage) {
-    this.logger.log(`Fetching comprehensive data for stage: ${stage}`);
+  async getStageData(stage: CustomerJourneyStage): Promise<{
+    name: string;
+    description: string;
+    icon: string;
+    color: string;
+    userCount: number;
+    requirements: StageRequirements;
+    philosophy: 'reciprocidad' | 'bien_comun' | 'metanoia';
+    timeLimit?: number;
+    autoProgression: boolean;
+    validationRequired: boolean;
+  }> {
+    this.logger.log(`Getting data for stage: ${stage}`);
 
-    try {
-      const [metrics, requirements, activities, progressions] =
-        await Promise.all([
-          this.calculateRealStageMetrics(stage),
-          this.getStageRequirements(stage),
-          this.getStageActivities(stage),
-          this.getActiveProgressions(stage),
-        ]);
+    // Get count of users in this stage
+    const userCount = await this.prisma.stageProgression.count({
+      where: {
+        stage,
+        isActive: true
+      },
+    });
 
-      const nextStage = this.getNextStage(stage);
-      const rewards = this.getStageRewards(stage);
-
-      return {
-        id: stage,
-        name: this.getStageName(stage),
-        description: this.getStageDescription(stage),
-        icon: this.getStageIcon(stage),
-        color: this.getStageColor(stage),
-        philosophyAlignment: this.getPhilosophyAlignment(stage),
-        metrics,
-        requirements,
-        nextStage,
-        activities,
-        rewards,
-        progressions,
-        isActive: true,
-        configuration: {
-          timeLimit: this.getStageTimeLimit(stage),
-          autoProgression: this.hasAutoProgression(stage),
-          validationRequired: this.requiresValidation(stage),
-        },
-      };
-    } catch (error) {
-      this.logger.error(`Error fetching data for stage ${stage}:`, error);
-      throw new NotFoundException(`Stage ${stage} data not found`);
-    }
+    return {
+      name: this.getStageName(stage),
+      description: this.getStageDescription(stage),
+      icon: this.getStageIcon(stage),
+      color: this.getStageColor(stage),
+      userCount,
+      requirements: this.getStageRequirements(stage),
+      philosophy: this.getPhilosophyAlignment(stage),
+      timeLimit: this.getStageTimeLimit(stage),
+      autoProgression: this.hasAutoProgression(stage),
+      validationRequired: this.requiresValidation(stage),
+    };
   }
 
   /**
@@ -158,17 +153,21 @@ export class StagesService {
     this.logger.log(`Calculating real metrics for stage: ${stage}`);
 
     try {
-      // Get users currently in this stage
-      const currentUsers = await this.prisma.user.count({
-        where: { currentStage: stage },
+      // Get users currently in this stage using StageProgression
+      const currentUsers = await this.prisma.stageProgression.count({
+        where: {
+          stage,
+          isActive: true
+        },
       });
 
       // Get users who progressed to this stage in the last week
       const oneWeekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
-      const newThisWeek = await this.prisma.user.count({
+      const newThisWeek = await this.prisma.stageProgression.count({
         where: {
-          currentStage: stage,
-          stageStartedAt: { gte: oneWeekAgo },
+          stage,
+          isActive: true,
+          startedAt: { gte: oneWeekAgo },
         },
       });
 
@@ -215,8 +214,11 @@ export class StagesService {
       let conversionRate = 100; // Default for final stage
 
       if (nextStage) {
-        const progressedToNext = await this.prisma.user.count({
-          where: { currentStage: nextStage },
+        const progressedToNext = await this.prisma.stageProgression.count({
+          where: {
+            stage: nextStage,
+            isActive: true
+          },
         });
         conversionRate =
           currentUsers > 0
@@ -226,10 +228,11 @@ export class StagesService {
 
       // Calculate weekly growth
       const twoWeeksAgo = new Date(Date.now() - 14 * 24 * 60 * 60 * 1000);
-      const previousWeekUsers = await this.prisma.user.count({
+      const previousWeekUsers = await this.prisma.stageProgression.count({
         where: {
-          currentStage: stage,
-          stageStartedAt: {
+          stage,
+          isActive: true,
+          startedAt: {
             gte: twoWeeksAgo,
             lt: oneWeekAgo,
           },
@@ -276,12 +279,18 @@ export class StagesService {
     this.logger.log(`Checking progression for user: ${userId}`);
 
     try {
+      // Get user and their active stage progression
       const user = await this.prisma.user.findUnique({
         where: { id: userId },
         include: {
           merits: true,
           transactionsFrom: true,
           transactionsTo: true,
+          stageProgressions: {
+            where: {
+              isActive: true
+            }
+          }
         },
       });
 
@@ -289,7 +298,12 @@ export class StagesService {
         throw new NotFoundException('User not found');
       }
 
-      const currentStage = user.currentStage as CustomerJourneyStage;
+      if (!user.stageProgressions || user.stageProgressions.length === 0) {
+        throw new NotFoundException('User has no active stage progression');
+      }
+
+      const activeProgression = user.stageProgressions[0];
+      const currentStage = activeProgression.stage;
       const nextStage = this.getNextStage(currentStage);
 
       if (!nextStage) {
@@ -347,78 +361,91 @@ export class StagesService {
     success: boolean;
     newStage?: CustomerJourneyStage;
     message: string;
-    rewards?: Array<{ type: string; amount: number; description: string }>;
   }> {
-    this.logger.log(`Attempting to progress user ${userId} to next stage`);
+    this.logger.log(`Attempting to progress user: ${userId}`);
 
     try {
-      const progressionCheck = await this.checkUserProgression(userId);
+      // Get user with active stage progression
+      const user = await this.prisma.user.findUnique({
+        where: { id: userId },
+        include: {
+          stageProgressions: {
+            where: {
+              isActive: true
+            }
+          }
+        }
+      });
 
-      if (!progressionCheck.canProgress) {
-        return {
-          success: false,
-          message: `No puedes avanzar aún. Requisitos faltantes: ${progressionCheck.missingRequirements.join(', ')}`,
-        };
-      }
-
-      const user = await this.prisma.user.findUnique({ where: { id: userId } });
       if (!user) {
         throw new NotFoundException('User not found');
       }
 
-      const newStage = progressionCheck.nextStage!;
+      if (!user.stageProgressions || user.stageProgressions.length === 0) {
+        throw new NotFoundException('User has no active stage progression');
+      }
 
-      // Update user stage
-      await this.prisma.user.update({
-        where: { id: userId },
-        data: {
-          currentStage: newStage,
-          stageProgressedAt: new Date(),
-          stageStartedAt: new Date(),
+      const activeProgression = user.stageProgressions[0];
+      const currentStage = activeProgression.stage;
+      const nextStage = this.getNextStage(currentStage);
+
+      if (!nextStage) {
+        return {
+          success: false,
+          message: 'El usuario ya está en el stage máximo.',
+        };
+      }
+
+      // Check if user can progress
+      const progressionCheck = await this.checkUserProgression(userId);
+      if (!progressionCheck.canProgress) {
+        return {
+          success: false,
+          message: `El usuario no cumple los requisitos para avanzar. Faltan: ${progressionCheck.missingRequirements.join(
+            ', '
+          )}`,
+        };
+      }
+
+      // Mark current stage progression as completed
+      await this.prisma.stageProgression.update({
+        where: {
+          id: activeProgression.id
         },
+        data: {
+          isActive: false,
+          completedAt: new Date()
+        }
       });
 
-      // Create stage progression record
+      // Create new stage progression
       await this.prisma.stageProgression.create({
         data: {
           userId,
-          stage: newStage,
+          stage: nextStage,
+          isActive: true,
           requirements: {},
-          metrics: {},
-          isActive: true,
-        },
+          startedAt: new Date()
+        }
       });
 
-      // Complete previous stage progression
-      await this.prisma.stageProgression.updateMany({
-        where: {
-          userId,
-          stage: user.currentStage as CustomerJourneyStage,
-          isActive: true,
-        },
-        data: {
-          completedAt: new Date(),
-          isActive: false,
-        },
-      });
-
-      const rewards = this.getStageRewards(newStage);
-      const stageName = this.getStageName(newStage);
-
-      this.logger.log(`User ${userId} successfully progressed to ${newStage}`);
+      this.logger.log(
+        `User ${userId} progressed from ${currentStage} to ${nextStage}`
+      );
 
       return {
         success: true,
-        newStage,
-        message: `¡Felicitaciones! Has avanzado a ${stageName}`,
-        rewards,
+        newStage: nextStage,
+        message: `Usuario avanzado con éxito al stage ${this.getStageName(
+          nextStage
+        )}.`,
       };
     } catch (error) {
-      this.logger.error(`Error progressing user ${userId}:`, error);
-      return {
-        success: false,
-        message: 'Error interno. Inténtalo más tarde.',
-      };
+      this.logger.error(
+        `Error progressing user ${userId} to next stage:`,
+        error
+      );
+      throw new BadRequestException('Failed to progress user');
     }
   }
 

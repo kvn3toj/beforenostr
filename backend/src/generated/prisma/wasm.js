@@ -224,11 +224,7 @@ exports.Prisma.UserScalarFieldEnum = {
   address: 'address',
   status: 'status',
   topUserCount: 'topUserCount',
-  personalityId: 'personalityId',
-  currentStage: 'currentStage',
-  stageProgressedAt: 'stageProgressedAt',
-  stageStartedAt: 'stageStartedAt',
-  stageCompletionData: 'stageCompletionData'
+  personalityId: 'personalityId'
 };
 
 exports.Prisma.RoleScalarFieldEnum = {
@@ -763,7 +759,7 @@ exports.Prisma.ReviewScalarFieldEnum = {
 
 exports.Prisma.MarketplaceMatchScalarFieldEnum = {
   id: 'id',
-  itemId: 'itemId',
+  marketplaceItemId: 'marketplaceItemId',
   buyerId: 'buyerId',
   sellerId: 'sellerId',
   buyerConfirmed: 'buyerConfirmed',

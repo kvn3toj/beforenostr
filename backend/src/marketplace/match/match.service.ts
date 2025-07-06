@@ -68,14 +68,14 @@ export class MatchService {
   async getReview(matchId: string, userId: string) {
     const match = await this.assertParticipant(matchId, userId);
     return this.prisma.review.findFirst({
-      where: { marketplaceItemId: match.itemId, userId },
+      where: { marketplaceItemId: match.marketplaceItemId, userId },
     });
   }
 
   async submitReview(matchId: string, userId: string, reviewDto: any) {
     const match = await this.assertParticipant(matchId, userId);
     const existing = await this.prisma.review.findFirst({
-      where: { marketplaceItemId: match.itemId, userId },
+      where: { marketplaceItemId: match.marketplaceItemId, userId },
     });
     if (existing) {
       return this.prisma.review.update({
@@ -84,7 +84,7 @@ export class MatchService {
       });
     }
     return this.prisma.review.create({
-      data: { ...reviewDto, marketplaceItemId: match.itemId, userId },
+      data: { ...reviewDto, marketplaceItemId: match.marketplaceItemId, userId },
     });
   }
 }
