@@ -23,7 +23,7 @@ dist-ssr
 *.sln
 *.sw?
 
-/src/generated/prisma
+
 
 # 🚫 DEBUG FILES PREVENTION
 # Prevent debug files from being committed
