@@ -36,9 +36,6 @@ RUN npx prisma generate --schema=backend/prisma/schema.prisma
 # Build the application
 RUN npm run build --workspace=backend
 
-# Build the seed script
-RUN npm run build:seed --workspace=backend
-
 # === STAGE 2: Production ===
 FROM node:20-alpine
 

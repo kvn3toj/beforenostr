@@ -21,9 +21,9 @@ for i in {1..3}; do
 done
 
 # 2. Ejecutar el sembrado (seed) de la base de datos
-echo "🌱 [CoomÜnity-Deploy] Ejecutando el ritual de seed transmutado (JavaScript compilado)..."
-node ./backend/dist/prisma/seed-production.js
-echo "✔️ [CoomÜnity-Deploy] Ritual de seed transmutado completado."
+echo "🌱 [CoomÜnity-Deploy] Ejecutando el ritual de seed unificado (JavaScript compilado)..."
+node ./backend/dist/prisma/seed.js
+echo "✔️ [CoomÜnity-Deploy] Ritual de seed unificado completado."
 
 # 3. Iniciar la aplicación principal
 echo "🚀 [CoomÜnity-Deploy] Iniciando la aplicación NestJS..."
