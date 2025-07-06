@@ -1,6 +1,5 @@
 # =================================================================
-# CoomÜnity Backend - DECRETO FINAL v17 (Root Context Fix)
-# Dockerfile movido al directorio raíz para acceso correcto al contexto
+# CoomÜnity Backend - DECRETO FINAL v16 (Monorepo Context Fix)
 # =================================================================
 
 # ----------------------------------------------------------------
