@@ -104,7 +104,7 @@
     "react-dom": "18.3.1"
   },
   "prisma": {
-    "seed": "ts-node backend/prisma/seed-dev.ts",
+    "seed": "ts-node backend/src/prisma/seed.ts",
     "schema": "backend/prisma/schema.prisma"
   }
 }
