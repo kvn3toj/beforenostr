@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "CoomÜnity Global Platform - Monorepo completo",
   "private": true,
+  "packageManager": "npm@10.0.0",
   "license": "MIT",
   "author": "CoomÜnity Team",
   "main": "backend/dist/main.js",

@@ -33,13 +33,16 @@
     "VITE_ENABLE_MOCK_AUTH"
   ],
   "tasks": {
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**", ".next/**", "!.next/cache/**"]
+    },
     "dev": {
       "cache": false,
       "persistent": true
     },
-    "build": {
-      "dependsOn": ["^build"],
-      "outputs": ["dist/**", "build/**", ".next/**", "!.next/cache/**"]
+    "start": {
+      "dependsOn": ["build"]
     },
     "test": {
       "dependsOn": ["build"],
