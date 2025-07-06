@@ -51,6 +51,7 @@ playwright-demo-report/
 
 # Scripts and verification files
 *.sh
+!backend/start-production.sh
 verify-*.sh
 test-*.sh
 fix-*.sh
