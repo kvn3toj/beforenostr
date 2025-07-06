@@ -13,15 +13,15 @@ services:
     maxmemoryPolicy: allkeys-lru
 
   # Backend - NestJS (Docker, recomendado)
+  # ✅ OPERATIVO EN PRODUCCIÓN: https://god-backend-j4b6.onrender.com
   - type: web
-    name: beforenostr-backend
+    name: god-backend
     plan: free
     runtime: docker
     repo: https://github.com/kvn3toj/beforenostr
     dockerContext: .
     dockerfilePath: ./Dockerfile.backend
-    healthCheck:
-      path: /health
+    healthCheckPath: /health
     envVars:
       - key: PORT
         value: 3002
@@ -35,6 +35,10 @@ services:
         generateValue: true
       - key: NODE_ENV
         value: production
+      - key: PRISMA_QUERY_ENGINE_LIBRARY_TIMEOUT
+        value: 60000
+      - key: PRISMA_CLIENT_ENGINE_TYPE
+        value: library
     buildFilter:
       paths:
         - backend/**
