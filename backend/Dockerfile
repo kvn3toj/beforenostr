@@ -1,5 +1,5 @@
 # =================================================================
-# CoomÜnity Backend - DECRETO FINAL v15 (PostgreSQL Connection Fix)
+# CoomÜnity Backend - DECRETO FINAL v16 (Monorepo Context Fix)
 # =================================================================
 
 # ----------------------------------------------------------------
@@ -13,7 +13,7 @@ RUN apt-get update && apt-get install -y openssl python3 make g++
 # 2. Establecer el directorio de trabajo principal (raíz del monorepo)
 WORKDIR /usr/src/app
 
-# 3. Copiar archivos clave del monorepo
+# 3. Copiar archivos clave del monorepo desde el contexto raíz
 COPY package*.json ./
 COPY turbo.json ./
 COPY tsconfig.json ./
@@ -61,12 +61,12 @@ COPY --from=builder /usr/src/app/backend/dist ./backend/dist
 # 5.1 Copiar el cliente Prisma generado (output personalizado)
 COPY --from=builder /usr/src/app/backend/src/generated/prisma ./backend/src/generated/prisma
 
-# 6. Copiar el script de inicio robusto
+# 6. Copiar el script de inicio optimizado desde el contexto raíz
 COPY backend/start-production.sh ./start-production.sh
 RUN chmod +x ./start-production.sh
 
 # 7. Exponer el puerto
 EXPOSE 3002
 
-# 8. Comando de inicio usando el script robusto
+# 8. Comando de inicio usando el script optimizado
 CMD ["./start-production.sh"]
