@@ -12,10 +12,10 @@
   transition: filter 300ms;
 }
 .logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
+  filter: drop-shadow(0 0 2em #D4AA73aa); /* Dorado con alpha */
 }
 .logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+  filter: drop-shadow(0 0 2em #D4AA73aa); /* Dorado con alpha */
 }
 
 @keyframes logo-spin {
@@ -38,7 +38,7 @@
 }
 
 .read-the-docs {
-  color: #888;
+  color: #706F6F; /* Gris Medio - Brand (Texto Secundario) */
 }
 
 @keyframes haloPulse {

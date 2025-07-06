@@ -1,11 +1,10 @@
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: 'Kollektif', system-ui, Avenir, Helvetica, Arial, sans-serif; /* Kollektif como base */
   line-height: 1.5;
   font-weight: 400;
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  color: #3C3C3B; /* Gris Oscuro - Brand (Texto Primario) */
+  background-color: #FFFFFF; /* Blanco (Fondo Principal) */
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -13,47 +12,61 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* Clase para encabezados */
+.guardian-heading {
+  font-family: 'Montserrat', system-ui, Avenir, Helvetica, Arial, sans-serif;
+  color: #3C3C3B; /* Asegurar que los encabezados también usen el color de texto primario */
+}
+
 a {
   font-weight: 500;
-  color: #646cff;
+  color: #D4AA73; /* Dorado - Brand (Acento Principal para enlaces) */
   text-decoration: inherit;
 }
 a:hover {
-  color: #535bf2;
+  color: #B89560; /* Dorado Oscuro (hover) */
 }
 
 body {
   margin: 0;
   display: flex;
-  place-items: center;
+  place-items: center; /* Esto podría necesitar revisión para layout real */
   min-width: 320px;
   min-height: 100vh;
+  background-color: #FFFFFF; /* Asegurar fondo blanco en body también */
+  color: #3C3C3B;
 }
 
-h1 {
-  font-size: 3.2em;
+h1 { /* Ejemplo de estilo para h1 usando la clase .guardian-heading implícitamente o explícitamente */
+  font-size: 3.2em; /* Mantener escala, pero la fuente será Montserrat si se usa la clase */
   line-height: 1.1;
+  /* color: ya heredado de :root o .guardian-heading */
 }
 
 button {
   border-radius: 8px;
-  border: 1px solid transparent;
+  border: 1px solid #D4AA73; /* Borde Dorado */
   padding: 0.6em 1.2em;
   font-size: 1em;
   font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
+  font-family: 'Montserrat', system-ui, Avenir, Helvetica, Arial, sans-serif; /* Montserrat para botones */
+  background-color: #D4AA73; /* Fondo Dorado */
+  color: #000000; /* Texto Contraste para Dorado (calculado) */
   cursor: pointer;
-  transition: border-color 0.25s;
+  transition: background-color 0.25s, border-color 0.25s;
 }
 button:hover {
-  border-color: #646cff;
+  background-color: #B89560; /* Dorado Oscuro */
+  border-color: #B89560;
 }
 button:focus,
 button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+  outline: 4px auto -webkit-focus-ring-color; /* Mantener outline por defecto o unificar con el dorado */
+  /* outline-color: #D4AA73; */
 }
 
+/* Eliminar el bloque @media (prefers-color-scheme: light) ya que forzamos el tema claro */
+/*
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;
@@ -65,4 +78,6 @@ button:focus-visible {
   button {
     background-color: #f9f9f9;
   }
+}
+*/
 }

@@ -244,55 +244,55 @@ export const COLOR_PALETTES: Record<PaletteType, ColorPalette> = {
     }
   },
 
-  // 🎯 MINIMALIST - Minimalista/Monocromático
+  // 🎯 MINIMALIST - Unificado con Brand Board de CoomÜnity
   minimalist: {
-    name: 'Pure Minimalist',
-    description: 'Diseño limpio y minimalista, alto contraste',
-    primary: {
-      50: '#f8fafc',
-      100: '#f1f5f9',
-      200: '#e2e8f0',
-      300: '#cbd5e1',
-      400: '#94a3b8',
-      500: '#64748b', // Gris azulado
+    name: 'CoomÜnity Minimalist Unified',
+    description: 'Estilo minimalista unificado con blanco como base y colores del Brand Board CoomÜnity.',
+    primary: { // Dorado (Acento Principal)
+      50: '#FFF9F0',
+      100: '#FEF0D9',
+      200: '#FCE1B3',
+      300: '#F9D28C',
+      400: '#F7C366',
+      500: '#D4AA73', // Dorado CoomÜnity
+      600: '#B89560',
+      700: '#9A7E4F',
+      800: '#7C673E',
+      900: '#5E502D',
+    },
+    secondary: { // Gris Azulado (Acento Secundario)
+      50: '#F8FAFC',
+      100: '#F1F5F9',
+      200: '#E2E8F0', // Bueno para bordes/divisores
+      300: '#CBD5E1',
+      400: '#94A3B8',
+      500: '#64748B',
       600: '#475569',
       700: '#334155',
-      800: '#1e293b',
-      900: '#0f172a',
-    },
-    secondary: {
-      50: '#fafafa',
-      100: '#f4f4f5',
-      200: '#e4e4e7',
-      300: '#d4d4d8',
-      400: '#a1a1aa',
-      500: '#71717a', // Gris neutro
-      600: '#52525b',
-      700: '#3f3f46',
-      800: '#27272a',
-      900: '#18181b',
+      800: '#1E293B',
+      900: '#0F172A',
     },
     semantic: {
-      success: { main: '#059669', light: '#ecfdf5', dark: '#047857' },
-      error: { main: '#dc2626', light: '#fef2f2', dark: '#b91c1c' },
-      warning: { main: '#d97706', light: '#fffbeb', dark: '#b45309' },
-      info: { main: '#0284c7', light: '#f0f9ff', dark: '#0369a1' },
+      success: { main: '#3E8638', light: '#D1FADF', dark: '#2A5B2F' }, // Verde Brand Board (light/dark aproximados)
+      error: { main: '#D6075C', light: '#FDD5E6', dark: '#A30547' },   // Magenta Brand Board (light/dark aproximados)
+      warning: { main: '#D4AA73', light: '#FCE1B3', dark: '#B89560' }, // Dorado Brand Board (usa tonos de primary)
+      info: { main: '#142C46', light: '#D6E0EA', dark: '#0D1B2A' },    // Azul Brand Board (light/dark aproximados)
     },
     background: {
-      default: '#ffffff',
-      paper: '#ffffff',
-      surface: '#fafafa',
+      default: '#FFFFFF',
+      paper: '#FFFFFF',
+      surface: '#F8FAFC', // Gris muy claro, casi blanco
     },
     text: {
-      primary: '#18181b',
-      secondary: '#52525b',
-      disabled: '#a1a1aa',
+      primary: '#3C3C3B',   // Gris Oscuro Brand Board
+      secondary: '#706F6F', // Gris Medio Brand Board
+      disabled: '#A1A1AA',  // Gris Claro (de la paleta minimalista anterior, buen contraste)
     }
   },
 };
 
 // ️ CONFIGURACIÓN ACTIVA (CAMBIAR AQUÍ PARA TODA LA APP)
-export const ACTIVE_PALETTE: PaletteType = 'minimalist'; // 👈 ACTIVADO TEMA MINIMALISTA
+export const ACTIVE_PALETTE: PaletteType = 'minimalist'; // 👈 ACTIVADO TEMA MINIMALISTA UNIFICADO
 
 // 🎨 PALETA ACTUALMENTE SELECCIONADA
 export const activePalette = COLOR_PALETTES[ACTIVE_PALETTE];

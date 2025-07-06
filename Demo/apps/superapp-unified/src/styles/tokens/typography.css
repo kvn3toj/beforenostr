@@ -2,7 +2,10 @@
 
 :root {
   /* === FAMILIA TIPOGRÁFICA === */
-  --font-family-primary: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  /* Kollektif para cuerpo de texto, Inter y sistema como fallbacks */
+  --font-family-primary: 'Kollektif', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  /* Montserrat para encabezados, Inter y sistema como fallbacks */
+  --font-family-headings: 'Montserrat', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
   --font-family-mono: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
 
   /* === ESCALA TIPOGRÁFICA MODULAR (1.25 - Major Third) === */
@@ -45,7 +48,7 @@
 
 /* Headers */
 .coomunity-h1 {
-  font-family: var(--font-family-primary);
+  font-family: var(--font-family-headings);
   font-size: var(--font-size-5xl);
   font-weight: var(--font-weight-bold);
   line-height: var(--line-height-tight);
@@ -55,7 +58,7 @@
 }
 
 .coomunity-h2 {
-  font-family: var(--font-family-primary);
+  font-family: var(--font-family-headings);
   font-size: var(--font-size-4xl);
   font-weight: var(--font-weight-semibold);
   line-height: var(--line-height-tight);
@@ -65,7 +68,7 @@
 }
 
 .coomunity-h3 {
-  font-family: var(--font-family-primary);
+  font-family: var(--font-family-headings);
   font-size: var(--font-size-3xl);
   font-weight: var(--font-weight-semibold);
   line-height: var(--line-height-snug);
@@ -75,7 +78,7 @@
 }
 
 .coomunity-h4 {
-  font-family: var(--font-family-primary);
+  font-family: var(--font-family-headings);
   font-size: var(--font-size-2xl);
   font-weight: var(--font-weight-medium);
   line-height: var(--line-height-snug);
@@ -85,7 +88,7 @@
 }
 
 .coomunity-h5 {
-  font-family: var(--font-family-primary);
+  font-family: var(--font-family-headings);
   font-size: var(--font-size-xl);
   font-weight: var(--font-weight-medium);
   line-height: var(--line-height-normal);
@@ -95,7 +98,7 @@
 }
 
 .coomunity-h6 {
-  font-family: var(--font-family-primary);
+  font-family: var(--font-family-headings);
   font-size: var(--font-size-lg);
   font-weight: var(--font-weight-medium);
   line-height: var(--line-height-normal);

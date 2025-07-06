@@ -21,11 +21,15 @@
 @import './styles/orbital-harmony-animations.css';
 /* Import simple orbital animations - More intuitive approach */
 @import './styles/simple-orbital-animations.css';
-/* Import Guardian dynamic styles */
-@import './styles/guardian-dynamic.css';
-/* Import UPlay Corporate Design System */
-@import './styles/uplay-corporate.css';
+
+/* === DEPRECATED THEME IMPORTS - Unification via color-system.ts === */
+/* @import './styles/guardian-dynamic.css'; */
+/* @import './styles/uplay-corporate.css'; */
+/* Any other full themes like Autumn, etc., should also be managed via color-system.ts if needed */
+/* Example: @import './styles/global-autumn-theme.css'; */
+
 /* 🆕 Import UPlay advanced component system */
+/* TODO: Review uplay-advanced.css to ensure it uses design tokens rather than defining its own palette */
 @import './styles/uplay-advanced.css';
 
 @tailwind base;

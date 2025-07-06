@@ -107,8 +107,11 @@ export const GRADIENTS = {
 };
 
 // Paletas temáticas completas
+// ESTAS PALETAS ESTÁN DEPRECADAS AQUÍ. La fuente de verdad para las paletas de temas es
+// Demo/apps/superapp-unified/src/design-system/color-system.ts
 export const THEME_PALETTES = {
-  // Tema minimalista (tema por defecto)
+  /*
+  // Tema minimalista (tema por defecto) - DEPRECADO AQUÍ
   minimalist: {
     name: 'Minimalist Unified',
     description: 'Estilo unificado, limpio y minimalista para la SuperApp',
@@ -131,7 +134,7 @@ export const THEME_PALETTES = {
     }
   },
 
-  // Tema monocromático
+  // Tema monocromático - DEPRECADO AQUÍ
   monochrome: {
     name: 'Pure Monochrome',
     description: 'Elegancia atemporal en escala de grises',
@@ -153,9 +156,12 @@ export const THEME_PALETTES = {
       muted: BRAND_COLORS.gray500
     }
   }
+  */
 };
 
 // Exportar todo como un objeto unificado para facilitar importaciones
+// UNIFIED_COLORS.themes estará vacío o contendrá paletas no activas.
+// La paleta activa se gestiona desde color-system.ts
 export const UNIFIED_COLORS = {
   brand: BRAND_COLORS,
   elements: ELEMENT_COLORS,

@@ -51,57 +51,68 @@ const getDesignTokens = (mode: 'light' | 'dark'): ThemeOptions => ({
     },
   },
   typography: {
-    fontFamily: '"Poppins", "Helvetica", "Arial", sans-serif',
+    fontFamily: '"Kollektif", "Poppins", "Helvetica", "Arial", sans-serif', // Kollektif para cuerpo base
     h1: {
+      fontFamily: '"Montserrat", "Poppins", "Helvetica", "Arial", sans-serif', // Montserrat para encabezados
       fontSize: '2.5rem',
       fontWeight: 700,
       lineHeight: 1.2,
       letterSpacing: '-0.01562em',
     },
     h2: {
+      fontFamily: '"Montserrat", "Poppins", "Helvetica", "Arial", sans-serif',
       fontSize: '2rem',
       fontWeight: 600,
       lineHeight: 1.3,
       letterSpacing: '-0.00833em',
     },
     h3: {
+      fontFamily: '"Montserrat", "Poppins", "Helvetica", "Arial", sans-serif',
       fontSize: '1.75rem',
       fontWeight: 600,
       lineHeight: 1.3,
     },
     h4: {
+      fontFamily: '"Montserrat", "Poppins", "Helvetica", "Arial", sans-serif',
       fontSize: '1.5rem',
       fontWeight: 600,
       lineHeight: 1.4,
     },
     h5: {
+      fontFamily: '"Montserrat", "Poppins", "Helvetica", "Arial", sans-serif',
       fontSize: '1.25rem',
       fontWeight: 600,
       lineHeight: 1.4,
     },
     h6: {
+      fontFamily: '"Montserrat", "Poppins", "Helvetica", "Arial", sans-serif',
       fontSize: '1rem',
       fontWeight: 600,
       lineHeight: 1.5,
     },
     body1: {
+      fontFamily: '"Kollektif", "Poppins", "Helvetica", "Arial", sans-serif', // Kollektif
       fontSize: '1rem',
       lineHeight: 1.6,
     },
     body2: {
+      fontFamily: '"Kollektif", "Poppins", "Helvetica", "Arial", sans-serif', // Kollektif
       fontSize: '0.875rem',
       lineHeight: 1.5,
     },
     button: {
+      fontFamily: '"Montserrat", "Poppins", "Helvetica", "Arial", sans-serif', // Montserrat para botones
       textTransform: 'none',
-      fontWeight: 500,
+      fontWeight: 500, // Montserrat usualmente tiene buenos pesos medios/semibold
       fontSize: '0.875rem',
     },
     caption: {
+      fontFamily: '"Kollektif", "Poppins", "Helvetica", "Arial", sans-serif', // Kollektif
       fontSize: '0.75rem',
       lineHeight: 1.4,
     },
     overline: {
+      fontFamily: '"Montserrat", "Poppins", "Helvetica", "Arial", sans-serif', // Montserrat
       fontSize: '0.75rem',
       fontWeight: 600,
       textTransform: 'uppercase',
@@ -116,9 +127,10 @@ const getDesignTokens = (mode: 'light' | 'dark'): ThemeOptions => ({
     MuiButton: {
       styleOverrides: {
         root: {
+          fontFamily: '"Montserrat", "Poppins", "Helvetica", "Arial", sans-serif', // Asegurar Montserrat aquí también
           borderRadius: 8,
           textTransform: 'none',
-          fontWeight: 500,
+          fontWeight: 500, // Ajustar según el peso deseado de Montserrat
           boxShadow: 'none',
           '&:hover': {
             boxShadow: '0 2px 8px rgba(0, 0, 0, 0.15)',
