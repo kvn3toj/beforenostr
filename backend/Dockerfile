@@ -63,6 +63,10 @@ RUN npm install --omit=dev --legacy-peer-deps --ignore-scripts
 COPY backend/start-production.sh ./start-production.sh
 RUN chmod +x ./start-production.sh
 
+# Copy migration script
+COPY backend/force-migrations.sh ./force-migrations.sh
+RUN chmod +x ./force-migrations.sh
+
 # Expose port
 EXPOSE 3002
 

@@ -6,16 +6,16 @@ echo "🔧 [CoomÜnity-Marketplace-Fix] Iniciando script de migración forzada..
 
 # Verificar estado de migraciones
 echo "📊 [CoomÜnity-Marketplace-Fix] Verificando estado de migraciones..."
-npx prisma migrate status --schema=./prisma/schema.prisma
+npx prisma migrate status --schema=./backend/prisma/schema.prisma
 
 # Generar el cliente Prisma
 echo "⚙️ [CoomÜnity-Marketplace-Fix] Generando cliente Prisma..."
-npx prisma generate --schema=./prisma/schema.prisma
+npx prisma generate --schema=./backend/prisma/schema.prisma
 
 # Aplicar migraciones con reintentos
 echo "🔄 [CoomÜnity-Marketplace-Fix] Aplicando migraciones..."
 for i in {1..5}; do
-  if npx prisma migrate deploy --schema=./prisma/schema.prisma; then
+  if npx prisma migrate deploy --schema=./backend/prisma/schema.prisma; then
     echo "✅ [CoomÜnity-Marketplace-Fix] Migraciones aplicadas exitosamente."
     break
   else
@@ -30,6 +30,6 @@ done
 
 # Verificar estado final
 echo "🔍 [CoomÜnity-Marketplace-Fix] Verificando estado final de migraciones..."
-npx prisma migrate status --schema=./prisma/schema.prisma
+npx prisma migrate status --schema=./backend/prisma/schema.prisma
 
 echo "🎉 [CoomÜnity-Marketplace-Fix] Script de migración forzada completado exitosamente."

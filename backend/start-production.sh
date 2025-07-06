@@ -10,9 +10,9 @@ bash ./force-migrations.sh
 
 # 2. Ejecutar el sembrado (seed) de la base de datos
 echo "🌱 [CoomÜnity-Deploy] Ejecutando el ritual de seed unificado (JavaScript compilado)..."
-node ./dist/prisma/seed.js
+node ./backend/dist/prisma/seed.js
 echo "✔️ [CoomÜnity-Deploy] Ritual de seed unificado completado."
 
 # 3. Iniciar la aplicación principal
 echo "🚀 [CoomÜnity-Deploy] Iniciando la aplicación NestJS..."
-node ./dist/main.js
+node ./backend/dist/main.js
