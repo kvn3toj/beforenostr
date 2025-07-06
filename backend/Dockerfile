@@ -1,5 +1,5 @@
 # =================================================================
-# CoomÜnity Backend - DECRETO FINAL v14 (Monorepo Workspace Fix)
+# CoomÜnity Backend - DECRETO FINAL v15 (PostgreSQL Connection Fix)
 # =================================================================
 
 # ----------------------------------------------------------------
@@ -40,8 +40,8 @@ FROM node:20-alpine AS production
 
 WORKDIR /usr/src/app
 
-# 1. Instalar solo las dependencias de sistema operativo necesarias para producción
-RUN apk add --no-cache openssl3
+# 1. Instalar herramientas necesarias para producción y diagnóstico
+RUN apk add --no-cache openssl3 netcat-openbsd bash
 
 # 2. Copiar archivos clave del monorepo
 COPY --from=builder /usr/src/app/package*.json ./
@@ -61,8 +61,12 @@ COPY --from=builder /usr/src/app/backend/dist ./backend/dist
 # 5.1 Copiar el cliente Prisma generado (output personalizado)
 COPY --from=builder /usr/src/app/backend/src/generated/prisma ./backend/src/generated/prisma
 
-# 6. Exponer el puerto
+# 6. Copiar el script de inicio robusto
+COPY backend/start-production.sh ./start-production.sh
+RUN chmod +x ./start-production.sh
+
+# 7. Exponer el puerto
 EXPOSE 3002
 
-# 7. Comando de inicio
-CMD ["sh", "-c", "npx prisma migrate deploy --schema=backend/prisma/schema.prisma && node backend/dist/main.js"]
+# 8. Comando de inicio usando el script robusto
+CMD ["./start-production.sh"]
