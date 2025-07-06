@@ -9,11 +9,12 @@
   "scripts": {
     "dev": "npm run start:dev",
     "build": "nest build",
+    "build:seed": "tsc src/prisma/seed-production.ts --outDir dist/prisma --target es2020 --module commonjs --moduleResolution node --esModuleInterop true --allowSyntheticDefaultImports true --skipLibCheck true --declaration false",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
-    "start:prod": "prisma generate && prisma migrate deploy && npx prisma db seed && node dist/main.js",
+    "start:prod": "prisma generate && prisma migrate deploy && node dist/prisma/seed-production.js && node dist/main.js",
     "deploy": "npx prisma migrate deploy && npx prisma db seed",
     "lint": "eslint . --fix",
     "lint:check": "eslint . --max-warnings 0",
