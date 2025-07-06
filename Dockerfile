@@ -19,7 +19,7 @@ COPY turbo.json ./
 COPY tsconfig.json ./
 
 # 4. Copiar el directorio backend completo
-COPY backend ./backend
+COPY ./backend ./backend
 
 # 5. Instalar TODAS las dependencias (incluyendo devDependencies)
 RUN npm install --legacy-peer-deps --ignore-scripts
@@ -28,7 +28,7 @@ RUN npm install --legacy-peer-deps --ignore-scripts
 RUN npm install -g @nestjs/cli
 
 # 7. Generar el cliente Prisma (desde backend)
-RUN npx prisma generate --schema=backend/prisma/schema.prisma
+RUN npx prisma generate --schema=./backend/prisma/schema.prisma
 
 # 8. Construir la aplicación backend usando workspace
 RUN npm run build --workspace=backend
@@ -62,7 +62,7 @@ COPY --from=builder /usr/src/app/backend/dist ./backend/dist
 COPY --from=builder /usr/src/app/backend/src/generated/prisma ./backend/src/generated/prisma
 
 # 6. Copiar el script de inicio optimizado desde el contexto raíz
-COPY backend/start-production.sh ./start-production.sh
+COPY ./backend/start-production.sh ./start-production.sh
 RUN chmod +x ./start-production.sh
 
 # 7. Exponer el puerto
