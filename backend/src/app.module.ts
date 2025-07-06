@@ -24,6 +24,7 @@ import { PhilosophyModule } from './philosophy/philosophy.module'; // 🌌 Módu
 import { CacheModule } from '@nestjs/cache-manager';
 import { CacheService } from './cache/cache.service';
 import { MetricsModule } from './common/metrics/metrics.module';
+import { DebugController } from './debug/debug.controller';
 
 @Module({
   imports: [
@@ -50,7 +51,7 @@ import { MetricsModule } from './common/metrics/metrics.module';
     CacheModule.register({ isGlobal: true }),
     MetricsModule,
   ],
-  controllers: [AppController],
+  controllers: [AppController, DebugController],
   providers: [AppService, CacheService],
   exports: [CacheService],
 })
