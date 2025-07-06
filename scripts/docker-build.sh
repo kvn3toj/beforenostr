@@ -37,13 +37,6 @@ if ! docker info >/dev/null 2>&1; then
     error "Docker no está corriendo. Por favor inicia Docker Desktop."
 fi
 
-# Verificar que existan los Dockerfiles
-SUPERAPP_DOCKERFILE="Demo/apps/superapp-unified/Dockerfile"
-if [ ! -f "$SUPERAPP_DOCKERFILE" ]; then
-    warn "Dockerfile de SuperApp no encontrado. Creándolo..."
-    # El script creará el Dockerfile si no existe
-fi
-
 # Variables
 IMAGE_PREFIX="${IMAGE_PREFIX:-coomunity}"
 VERSION="${VERSION:-latest}"
@@ -54,8 +47,20 @@ log "  - Prefijo de imágen: $IMAGE_PREFIX"
 log "  - Versión: $VERSION"
 log "  - Argumentos adicionales: $BUILD_ARGS"
 
+# Construir Backend (desde el directorio raíz)
+log "Construyendo Backend NestJS..."
+docker build \
+    -t "${IMAGE_PREFIX}/backend:${VERSION}" \
+    -f Dockerfile \
+    --target production \
+    --build-arg NODE_ENV=production \
+    $BUILD_ARGS \
+    .
+success "Backend NestJS construido exitosamente"
+
 # Construir SuperApp
 log "Construyendo SuperApp Frontend..."
+SUPERAPP_DOCKERFILE="Demo/apps/superapp-unified/Dockerfile"
 if [ -f "$SUPERAPP_DOCKERFILE" ]; then
     docker build \
         -t "${IMAGE_PREFIX}/superapp:${VERSION}" \
@@ -65,18 +70,18 @@ if [ -f "$SUPERAPP_DOCKERFILE" ]; then
         ./Demo/apps/superapp-unified/
     success "SuperApp Frontend construida exitosamente"
 else
-    error "No se pudo encontrar el Dockerfile de SuperApp"
+    warn "No se pudo encontrar el Dockerfile de SuperApp"
 fi
 
 # Construir imagen de desarrollo (multi-stage opcional)
 log "Construyendo imagen de desarrollo..."
 docker build \
-    -t "${IMAGE_PREFIX}/superapp:${VERSION}-dev" \
-    -f "$SUPERAPP_DOCKERFILE" \
-    --target development \
+    -t "${IMAGE_PREFIX}/backend:${VERSION}-dev" \
+    -f Dockerfile \
+    --target builder \
     --build-arg NODE_ENV=development \
     $BUILD_ARGS \
-    ./Demo/apps/superapp-unified/ 2>/dev/null || warn "No se pudo construir imagen de desarrollo (opcional)"
+    . 2>/dev/null || warn "No se pudo construir imagen de desarrollo (opcional)"
 
 # Limpiar imágenes intermedias
 log "Limpiando imágenes intermedias..."
@@ -89,8 +94,11 @@ docker images | grep "$IMAGE_PREFIX" | head -10
 success "🎉 Construcción Docker completada exitosamente!"
 
 echo ""
+echo "Para ejecutar el Backend:"
+echo "  docker run -p 3002:3002 ${IMAGE_PREFIX}/backend:${VERSION}"
+echo ""
 echo "Para ejecutar la SuperApp:"
-echo "  docker run -p 3000:3000 ${IMAGE_PREFIX}/superapp:${VERSION}"
+echo "  docker run -p 3001:80 ${IMAGE_PREFIX}/superapp:${VERSION}"
 echo ""
 echo "Para desarrollo:"
-echo "  docker run -p 3000:3000 -v \$(pwd)/Demo/apps/superapp-unified:/app ${IMAGE_PREFIX}/superapp:${VERSION}-dev" 
+echo "  docker run -p 3002:3002 ${IMAGE_PREFIX}/backend:${VERSION}-dev"
