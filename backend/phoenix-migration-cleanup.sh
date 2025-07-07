@@ -11,7 +11,10 @@ if [ "$NODE_ENV" = "production" ]; then
 
     # Limpiar el historial de migraciones corrupto
     echo "🧹 Limpiando historial de migraciones corrupto..."
-    npx prisma db execute --stdin <<EOF
+
+    # Usar el esquema correcto desde el directorio backend
+    cd backend
+    npx prisma db execute --schema=./prisma/schema.prisma --stdin <<EOF
 DELETE FROM "_prisma_migrations";
 EOF
 
@@ -21,6 +24,8 @@ EOF
         echo "❌ Error al limpiar historial de migraciones"
         exit 1
     fi
+
+    cd ..
 else
     echo "⚠️ No estamos en producción, saltando limpieza de migraciones"
 fi
