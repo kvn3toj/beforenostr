@@ -68,10 +68,6 @@ RUN chmod +x ./start-production.sh
 COPY backend/force-migrations.sh ./force-migrations.sh
 RUN chmod +x ./force-migrations.sh
 
-# 🦅 PHOENIX: Copia el script de limpieza de migraciones
-COPY backend/phoenix-migration-cleanup.sh ./phoenix-migration-cleanup.sh
-RUN chmod +x ./phoenix-migration-cleanup.sh
-
 # Expone el puerto que la aplicación usará
 EXPOSE 3002
 
