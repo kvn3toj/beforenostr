@@ -1,13 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import {
-  IsString,
-  IsNotEmpty,
-  IsOptional,
-  IsEnum,
-  IsUrl,
-  IsNumber,
-  IsUUID,
-} from 'class-validator';
+import { IsString, IsNotEmpty, IsOptional, IsNumber } from 'class-validator';
 
 export class CreateMeritDto {
   @ApiProperty({ description: 'User ID who earned the merit' })

@@ -471,7 +471,7 @@ This is an automated report from GAMIFIER Monitoring System.
    */
   private async sendHealthReportEmail(
     reportContent: ReportContent,
-    healthReport: HealthReportDto
+    _healthReport: HealthReportDto
   ): Promise<boolean> {
     try {
       if (!this.emailTransporter) {

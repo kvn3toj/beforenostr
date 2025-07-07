@@ -3,14 +3,14 @@ import {
   Get,
   Post,
   Body,
-  Patch,
+  // Patch, // Unused import
   Param,
-  Delete,
+  // Delete, // Unused import
   Inject,
 } from '@nestjs/common';
 import { GroupsService } from './groups.service';
 import { CreateGroupDto } from './dto/create-group.dto';
-import { UpdateGroupDto } from './dto/update-group.dto';
+// import { UpdateGroupDto } from './dto/update-group.dto'; // Unused import
 import { JoinGroupDto } from './dto/join-group.dto';
 
 @Controller('groups')

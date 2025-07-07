@@ -18,6 +18,15 @@ export enum TransactionCurrency {
   MERITS = 'Mëritos',
 }
 
+interface TransactionMetadata {
+  [key: string]: string | number | boolean | null | undefined;
+  category?: string;
+  source?: string;
+  reason?: string;
+  ayniLevel?: number;
+  contextualData?: string | number | boolean;
+}
+
 export class SendTransactionDto {
   @IsUUID()
   recipientId: string;
@@ -37,5 +46,5 @@ export class SendTransactionDto {
 
   @IsOptional()
   @IsObject()
-  metadata?: Record<string, any>; // Metadata filosófica opcional
+  metadata?: TransactionMetadata; // Metadata filosófica opcional
 }

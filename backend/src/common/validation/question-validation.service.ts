@@ -2,11 +2,7 @@ import { Injectable, Logger, Inject } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { VideoItemsService } from '../../video-items/video-items.service';
 import { NotificationService } from '../notifications/notification.service';
-import type {
-  Question,
-  ActivityQuestion,
-  VideoItem,
-} from '../../generated/prisma';
+import type { VideoItem } from '../../generated/prisma';
 
 export interface QuestionValidationResult {
   questionId: string | number;

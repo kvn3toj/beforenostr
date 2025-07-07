@@ -115,7 +115,7 @@ export class UsersService {
     return user;
   }
 
-  async create(data: CreateUserDto, user: AuthenticatedUser): Promise<User> {
+  async create(data: CreateUserDto, _user: AuthenticatedUser): Promise<User> {
     const hashedPassword = await bcrypt.hash(data.password, 10);
 
     const createData = {
@@ -148,7 +148,7 @@ export class UsersService {
   async update(
     id: string,
     data: UpdateUserDto,
-    user: AuthenticatedUser
+    _user: AuthenticatedUser
   ): Promise<User> {
     const existingUser = await this.prisma.user.findUnique({ where: { id } });
     if (!existingUser) throw new NotFoundException('Usuario no encontrado');
@@ -188,7 +188,7 @@ export class UsersService {
     return updatedUser;
   }
 
-  async remove(id: string, user: AuthenticatedUser): Promise<User> {
+  async remove(id: string, _user: AuthenticatedUser): Promise<User> {
     const existingUser = await this.prisma.user.findUnique({ where: { id } });
     if (!existingUser) throw new NotFoundException('Usuario no encontrado');
 

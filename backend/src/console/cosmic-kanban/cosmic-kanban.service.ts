@@ -41,6 +41,15 @@ interface InfrastructureStatus {
   [key: string]: unknown;
 }
 
+// Interface for Redis client access
+interface CacheServiceWithClient {
+  client?: {
+    isReady: boolean;
+    del: (key: string | string[]) => Promise<number>;
+    keys: (pattern: string) => Promise<string[]>;
+  };
+}
+
 @Injectable()
 export class CosmicKanbanService {
   // Propiedad para almacenar el ID del intervalo de sincronización automática
@@ -282,7 +291,8 @@ export class CosmicKanbanService {
       // Invalidar caché de estadísticas usando el patrón del CacheService
       if (this.cache && typeof this.cache['client'] !== 'undefined') {
         // Acceso al cliente Redis interno del CacheService
-        const redisClient = (this.cache as unknown as { client?: any }).client;
+        const redisClient = (this.cache as unknown as CacheServiceWithClient)
+          .client;
         if (redisClient?.isReady) {
           await redisClient.del('cosmic:stats');
 

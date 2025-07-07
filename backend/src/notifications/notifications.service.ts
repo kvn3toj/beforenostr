@@ -3,7 +3,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import {
   CreateNotificationDto,
   CreateBulkNotificationDto,
-  UpdateNotificationDto,
+  // UpdateNotificationDto, // Unused import
   NotificationFilterDto,
   NotificationType,
 } from './dto/notifications.dto';
@@ -292,11 +292,11 @@ export class NotificationsService {
   /**
    * Simular envío de push notification (aquí se integraría con un servicio real)
    */
-  private async sendPushNotification(notification: Notification) {
+  private async sendPushNotification(_notification: Notification) {
     // console.log('>>> NotificationsService.sendPushNotification: Sending push notification', {
-    //   userId: notification.userId,
-    //   type: notification.type,
-    //   message: notification.message
+    //   userId: _notification.userId,
+    //   type: _notification.type,
+    //   message: _notification.message
     // });
 
     // Aquí se integraría con servicios como:

@@ -8,7 +8,7 @@ import {
   ConnectedSocket,
   WsException,
 } from '@nestjs/websockets';
-import { Logger, UseGuards } from '@nestjs/common';
+import { Logger /* , UseGuards */ } from '@nestjs/common'; // UseGuards unused
 import { Server, Socket } from 'socket.io';
 import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from '../prisma/prisma.service';

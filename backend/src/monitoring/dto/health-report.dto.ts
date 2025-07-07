@@ -2,16 +2,16 @@ import { ApiProperty } from '@nestjs/swagger';
 
 // --- Sub-interfaces for strong typing in HealthReportDto ---
 
-interface CacheHealth {
-  healthy: boolean;
-  stats: Record<string, unknown>; // Can be more specific if stats structure is known
-}
+// interface CacheHealth { // Unused interface
+//   healthy: boolean;
+//   stats: Record<string, unknown>; // Can be more specific if stats structure is known
+// }
 
-interface YoutubeApiHealth {
-  configured: boolean;
-  accessible: boolean;
-  lastTest: string;
-}
+// interface YoutubeApiHealth { // Unused interface
+//   configured: boolean;
+//   accessible: boolean;
+//   lastTest: string;
+// }
 
 interface PerformanceMetrics {
   averageCalculationTime: number;
@@ -26,11 +26,11 @@ interface PerformanceMetrics {
   };
 }
 
-interface RecentAlert {
-  timestamp: string;
-  type: 'CACHE_ERROR' | 'YOUTUBE_API_FAILURE' | 'INCONSISTENCY_DETECTED';
-  message: string;
-}
+// interface RecentAlert { // Unused interface
+//   timestamp: string;
+//   type: 'CACHE_ERROR' | 'YOUTUBE_API_FAILURE' | 'INCONSISTENCY_DETECTED';
+//   message: string;
+// }
 
 interface ProblematicVideo {
   videoId: string;

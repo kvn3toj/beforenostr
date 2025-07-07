@@ -1,19 +1,9 @@
-import {
-  Injectable,
-  NotFoundException,
-  ForbiddenException,
-  BadRequestException,
-  Inject,
-  Logger,
-} from '@nestjs/common';
+import { Injectable, NotFoundException, Inject, Logger } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import {
   CreateMarketplaceItemDto,
   UpdateMarketplaceItemDto,
   MarketplaceSearchDto,
-  CreateMarketplaceOfferDto,
-  MarketplaceItemStatus,
-  MarketplaceItemType,
 } from './dto/marketplace.dto';
 import {
   MarketplaceItemStatus as PrismaMarketplaceItemStatus,
@@ -29,16 +19,32 @@ interface MarketplaceMetrics {
   cacheHit?: boolean;
 }
 
-// 🔹 COSMOS: Integrated Cache Keys
-const CACHE_KEYS = {
-  ALL_ITEMS: 'marketplace:all_items',
-  SEARCH_RESULTS: 'marketplace:search',
-  ITEM_DETAIL: 'marketplace:item',
-  SELLER_ITEMS: 'marketplace:seller',
-  FEATURED_ITEMS: 'marketplace:featured',
-  CATEGORIES: 'marketplace:categories',
-  STATS: 'marketplace:stats',
-} as const;
+// Interface for marketplace item data
+interface MarketplaceItemData {
+  id: string;
+  name: string;
+  description: string;
+  itemType: string;
+  price: number;
+  priceToins?: number;
+  currency: string;
+  tags: string[];
+  images: string[];
+  location?: string;
+  status: string;
+  metadata?: string;
+  seller?: {
+    id: string;
+    firstName?: string;
+    lastName?: string;
+    username?: string;
+    avatarUrl?: string;
+  };
+  createdAt: Date;
+  updatedAt: Date;
+  viewCount?: number;
+  favoriteCount?: number;
+}
 
 @Injectable()
 export class MarketplaceService {
@@ -71,7 +77,7 @@ export class MarketplaceService {
   }
 
   // 🔹 COSMOS: Unified item transformation
-  private transformMarketplaceItem(item: any) {
+  private transformMarketplaceItem(item: MarketplaceItemData) {
     return {
       id: item.id,
       title: item.name,
@@ -98,7 +104,7 @@ export class MarketplaceService {
   }
 
   // 🌟 COSMOS: Calculate Reciprocidad (reciprocity) score
-  private calculateReciprocidadScore(item: any): number {
+  private calculateReciprocidadScore(item: MarketplaceItemData): number {
     let score = 0;
 
     // Base score for active participation
@@ -128,7 +134,7 @@ export class MarketplaceService {
 
   // 🌟 COSMOS: Calculate consciousness level
   private calculateConsciousnessLevel(
-    item: any
+    item: MarketplaceItemData
   ): 'SEED' | 'GROWING' | 'FLOURISHING' | 'TRANSCENDENT' {
     const reciprocidadScore = this.calculateReciprocidadScore(item);
 

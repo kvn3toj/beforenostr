@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
   IsString,
-  IsUUID,
+  // IsUUID, // Unused import
   IsOptional,
   MaxLength,
   MinLength,

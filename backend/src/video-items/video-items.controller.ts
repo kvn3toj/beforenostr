@@ -41,35 +41,30 @@ export class VideoItemsController {
     //     console.log('>>> VideoItemsController.findAll: Starting...');
     //     console.log('>>> VideoItemsController.findAll: this.prisma IS', this.prisma ? 'DEFINED' : 'UNDEFINED');
 
-    try {
-      //       console.log('>>> VideoItemsController.findAll: About to call prisma.videoItem.findMany');
-      const videoItems = await this.prisma.videoItem.findMany({
-        include: {
-          subtitles: {
-            where: { isActive: true },
-          },
-          questions: {
-            where: { isActive: true },
-            include: {
-              answerOptions: {
-                orderBy: { order: 'asc' },
-              },
+    //       console.log('>>> VideoItemsController.findAll: About to call prisma.videoItem.findMany');
+    const videoItems = await this.prisma.videoItem.findMany({
+      include: {
+        subtitles: {
+          where: { isActive: true },
+        },
+        questions: {
+          where: { isActive: true },
+          include: {
+            answerOptions: {
+              orderBy: { order: 'asc' },
             },
           },
         },
-        orderBy: { id: 'asc' },
-      });
+      },
+      orderBy: { id: 'asc' },
+    });
 
-      // Mapear externalId a youtubeId y exponer thumbnailUrl
-      return videoItems.map((item) => ({
-        ...item,
-        youtubeId: item.externalId,
-        thumbnailUrl: item.thumbnailUrl,
-      }));
-    } catch (error) {
-      //       console.error('>>> VideoItemsController.findAll: ERROR:', error);
-      throw error;
-    }
+    // Mapear externalId a youtubeId y exponer thumbnailUrl
+    return videoItems.map((item) => ({
+      ...item,
+      youtubeId: item.externalId,
+      thumbnailUrl: item.thumbnailUrl,
+    }));
   }
 
   @Get(':id')
@@ -84,48 +79,43 @@ export class VideoItemsController {
     //     console.log('>>> VideoItemsController.findOne: Starting with id:', id);
     //     console.log('>>> VideoItemsController.findOne: this.prisma IS', this.prisma ? 'DEFINED' : 'UNDEFINED');
 
-    try {
-      const parsedId = parseInt(id);
-      //       console.log('>>> VideoItemsController.findOne: Parsed ID:', parsedId);
+    const parsedId = parseInt(id);
+    //       console.log('>>> VideoItemsController.findOne: Parsed ID:', parsedId);
 
-      if (isNaN(parsedId)) {
-        throw new NotFoundException(`Invalid ID format: ${id}`);
-      }
+    if (isNaN(parsedId)) {
+      throw new NotFoundException(`Invalid ID format: ${id}`);
+    }
 
-      //       console.log('>>> VideoItemsController.findOne: About to call prisma.videoItem.findUnique');
-      const videoItem = await this.prisma.videoItem.findUnique({
-        where: { id: parsedId },
-        include: {
-          subtitles: {
-            where: { isActive: true },
-          },
-          questions: {
-            where: { isActive: true },
-            include: {
-              answerOptions: {
-                orderBy: { order: 'asc' },
-              },
+    //       console.log('>>> VideoItemsController.findOne: About to call prisma.videoItem.findUnique');
+    const videoItem = await this.prisma.videoItem.findUnique({
+      where: { id: parsedId },
+      include: {
+        subtitles: {
+          where: { isActive: true },
+        },
+        questions: {
+          where: { isActive: true },
+          include: {
+            answerOptions: {
+              orderBy: { order: 'asc' },
             },
           },
         },
-      });
+      },
+    });
 
-      //       console.log('>>> VideoItemsController.findOne: Query result:', videoItem ? 'FOUND' : 'NOT FOUND');
+    //       console.log('>>> VideoItemsController.findOne: Query result:', videoItem ? 'FOUND' : 'NOT FOUND');
 
-      if (!videoItem) {
-        throw new NotFoundException(`Video item with ID ${id} not found`);
-      }
-
-      // Mapear externalId a youtubeId y exponer thumbnailUrl
-      return {
-        ...videoItem,
-        youtubeId: videoItem.externalId,
-        thumbnailUrl: videoItem.thumbnailUrl,
-      };
-    } catch (error) {
-      //       console.error('>>> VideoItemsController.findOne: ERROR:', error);
-      throw error;
+    if (!videoItem) {
+      throw new NotFoundException(`Video item with ID ${id} not found`);
     }
+
+    // Mapear externalId a youtubeId y exponer thumbnailUrl
+    return {
+      ...videoItem,
+      youtubeId: videoItem.externalId,
+      thumbnailUrl: videoItem.thumbnailUrl,
+    };
   }
 
   @Get(':videoId/questions')
@@ -146,14 +136,9 @@ export class VideoItemsController {
   async getQuestionsForVideo(@Param('videoId') videoId: string) {
     //     console.log('>>> VideoItemsController.getQuestionsForVideo: Starting with videoId:', videoId);
 
-    try {
-      const questions =
-        await this.videoItemsService.findQuestionsByVideoId(videoId);
-      //       console.log('>>> VideoItemsController.getQuestionsForVideo: SUCCESS, returning', questions.length, 'questions');
-      return questions;
-    } catch (error) {
-      //       console.error('>>> VideoItemsController.getQuestionsForVideo: ERROR:', error);
-      throw error;
-    }
+    const questions =
+      await this.videoItemsService.findQuestionsByVideoId(videoId);
+    //       console.log('>>> VideoItemsController.getQuestionsForVideo: SUCCESS, returning', questions.length, 'questions');
+    return questions;
   }
 }

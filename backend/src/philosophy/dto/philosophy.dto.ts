@@ -4,7 +4,7 @@ import {
   IsNumber,
   IsEnum,
   IsOptional,
-  IsBoolean,
+  // IsBoolean, // Unused import
   Min,
   Max,
   IsObject,

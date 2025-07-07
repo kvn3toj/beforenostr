@@ -1,4 +1,4 @@
-import { PrismaClient } from '../generated/prisma';
+import { PrismaClient, CustomerJourneyStage } from '../generated/prisma';
 import * as bcrypt from 'bcrypt';
 
 const prisma = new PrismaClient();
@@ -85,7 +85,7 @@ async function createUsers(prisma: PrismaClient) {
     const existingStageProgression = await prisma.stageProgression.findFirst({
       where: {
         userId: user.id,
-        stage: userData.stage as any,
+        stage: userData.stage as CustomerJourneyStage,
       },
     });
 
@@ -101,7 +101,7 @@ async function createUsers(prisma: PrismaClient) {
       await prisma.stageProgression.create({
         data: {
           userId: user.id,
-          stage: userData.stage as any,
+          stage: userData.stage as CustomerJourneyStage,
           isActive: true,
           requirements: {},
         },
@@ -161,13 +161,16 @@ async function createMarketplaceItems(prisma: PrismaClient) {
   const marketplaceItems = [
     {
       name: 'Taller de Huerto Urbano Orgánico',
-      description: 'Aprende a cultivar tus propios alimentos en espacios pequeños usando principios de permacultura.',
+      description:
+        'Aprende a cultivar tus propios alimentos en espacios pequeños usando principios de permacultura.',
       itemType: 'SERVICE' as const,
       price: 35,
       priceToins: 15,
       currency: 'UNITS' as const,
       status: 'ACTIVE' as const,
-      images: ['https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=600'],
+      images: [
+        'https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=600',
+      ],
       tags: ['huerto', 'orgánico', 'taller', 'permacultura', 'sostenibilidad'],
       location: 'Online + Kit presencial',
       sellerId: creatorUser?.id || defaultSellerId,
@@ -179,38 +182,59 @@ async function createMarketplaceItems(prisma: PrismaClient) {
     },
     {
       name: 'Kombucha Artesanal de Jengibre y Cúrcuma',
-      description: 'Bebida probiótica fermentada artesanalmente con ingredientes 100% orgánicos.',
+      description:
+        'Bebida probiótica fermentada artesanalmente con ingredientes 100% orgánicos.',
       itemType: 'PRODUCT' as const,
       price: 15,
       priceToins: 8,
       currency: 'UNITS' as const,
       status: 'ACTIVE' as const,
-      images: ['https://images.unsplash.com/photo-1559181567-c3190ca9959b?w=600'],
+      images: [
+        'https://images.unsplash.com/photo-1559181567-c3190ca9959b?w=600',
+      ],
       tags: ['kombucha', 'probiótico', 'orgánico', 'salud', 'fermentado'],
       location: 'Medellín, Colombia',
       sellerId: adminUser?.id || defaultSellerId,
       metadata: JSON.stringify({
         volume: '500ml',
-        ingredients: ['Té verde orgánico', 'Jengibre fresco', 'Cúrcuma', 'SCOBY'],
+        ingredients: [
+          'Té verde orgánico',
+          'Jengibre fresco',
+          'Cúrcuma',
+          'SCOBY',
+        ],
         shelfLife: '30 días refrigerado',
       }),
     },
     {
       name: 'Sesión de Sound Healing',
-      description: 'Viaje sonoro de 60 minutos con cuencos tibetanos, gongs y campanas para equilibrar tu energía.',
+      description:
+        'Viaje sonoro de 60 minutos con cuencos tibetanos, gongs y campanas para equilibrar tu energía.',
       itemType: 'SERVICE' as const,
       price: 60,
       priceToins: 25,
       currency: 'UNITS' as const,
       status: 'ACTIVE' as const,
-      images: ['https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=600'],
-      tags: ['sound healing', 'meditación', 'bienestar', 'relajación', 'energía'],
+      images: [
+        'https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=600',
+      ],
+      tags: [
+        'sound healing',
+        'meditación',
+        'bienestar',
+        'relajación',
+        'energía',
+      ],
       location: 'Online via Zoom',
       sellerId: regularUser?.id || defaultSellerId,
       metadata: JSON.stringify({
         duration: '60 minutos',
         instruments: ['Cuencos tibetanos', 'Gongs', 'Campanas'],
-        benefits: ['Reducción del estrés', 'Mejora del sueño', 'Equilibrio energético'],
+        benefits: [
+          'Reducción del estrés',
+          'Mejora del sueño',
+          'Equilibrio energético',
+        ],
       }),
     },
   ];
@@ -222,7 +246,7 @@ async function createMarketplaceItems(prisma: PrismaClient) {
 
     if (existingItem) {
       // Separate fields for update (exclude sellerId)
-      const { sellerId, ...updateData } = itemData;
+      const { sellerId: _sellerId, ...updateData } = itemData;
       await prisma.marketplaceItem.update({
         where: { id: existingItem.id },
         data: updateData,
@@ -288,8 +312,10 @@ async function createUPlayContent(prisma: PrismaClient) {
   const videos = [
     {
       title: 'Coomunity: La Visión del Futuro',
-      description: 'Descubre la visión y misión de Coomunity para construir un futuro colaborativo.',
-      content: 'Descubre la visión y misión de Coomunity para construir un futuro colaborativo.',
+      description:
+        'Descubre la visión y misión de Coomunity para construir un futuro colaborativo.',
+      content:
+        'Descubre la visión y misión de Coomunity para construir un futuro colaborativo.',
       externalId: 'dQw4w9WgXcQ',
       thumbnailUrl: 'https://i3.ytimg.com/vi/dQw4w9WgXcQ/maxresdefault.jpg',
       duration: 212,
@@ -299,8 +325,10 @@ async function createUPlayContent(prisma: PrismaClient) {
     },
     {
       title: 'Ayni: El Arte de la Reciprocidad',
-      description: 'Un documental profundo sobre el principio ancestral del Ayni y su aplicación moderna.',
-      content: 'Un documental profundo sobre el principio ancestral del Ayni y su aplicación moderna.',
+      description:
+        'Un documental profundo sobre el principio ancestral del Ayni y su aplicación moderna.',
+      content:
+        'Un documental profundo sobre el principio ancestral del Ayni y su aplicación moderna.',
       externalId: 'oHg5SJYRHA0',
       thumbnailUrl: 'https://i3.ytimg.com/vi/oHg5SJYRHA0/maxresdefault.jpg',
       duration: 300,
@@ -343,8 +371,7 @@ async function main() {
   }
 }
 
-main()
-  .catch((e) => {
-    console.error('💥 Fatal error:', e);
-    process.exit(1);
-  });
+main().catch((e) => {
+  console.error('💥 Fatal error:', e);
+  process.exit(1);
+});

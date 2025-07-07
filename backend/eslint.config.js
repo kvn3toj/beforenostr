@@ -1,75 +1,67 @@
-import js from '@eslint/js';
-import globals from 'globals';
-import tseslint from '@typescript-eslint/eslint-plugin';
-import tsParser from '@typescript-eslint/parser';
-import prettier from 'eslint-plugin-prettier';
+// 🎸 SOLISTA BACKEND NESTJS
+// Configuración especializada para backend NestJS
+// Extiende la configuración del orquestador principal
 
-export default [
+const baseConfig = require('../eslint.config.cjs');
+
+module.exports = [
+  // Heredar configuración base del orquestador
+  ...baseConfig.filter(
+    (config) =>
+      config.name === 'coomunity/global-ignores' ||
+      config.name === 'coomunity/backend'
+  ),
+
+  // 🔧 REFINAMIENTOS ESPECÍFICOS BACKEND
   {
+    name: 'coomunity/backend-overrides',
+    files: ['**/*.{ts,js}'],
     ignores: [
-      'dist',
-      'node_modules',
-      'generated/**',
-      'src/generated/**',
       'prisma/seed*.ts', // Seed files pueden usar console.log
       'scripts/**', // Scripts de desarrollo
+      'generated/**',
+      'dist/**',
     ],
-  },
-  {
-    files: ['**/*.{ts,tsx}'],
-    languageOptions: {
-      ecmaVersion: 2020,
-      sourceType: 'module',
-      parser: tsParser,
-      parserOptions: {
-        ecmaFeatures: {
-          jsx: false, // Backend is not using JSX
-        },
-      },
-      globals: {
-        ...globals.es2020,
-        ...globals.node,
-        ...globals.jest,
-      },
-    },
-    plugins: {
-      '@typescript-eslint': tseslint,
-      prettier: prettier,
-    },
     rules: {
-      ...js.configs.recommended.rules,
-      ...tseslint.configs.recommended.rules,
-      'prettier/prettier': [
-        'error',
+      // Permitir console en seeds y scripts
+      'no-console': [
+        'warn',
         {
-          endOfLine: 'auto',
+          allow: ['warn', 'error', 'info'],
         },
       ],
 
-      // 🌟 PURIFICACIÓN CÓSMICA - Reglas estrictas para prevenir 'any' y variables no usadas
-      '@typescript-eslint/no-explicit-any': 'error', // Prohibir 'any' completamente
+      // Reglas específicas para Prisma
+      '@typescript-eslint/no-explicit-any': [
+        'error',
+        {
+          ignoreRestArgs: true, // Permitir any en rest args de Prisma
+        },
+      ],
+
+      // Reglas específicas para NestJS decorators
       '@typescript-eslint/no-unused-vars': [
         'error',
         {
           argsIgnorePattern: '^_',
           varsIgnorePattern: '^_',
           destructuredArrayIgnorePattern: '^_',
+          ignoreRestSiblings: true,
         },
       ],
-      'no-unused-vars': 'off', // Desactivar la regla JS en favor de la TypeScript
 
-      // Reglas de limpieza de código
-      'no-console': 'warn', // Advertir sobre console.log en producción
-      'no-debugger': 'error', // Prohibir debugger
-      'no-alert': 'error', // Prohibir alert()
-      'no-undef': 'error', // Error en variables no definidas
-      'prefer-const': 'error', // Forzar const cuando sea posible
-      'no-var': 'error', // Prohibir var
-      'object-shorthand': 'error', // Forzar object shorthand
-      'prefer-arrow-callback': 'error', // Preferir arrow functions
-      'no-useless-catch': 'error', // Eliminar catch innecesarios
-      'no-empty': 'error', // Prohibir bloques vacíos
-      'no-unreachable': 'error', // Prohibir código inalcanzable
+      // Permitir parámetros sin uso en controladores NestJS
+      'no-unused-vars': 'off',
+    },
+  },
+
+  // 🌟 REGLAS ESPECÍFICAS PARA SEEDS Y SCRIPTS
+  {
+    name: 'coomunity/backend-seeds',
+    files: ['prisma/seed*.ts', 'scripts/**/*.{ts,js}'],
+    rules: {
+      'no-console': 'off', // Permitir console en seeds y scripts
+      '@typescript-eslint/no-explicit-any': 'warn', // Más permisivo en scripts
     },
   },
 ];

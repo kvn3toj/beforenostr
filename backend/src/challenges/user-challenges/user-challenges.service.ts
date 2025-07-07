@@ -8,7 +8,6 @@ import {
 import { PrismaService } from '../../prisma/prisma.service';
 import { TransactionsService } from '../../merits-and-wallet/transactions/transactions.service';
 import {
-  User,
   Challenge,
   ChallengeReward,
   UserChallenge,
@@ -128,8 +127,8 @@ export class UserChallengesService {
       actionType: 'user_challenge:progress_updated',
       entityType: 'UserChallenge',
       entityId: updatedUserChallenge.id,
-      oldValue: oldProgress,
-      newValue: newProgress,
+      oldValue: { progress: oldProgress },
+      newValue: { progress: newProgress },
       // TODO: Add ipAddress, userAgent if available from request context
     });
 
@@ -236,7 +235,7 @@ export class UserChallengesService {
       newValue: {
         id: completedUserChallenge.id,
         status: completedUserChallenge.status,
-        completedAt: completedUserChallenge.completedAt,
+        completedAt: completedUserChallenge.completedAt?.toISOString(),
       },
       // TODO: Add ipAddress, userAgent if available from request context
     });

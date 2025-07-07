@@ -2,7 +2,7 @@ import { IsString, IsNotEmpty, IsOptional } from 'class-validator';
 import { ApiProperty, PartialType } from '@nestjs/swagger';
 
 // A general type for configuration value
-export type AppConfigValue = any;
+export type AppConfigValue = string | number | boolean | object | null;
 
 export class CreateConfigDto {
   @ApiProperty({ description: 'The unique key for the configuration setting' })

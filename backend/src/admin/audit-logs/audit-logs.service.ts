@@ -3,14 +3,25 @@ import { PrismaService } from '../../prisma/prisma.service';
 import { GetAuditLogsDto } from './dto/get-audit-logs.dto';
 import { Log, Prisma } from '../../generated/prisma';
 
+// Interfaces for audit log values
+export interface AuditLogValue {
+  [key: string]:
+    | string
+    | number
+    | boolean
+    | null
+    | AuditLogValue
+    | AuditLogValue[];
+}
+
 // Simple audit log interface that maps to the Log model
 export interface CreateAuditLogDto {
   userId: string;
   actionType: string;
   entityType: string;
   entityId: string;
-  oldValue?: any;
-  newValue?: any;
+  oldValue?: AuditLogValue;
+  newValue?: AuditLogValue;
   ipAddress?: string;
   userAgent?: string;
 }

@@ -2,8 +2,8 @@ import {
   IsString,
   IsInt,
   IsOptional,
-  IsArray,
-  IsObject,
+  // IsArray, // Unused import
+  // IsObject, // Unused import
 } from 'class-validator';
 
 export class UpdateVideoItemDto {

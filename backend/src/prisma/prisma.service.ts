@@ -26,14 +26,14 @@ export class PrismaService extends PrismaClient implements OnModuleInit {
       //       console.log('>>> PrismaService onModuleInit - Database connection established');
       //       console.log('>>> PrismaService onModuleInit - Backend using REAL PostgreSQL database');
       await this.seedDatabase(); // Llama al seeder aquí
-    } catch (error) {
-      //       console.error('>>> PrismaService onModuleInit - Database connection failed:', error.message);
+    } catch {
+      //       console.error('>>> PrismaService onModuleInit - Database connection failed:');
       //       console.log('>>> PrismaService onModuleInit - Falling back to MOCK MODE');
       this.isMockMode = true;
     }
   }
 
-  async enableShutdownHooks(app: INestApplication) {
+  async enableShutdownHooks(_app: INestApplication) {
     // Note: beforeExit event is not available in the current Prisma version
     // This method is kept for compatibility but doesn't do anything
     // The connection will be closed when the app shuts down

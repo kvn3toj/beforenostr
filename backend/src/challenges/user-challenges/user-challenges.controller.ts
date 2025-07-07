@@ -7,7 +7,6 @@ import {
   Param,
   UseGuards,
   Req,
-  ForbiddenException,
   Query,
 } from '@nestjs/common';
 import { UserChallengesService } from './user-challenges.service';
@@ -25,7 +24,6 @@ import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard'; // Adjust path 
 import { RolesGuard } from '@/rbac/guards/roles.guard'; // Adjust path as necessary
 import { Roles } from '@/rbac/decorators/roles.decorator'; // Adjust path as necessary
 import { Request } from 'express';
-import { Cache } from 'cache-manager';
 import { AuthenticatedUser } from '@/types/auth.types';
 
 // Updated interface to include email

@@ -439,7 +439,7 @@ export class AnalyticsService {
       try {
         const videoCount = await this.prisma.contentItem.count();
         totalVideos = videoCount > 0 ? videoCount : 42;
-      } catch (_dbError) {
+      } catch {
         console.warn(
           '[AnalyticsService] Could not fetch video count from DB, using mock data'
         );
@@ -621,10 +621,10 @@ export class AnalyticsService {
         } else if (dbResponseTime > 2000) {
           databaseStatus = 'critical';
         }
-      } catch (_dbError) {
+      } catch (dbError) {
         console.error(
           '[AnalyticsService] Database health check failed:',
-          _dbError
+          dbError
         );
         databaseStatus = 'critical';
         dbResponseTime = -1;

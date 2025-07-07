@@ -69,7 +69,7 @@ export class MeritsService {
   }
 
   async update(id: string, updateMeritDto: UpdateMeritDto): Promise<Merit> {
-    const merit = await this.findOne(id);
+    await this.findOne(id); // Verify merit exists
     return this.prisma.merit.update({
       where: { id },
       data: updateMeritDto,
@@ -77,7 +77,7 @@ export class MeritsService {
   }
 
   async remove(id: string): Promise<Merit> {
-    const merit = await this.findOne(id);
+    await this.findOne(id); // Verify merit exists
     return this.prisma.merit.delete({ where: { id } });
   }
 }

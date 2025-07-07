@@ -11,7 +11,7 @@ import {
   StudyRoomResponseDto,
   StudyRoomParticipantDto,
 } from './dto/study-room-response.dto';
-import { StudyRoomStatus, StudyRoom, User } from '../generated/prisma';
+import { StudyRoomStatus, StudyRoom /* , User */ } from '../generated/prisma'; // User unused
 
 type StudyRoomWithRelations = StudyRoom & {
   video: { id: number; title: string };

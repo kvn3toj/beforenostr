@@ -26,12 +26,13 @@ import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '@/rbac/guards/roles.guard';
 import { Roles } from '@/rbac/decorators/roles.decorator';
 import { UpdateStageDto } from './dto/update-stage.dto';
-import {
-  StageConfigurationDto,
-  StageAnalyticsDto,
-  UserProgressionDto,
-  ProgressActionResultDto,
-} from './dto/stage-response.dto';
+// Commented out unused DTOs
+// import {
+//   StageConfigurationDto,
+//   StageAnalyticsDto,
+//   UserProgressionDto,
+//   ProgressActionResultDto,
+// } from './dto/stage-response.dto';
 import { AuthenticatedRequest } from '../../types/auth.types';
 
 @ApiTags('stages')

@@ -8,16 +8,16 @@ import { PrismaService } from '../../prisma/prisma.service';
  */
 
 // Interfaces para el sistema de agentes
-interface AgentProfile {
-  id: string;
-  name: string;
-  role: string;
-  element: 'FUEGO' | 'AGUA' | 'TIERRA' | 'AIRE';
-  specialization: string;
-  lukasBalance: number;
-  level: number;
-  activeQuests: string[];
-}
+// interface AgentProfile { // Unused interface
+//   id: string;
+//   name: string;
+//   role: string;
+//   element: 'FUEGO' | 'AGUA' | 'TIERRA' | 'AIRE';
+//   specialization: string;
+//   lukasBalance: number;
+//   level: number;
+//   activeQuests: string[];
+// }
 
 interface FeedbackAnalysis {
   sentiment: number; // -1 a 1
@@ -28,13 +28,32 @@ interface FeedbackAnalysis {
   lukasReward: number;
 }
 
+interface TaskResults {
+  priority?: string;
+  estimatedResolution?: string;
+  resourcesNeeded?: string[];
+  reciprocidadImpact?: string;
+  stakeholdersNotified?: string[];
+  collaborationChannels?: string[];
+  consensusLevel?: number;
+  reciprocidadFlow?: string;
+  knowledgeArticlesCreated?: number;
+  bestPracticesUpdated?: string[];
+  wisdomScore?: number;
+  foundationStrength?: string;
+  trendsIdentified?: string[];
+  innovationOpportunities?: number;
+  futureImpactScore?: number;
+  visionClarity?: string;
+}
+
 interface CollaborationTask {
   id: string;
   type: 'ANALYZE' | 'PRIORITIZE' | 'RESOLVE' | 'DISTRIBUTE';
   feedbackId: string;
   assignedAgents: string[];
   status?: 'PENDING' | 'IN_PROGRESS' | 'COMPLETED';
-  results: any;
+  results: TaskResults;
   lukasGenerated: number;
 }
 

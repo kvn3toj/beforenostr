@@ -9,10 +9,11 @@ import {
   CreateLetsTransactionDto,
   LetsBalanceDto,
   LetsExpiryCheckDto,
-  LetsTransactionType,
-  LetsTransactionStatus,
+  // LetsTransactionType, // Unused
+  // LetsTransactionStatus, // Unused
 } from './dto/lets.dto';
-import type { Token, Transaction, User, Wallet } from '../generated/prisma';
+// Commented out unused type imports
+// import type { Token, Transaction, User, Wallet } from '../generated/prisma';
 
 @Injectable()
 export class LetsService {
@@ -138,7 +139,7 @@ export class LetsService {
           type: 'EXCHANGE',
           description:
             dto.description || `Intercambio LETS de ${dto.amount} Ünits`,
-        } as any,
+        } as TransactionData,
       });
 
       // 2. Actualizar balances en wallets
@@ -253,7 +254,7 @@ export class LetsService {
           currency: 'USD',
           type: 'RECEIVE', // Transacción negativa por caducidad
           description: `Caducidad automática de ${expiredTokens.length} tokens`,
-        } as any,
+        } as TransactionData,
       });
     });
 
@@ -736,8 +737,8 @@ export class LetsService {
   /**
    * Obtener notificaciones LETS para un usuario
    */
-  async getNotifications(userId: string) {
-    //     console.log('>>> LetsService.getNotifications: Getting notifications for user', userId);
+  async getNotifications(_userId: string) {
+    //     console.log('>>> LetsService.getNotifications: Getting notifications for user', _userId);
 
     try {
       // Por ahora devolvemos notificaciones simuladas hasta implementar el modelo Notification
@@ -824,4 +825,14 @@ export class LetsService {
       return [];
     }
   }
+}
+
+// Interface for transaction data
+interface TransactionData {
+  fromUserId?: string;
+  toUserId: string;
+  amount: number;
+  currency: string;
+  type: string;
+  description: string;
 }

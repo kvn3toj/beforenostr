@@ -1,23 +1,27 @@
 import {
   Injectable,
-  ConflictException,
   NotFoundException,
   ForbiddenException,
 } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { WalletsService } from '../wallets/wallets.service';
 import { Transaction } from '../../generated/prisma';
-import {
-  SendTransactionDto,
-  TransactionCurrency,
-} from './dto/send-transaction.dto';
-import { Merit } from '../../generated/prisma';
+import { SendTransactionDto } from './dto/send-transaction.dto';
 
 // Define a basic type for the authenticated user passed from the controller
 type AuthenticatedUser = { id: string; roles: string[] /* other properties */ };
 
 // Basic type for eventData - its structure depends on the transaction source/type
 export type TransactionEventData = Record<string, unknown>; // Can be refined if specific structures are known
+
+interface TransactionCreateData {
+  fromUserId?: string;
+  toUserId: string;
+  amount: number;
+  currency: string;
+  type: string;
+  description?: string;
+}
 
 @Injectable()
 export class TransactionsService {
@@ -44,7 +48,7 @@ export class TransactionsService {
           currency: 'USD',
           type: data.type,
           description: data.description,
-        } as any,
+        } as TransactionCreateData,
       });
 
       // 2. Update the corresponding wallet balance if needed

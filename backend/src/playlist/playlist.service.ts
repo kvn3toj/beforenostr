@@ -4,6 +4,54 @@ import { CreatePlaylistDto } from './dto/create-playlist.dto';
 import { UpdatePlaylistDto } from './dto/update-playlist.dto';
 import { FindAllPlaylistsDto } from './dto/find-all-playlists.dto';
 
+interface PlaylistWhereFilter {
+  mundoId?: string;
+  isActive?: boolean;
+  name?: { contains: string; mode: 'insensitive' };
+  description?: { contains: string; mode: 'insensitive' };
+}
+
+interface PlaylistIncludeOptions {
+  mundo?: boolean;
+  videoItems?: {
+    select: {
+      id: boolean;
+      title: boolean;
+      description: boolean;
+      url: boolean;
+      thumbnailUrl: boolean;
+      duration: boolean;
+      categories: boolean;
+      platform: boolean;
+      externalId: boolean;
+      isActive: boolean;
+      order: boolean;
+      questions: {
+        select: {
+          id: boolean;
+          text: boolean;
+          timestamp: boolean;
+          type: boolean;
+          answerOptions: {
+            select: {
+              id: boolean;
+              text: boolean;
+              isCorrect: boolean;
+              order: boolean;
+            };
+          };
+        };
+      };
+    };
+    where: { isActive: boolean };
+    orderBy: { order: 'asc' };
+  };
+}
+
+interface PlaylistOrderBy {
+  [key: string]: 'asc' | 'desc';
+}
+
 @Injectable()
 export class PlaylistService {
   constructor(@Inject(PrismaService) private readonly prisma: PrismaService) {}
@@ -56,14 +104,14 @@ export class PlaylistService {
 
     const skip = (page - 1) * limit;
 
-    const where: any = {};
+    const where: PlaylistWhereFilter = {};
     if (mundoId) where.mundoId = mundoId;
     if (typeof isActive === 'boolean') where.isActive = isActive;
     if (name) where.name = { contains: name, mode: 'insensitive' };
     if (description)
       where.description = { contains: description, mode: 'insensitive' };
 
-    const include: any = {};
+    const include: PlaylistIncludeOptions = {};
     if (includeMundo) include.mundo = true;
     if (includeItems) {
       include.videoItems = {
@@ -101,7 +149,7 @@ export class PlaylistService {
       };
     }
 
-    const orderByClause: any = {
+    const orderByClause: PlaylistOrderBy = {
       [orderBy]: orderDirection,
     };
 

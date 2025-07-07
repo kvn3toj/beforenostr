@@ -1,4 +1,9 @@
-import { Controller, Get, UseGuards, Req, Injectable } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  UseGuards,
+  Req /* , Injectable */,
+} from '@nestjs/common'; // Injectable unused
 import { AuthGuard } from '@nestjs/passport';
 import { RolesGuard } from '@/rbac/guards/roles.guard';
 import { Roles } from '@/rbac/decorators/roles.decorator';

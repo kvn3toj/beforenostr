@@ -24,7 +24,7 @@ import {
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { StudyRoomsService } from './study-rooms.service';
 import { CreateStudyRoomDto } from './dto/create-study-room.dto';
-import { JoinStudyRoomDto } from './dto/join-study-room.dto';
+// import { JoinStudyRoomDto } from './dto/join-study-room.dto'; // Unused import
 import { StudyRoomResponseDto } from './dto/study-room-response.dto';
 
 interface AuthenticatedRequest extends Request {

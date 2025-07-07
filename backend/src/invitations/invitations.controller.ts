@@ -20,8 +20,9 @@ import {
 import { JwtAuthGuard } from '@/auth/guards/jwt-auth.guard';
 import { RolesGuard } from '@/rbac/guards/roles.guard';
 import { Roles } from '@/rbac/decorators/roles.decorator';
-import { UpdateInvitationStatusDto } from './dto/update-invitation-status.dto';
-import { AuthenticatedUser } from '@/types/auth.types';
+// Commented out unused imports
+// import { UpdateInvitationStatusDto } from './dto/update-invitation-status.dto';
+// import { AuthenticatedUser } from '@/types/auth.types';
 import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 
 @ApiTags('invitations')

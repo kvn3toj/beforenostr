@@ -3,9 +3,7 @@ import { PrismaService } from '../prisma/prisma.service';
 
 @Controller('debug')
 export class DebugController {
-  constructor(
-    @Inject(PrismaService) private readonly prisma: PrismaService,
-  ) {}
+  constructor(@Inject(PrismaService) private readonly prisma: PrismaService) {}
 
   @Get('marketplace-table')
   async checkMarketplaceTable() {
@@ -23,7 +21,8 @@ export class DebugController {
         tableExists: false,
         error: error.message,
         errorCode: error.code,
-        message: 'marketplace_items table has issues - likely missing columns or table does not exist',
+        message:
+          'marketplace_items table has issues - likely missing columns or table does not exist',
       };
     }
   }
@@ -86,20 +85,20 @@ export class DebugController {
       if (itemCount === 0) {
         console.log('🌱 [Emergency Repair] Adding sample marketplace data...');
 
-                 await this.prisma.marketplaceItem.create({
-           data: {
-             id: 'sample-1',
-             name: 'Taller de Huerto Urbano',
-             description: 'Aprende a crear tu propio huerto urbano',
-             itemType: 'SERVICE',
-             price: 25.00,
-             currency: 'UNITS',
-             category: 'education',
-             sellerId: 'system-user-id',
-             tags: ['huerto', 'urbano', 'sostenibilidad'],
-             images: ['https://example.com/huerto.jpg'],
-           }
-         });
+        await this.prisma.marketplaceItem.create({
+          data: {
+            id: 'sample-1',
+            name: 'Taller de Huerto Urbano',
+            description: 'Aprende a crear tu propio huerto urbano',
+            itemType: 'SERVICE',
+            price: 25.0,
+            currency: 'UNITS',
+            category: 'education',
+            sellerId: 'system-user-id',
+            tags: ['huerto', 'urbano', 'sostenibilidad'],
+            images: ['https://example.com/huerto.jpg'],
+          },
+        });
 
         console.log('✅ [Emergency Repair] Sample data added');
       }
@@ -116,12 +115,13 @@ export class DebugController {
           itemCount: finalCount,
           sampleItem: sampleItem,
           repairActions: [
-            tableStatus === 'broken' ? 'Fixed table schema' : 'Table schema was already working',
-            itemCount === 0 ? 'Added sample data' : 'Data already existed'
-          ]
-        }
+            tableStatus === 'broken'
+              ? 'Fixed table schema'
+              : 'Table schema was already working',
+            itemCount === 0 ? 'Added sample data' : 'Data already existed',
+          ],
+        },
       };
-
     } catch (error) {
       console.error('❌ [Emergency Repair] Failed:', error);
       return {

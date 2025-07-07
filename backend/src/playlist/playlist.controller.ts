@@ -17,7 +17,7 @@ import {
   ApiOperation,
   ApiResponse,
   ApiBearerAuth,
-  ApiQuery,
+  // ApiQuery, // Unused import
   ApiParam,
 } from '@nestjs/swagger';
 import { PlaylistService } from './playlist.service';

@@ -4,7 +4,7 @@ import {
   IsOptional,
   IsBoolean,
   IsInt,
-  IsUUID,
+  // IsUUID, // Unused import
   IsNotEmpty,
   MaxLength,
   Min,

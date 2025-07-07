@@ -7,7 +7,7 @@ import {
 } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { CreateGroupDto } from './dto/create-group.dto';
-import { UpdateGroupDto } from './dto/update-group.dto';
+// import { UpdateGroupDto } from './dto/update-group.dto'; // Unused import
 import { JoinGroupDto } from './dto/join-group.dto';
 import type { Group, UserGroup } from '../../generated/prisma';
 

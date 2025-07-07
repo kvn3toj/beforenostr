@@ -1,8 +1,8 @@
-import { PrismaClient } from '../generated/prisma';
+import { PrismaClient, CustomerJourneyStage } from '../generated/prisma';
 import bcrypt from 'bcrypt';
 
-// Función para crear usuarios
-async function createUsers(prisma: PrismaClient) {
+// Función para crear usuarios (actualmente no utilizada)
+async function _createUsers(prisma: PrismaClient) {
   const usersData = [
     {
       email: 'admin@gamifier.com',
@@ -61,7 +61,7 @@ async function createUsers(prisma: PrismaClient) {
       await prisma.stageProgression.create({
         data: {
           userId: user.id,
-          stage: userData.stage as any,
+          stage: userData.stage as CustomerJourneyStage,
           isActive: true,
           requirements: {},
         },

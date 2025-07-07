@@ -6,6 +6,12 @@ import {
 import { PrismaService } from '@/prisma/prisma.service';
 import { MatchStatus } from '../../generated/prisma';
 
+interface ReviewData {
+  rating: number;
+  comment?: string;
+  helpful?: boolean;
+}
+
 @Injectable()
 export class MatchService {
   constructor(private readonly prisma: PrismaService) {}
@@ -72,7 +78,7 @@ export class MatchService {
     });
   }
 
-  async submitReview(matchId: string, userId: string, reviewDto: any) {
+  async submitReview(matchId: string, userId: string, reviewDto: ReviewData) {
     const match = await this.assertParticipant(matchId, userId);
     const existing = await this.prisma.review.findFirst({
       where: { marketplaceItemId: match.marketplaceItemId, userId },
@@ -84,7 +90,11 @@ export class MatchService {
       });
     }
     return this.prisma.review.create({
-      data: { ...reviewDto, marketplaceItemId: match.marketplaceItemId, userId },
+      data: {
+        ...reviewDto,
+        marketplaceItemId: match.marketplaceItemId,
+        userId,
+      },
     });
   }
 }

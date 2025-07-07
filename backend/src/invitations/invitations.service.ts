@@ -8,14 +8,14 @@ import { PrismaService } from '../prisma/prisma.service';
 import { NotificationsService } from '../notifications/notifications.service';
 import { NotificationType } from '../notifications/dto/notifications.dto';
 import {
-  CreateInvitationTemplateDto,
+  // CreateInvitationTemplateDto, // Unused
   CreateGiftCardDto,
   RedeemGiftCardDto,
   UpdateGiftCardDto,
-  InvitationChallengeDto,
+  // InvitationChallengeDto, // Unused
   InvitationStatsDto,
   InvitationStatus,
-  UserInvitationStatus,
+  // UserInvitationStatus, // Unused
 } from './dto/invitations.dto';
 import * as crypto from 'crypto';
 import * as bcrypt from 'bcryptjs';

@@ -150,7 +150,6 @@ export class CoomUnityLoggerService implements LoggerService {
    * Log de performance para medir tiempos
    */
   performance(operation: string, duration: number, context?: LogContext) {
-    const color = duration > 1000 ? 'warn' : duration > 500 ? 'info' : 'debug';
     const level =
       duration > 1000
         ? LogLevel.WARN
@@ -250,7 +249,7 @@ export class CoomUnityLoggerService implements LoggerService {
 
   private formatContext(context: LogContext): string {
     const entries = Object.entries(context).filter(
-      ([key, value]) => value !== undefined
+      ([_key, value]) => value !== undefined
     );
     if (entries.length === 0) return '';
 

@@ -4,7 +4,7 @@ import { CacheService } from '../cache/cache.service';
 import { MetricsService } from '../common/metrics/metrics.service';
 import { VideoPlatform } from '../common/constants/platform.enum';
 import {
-  VideoQuality,
+  // VideoQuality, // Unused import
   VideoMetadata,
 } from '../common/interfaces/video-metadata.interface';
 import { AbortController } from 'node-abort-controller';
@@ -47,6 +47,35 @@ interface YouTubeVideoListResponse {
   }[];
 }
 
+interface FetchResponse {
+  json(): Promise<unknown>;
+  text(): Promise<string>;
+  ok: boolean;
+  status: number;
+  statusText: string;
+}
+
+/* interface VideoItemUpdateData { // Unused interface
+  title?: string;
+  description?: string;
+  content?: string;
+  url?: string;
+  platform?: string;
+  externalId?: string;
+  duration?: number;
+  thumbnailUrl?: string;
+  itemTypeId?: string;
+  tags?: string[];
+  categories?: string[];
+  quality?: string;
+  playlistId?: string;
+} */
+
+interface VideoMetadataUpdateResult {
+  metadata: VideoMetadata;
+  [key: string]: unknown;
+}
+
 @Injectable()
 export class VideoItemsService {
   private readonly logger = new Logger(VideoItemsService.name);
@@ -62,7 +91,7 @@ export class VideoItemsService {
   private async fetch(
     url: string,
     options: Record<string, unknown> = {}
-  ): Promise<any> {
+  ): Promise<FetchResponse> {
     const { default: fetch } = await import('node-fetch');
     return fetch(url, options);
   }
@@ -182,7 +211,7 @@ export class VideoItemsService {
     //     console.log(`>>> VideoItemsService.update: Updating video item with ID: ${id}`);
 
     // Convertir DTO a formato compatible con Prisma
-    const updateData: any = {};
+    const updateData: Partial<UpdateVideoItemDto> = {};
 
     if (data.title !== undefined) updateData.title = data.title;
     if (data.description !== undefined)
@@ -362,7 +391,7 @@ export class VideoItemsService {
       // }
 
       const endTime = Date.now();
-      const executionTime = endTime - startTime;
+      const _executionTime = endTime - startTime;
 
       // this.logger.logVideoCalculation(
       //   content,
@@ -372,9 +401,9 @@ export class VideoItemsService {
       // );
 
       return duration;
-    } catch (error) {
+    } catch {
       const endTime = Date.now();
-      const executionTime = endTime - startTime;
+      const _executionTime = endTime - startTime;
 
       // this.metricsService.incrementApiErrors('video_duration', 'calculate_duration');
 
@@ -382,8 +411,8 @@ export class VideoItemsService {
       //   content,
       //   -1,
       //   VideoPlatform.UNKNOWN,
-      //   executionTime,
-      //   error
+      //   _executionTime,
+      //   _error
       // );
 
       const fallbackDuration = this.getEstimatedDuration(content);
@@ -776,7 +805,7 @@ export class VideoItemsService {
       if (!metadata.duration) {
         metadata.duration = await this.calculateVideoDuration(content);
       }
-    } catch (error) {
+    } catch {
       // this.logger.error(`Error extracting video metadata: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
 
@@ -874,9 +903,7 @@ export class VideoItemsService {
   /**
    * Actualiza metadatos de un video existente
    */
-  async updateVideoMetadata(
-    id: number
-  ): Promise<{ metadata: VideoMetadata; [key: string]: any }> {
+  async updateVideoMetadata(id: number): Promise<VideoMetadataUpdateResult> {
     // this.logger.log(`Updating metadata for video item ${id}`);
     const videoItem = await this.prisma.videoItem.findUnique({ where: { id } });
 
@@ -1268,7 +1295,7 @@ export class VideoItemsService {
   private shouldUpdateDuration(
     currentDuration: number | null,
     calculatedDuration: number,
-    title: string
+    _title: string
   ): boolean {
     if (!currentDuration || currentDuration <= 0) return true; // Siempre actualizar si no hay duración o es inválida
 

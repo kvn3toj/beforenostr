@@ -15,7 +15,7 @@ export class ChallengesService {
 
   async create(
     createChallengeDto: CreateChallengeDto,
-    user: AuthenticatedUser
+    _user: AuthenticatedUser
   ): Promise<Challenge> {
     const { rewards, config, type, startDate, endDate, ...challengeData } =
       createChallengeDto;
@@ -80,7 +80,7 @@ export class ChallengesService {
   async update(
     id: string,
     updateChallengeDto: UpdateChallengeDto,
-    user: AuthenticatedUser
+    _user: AuthenticatedUser
   ): Promise<Challenge> {
     const { rewards, config, type, ...challengeData } = updateChallengeDto;
 
@@ -125,15 +125,15 @@ export class ChallengesService {
     return updatedChallenge;
   }
 
-  async remove(id: string, user: AuthenticatedUser): Promise<Challenge> {
+  async remove(id: string, _user: AuthenticatedUser): Promise<Challenge> {
     const existingChallenge = await this.prisma.challenge.findUnique({
       where: { id },
     });
     if (!existingChallenge)
       throw new NotFoundException(`Challenge with ID ${id} not found`);
 
-    // Capture old value before deletion
-    const oldValue = existingChallenge;
+    // Capture old value before deletion (for future audit logging)
+    const _oldValue = existingChallenge;
 
     // Need to consider deleting associated UserChallenges and ChallengeRewards first
     await this.prisma.challengeReward.deleteMany({

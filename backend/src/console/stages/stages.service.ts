@@ -65,6 +65,26 @@ export interface StageAnalytics {
   optimizationSuggestions: string[];
 }
 
+// Interfaces for user data and merits
+interface UserWithMerits {
+  stageStartedAt?: Date;
+  merits?: Array<{ amount: number }>;
+  transactionsFrom?: unknown[];
+  transactionsTo?: unknown[];
+}
+
+interface MeritData {
+  amount: number;
+}
+
+interface StageWithMetrics {
+  id: string;
+  metrics: {
+    totalUsers: number;
+    conversionRate: number;
+  };
+}
+
 @Injectable()
 export class StagesService {
   private readonly logger = new Logger(StagesService.name);
@@ -126,7 +146,7 @@ export class StagesService {
     const userCount = await this.prisma.stageProgression.count({
       where: {
         stage,
-        isActive: true
+        isActive: true,
       },
     });
 
@@ -157,7 +177,7 @@ export class StagesService {
       const currentUsers = await this.prisma.stageProgression.count({
         where: {
           stage,
-          isActive: true
+          isActive: true,
         },
       });
 
@@ -217,7 +237,7 @@ export class StagesService {
         const progressedToNext = await this.prisma.stageProgression.count({
           where: {
             stage: nextStage,
-            isActive: true
+            isActive: true,
           },
         });
         conversionRate =
@@ -288,9 +308,9 @@ export class StagesService {
           transactionsTo: true,
           stageProgressions: {
             where: {
-              isActive: true
-            }
-          }
+              isActive: true,
+            },
+          },
         },
       });
 
@@ -371,10 +391,10 @@ export class StagesService {
         include: {
           stageProgressions: {
             where: {
-              isActive: true
-            }
-          }
-        }
+              isActive: true,
+            },
+          },
+        },
       });
 
       if (!user) {
@@ -410,12 +430,12 @@ export class StagesService {
       // Mark current stage progression as completed
       await this.prisma.stageProgression.update({
         where: {
-          id: activeProgression.id
+          id: activeProgression.id,
         },
         data: {
           isActive: false,
-          completedAt: new Date()
-        }
+          completedAt: new Date(),
+        },
       });
 
       // Create new stage progression
@@ -425,8 +445,8 @@ export class StagesService {
           stage: nextStage,
           isActive: true,
           requirements: {},
-          startedAt: new Date()
-        }
+          startedAt: new Date(),
+        },
       });
 
       this.logger.log(
@@ -506,7 +526,7 @@ export class StagesService {
   /**
    * 🔄 Calculate user progress for all metrics
    */
-  private async calculateUserProgress(user: any) {
+  private async calculateUserProgress(user: UserWithMerits) {
     const daysSinceStageStart = user.stageStartedAt
       ? Math.floor(
           (Date.now() - user.stageStartedAt.getTime()) / (1000 * 60 * 60 * 24)
@@ -516,7 +536,7 @@ export class StagesService {
     return {
       meritos:
         user.merits?.reduce(
-          (sum: number, merit: any) => sum + merit.amount,
+          (sum: number, merit: MeritData) => sum + merit.amount,
           0
         ) || 0,
       ondas: 0, // Calculate from user data when available
@@ -618,7 +638,7 @@ export class StagesService {
    */
   private estimateTimeToProgression(
     missingRequirements: string[],
-    currentProgress: Record<string, number>
+    _currentProgress: Record<string, number>
   ): number {
     // Simplified estimation - can be enhanced with ML models
     return missingRequirements.length * 3; // 3 days per missing requirement
@@ -629,7 +649,7 @@ export class StagesService {
    */
   private generateProgressionRecommendations(
     missingRequirements: string[],
-    currentStage: CustomerJourneyStage
+    _currentStage: CustomerJourneyStage
   ): string[] {
     const recommendations: string[] = [];
 
@@ -770,17 +790,17 @@ export class StagesService {
         include: { user: { select: { id: true, name: true, email: true } } },
         take: 10,
       });
-    } catch (error) {
+    } catch {
       return [];
     }
   }
 
-  private async calculateUserDistribution(stage: CustomerJourneyStage) {
+  private async calculateUserDistribution(_stage: CustomerJourneyStage) {
     // Mock implementation
     return { active: 80, progressing: 15, stuck: 5 };
   }
 
-  private async calculateProgressionTrends(stage: CustomerJourneyStage) {
+  private async calculateProgressionTrends(_stage: CustomerJourneyStage) {
     // Mock implementation - replace with real trend calculation
     const last30Days = Array.from({ length: 30 }, (_, i) => {
       const date = new Date(Date.now() - i * 24 * 60 * 60 * 1000);
@@ -794,7 +814,7 @@ export class StagesService {
   }
 
   private async getTopExitPoints(
-    stage: CustomerJourneyStage
+    _stage: CustomerJourneyStage
   ): Promise<string[]> {
     // Mock implementation
     return [
@@ -978,7 +998,7 @@ export class StagesService {
   /**
    * 📊 Calculate conversion funnel
    */
-  private calculateConversionFunnel(stages: any[]) {
+  private calculateConversionFunnel(stages: StageWithMetrics[]) {
     return stages.map((stage, index) => ({
       stage: stage.id,
       users: stage.metrics.totalUsers,
@@ -989,7 +1009,7 @@ export class StagesService {
   /**
    * 📈 Calculate stage progression overview
    */
-  private calculateStageProgression(stages: any[]) {
+  private calculateStageProgression(stages: StageWithMetrics[]) {
     const totalUsers = stages.reduce(
       (sum, stage) => sum + stage.metrics.totalUsers,
       0

@@ -5,7 +5,7 @@ import {
   UseGuards,
   Req,
   ForbiddenException,
-  NotFoundException,
+  // NotFoundException, // Unused import
   Inject,
 } from '@nestjs/common';
 import { WalletsService } from './wallets.service';
