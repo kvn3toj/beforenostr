@@ -777,6 +777,34 @@ exports.Prisma.MatchMessageScalarFieldEnum = {
   createdAt: 'createdAt'
 };
 
+exports.Prisma.AIMissionScalarFieldEnum = {
+  id: 'id',
+  missionType: 'missionType',
+  primaryAgent: 'primaryAgent',
+  involvedAgents: 'involvedAgents',
+  title: 'title',
+  description: 'description',
+  prompt: 'prompt',
+  context: 'context',
+  status: 'status',
+  progress: 'progress',
+  estimatedDuration: 'estimatedDuration',
+  startedAt: 'startedAt',
+  completedAt: 'completedAt',
+  results: 'results',
+  outputs: 'outputs',
+  errorMessage: 'errorMessage',
+  n8nWorkflowId: 'n8nWorkflowId',
+  n8nExecutionId: 'n8nExecutionId',
+  webhookResponse: 'webhookResponse',
+  qualityScore: 'qualityScore',
+  userFeedback: 'userFeedback',
+  costEstimate: 'costEstimate',
+  createdBy: 'createdBy',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -875,6 +903,31 @@ exports.MatchStatus = exports.$Enums.MatchStatus = {
   COMPLETED: 'COMPLETED'
 };
 
+exports.MissionType = exports.$Enums.MissionType = {
+  RESEARCH: 'RESEARCH',
+  MEDIA_CREATION: 'MEDIA_CREATION',
+  PUBLICATION: 'PUBLICATION',
+  NOTIFICATION: 'NOTIFICATION',
+  COMPLEX: 'COMPLEX'
+};
+
+exports.AgentType = exports.$Enums.AgentType = {
+  ANA: 'ANA',
+  NIRA: 'NIRA',
+  ARIA: 'ARIA',
+  HERALDO: 'HERALDO',
+  PAX: 'PAX'
+};
+
+exports.MissionStatus = exports.$Enums.MissionStatus = {
+  PENDING: 'PENDING',
+  DISPATCHED: 'DISPATCHED',
+  IN_PROGRESS: 'IN_PROGRESS',
+  COMPLETED: 'COMPLETED',
+  FAILED: 'FAILED',
+  CANCELLED: 'CANCELLED'
+};
+
 exports.Prisma.ModelName = {
   Mundo: 'Mundo',
   Playlist: 'Playlist',
@@ -930,7 +983,8 @@ exports.Prisma.ModelName = {
   Profile: 'Profile',
   Review: 'Review',
   MarketplaceMatch: 'MarketplaceMatch',
-  MatchMessage: 'MatchMessage'
+  MatchMessage: 'MatchMessage',
+  AIMission: 'AIMission'
 };
 
 /**

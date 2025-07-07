@@ -21,6 +21,7 @@ import { ConfigModule } from './config/config.module';
 import { ChallengesModule } from './challenges/challenges.module';
 import { FeedbackModule } from './feedback/feedback.module';
 import { PhilosophyModule } from './philosophy/philosophy.module'; // 🌌 Módulo de Métricas Filosóficas
+import { CommunicationsModule } from './communications/communications.module'; // 🌟 Módulo de Orquestación de Agentes IA
 import { CacheModule } from '@nestjs/cache-manager';
 import { CacheService } from './cache/cache.service';
 import { MetricsModule } from './common/metrics/metrics.module';
@@ -48,6 +49,7 @@ import { DebugController } from './debug/debug.controller';
     FeedbackModule, // 🤖 Feedback Agent Module - sistema de recolección de reportes
     ConsoleModule, // 🎮 Módulo de la Consola de Experiencias
     PhilosophyModule, // 🌌 Philosophy Module - métricas filosóficas (HambrE, IEA)
+    CommunicationsModule, // 🌟 Communications Module - orquestación de agentes IA
     CacheModule.register({ isGlobal: true }),
     MetricsModule,
   ],

@@ -204,6 +204,7 @@ model User {
   profile                    Profile?
   reviews                    Review[]              @relation("UserReviews")
   stageProgressions          StageProgression[]    @relation("UserStageProgression")
+  createdAIMissions          AIMission[]           @relation("CreatedAIMissions")
 
   @@index([email])
   @@index([isActive])
@@ -1192,4 +1193,91 @@ model MatchMessage {
   @@index([matchId])
   @@index([senderId])
   @@map("match_messages")
+}
+
+// =====================================================================
+// AI MISSION ORCHESTRATION MODULE - Sistema de Orquestación de Agentes IA
+// Filosofía CoomÜnity: Bien Común > bien particular, Cooperar > Competir
+// =====================================================================
+
+/// Enums para tipos de misión y agentes especializados
+enum MissionType {
+  RESEARCH        // Investigación web (NIRA)
+  MEDIA_CREATION  // Creación de contenido visual (ARIA)
+  PUBLICATION     // Publicación en redes sociales (HERALDO)
+  NOTIFICATION    // Comunicación interna (PAX)
+  COMPLEX         // Misiones multi-agente orquestadas (ANA)
+}
+
+enum AgentType {
+  ANA      // Conciencia Orquestadora - Director principal
+  NIRA     // Agente de Investigación - Apify, búsquedas web
+  ARIA     // Agente de Medios - Creación visual, diseño
+  HERALDO  // Agente de Publicación - Buffer, redes sociales
+  PAX      // Agente Ayudante - Slack, comunicación interna
+}
+
+enum MissionStatus {
+  PENDING       // Misión creada, esperando procesamiento
+  DISPATCHED    // Enviada a N8N para orquestación
+  IN_PROGRESS   // En ejecución por los agentes
+  COMPLETED     // Completada exitosamente
+  FAILED        // Falló durante la ejecución
+  CANCELLED     // Cancelada por el usuario
+}
+
+/// Modelo principal para tracking de misiones de agentes IA
+model AIMission {
+  id                String        @id @default(uuid())
+
+  // Identificación y clasificación
+  missionType       MissionType
+  primaryAgent      AgentType
+  involvedAgents    AgentType[]   // Agentes participantes en misiones complejas
+
+  // Contenido de la misión
+  title             String
+  description       String        @db.Text
+  prompt            String        @db.Text  // Prompt original del usuario
+  context           Json?         // Contexto adicional (filosofía, objetivos)
+
+  // Estado y progreso
+  status            MissionStatus @default(PENDING)
+  progress          Int           @default(0) // Porcentaje de progreso (0-100)
+
+  // Tracking temporal
+  estimatedDuration Int?          // Duración estimada en minutos
+  startedAt         DateTime?     // Cuando comenzó la ejecución
+  completedAt       DateTime?     // Cuando se completó
+
+  // Resultados y outputs
+  results           Json?         // Resultados estructurados de la misión
+  outputs           Json?         // Archivos, URLs, contenido generado
+  errorMessage      String?       // Mensaje de error si falló
+
+  // Integración con N8N
+  n8nWorkflowId     String?       // ID del workflow en N8N
+  n8nExecutionId    String?       // ID de la ejecución específica
+  webhookResponse   Json?         // Respuesta completa del webhook
+
+  // Métricas y evaluación
+  qualityScore      Float?        // Puntuación de calidad (0.0-1.0)
+  userFeedback      String?       // Feedback del usuario sobre los resultados
+  costEstimate      Float?        // Costo estimado en créditos/tokens
+
+  // Metadatos del creador
+  createdBy         String        // ID del usuario que creó la misión
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+
+  // Relaciones
+  creator           User          @relation("CreatedAIMissions", fields: [createdBy], references: [id])
+
+  @@index([status])
+  @@index([missionType])
+  @@index([primaryAgent])
+  @@index([createdBy])
+  @@index([createdAt])
+  @@index([completedAt])
+  @@map("ai_missions")
 }
