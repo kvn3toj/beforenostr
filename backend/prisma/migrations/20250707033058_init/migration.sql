@@ -1,5 +1,8 @@
 -- CreateEnum
-CREATE TYPE "Currency" AS ENUM ('LUKAS', 'USD', 'EUR', 'BTC', 'ETH');
+CREATE TYPE "Currency" AS ENUM ('UNITS', 'TOINS', 'ONDAS', 'MERITOS');
+
+-- CreateEnum
+CREATE TYPE "CustomerJourneyStage" AS ENUM ('BUYER', 'SEEKER', 'SOLVER', 'PROMOTER');
 
 -- CreateEnum
 CREATE TYPE "MarketplaceItemType" AS ENUM ('PRODUCT', 'SERVICE', 'EXPERIENCE', 'SKILL_EXCHANGE', 'DIGITAL_CONTENT');
@@ -18,6 +21,9 @@ CREATE TYPE "FeedbackPriority" AS ENUM ('LOW', 'MEDIUM', 'HIGH', 'CRITICAL');
 
 -- CreateEnum
 CREATE TYPE "FeedbackStatus" AS ENUM ('SUBMITTED', 'REVIEWING', 'IN_PROGRESS', 'RESOLVED', 'REJECTED', 'DUPLICATE');
+
+-- CreateEnum
+CREATE TYPE "MatchStatus" AS ENUM ('PENDING', 'CONFIRMED', 'CANCELLED', 'COMPLETED');
 
 -- CreateTable
 CREATE TABLE "mundos" (
@@ -356,12 +362,11 @@ CREATE TABLE "merits" (
 CREATE TABLE "wallets" (
     "id" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
-    "blockchainAddress" TEXT,
-    "balanceUnits" DOUBLE PRECISION NOT NULL DEFAULT 0,
-    "balanceToins" DOUBLE PRECISION NOT NULL DEFAULT 0,
-    "status" TEXT NOT NULL DEFAULT 'ACTIVE',
+    "balance" DOUBLE PRECISION NOT NULL DEFAULT 0,
+    "currency" TEXT NOT NULL DEFAULT 'USD',
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
+    "lastTransaction" TIMESTAMP(3),
 
     CONSTRAINT "wallets_pkey" PRIMARY KEY ("id")
 );
@@ -369,14 +374,16 @@ CREATE TABLE "wallets" (
 -- CreateTable
 CREATE TABLE "transactions" (
     "id" TEXT NOT NULL,
+    "amount" DOUBLE PRECISION NOT NULL,
+    "currency" TEXT NOT NULL,
+    "description" TEXT,
     "fromUserId" TEXT,
     "toUserId" TEXT NOT NULL,
-    "amount" DOUBLE PRECISION NOT NULL,
-    "tokenType" TEXT NOT NULL,
-    "type" TEXT NOT NULL,
-    "status" TEXT NOT NULL DEFAULT 'PENDING',
-    "description" TEXT,
+    "transactionDate" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "type" TEXT,
+    "metadata" JSONB,
 
     CONSTRAINT "transactions_pkey" PRIMARY KEY ("id")
 );
@@ -650,27 +657,61 @@ CREATE TABLE "user_challenges" (
 );
 
 -- CreateTable
+CREATE TABLE "stage_progressions" (
+    "id" TEXT NOT NULL,
+    "userId" TEXT NOT NULL,
+    "stage" "CustomerJourneyStage" NOT NULL,
+    "startedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "completedAt" TIMESTAMP(3),
+    "requirements" JSONB NOT NULL,
+    "metrics" JSONB,
+    "isActive" BOOLEAN NOT NULL DEFAULT true,
+
+    CONSTRAINT "stage_progressions_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "stage_requirements" (
+    "id" TEXT NOT NULL,
+    "stage" "CustomerJourneyStage" NOT NULL,
+    "type" TEXT NOT NULL,
+    "minValue" INTEGER NOT NULL,
+    "description" TEXT NOT NULL,
+    "isRequired" BOOLEAN NOT NULL DEFAULT true,
+    "order" INTEGER NOT NULL DEFAULT 0,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "stage_requirements_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "marketplace_items" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
-    "description" TEXT NOT NULL,
-    "price" DOUBLE PRECISION NOT NULL,
-    "currency" "Currency" NOT NULL DEFAULT 'LUKAS',
+    "description" TEXT,
+    "fullDescription" TEXT,
     "itemType" "MarketplaceItemType" NOT NULL DEFAULT 'SERVICE',
-    "status" "MarketplaceItemStatus" NOT NULL DEFAULT 'ACTIVE',
-    "images" TEXT[],
+    "price" DOUBLE PRECISION NOT NULL DEFAULT 0,
+    "priceToins" DOUBLE PRECISION NOT NULL DEFAULT 0,
+    "currency" "Currency" NOT NULL DEFAULT 'UNITS',
+    "category" TEXT,
     "tags" TEXT[],
+    "images" TEXT[],
+    "stock" INTEGER NOT NULL DEFAULT 0,
+    "rating" DOUBLE PRECISION NOT NULL DEFAULT 0,
+    "reviewCount" INTEGER NOT NULL DEFAULT 0,
     "location" TEXT,
-    "metadata" TEXT,
-    "priceToins" DOUBLE PRECISION DEFAULT 0,
-    "sellerId" TEXT NOT NULL,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "status" "MarketplaceItemStatus" NOT NULL DEFAULT 'ACTIVE',
     "isActive" BOOLEAN NOT NULL DEFAULT true,
     "isDeleted" BOOLEAN NOT NULL DEFAULT false,
     "deletedAt" TIMESTAMP(3),
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
     "viewCount" INTEGER NOT NULL DEFAULT 0,
     "favoriteCount" INTEGER NOT NULL DEFAULT 0,
+    "sellerId" TEXT NOT NULL,
+    "metadata" TEXT,
 
     CONSTRAINT "marketplace_items_pkey" PRIMARY KEY ("id")
 );
@@ -745,6 +786,70 @@ CREATE TABLE "feedback_reports" (
     CONSTRAINT "feedback_reports_pkey" PRIMARY KEY ("id")
 );
 
+-- CreateTable
+CREATE TABLE "profiles" (
+    "id" TEXT NOT NULL,
+    "userId" TEXT NOT NULL,
+    "avatar" TEXT,
+    "bio" TEXT,
+    "location" TEXT,
+    "website" TEXT,
+    "skills" TEXT[],
+    "interests" TEXT[],
+    "isEmprendedorConfiable" BOOLEAN NOT NULL DEFAULT false,
+    "socialLinks" JSONB,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "profiles_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "reviews" (
+    "id" TEXT NOT NULL,
+    "marketplaceItemId" TEXT NOT NULL,
+    "userId" TEXT NOT NULL,
+    "rating" INTEGER NOT NULL,
+    "comment" TEXT,
+    "communication" INTEGER,
+    "quality" INTEGER,
+    "delivery" INTEGER,
+    "value" INTEGER,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "reviews_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "marketplace_matches" (
+    "id" TEXT NOT NULL,
+    "marketplaceItemId" TEXT NOT NULL,
+    "buyerId" TEXT NOT NULL,
+    "sellerId" TEXT NOT NULL,
+    "buyerConfirmed" BOOLEAN NOT NULL DEFAULT false,
+    "sellerConfirmed" BOOLEAN NOT NULL DEFAULT false,
+    "status" "MatchStatus" NOT NULL DEFAULT 'PENDING',
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "marketplace_matches_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "match_messages" (
+    "id" TEXT NOT NULL,
+    "matchId" TEXT NOT NULL,
+    "senderId" TEXT NOT NULL,
+    "content" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "match_messages_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateIndex
+CREATE UNIQUE INDEX "mundos_name_key" ON "mundos"("name");
+
 -- CreateIndex
 CREATE INDEX "mundos_isActive_idx" ON "mundos"("isActive");
 
@@ -762,6 +867,12 @@ CREATE INDEX "playlists_createdById_idx" ON "playlists"("createdById");
 
 -- CreateIndex
 CREATE INDEX "playlists_orderInMundo_idx" ON "playlists"("orderInMundo");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "playlists_mundoId_name_key" ON "playlists"("mundoId", "name");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "video_items_title_key" ON "video_items"("title");
 
 -- CreateIndex
 CREATE INDEX "video_items_playlistId_idx" ON "video_items"("playlistId");
@@ -932,28 +1043,10 @@ CREATE INDEX "merits_source_idx" ON "merits"("source");
 CREATE UNIQUE INDEX "wallets_userId_key" ON "wallets"("userId");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "wallets_blockchainAddress_key" ON "wallets"("blockchainAddress");
+CREATE INDEX "transaction_from_user_id_idx" ON "transactions"("fromUserId");
 
 -- CreateIndex
-CREATE INDEX "wallets_userId_idx" ON "wallets"("userId");
-
--- CreateIndex
-CREATE INDEX "wallets_blockchainAddress_idx" ON "wallets"("blockchainAddress");
-
--- CreateIndex
-CREATE INDEX "wallets_status_idx" ON "wallets"("status");
-
--- CreateIndex
-CREATE INDEX "transactions_fromUserId_idx" ON "transactions"("fromUserId");
-
--- CreateIndex
-CREATE INDEX "transactions_toUserId_idx" ON "transactions"("toUserId");
-
--- CreateIndex
-CREATE INDEX "transactions_type_idx" ON "transactions"("type");
-
--- CreateIndex
-CREATE INDEX "transactions_status_idx" ON "transactions"("status");
+CREATE INDEX "transaction_to_user_id_idx" ON "transactions"("toUserId");
 
 -- CreateIndex
 CREATE INDEX "groups_ownerId_idx" ON "groups"("ownerId");
@@ -1127,16 +1220,31 @@ CREATE INDEX "user_challenges_status_idx" ON "user_challenges"("status");
 CREATE UNIQUE INDEX "user_challenges_userId_challengeId_key" ON "user_challenges"("userId", "challengeId");
 
 -- CreateIndex
+CREATE INDEX "stage_progressions_userId_idx" ON "stage_progressions"("userId");
+
+-- CreateIndex
+CREATE INDEX "stage_progressions_stage_idx" ON "stage_progressions"("stage");
+
+-- CreateIndex
+CREATE INDEX "stage_progressions_isActive_idx" ON "stage_progressions"("isActive");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "stage_progressions_userId_stage_key" ON "stage_progressions"("userId", "stage");
+
+-- CreateIndex
+CREATE INDEX "stage_requirements_stage_idx" ON "stage_requirements"("stage");
+
+-- CreateIndex
+CREATE INDEX "stage_requirements_type_idx" ON "stage_requirements"("type");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "marketplace_items_name_key" ON "marketplace_items"("name");
+
+-- CreateIndex
 CREATE INDEX "marketplace_items_sellerId_idx" ON "marketplace_items"("sellerId");
 
 -- CreateIndex
-CREATE INDEX "marketplace_items_itemType_idx" ON "marketplace_items"("itemType");
-
--- CreateIndex
 CREATE INDEX "marketplace_items_status_idx" ON "marketplace_items"("status");
-
--- CreateIndex
-CREATE INDEX "marketplace_items_currency_idx" ON "marketplace_items"("currency");
 
 -- CreateIndex
 CREATE INDEX "marketplace_items_isActive_idx" ON "marketplace_items"("isActive");
@@ -1148,7 +1256,28 @@ CREATE INDEX "marketplace_items_isDeleted_idx" ON "marketplace_items"("isDeleted
 CREATE INDEX "marketplace_items_createdAt_idx" ON "marketplace_items"("createdAt");
 
 -- CreateIndex
+CREATE INDEX "marketplace_items_updatedAt_idx" ON "marketplace_items"("updatedAt");
+
+-- CreateIndex
+CREATE INDEX "marketplace_items_viewCount_idx" ON "marketplace_items"("viewCount");
+
+-- CreateIndex
+CREATE INDEX "marketplace_items_favoriteCount_idx" ON "marketplace_items"("favoriteCount");
+
+-- CreateIndex
+CREATE INDEX "marketplace_items_itemType_idx" ON "marketplace_items"("itemType");
+
+-- CreateIndex
 CREATE INDEX "marketplace_items_price_idx" ON "marketplace_items"("price");
+
+-- CreateIndex
+CREATE INDEX "marketplace_items_priceToins_idx" ON "marketplace_items"("priceToins");
+
+-- CreateIndex
+CREATE INDEX "marketplace_items_currency_idx" ON "marketplace_items"("currency");
+
+-- CreateIndex
+CREATE INDEX "marketplace_items_category_idx" ON "marketplace_items"("category");
 
 -- CreateIndex
 CREATE INDEX "marketplace_items_location_idx" ON "marketplace_items"("location");
@@ -1206,6 +1335,30 @@ CREATE INDEX "feedback_reports_priority_idx" ON "feedback_reports"("priority");
 
 -- CreateIndex
 CREATE INDEX "feedback_reports_createdAt_idx" ON "feedback_reports"("createdAt");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "profiles_userId_key" ON "profiles"("userId");
+
+-- CreateIndex
+CREATE INDEX "reviews_marketplaceItemId_idx" ON "reviews"("marketplaceItemId");
+
+-- CreateIndex
+CREATE INDEX "reviews_userId_idx" ON "reviews"("userId");
+
+-- CreateIndex
+CREATE INDEX "marketplace_matches_marketplaceItemId_idx" ON "marketplace_matches"("marketplaceItemId");
+
+-- CreateIndex
+CREATE INDEX "marketplace_matches_buyerId_idx" ON "marketplace_matches"("buyerId");
+
+-- CreateIndex
+CREATE INDEX "marketplace_matches_sellerId_idx" ON "marketplace_matches"("sellerId");
+
+-- CreateIndex
+CREATE INDEX "match_messages_matchId_idx" ON "match_messages"("matchId");
+
+-- CreateIndex
+CREATE INDEX "match_messages_senderId_idx" ON "match_messages"("senderId");
 
 -- AddForeignKey
 ALTER TABLE "playlists" ADD CONSTRAINT "playlists_mundoId_fkey" FOREIGN KEY ("mundoId") REFERENCES "mundos"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -1298,19 +1451,13 @@ ALTER TABLE "tokens" ADD CONSTRAINT "tokens_userId_fkey" FOREIGN KEY ("userId") 
 ALTER TABLE "merits" ADD CONSTRAINT "merits_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "wallets" ADD CONSTRAINT "wallets_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "transactions" ADD CONSTRAINT "transaction_to_wallet_fkey" FOREIGN KEY ("toUserId") REFERENCES "wallets"("userId") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "transactions" ADD CONSTRAINT "transaction_from_wallet_fkey" FOREIGN KEY ("fromUserId") REFERENCES "wallets"("userId") ON DELETE SET NULL ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "transactions" ADD CONSTRAINT "transaction_to_user_fkey" FOREIGN KEY ("toUserId") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "wallets" ADD CONSTRAINT "wallets_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "transactions" ADD CONSTRAINT "transaction_from_user_fkey" FOREIGN KEY ("fromUserId") REFERENCES "users"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "transactions" ADD CONSTRAINT "transaction_to_user_fkey" FOREIGN KEY ("toUserId") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "groups" ADD CONSTRAINT "groups_ownerId_fkey" FOREIGN KEY ("ownerId") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -1373,6 +1520,9 @@ ALTER TABLE "user_challenges" ADD CONSTRAINT "user_challenges_challengeId_fkey" 
 ALTER TABLE "user_challenges" ADD CONSTRAINT "user_challenges_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE "stage_progressions" ADD CONSTRAINT "stage_progressions_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE "marketplace_items" ADD CONSTRAINT "marketplace_items_sellerId_fkey" FOREIGN KEY ("sellerId") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
@@ -1398,3 +1548,27 @@ ALTER TABLE "feedback_reports" ADD CONSTRAINT "feedback_reports_userId_fkey" FOR
 
 -- AddForeignKey
 ALTER TABLE "feedback_reports" ADD CONSTRAINT "feedback_reports_adminUserId_fkey" FOREIGN KEY ("adminUserId") REFERENCES "users"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "profiles" ADD CONSTRAINT "profiles_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "reviews" ADD CONSTRAINT "reviews_marketplaceItemId_fkey" FOREIGN KEY ("marketplaceItemId") REFERENCES "marketplace_items"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "reviews" ADD CONSTRAINT "reviews_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "marketplace_matches" ADD CONSTRAINT "marketplace_matches_marketplaceItemId_fkey" FOREIGN KEY ("marketplaceItemId") REFERENCES "marketplace_items"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "marketplace_matches" ADD CONSTRAINT "marketplace_matches_buyerId_fkey" FOREIGN KEY ("buyerId") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "marketplace_matches" ADD CONSTRAINT "marketplace_matches_sellerId_fkey" FOREIGN KEY ("sellerId") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "match_messages" ADD CONSTRAINT "match_messages_matchId_fkey" FOREIGN KEY ("matchId") REFERENCES "marketplace_matches"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "match_messages" ADD CONSTRAINT "match_messages_senderId_fkey" FOREIGN KEY ("senderId") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
