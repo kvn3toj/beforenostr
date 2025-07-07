@@ -68,6 +68,10 @@ RUN chmod +x ./start-production.sh
 COPY backend/force-migrations.sh ./force-migrations.sh
 RUN chmod +x ./force-migrations.sh
 
+# 🦅 PHOENIX: Copia el script de limpieza de migraciones
+COPY backend/phoenix-migration-cleanup.sh ./phoenix-migration-cleanup.sh
+RUN chmod +x ./phoenix-migration-cleanup.sh
+
 # Expone el puerto que la aplicación usará
 EXPOSE 3002
 
@@ -76,3 +80,5 @@ CMD ["./start-production.sh"]
 
 # ATLAS MISSION: Forzar nuevo build con migración 20250707005901_add_missing_unique_constraints
 # Timestamp: Jul 6 20:45:00 2025 - Migración creada después del último build exitoso
+# 🦅 PHOENIX MISSION: Renacimiento del esquema con migración inicial única
+# Timestamp: Jul 6 22:30:58 2025 - Migración inicial limpia (20250707033058_init)

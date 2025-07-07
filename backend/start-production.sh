@@ -4,6 +4,10 @@ set -e
 
 echo "✅ [CoomÜnity-Deploy] Iniciando script de producción..."
 
+# 🦅 PHOENIX: Limpieza de historial de migraciones corrupto
+echo "🦅 [PHOENIX] Ejecutando limpieza de historial de migraciones..."
+./phoenix-migration-cleanup.sh
+
 # 1. Generar el cliente Prisma
 echo "⚙️ [CoomÜnity-Deploy] Generando cliente Prisma..."
 npx prisma generate --schema=./backend/prisma/schema.prisma
