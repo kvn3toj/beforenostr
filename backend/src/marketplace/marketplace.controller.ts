@@ -10,6 +10,9 @@ import {
   UseGuards,
   Inject,
   Req,
+  HttpException,
+  HttpStatus,
+  Logger,
 } from '@nestjs/common';
 import { Request } from 'express';
 import { MarketplaceService } from './marketplace.service';
@@ -31,11 +34,13 @@ interface AuthenticatedRequest extends Request {
 
 @Controller('marketplace')
 export class MarketplaceController {
+  private readonly logger = new Logger(MarketplaceController.name);
+
   constructor(
     @Inject(MarketplaceService)
     private readonly marketplaceService: MarketplaceService
   ) {
-    // //     console.log('>>> MarketplaceController CONSTRUCTOR: this.marketplaceService IS', this.marketplaceService ? 'DEFINED' : 'UNDEFINED');
+    this.logger.log('MarketplaceController initialized');
   }
 
   /**
@@ -48,17 +53,30 @@ export class MarketplaceController {
     @Body() dto: CreateMarketplaceItemDto,
     @Req() req: AuthenticatedRequest
   ) {
-    //     console.log('>>> MarketplaceController.createItem: Creating marketplace item', dto);
+    try {
+      this.logger.log('Creating marketplace item');
 
-    // Obtener el userId del token JWT
-    const userId = req.user?.id;
-    if (!userId) {
-      throw new Error('Usuario no autenticado');
+      // Obtener el userId del token JWT
+      const userId = req.user?.id;
+      if (!userId) {
+        throw new HttpException('Usuario no autenticado', HttpStatus.UNAUTHORIZED);
+      }
+
+      // Usar el userId del token en lugar del DTO
+      const createDto = { ...dto, sellerId: userId };
+      return await this.marketplaceService.createItem(createDto);
+    } catch (error) {
+      this.logger.error(`Error creating marketplace item: ${error.message}`, error.stack);
+
+      if (error instanceof HttpException) {
+        throw error;
+      }
+
+      throw new HttpException(
+        'Error interno del servidor al crear el item',
+        HttpStatus.INTERNAL_SERVER_ERROR
+      );
     }
-
-    // Usar el userId del token en lugar del DTO
-    const createDto = { ...dto, sellerId: userId };
-    return await this.marketplaceService.createItem(createDto);
   }
 
   /**
@@ -77,20 +95,29 @@ export class MarketplaceController {
     @Query('limit') limit?: string,
     @Query('offset') offset?: string
   ) {
-    //     console.log('>>> MarketplaceController.searchItems: Searching marketplace items');
+    try {
+      this.logger.log('Searching marketplace items');
 
-    const searchDto: MarketplaceSearchDto = {
-      query,
-      type: type as MarketplaceItemType,
-      minPrice: minPrice ? parseInt(minPrice, 10) : undefined,
-      maxPrice: maxPrice ? parseInt(maxPrice, 10) : undefined,
-      location,
-      tags: tags ? tags.split(',') : undefined,
-      limit,
-      offset,
-    };
+      const searchDto: MarketplaceSearchDto = {
+        query,
+        type: type as MarketplaceItemType,
+        minPrice: minPrice ? parseInt(minPrice, 10) : undefined,
+        maxPrice: maxPrice ? parseInt(maxPrice, 10) : undefined,
+        location,
+        tags: tags ? tags.split(',') : undefined,
+        limit,
+        offset,
+      };
 
-    return await this.marketplaceService.searchItems(searchDto);
+      return await this.marketplaceService.searchItems(searchDto);
+    } catch (error) {
+      this.logger.error(`Error searching marketplace items: ${error.message}`, error.stack);
+
+      throw new HttpException(
+        'Error interno del servidor al buscar items',
+        HttpStatus.INTERNAL_SERVER_ERROR
+      );
+    }
   }
 
   /**
@@ -99,12 +126,52 @@ export class MarketplaceController {
   @Get('items')
   async getAllItems(
     @Query('limit') limit?: string,
-    @Query('offset') offset?: string
+    @Query('offset') offset?: string,
+    @Query('page') page?: string,
+    @Query('category') category?: string,
+    @Query('search') search?: string
   ) {
-    //     console.log('>>> MarketplaceController.getAllItems: Getting all marketplace items (PUBLIC)');
+    try {
+      this.logger.log('Getting all marketplace items (PUBLIC endpoint)');
 
-    const searchDto: MarketplaceSearchDto = { limit, offset };
-    return await this.marketplaceService.findAllActiveItems(searchDto);
+      // Convertir page a offset si se proporciona
+      let calculatedOffset = offset ? parseInt(offset, 10) : 0;
+      const limitNum = limit ? parseInt(limit, 10) : 20;
+
+      if (page && !offset) {
+        const pageNum = parseInt(page, 10);
+        calculatedOffset = (pageNum - 1) * limitNum;
+      }
+
+      const searchDto: MarketplaceSearchDto = {
+        limit: limitNum.toString(),
+        offset: calculatedOffset.toString(),
+        query: search,
+      };
+
+      // Si hay categoría, agregarla como filtro de búsqueda
+      if (category) {
+        searchDto.query = category;
+      }
+
+      const result = await this.marketplaceService.findAllActiveItems(searchDto);
+
+      this.logger.log(`Successfully retrieved ${result.items?.length || 0} marketplace items`);
+      return result;
+    } catch (error) {
+      this.logger.error(`Error getting all marketplace items: ${error.message}`, error.stack);
+
+      // Retornar estructura mínima en caso de error para evitar romper la UI
+      return {
+        items: [],
+        total: 0,
+        limit: parseInt(limit || '20', 10),
+        offset: parseInt(offset || '0', 10),
+        hasMore: false,
+        error: 'Error interno del servidor al obtener items del marketplace',
+        timestamp: new Date().toISOString()
+      };
+    }
   }
 
   /**
@@ -114,8 +181,30 @@ export class MarketplaceController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('admin', 'USER')
   async getItem(@Param('itemId') itemId: string) {
-    //     console.log('>>> MarketplaceController.getItem: Getting marketplace item', itemId);
-    return await this.marketplaceService.getItem(itemId);
+    try {
+      this.logger.log(`Getting marketplace item: ${itemId}`);
+
+      if (!itemId || itemId.trim() === '') {
+        throw new HttpException('ID de item inválido', HttpStatus.BAD_REQUEST);
+      }
+
+      return await this.marketplaceService.getItem(itemId);
+    } catch (error) {
+      this.logger.error(`Error getting marketplace item ${itemId}: ${error.message}`, error.stack);
+
+      if (error instanceof HttpException) {
+        throw error;
+      }
+
+      if (error.message.includes('not found') || error.message.includes('no encontrado')) {
+        throw new HttpException('Item no encontrado', HttpStatus.NOT_FOUND);
+      }
+
+      throw new HttpException(
+        'Error interno del servidor al obtener el item',
+        HttpStatus.INTERNAL_SERVER_ERROR
+      );
+    }
   }
 
   /**
@@ -129,15 +218,28 @@ export class MarketplaceController {
     @Body() dto: UpdateMarketplaceItemDto,
     @Req() req: AuthenticatedRequest
   ) {
-    //     console.log('>>> MarketplaceController.updateItem: Updating marketplace item', itemId);
+    try {
+      this.logger.log(`Updating marketplace item: ${itemId}`);
 
-    // Obtener el userId del token JWT
-    const userId = req.user?.id;
-    if (!userId) {
-      throw new Error('Usuario no autenticado');
+      // Obtener el userId del token JWT
+      const userId = req.user?.id;
+      if (!userId) {
+        throw new HttpException('Usuario no autenticado', HttpStatus.UNAUTHORIZED);
+      }
+
+      return await this.marketplaceService.updateItem(itemId, dto, userId);
+    } catch (error) {
+      this.logger.error(`Error updating marketplace item ${itemId}: ${error.message}`, error.stack);
+
+      if (error instanceof HttpException) {
+        throw error;
+      }
+
+      throw new HttpException(
+        'Error interno del servidor al actualizar el item',
+        HttpStatus.INTERNAL_SERVER_ERROR
+      );
     }
-
-    return await this.marketplaceService.updateItem(itemId, dto, userId);
   }
 
   /**
@@ -150,15 +252,28 @@ export class MarketplaceController {
     @Param('itemId') itemId: string,
     @Req() req: AuthenticatedRequest
   ) {
-    //     console.log('>>> MarketplaceController.deleteItem: Deleting marketplace item', itemId);
+    try {
+      this.logger.log(`Deleting marketplace item: ${itemId}`);
 
-    // Obtener el userId del token JWT
-    const userId = req.user?.id;
-    if (!userId) {
-      throw new Error('Usuario no autenticado');
+      // Obtener el userId del token JWT
+      const userId = req.user?.id;
+      if (!userId) {
+        throw new HttpException('Usuario no autenticado', HttpStatus.UNAUTHORIZED);
+      }
+
+      return await this.marketplaceService.deleteItem(itemId, userId);
+    } catch (error) {
+      this.logger.error(`Error deleting marketplace item ${itemId}: ${error.message}`, error.stack);
+
+      if (error instanceof HttpException) {
+        throw error;
+      }
+
+      throw new HttpException(
+        'Error interno del servidor al eliminar el item',
+        HttpStatus.INTERNAL_SERVER_ERROR
+      );
     }
-
-    return await this.marketplaceService.deleteItem(itemId, userId);
   }
 
   /**
@@ -168,8 +283,17 @@ export class MarketplaceController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('admin', 'USER')
   async getSellerItems(@Param('sellerId') sellerId: string) {
-    //     console.log('>>> MarketplaceController.getSellerItems: Getting items for seller', sellerId);
-    return await this.marketplaceService.getSellerItems(sellerId);
+    try {
+      this.logger.log(`Getting items for seller: ${sellerId}`);
+      return await this.marketplaceService.getSellerItems(sellerId);
+    } catch (error) {
+      this.logger.error(`Error getting seller items for ${sellerId}: ${error.message}`, error.stack);
+
+      throw new HttpException(
+        'Error interno del servidor al obtener items del vendedor',
+        HttpStatus.INTERNAL_SERVER_ERROR
+      );
+    }
   }
 
   /**
@@ -179,15 +303,28 @@ export class MarketplaceController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('admin', 'USER')
   async getUserFavorites(@Req() req: AuthenticatedRequest) {
-    //     console.log('>>> MarketplaceController.getUserFavorites: Getting favorite items for authenticated user');
+    try {
+      this.logger.log('Getting favorite items for authenticated user');
 
-    // Obtener el userId del token JWT
-    const userId = req.user?.id;
-    if (!userId) {
-      throw new Error('Usuario no autenticado');
+      // Obtener el userId del token JWT
+      const userId = req.user?.id;
+      if (!userId) {
+        throw new HttpException('Usuario no autenticado', HttpStatus.UNAUTHORIZED);
+      }
+
+      return await this.marketplaceService.getUserFavorites(userId);
+    } catch (error) {
+      this.logger.error(`Error getting user favorites: ${error.message}`, error.stack);
+
+      if (error instanceof HttpException) {
+        throw error;
+      }
+
+      throw new HttpException(
+        'Error interno del servidor al obtener favoritos',
+        HttpStatus.INTERNAL_SERVER_ERROR
+      );
     }
-
-    return await this.marketplaceService.getUserFavorites(userId);
   }
 
   /**
@@ -197,15 +334,28 @@ export class MarketplaceController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('admin', 'USER')
   async getMyItems(@Req() req: AuthenticatedRequest) {
-    //     console.log('>>> MarketplaceController.getMyItems: Getting items for authenticated user');
+    try {
+      this.logger.log('Getting items for authenticated user');
 
-    // Obtener el userId del token JWT
-    const userId = req.user?.id;
-    if (!userId) {
-      throw new Error('Usuario no autenticado');
+      // Obtener el userId del token JWT
+      const userId = req.user?.id;
+      if (!userId) {
+        throw new HttpException('Usuario no autenticado', HttpStatus.UNAUTHORIZED);
+      }
+
+      return await this.marketplaceService.getSellerItems(userId);
+    } catch (error) {
+      this.logger.error(`Error getting user items: ${error.message}`, error.stack);
+
+      if (error instanceof HttpException) {
+        throw error;
+      }
+
+      throw new HttpException(
+        'Error interno del servidor al obtener tus items',
+        HttpStatus.INTERNAL_SERVER_ERROR
+      );
     }
-
-    return await this.marketplaceService.getSellerItems(userId);
   }
 
   /**
@@ -215,8 +365,17 @@ export class MarketplaceController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('admin')
   async getMarketplaceStats() {
-    //     console.log('>>> MarketplaceController.getMarketplaceStats: Getting marketplace statistics');
-    return await this.marketplaceService.getMarketplaceStats();
+    try {
+      this.logger.log('Getting marketplace statistics');
+      return await this.marketplaceService.getMarketplaceStats();
+    } catch (error) {
+      this.logger.error(`Error getting marketplace stats: ${error.message}`, error.stack);
+
+      throw new HttpException(
+        'Error interno del servidor al obtener estadísticas',
+        HttpStatus.INTERNAL_SERVER_ERROR
+      );
+    }
   }
 
   /**
@@ -224,13 +383,23 @@ export class MarketplaceController {
    */
   @Get('ping')
   async ping() {
-    //     console.log('>>> MarketplaceController.ping: Marketplace module is working');
-    return {
-      message: 'Marketplace module is working',
-      timestamp: new Date().toISOString(),
-      module: 'Marketplace System',
-      version: '2.0.0',
-      features: ['Authentication', 'RBAC', 'MarketplaceItem Model'],
-    };
+    try {
+      this.logger.log('Marketplace ping endpoint called');
+      return {
+        message: 'Marketplace module is working',
+        timestamp: new Date().toISOString(),
+        module: 'Marketplace System',
+        version: '2.0.0',
+        features: ['Authentication', 'RBAC', 'MarketplaceItem Model', 'Error Handling'],
+        status: 'healthy'
+      };
+    } catch (error) {
+      this.logger.error(`Error in ping endpoint: ${error.message}`, error.stack);
+
+      throw new HttpException(
+        'Error interno del servidor',
+        HttpStatus.INTERNAL_SERVER_ERROR
+      );
+    }
   }
 }

@@ -14,7 +14,7 @@ npx prisma migrate deploy --schema=./backend/prisma/schema.prisma
 
 # 3. Ejecutar el sembrado (seed) de la base de datos
 echo "🌱 [CoomÜnity-Deploy] Ejecutando el ritual de seed unificado (JavaScript compilado)..."
-node ./backend/dist/prisma/seed.js
+node ./backend/dist/src/prisma/seed-production.js
 echo "✔️ [CoomÜnity-Deploy] Ritual de seed unificado completado."
 
 # 4. Iniciar la aplicación principal
