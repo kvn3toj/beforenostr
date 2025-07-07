@@ -1,76 +1,77 @@
 # =================================================================
-# CoomÜnity Backend - Production Dockerfile (Optimized)
+# CoomÜnity Backend - Production Dockerfile (Optimized by ATLAS)
 # =================================================================
 
 # === STAGE 1: Builder ===
+# Usa una imagen base con herramientas de construcción
 FROM node:20-slim as builder
 
-# Install system dependencies
+# Instala dependencias del sistema operativo para Prisma y otros paquetes
 RUN apt-get update && apt-get install -y openssl python3 make g++
 
-# Set working directory
+# Establece el directorio de trabajo
 WORKDIR /usr/src/app
 
-# Copy package files from monorepo root
+# Copia los archivos de manifiesto y bloqueo para instalar dependencias
 COPY package*.json ./
 COPY turbo.json ./
-
-# Copy backend-specific package.json
 COPY backend/package.json ./backend/package.json
 
-# Copy Prisma schema
+# Copia el esquema Y las migraciones de Prisma ANTES de instalar
+# para asegurar que `prisma generate` funcione correctamente
 COPY backend/prisma ./backend/prisma
 
-# Install dependencies
+# Instala todas las dependencias (incluyendo las de desarrollo para el build)
 RUN npm install --legacy-peer-deps --ignore-scripts
 
-# Copy backend source code
+# Copia el resto del código fuente del backend
 COPY backend ./backend
 
-# Install NestJS CLI globally
+# Instala NestJS CLI (necesario para el build)
 RUN npm install -g @nestjs/cli
 
-# Build the application
+# Construye la aplicación del backend
 RUN npm run build --workspace=backend
 
 # === STAGE 2: Production ===
+# Usa una imagen alpina, más ligera y segura para producción
 FROM node:20-alpine
 
-# Install system dependencies
+# Instala solo las dependencias de sistema operativo necesarias para correr la app
 RUN apk add --no-cache openssl3 netcat-openbsd bash
 
-# Set working directory
+# Establece el directorio de trabajo
 WORKDIR /usr/src/app
 
-# Copy package files
+# Copia los archivos de manifiesto para instalar SOLO dependencias de producción
 COPY --from=builder /usr/src/app/package.json ./
 COPY --from=builder /usr/src/app/turbo.json ./
-
-# Copy backend package.json
 COPY --from=builder /usr/src/app/backend/package.json ./backend/package.json
 
-# Copy built application
-COPY --from=builder /usr/src/app/backend/dist ./backend/dist
-
-# Copy Prisma schema and generated client
-COPY --from=builder /usr/src/app/backend/prisma ./backend/prisma
-COPY --from=builder /usr/src/app/backend/src/generated/prisma ./backend/src/generated/prisma
-
-# Install production dependencies
+# Instala SOLO las dependencias de producción
 RUN npm install --omit=dev --legacy-peer-deps --ignore-scripts
 
-# Copy startup script
+# Copia la aplicación ya compilada desde la etapa de 'builder'
+COPY --from=builder /usr/src/app/backend/dist ./backend/dist
+
+# ----------------- INICIO DE LA CORRECCIÓN DE ATLAS -----------------
+# Copia el esquema de Prisma Y el directorio completo de migraciones.
+# Esta es la corrección clave para asegurar que las nuevas migraciones
+# siempre estén presentes en la imagen de producción.
+COPY --from=builder /usr/src/app/backend/prisma ./backend/prisma
+# ------------------ FIN DE LA CORRECCIÓN DE ATLAS -------------------
+
+# Copia los scripts de inicio y les da permisos de ejecución
 COPY backend/start-production.sh ./start-production.sh
 RUN chmod +x ./start-production.sh
 
-# Copy migration script
 COPY backend/force-migrations.sh ./force-migrations.sh
 RUN chmod +x ./force-migrations.sh
 
-# Expose port
+# Expone el puerto que la aplicación usará
 EXPOSE 3002
 
-# Start the application
+# Define el comando para iniciar la aplicación
 CMD ["./start-production.sh"]
 
 # ATLAS MISSION: Forzar nuevo build con migración 20250707005901_add_missing_unique_constraints
