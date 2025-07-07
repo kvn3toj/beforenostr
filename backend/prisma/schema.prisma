@@ -11,7 +11,7 @@ datasource db {
 
 model Mundo {
   id          String     @id @default(uuid())
-  name        String
+  name        String     @unique
   description String?
   imageUrl    String?
   isActive    Boolean    @default(true)
@@ -44,6 +44,7 @@ model Playlist {
   mundo             Mundo              @relation(fields: [mundoId], references: [id])
   videoItems        VideoItem[]
 
+  @@unique([mundoId, name])
   @@index([mundoId])
   @@index([isActive])
   @@index([createdById])
@@ -53,7 +54,7 @@ model Playlist {
 
 model VideoItem {
   id           Int               @id @default(autoincrement())
-  title        String
+  title        String            @unique
   description  String?
   content      String
   url          String?
@@ -194,7 +195,7 @@ model User {
   videoPermissions           VideoPermissions[]
   wallet                     Wallet?
   createdWorlds              World[]               @relation("WorldCreator")
-  marketplaceItems           MarketplaceItem[]
+  marketplaceItems           MarketplaceItem[]     @relation("UserMarketplaceItems")
   buyerMatches               MarketplaceMatch[]    @relation("MatchBuyer")
   sellerMatches              MarketplaceMatch[]    @relation("MatchSeller")
   matchMessages              MatchMessage[]
@@ -864,6 +865,7 @@ model StageProgression {
   isActive              Boolean               @default(true)
   user                  User                  @relation("UserStageProgression", fields: [userId], references: [id])
 
+  @@unique([userId, stage])
   @@index([userId])
   @@index([stage])
   @@index([isActive])
@@ -905,7 +907,7 @@ enum MarketplaceItemStatus {
 
 model MarketplaceItem {
   id             String                @id @default(uuid())
-  name           String
+  name           String                @unique
   description    String?
   fullDescription String?
   itemType       MarketplaceItemType   @default(SERVICE)
@@ -929,7 +931,7 @@ model MarketplaceItem {
   favoriteCount  Int                   @default(0)
   sellerId       String
   metadata       String?
-  seller         User                  @relation(fields: [sellerId], references: [id])
+  seller         User                  @relation("UserMarketplaceItems", fields: [sellerId], references: [id])
   reviews        Review[]
   matches        MarketplaceMatch[]
 

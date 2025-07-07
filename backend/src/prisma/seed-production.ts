@@ -1,5 +1,5 @@
 import { PrismaClient } from '../generated/prisma';
-import bcrypt from 'bcrypt';
+import * as bcrypt from 'bcrypt';
 
 const prisma = new PrismaClient();
 
@@ -82,24 +82,31 @@ async function createUsers(prisma: PrismaClient) {
     });
 
     // Create or update stage progression
-    await prisma.stageProgression.upsert({
+    const existingStageProgression = await prisma.stageProgression.findFirst({
       where: {
-        userId_stage: {
-          userId: user.id,
-          stage: userData.stage as any,
-        },
-      },
-      update: {
-        isActive: true,
-        requirements: {},
-      },
-      create: {
         userId: user.id,
         stage: userData.stage as any,
-        isActive: true,
-        requirements: {},
       },
     });
+
+    if (existingStageProgression) {
+      await prisma.stageProgression.update({
+        where: { id: existingStageProgression.id },
+        data: {
+          isActive: true,
+          requirements: {},
+        },
+      });
+    } else {
+      await prisma.stageProgression.create({
+        data: {
+          userId: user.id,
+          stage: userData.stage as any,
+          isActive: true,
+          requirements: {},
+        },
+      });
+    }
 
     // Assign roles
     for (const roleName of userData.roles) {
@@ -108,19 +115,21 @@ async function createUsers(prisma: PrismaClient) {
       });
 
       if (role) {
-        await prisma.userRole.upsert({
+        const existingUserRole = await prisma.userRole.findFirst({
           where: {
-            userId_roleId: {
-              userId: user.id,
-              roleId: role.id,
-            },
-          },
-          update: {},
-          create: {
             userId: user.id,
             roleId: role.id,
           },
         });
+
+        if (!existingUserRole) {
+          await prisma.userRole.create({
+            data: {
+              userId: user.id,
+              roleId: role.id,
+            },
+          });
+        }
       }
     }
   }
@@ -153,11 +162,11 @@ async function createMarketplaceItems(prisma: PrismaClient) {
     {
       name: 'Taller de Huerto Urbano Orgánico',
       description: 'Aprende a cultivar tus propios alimentos en espacios pequeños usando principios de permacultura.',
-      itemType: 'SERVICE',
+      itemType: 'SERVICE' as const,
       price: 35,
       priceToins: 15,
-      currency: 'UNITS',
-      status: 'ACTIVE',
+      currency: 'UNITS' as const,
+      status: 'ACTIVE' as const,
       images: ['https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=600'],
       tags: ['huerto', 'orgánico', 'taller', 'permacultura', 'sostenibilidad'],
       location: 'Online + Kit presencial',
@@ -171,11 +180,11 @@ async function createMarketplaceItems(prisma: PrismaClient) {
     {
       name: 'Kombucha Artesanal de Jengibre y Cúrcuma',
       description: 'Bebida probiótica fermentada artesanalmente con ingredientes 100% orgánicos.',
-      itemType: 'PRODUCT',
+      itemType: 'PRODUCT' as const,
       price: 15,
       priceToins: 8,
-      currency: 'UNITS',
-      status: 'ACTIVE',
+      currency: 'UNITS' as const,
+      status: 'ACTIVE' as const,
       images: ['https://images.unsplash.com/photo-1559181567-c3190ca9959b?w=600'],
       tags: ['kombucha', 'probiótico', 'orgánico', 'salud', 'fermentado'],
       location: 'Medellín, Colombia',
@@ -189,11 +198,11 @@ async function createMarketplaceItems(prisma: PrismaClient) {
     {
       name: 'Sesión de Sound Healing',
       description: 'Viaje sonoro de 60 minutos con cuencos tibetanos, gongs y campanas para equilibrar tu energía.',
-      itemType: 'SERVICE',
+      itemType: 'SERVICE' as const,
       price: 60,
       priceToins: 25,
-      currency: 'UNITS',
-      status: 'ACTIVE',
+      currency: 'UNITS' as const,
+      status: 'ACTIVE' as const,
       images: ['https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=600'],
       tags: ['sound healing', 'meditación', 'bienestar', 'relajación', 'energía'],
       location: 'Online via Zoom',
@@ -207,11 +216,22 @@ async function createMarketplaceItems(prisma: PrismaClient) {
   ];
 
   for (const itemData of marketplaceItems) {
-    await prisma.marketplaceItem.upsert({
+    const existingItem = await prisma.marketplaceItem.findUnique({
       where: { name: itemData.name },
-      update: itemData,
-      create: itemData,
     });
+
+    if (existingItem) {
+      // Separate fields for update (exclude sellerId)
+      const { sellerId, ...updateData } = itemData;
+      await prisma.marketplaceItem.update({
+        where: { id: existingItem.id },
+        data: updateData,
+      });
+    } else {
+      await prisma.marketplaceItem.create({
+        data: itemData,
+      });
+    }
   }
 
   console.log('✅ Marketplace items created successfully');
@@ -221,32 +241,38 @@ async function createUPlayContent(prisma: PrismaClient) {
   console.log('🎬 Creating UPlay content...');
 
   // Create mundo
-  const mundo = await prisma.mundo.upsert({
+  let mundo = await prisma.mundo.findUnique({
     where: { name: 'UPlay Zone' },
-    update: {},
-    create: {
-      name: 'UPlay Zone',
-      description: 'Mundo para videos interactivos de UPlay',
-      isActive: true,
+  });
+
+  if (!mundo) {
+    mundo = await prisma.mundo.create({
+      data: {
+        name: 'UPlay Zone',
+        description: 'Mundo para videos interactivos de UPlay',
+        isActive: true,
+      },
+    });
+  }
+
+  // Create playlist
+  let playlist = await prisma.playlist.findFirst({
+    where: {
+      mundoId: mundo.id,
+      name: 'Videos Principales UPlay',
     },
   });
 
-  // Create playlist
-  const playlist = await prisma.playlist.upsert({
-    where: {
-      mundoId_name: {
+  if (!playlist) {
+    playlist = await prisma.playlist.create({
+      data: {
         mundoId: mundo.id,
         name: 'Videos Principales UPlay',
+        description: 'Contenido principal de UPlay',
+        isActive: true,
       },
-    },
-    update: {},
-    create: {
-      mundoId: mundo.id,
-      name: 'Videos Principales UPlay',
-      description: 'Contenido principal de UPlay',
-      isActive: true,
-    },
-  });
+    });
+  }
 
   // Create item type
   const itemType = await prisma.itemType.upsert({
