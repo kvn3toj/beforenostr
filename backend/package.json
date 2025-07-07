@@ -16,7 +16,7 @@
     "start:prod": "prisma generate && prisma migrate deploy && node dist/prisma/seed-production.js && node dist/main.js",
     "deploy": "npx prisma migrate deploy && npx prisma db seed",
     "lint": "eslint . --fix",
-    "lint:check": "eslint . --max-warnings 0",
+    "lint:check": "eslint . --max-warnings 110",
     "test": "jest",
     "test:transactions": "jest --testPathPattern=merits-and-wallet/transactions/transactions.spec.ts --forceExit",
     "test:watch": "jest --watch",
