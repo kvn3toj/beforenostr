@@ -72,3 +72,6 @@ EXPOSE 3002
 
 # Start the application
 CMD ["./start-production.sh"]
+
+# ATLAS MISSION: Forzar nuevo build con migración 20250707005901_add_missing_unique_constraints
+# Timestamp: Jul 6 20:45:00 2025 - Migración creada después del último build exitoso
