@@ -1,5 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Container, Tabs, Tab, Fade, Paper, Typography, IconButton, useTheme, Chip, Badge } from '@mui/material';
+import {
+  Box,
+  Container,
+  Tabs,
+  Tab,
+  Fade,
+  Paper,
+  Typography,
+  IconButton,
+  useTheme,
+  Chip,
+  Badge,
+} from '@mui/material';
 import {
   Dashboard,
   VideoLibrary,
@@ -22,7 +34,7 @@ import UPlayStudyRooms from '../components/modules/uplay/UPlayStudyRooms';
 import {
   ConsciousUPlayFeedback,
   useConsciousUPlayFeedback,
-  type ConsciousUPlayFeedbackData
+  type ConsciousUPlayFeedbackData,
 } from '../components/modules/uplay/components/ConsciousUPlayFeedback';
 import {
   LearningLevelChip,
@@ -113,47 +125,91 @@ const UPlayHeader: React.FC<UPlayHeaderProps> = ({ learningState }) => {
         }}
       >
         <Container maxWidth="xl" sx={{ position: 'relative', zIndex: 1 }}>
-          <Box display="flex" flexDirection={{ xs: 'column', md: 'row' }} alignItems="center" justifyContent="space-between" gap={3}>
+          <Box
+            display="flex"
+            flexDirection={{ xs: 'column', md: 'row' }}
+            alignItems="center"
+            justifyContent="space-between"
+            gap={3}
+          >
             <Box textAlign={{ xs: 'center', md: 'left' }}>
-              <Typography variant="h2" fontWeight="bold" sx={{
-                mb: 0.5,
-                color: theme.palette.primary.main,
-                fontSize: { xs: '2rem', md: '2.5rem' },
-                letterSpacing: '-1px',
-              }}>
+              <Typography
+                variant="h2"
+                fontWeight="bold"
+                sx={{
+                  mb: 0.5,
+                  color: theme.palette.primary.main,
+                  fontSize: { xs: '2rem', md: '2.5rem' },
+                  letterSpacing: '-1px',
+                }}
+              >
                 ÜPlay
               </Typography>
-              <Typography variant="h6" color={theme.palette.text.secondary} sx={{ fontSize: { xs: '0.9rem', md: '1rem' }, fontWeight: 400 }}>
+              <Typography
+                variant="h6"
+                color={theme.palette.text.secondary}
+                sx={{ fontSize: { xs: '0.9rem', md: '1rem' }, fontWeight: 400 }}
+              >
                 Gamified Play List
               </Typography>
             </Box>
 
-            <Box sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, alignItems: 'center', gap: 3, mt: { xs: 2, md: 0 } }}>
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: { xs: 'column', sm: 'row' },
+                alignItems: 'center',
+                gap: 3,
+                mt: { xs: 2, md: 0 },
+              }}
+            >
               {/* Insignias de estado */}
-              <Box sx={{ display: 'flex', gap: 2, alignItems: 'center', justifyContent: 'center' }}>
+              <Box
+                sx={{
+                  display: 'flex',
+                  gap: 2,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+              >
                 <Chip
                   icon={<School />}
                   label={learningState.level}
                   variant="outlined"
                   size="medium"
-                  sx={{ borderColor: 'primary.main', color: 'primary.main', fontWeight: 500 }}
+                  sx={{
+                    borderColor: 'primary.main',
+                    color: 'primary.main',
+                    fontWeight: 500,
+                  }}
                   data-testid="learning-level-indicator"
+                  aria-label={`Nivel de aprendizaje actual: ${learningState.level}`}
                 />
                 <Chip
                   icon={<BrightnessHigh />}
                   label={learningState.consciousState}
                   variant="outlined"
                   size="medium"
-                  sx={{ borderColor: 'secondary.main', color: 'secondary.main', fontWeight: 500 }}
+                  sx={{
+                    borderColor: 'secondary.main',
+                    color: 'secondary.main',
+                    fontWeight: 500,
+                  }}
                   data-testid="conscious-state-indicator"
+                  aria-label={`Estado de conciencia actual: ${learningState.consciousState}`}
                 />
                 <Chip
                   icon={<Extension />}
                   label={learningState.mode}
                   variant="outlined"
                   size="medium"
-                  sx={{ borderColor: 'info.main', color: 'info.main', fontWeight: 500 }}
+                  sx={{
+                    borderColor: 'info.main',
+                    color: 'info.main',
+                    fontWeight: 500,
+                  }}
                   data-testid="learning-mode-indicator"
+                  aria-label={`Modo de aprendizaje actual: ${learningState.mode}`}
                 />
               </Box>
 
@@ -169,8 +225,8 @@ const UPlayHeader: React.FC<UPlayHeaderProps> = ({ learningState }) => {
                   transition: 'transform 0.3s ease',
                   '&:hover': {
                     bgcolor: 'primary.dark',
-                    transform: 'scale(1.1)'
-                  }
+                    transform: 'scale(1.1)',
+                  },
                 }}
               >
                 <PlayArrow sx={{ fontSize: 32 }} />
@@ -189,26 +245,26 @@ const tabs = [
     label: 'Dashboard',
     icon: Dashboard,
     component: <UPlayEnhancedDashboard />,
-    id: 'dashboard'
+    id: 'dashboard',
   },
   {
     label: 'Videoteca',
     icon: VideoLibrary,
     component: <UPlayInteractiveLibrary />,
     notifications: 5,
-    id: 'library'
+    id: 'library',
   },
   {
     label: 'Logros',
     icon: EmojiEvents,
     component: <UPlayAchievementSystem />,
-    id: 'achievements'
+    id: 'achievements',
   },
   {
     label: 'Salas de Estudio',
     icon: Groups,
     component: <UPlayStudyRooms />,
-    id: 'studyrooms'
+    id: 'studyrooms',
   },
 ];
 
@@ -246,7 +302,7 @@ const UPlay: React.FC = () => {
     const tabNames = ['Dashboard', 'Videoteca', 'Logros', 'Salas de Estudio'];
     const newTabName = tabNames[newValue];
 
-    setLearningState(prev => ({ ...prev, currentModule: newTabName }));
+    setLearningState((prev) => ({ ...prev, currentModule: newTabName }));
 
     // Provide conscious feedback for navigation
     if (newValue !== previousTab) {
@@ -257,14 +313,16 @@ const UPlay: React.FC = () => {
     }
 
     // Special feedback for collaboration (Study Rooms)
-    if (newValue === 3) { // Study Rooms tab
+    if (newValue === 3) {
+      // Study Rooms tab
       showReciprocidadLearning(
         'Entrando al espacio de aprendizaje colaborativo. Aquí practicamos el Reciprocidad: dar y recibir conocimiento en equilibrio.'
       );
     }
 
     // Special feedback for achievements
-    if (newValue === 2) { // Achievements tab
+    if (newValue === 2) {
+      // Achievements tab
       showCollectiveGrowth(
         'Tus logros contribuyen al crecimiento colectivo. Cada avance individual fortalece el Bien Común.'
       );
@@ -299,14 +357,14 @@ const UPlay: React.FC = () => {
 
   const handleDismissFeedback = (index: number) => {
     dismissFeedback(index);
-    showMetacognition('Has procesado un insight. La metacognición es clave para la maestría.');
+    showMetacognition(
+      'Has procesado un insight. La metacognición es clave para la maestría.'
+    );
   };
 
   return (
     <Container maxWidth="xl" sx={{ py: { xs: 2, md: 4 } }}>
-      <UPlayHeader
-        learningState={learningState}
-      />
+      <UPlayHeader learningState={learningState} />
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
         <Tabs
           value={activeTab}
@@ -377,16 +435,21 @@ const UPlay: React.FC = () => {
       ))}
 
       {/* 🛡️ Guardian Conscious Feedback Container */}
-      <Box sx={{
-        position: 'fixed',
-        bottom: 16,
-        right: 16,
-        zIndex: 1400,
-        display: 'flex',
-        flexDirection: 'column',
-        gap: 2,
-        maxWidth: 360,
-      }}>
+      <Box
+        sx={{
+          position: 'fixed',
+          bottom: 16,
+          right: 16,
+          zIndex: 1400,
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 2,
+          maxWidth: 360,
+        }}
+        aria-label="Contenedor de retroalimentación consciente y notificaciones de aprendizaje"
+        role="region"
+        aria-live="polite"
+      >
         {feedbacks.map((feedback, index) => (
           <ConsciousUPlayFeedback
             key={index}

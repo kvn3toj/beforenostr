@@ -13,6 +13,14 @@ export class ConfigService {
     private readonly auditLogsService: AuditLogsService
   ) {}
 
+  // Helper method to convert Configuration to AuditLogValue
+  private configToAuditValue(config: Configuration) {
+    return {
+      ...config,
+      updatedAt: config.updatedAt.toISOString(), // Convert Date to string
+    };
+  }
+
   async create(
     createConfigDto: CreateConfigDto,
     user: AuthenticatedUser
@@ -34,7 +42,7 @@ export class ConfigService {
       actionType: 'config:created',
       entityType: 'Configuration',
       entityId: newConfig.id,
-      newValue: newConfig,
+      newValue: this.configToAuditValue(newConfig),
     });
 
     return newConfig;
@@ -75,7 +83,7 @@ export class ConfigService {
     }
 
     // Capture old value before update
-    const oldValue = { ...existingConfig };
+    const oldValue = this.configToAuditValue(existingConfig);
 
     const updatedConfig = await this.prisma.configuration.update({
       where: { id },
@@ -92,7 +100,7 @@ export class ConfigService {
     });
 
     // Capture new value after update
-    const newValue = { ...updatedConfig };
+    const newValue = this.configToAuditValue(updatedConfig);
 
     // Log config update
     await this.auditLogsService.createLog({
@@ -117,7 +125,7 @@ export class ConfigService {
     }
 
     // Capture old value before deletion
-    const oldValue = { ...existingConfig };
+    const oldValue = this.configToAuditValue(existingConfig);
 
     const deletedConfig = await this.prisma.configuration.delete({
       where: { id },

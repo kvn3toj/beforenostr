@@ -1,12 +1,21 @@
 import { PrismaClient } from '../src/generated/prisma';
-import bcrypt from 'bcrypt';
+import * as bcrypt from 'bcrypt';
 
 // Función para crear usuarios
 async function createUsers(prisma: PrismaClient) {
+  // 1. Sincronía de la Alquimia: Generar hash explícito para el admin
+  const plainAdminPassword = 'admin123';
+  const hashedAdminPassword = await bcrypt.hash(plainAdminPassword, 10);
+
+  // 2. Ojo de HELIOS: Mostrar el hash generado para depuración
+  console.log('🔮 HASH DEPURADO POR HELIOS:');
+  console.log('Contraseña Plana:', plainAdminPassword);
+  console.log('Hash Generado:', hashedAdminPassword);
+
   const usersData = [
     {
       email: 'admin@gamifier.com',
-      password: await bcrypt.hash('admin123', 10),
+      password: hashedAdminPassword, // Usar el hash generado explícitamente
       name: 'Admin',
       roles: ['admin'],
       stage: 'PROMOTER',
@@ -83,7 +92,28 @@ async function createUsers(prisma: PrismaClient) {
         }
       }
     } else {
-      console.log(`User already exists: ${userData.email}`);
+      console.log(`Updating user: ${userData.email}`);
+      await prisma.user.update({
+        where: { email: userData.email },
+        data: {
+          password: userData.password,
+          name: userData.name,
+          status: 'ACTIVE',
+        },
+      });
+      // Opcional: podrías actualizar roles y stage progression aquí si lo deseas
     }
   }
 }
+
+// --- Ejecución principal del seed ---
+async function main() {
+  const prisma = new PrismaClient();
+  await createUsers(prisma);
+  await prisma.$disconnect();
+}
+
+main().catch((e) => {
+  console.error(e);
+  process.exit(1);
+});

@@ -5,7 +5,6 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { Toaster } from 'sonner';
 
-
 // Contexts
 import { AuthProvider } from './contexts/AuthContext';
 import { LetsEducationProvider } from './contexts/LetsEducationContext';
@@ -26,10 +25,7 @@ import { ProtectedRoute } from './components/ProtectedRoute';
 import ErrorBoundary from './components/ui/ErrorBoundary';
 
 // Lazy Components
-import {
-  LazyPages,
-  preloadCriticalComponents,
-} from './utils/lazyComponents';
+import { LazyPages, preloadCriticalComponents } from './utils/lazyComponents';
 
 // Dev Test Pages
 import MiroSyncPage from './pages/dev/MiroSyncPage';
@@ -64,7 +60,10 @@ const EnvironmentBanner: React.FC = () => {
     opacity: 0.8,
   };
 
-  const environments: Record<string, { text: string; style: React.CSSProperties }> = {
+  const environments: Record<
+    string,
+    { text: string; style: React.CSSProperties }
+  > = {
     development: {
       text: 'Dev',
       style: { ...bannerStyle, backgroundColor: '#4caf50', color: 'white' },
@@ -108,77 +107,111 @@ const AppRoutes: React.FC = () => {
       <Route element={<ProtectedRoute />}>
         {/* 🏠 Página Principal */}
         <Route path="/" element={<LazyPages.HomePage />} />
-
         {/* 🛒 Marketplace - GMP Gamified Match Place ⚜️ CONCILIO DE GUARDIANES ACTIVADO */}
         <Route path="/marketplace" element={<LazyPages.MarketplacePage />} />
-        <Route path="/marketplace/item/:id" element={<LazyPages.ProductDetail />} />
-        <Route path="/marketplace/dashboard" element={<LazyPages.MarketplaceDashboardPage />} />
-        <Route path="/marketplace-test" element={<LazyPages.MarketplaceTest />} />
-
+        <Route
+          path="/marketplace/item/:id"
+          element={<LazyPages.ProductDetail />}
+        />
+        <Route
+          path="/marketplace/dashboard"
+          element={<LazyPages.MarketplaceDashboardPage />}
+        />
+        <Route
+          path="/marketplace-test"
+          element={<LazyPages.MarketplaceTest />}
+        />
         {/* 🎮 ÜPlay - GPL Gamified Play List */}
         <Route path="/uplay" element={<LazyPages.UPlay />} />
-        <Route path="/uplay/journey/:journeyId" element={<LazyPages.UPlayJourneyPortal />} />
-        <Route path="/uplay/harvest/:videoId" element={<LazyPages.UPlayHarvestReflection />} />
-        <Route path="/uplay/video/:videoId" element={<LazyPages.UPlayVideoPlayer />} />
+        <Route
+          path="/uplay/journey/:journeyId"
+          element={<LazyPages.UPlayJourneyPortal />}
+        />
+        <Route
+          path="/uplay/harvest/:videoId"
+          element={<LazyPages.UPlayHarvestReflection />}
+        />
+        <Route
+          path="/uplay/video/:videoId"
+          element={<LazyPages.UPlayVideoPlayer />}
+        />
         <Route path="/video/:videoId" element={<LazyPages.VideoPlayer />} />
         <Route path="/video" element={<LazyPages.VideoHome />} />
-        <Route path="/interactive-video" element={<LazyPages.InteractiveVideoEnhanced />} />
-        <Route path="/interactive-demo" element={<LazyPages.InteractiveVideoDemo />} />
-
+        <Route
+          path="/interactive-video"
+          element={<LazyPages.InteractiveVideoEnhanced />}
+        />
+        <Route
+          path="/interactive-demo"
+          element={<LazyPages.InteractiveVideoDemo />}
+        />
         {/* 👥 Social */}
         <Route path="/social" element={<LazyPages.Social />} />
         <Route path="/social/chat" element={<LazyPages.SocialChat />} />
         <Route path="/social/feed" element={<LazyPages.SocialFeed />} />
-
         {/* 👤 Perfil y Configuración */}
         <Route path="/profile" element={<LazyPages.Profile />} />
         <Route path="/settings" element={<LazyPages.SettingsPage />} />
-
         {/* 💰 Wallet y LETS */}
         <Route path="/wallet" element={<LazyPages.Wallet />} />
         <Route path="/lets" element={<LazyPages.LetsPage />} />
-
         {/* 🏆 Desafíos y Grupos */}
         <Route path="/challenges" element={<LazyPages.ChallengesPage />} />
-        <Route path="/challenges/:challengeId" element={<LazyPages.ChallengeDetailPage />} />
+        <Route
+          path="/challenges/:challengeId"
+          element={<LazyPages.ChallengeDetailPage />}
+        />
         <Route path="/groups" element={<LazyPages.GroupsPage />} />
-
         {/* 📊 UStats y Analytics */}
         <Route path="/ustats" element={<LazyPages.UStatsPage />} />
         <Route path="/analytics" element={<LazyPages.AnalyticsPage />} />
-
         {/* 🧠 Consciousness & Cosmic Archive */}
-        <Route path="/consciousness" element={<LazyPages.ConsciousnessPage />} />
-
+        <Route
+          path="/consciousness"
+          element={<LazyPages.ConsciousnessPage />}
+        />
         {/* 📚 Study Rooms */}
         <Route path="/study-rooms" element={<LazyPages.StudyRoomsPage />} />
         <Route path="/websocket-test" element={<LazyPages.WebSocketTest />} />
-
         {/* 🔔 Notificaciones */}
-        <Route path="/notifications" element={<LazyPages.NotificationsPage />} />
-
+        <Route
+          path="/notifications"
+          element={<LazyPages.NotificationsPage />}
+        />
         {/* 📱 PWA Demo */}
         <Route path="/pwa" element={<LazyPages.PWADemo />} />
-
         {/* 🎨 Design System */}
-        <Route path="/design-system" element={<LazyPages.DesignSystemShowcase />} />
-
+        <Route
+          path="/design-system"
+          element={<LazyPages.DesignSystemShowcase />}
+        />
         {/* 🚀 Beta Registration */}
         <Route path="/beta" element={<LazyPages.BetaRegister />} />
-
         {/* 🎓 Onboarding Demo */}
         <Route path="/onboarding" element={<LazyPages.OnboardingDemo />} />
-
         {/* 🧭 Pilgrim Journey - Experiencia de Descubrimiento Inicial */}
-        <Route path="/pilgrim" element={<LazyPages.UPlay />} /> {/* Reutiliza UPlay como experiencia de descubrimiento */}
+        <Route path="/pilgrim" element={<LazyPages.UPlay />} />{' '}
+        {/* Reutiliza UPlay como experiencia de descubrimiento */}
         {/* 🛡️ Admin Panel - Solo accesible para administradores */}
         <Route path="/admin" element={<LazyPages.CosmicAuditDemo />} />
+        <Route
+          path="/admin/cosmic-brain"
+          element={<LazyPages.CosmicBrainDashboard />}
+        />
+        <Route
+          path="/admin/cosmic-brain/test"
+          element={<LazyPages.CosmicBrainQuickTest />}
+        />
         {/* ✨ Discovery Tutorials */}
-        <Route path="/tutorials" element={<LazyPages.DiscoveryTutorialsPage />} />
-
+        <Route
+          path="/tutorials"
+          element={<LazyPages.DiscoveryTutorialsPage />}
+        />
         {/* 🎯 Customer Journey - Sistema de Gestión de Stages */}
-        <Route path="/customer-journey" element={<LazyPages.CustomerJourney />} />
-
+        <Route
+          path="/customer-journey"
+          element={<LazyPages.CustomerJourney />}
+        />
         {/* 🛠️ Dev Test Routes */}
         <Route path="/dev/miro-test" element={<MiroSyncPage />} />
       </Route>

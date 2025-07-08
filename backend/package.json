@@ -13,7 +13,7 @@
     "start": "nest start",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
-    "start:prod": "prisma generate && prisma migrate deploy && node dist/prisma/seed-production.js && node dist/main.js",
+    "start:prod": "prisma generate && prisma migrate deploy && node dist/backend/prisma/seed-production.js && node dist/backend/src/main.js",
     "deploy": "npx prisma migrate deploy && npx prisma db seed",
     "lint": "eslint . --fix",
     "lint:check": "eslint . --max-warnings 110",
@@ -131,7 +131,7 @@
     }
   },
   "prisma": {
-    "seed": "ts-node src/prisma/seed.ts",
+    "seed": "ts-node prisma/seed.ts",
     "schema": "prisma/schema.prisma"
   }
 }

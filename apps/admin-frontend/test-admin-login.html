@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🧪 Test Login Admin - Gamifier Admin</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .header {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .success {
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+            color: #155724;
+        }
+        .error {
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+            color: #721c24;
+        }
+        .info {
+            background-color: #d1ecf1;
+            border-color: #bee5eb;
+            color: #0c5460;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .result {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 5px;
+            font-family: monospace;
+            white-space: pre-wrap;
+        }
+        .credentials {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🧪 Test de Login - Gamifier Admin</h1>
+            <p>Verificación del protocolo de armonización</p>
+        </div>
+
+        <div class="test-section info">
+            <h3>📋 Credenciales de Prueba</h3>
+            <div class="credentials">
+                <strong>Email:</strong> admin@gamifier.com<br>
+                <strong>Password:</strong> admin123<br>
+                <strong>Backend:</strong> http://localhost:3002
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h3>🔐 Test de Autenticación</h3>
+            <button onclick="testLogin()">Probar Login</button>
+            <div id="loginResult" class="result"></div>
+        </div>
+
+        <div class="test-section">
+            <h3>🔍 Verificación de Token</h3>
+            <button onclick="testToken()" disabled id="tokenBtn">Verificar Token</button>
+            <div id="tokenResult" class="result"></div>
+        </div>
+
+        <div class="test-section">
+            <h3>📊 Resumen del Estado</h3>
+            <div id="statusSummary" class="result">
+                Esperando resultados de las pruebas...
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentToken = null;
+        let currentUser = null;
+
+        async function testLogin() {
+            const resultDiv = document.getElementById('loginResult');
+            const tokenBtn = document.getElementById('tokenBtn');
+            
+            try {
+                resultDiv.innerHTML = '🔄 Intentando login...';
+                resultDiv.className = 'result info';
+                
+                const response = await fetch('http://localhost:3002/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        email: 'admin@gamifier.com',
+                        password: 'admin123'
+                    }),
+                });
+
+                const result = await response.json();
+                
+                if (response.ok) {
+                    currentToken = result.access_token;
+                    currentUser = result.user;
+                    
+                    resultDiv.innerHTML = `✅ LOGIN EXITOSO!
+                    
+📋 Datos del usuario:
+- ID: ${result.user.id}
+- Email: ${result.user.email}
+- Name: ${result.user.name}
+- Roles: ${JSON.stringify(result.user.roles)}
+- Permissions: ${JSON.stringify(result.user.permissions)}
+
+🔑 Token: ${result.access_token.substring(0, 50)}...`;
+                    
+                    resultDiv.className = 'result success';
+                    tokenBtn.disabled = false;
+                    
+                } else {
+                    resultDiv.innerHTML = `❌ ERROR EN LOGIN:
+Status: ${response.status}
+Message: ${result.message || 'Error desconocido'}`;
+                    resultDiv.className = 'result error';
+                }
+                
+            } catch (error) {
+                resultDiv.innerHTML = `💥 ERROR CRÍTICO:
+${error.message}
+
+🔧 Posibles causas:
+- Backend no está ejecutándose en puerto 3002
+- Problema de CORS
+- Error de red`;
+                resultDiv.className = 'result error';
+            }
+            
+            updateStatusSummary();
+        }
+
+        async function testToken() {
+            const resultDiv = document.getElementById('tokenResult');
+            
+            if (!currentToken) {
+                resultDiv.innerHTML = '⚠️ No hay token disponible. Ejecuta el login primero.';
+                resultDiv.className = 'result error';
+                return;
+            }
+            
+            try {
+                resultDiv.innerHTML = '🔄 Verificando token...';
+                resultDiv.className = 'result info';
+                
+                const response = await fetch('http://localhost:3002/users/me', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${currentToken}`,
+                        'Content-Type': 'application/json',
+                    },
+                });
+
+                if (response.ok) {
+                    const userData = await response.json();
+                    
+                    resultDiv.innerHTML = `✅ TOKEN VÁLIDO!
+                    
+📋 Datos verificados:
+- ID: ${userData.id}
+- Email: ${userData.email}
+- Name: ${userData.name}
+- Status: ${userData.status}`;
+                    
+                    resultDiv.className = 'result success';
+                    
+                } else {
+                    const errorData = await response.json();
+                    resultDiv.innerHTML = `❌ TOKEN INVÁLIDO:
+Status: ${response.status}
+Message: ${errorData.message || 'Error desconocido'}`;
+                    resultDiv.className = 'result error';
+                }
+                
+            } catch (error) {
+                resultDiv.innerHTML = `💥 ERROR EN VERIFICACIÓN:
+${error.message}`;
+                resultDiv.className = 'result error';
+            }
+            
+            updateStatusSummary();
+        }
+
+        function updateStatusSummary() {
+            const summaryDiv = document.getElementById('statusSummary');
+            const loginSuccess = currentToken && currentUser;
+            
+            if (loginSuccess) {
+                summaryDiv.innerHTML = `🎉 PROTOCOLO DE ARMONIZACIÓN COMPLETADO
+                
+✅ Backend funcionando correctamente
+✅ Credenciales admin@gamifier.com / admin123 validadas
+✅ Token JWT generado y válido
+✅ Usuario admin autenticado con rol: ${JSON.stringify(currentUser.roles)}
+
+🏆 El Gamifier Admin puede conectarse exitosamente al backend NestJS
+🌟 La armonización del hash de contraseña fue exitosa`;
+                summaryDiv.className = 'result success';
+            } else {
+                summaryDiv.innerHTML = `⏳ Pruebas en progreso...
+                
+Ejecuta las pruebas para verificar el estado del sistema.`;
+                summaryDiv.className = 'result info';
+            }
+        }
+
+        // Inicializar estado
+        updateStatusSummary();
+    </script>
+</body>
+</html>

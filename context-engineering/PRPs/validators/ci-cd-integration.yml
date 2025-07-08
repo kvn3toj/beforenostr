@@ -1,0 +1,127 @@
+# 🌌 GUARDIÁN DEL UMBRAL - CI/CD PHILOSOPHY VALIDATION
+# Este pipeline actúa como el guardián automático que valida la alineación filosófica
+# de cada Pull Request antes de permitir su fusión con la rama principal.
+
+name: 🔮 Cosmic Philosophy Validation
+
+on:
+  pull_request:
+    branches: [main, godsplan, development]
+    paths:
+      - 'backend/src/**'
+      - 'Demo/apps/superapp-unified/src/**'
+      - 'apps/admin-frontend/src/**'
+      - 'context-engineering/**'
+
+jobs:
+  philosophy-validation:
+    name: 🧙‍♂️ SAGE Philosophy Validation
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: 🏗️ Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: 📦 Install Dependencies
+        run: |
+          npm ci --legacy-peer-deps
+
+      - name: 🔮 Execute Philosophy Validation
+        run: |
+          echo "🌌 Activating SAGE Validator..."
+          npx tsx context-engineering/PRPs/validators/philosophy/PhilosophyValidator.ts
+
+      - name: 📊 Cosmic Metrics Analysis
+        run: |
+          echo "📈 Analyzing Cosmic Metrics..."
+          npx tsx context-engineering/PRPs/validators/quality/CosmicMetrics.ts --pr-mode
+
+      - name: 🎯 Technical Quality Gate
+        run: |
+          echo "🔧 Executing Technical Validation..."
+          npm run lint
+          npm run type-check
+
+      - name: 🧪 Philosophical Alignment Test
+        run: |
+          echo "🧬 Testing Philosophical Alignment..."
+          npm run test:philosophy
+
+      - name: 📝 Generate Validation Report
+        if: always()
+        run: |
+          echo "📋 Generating Cosmic Validation Report..."
+          npx tsx context-engineering/PRPs/validators/generate-report.ts
+
+      - name: 💎 Cosmic Approval Gate
+        run: |
+          echo "✨ Validating Cosmic Approval..."
+          if [ -f "cosmic-validation-passed.flag" ]; then
+            echo "🌟 COSMIC VALIDATION PASSED - Ready for Merge"
+            echo "🎭 Philosophy Score: $(cat philosophy-score.txt)"
+            echo "📊 Quality Score: $(cat quality-score.txt)"
+            echo "🚀 Integration Score: $(cat integration-score.txt)"
+          else
+            echo "❌ COSMIC VALIDATION FAILED - Review Required"
+            echo "📋 See validation report for details"
+            exit 1
+          fi
+
+      - name: 📤 Upload Validation Artifacts
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: cosmic-validation-report
+          path: |
+            cosmic-validation-report.md
+            philosophy-score.txt
+            quality-score.txt
+            integration-score.txt
+
+  cosmic-metrics-dashboard:
+    name: 📊 Update Cosmic Metrics Dashboard
+    needs: philosophy-validation
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: 🏗️ Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: 📊 Update Cosmic Dashboard
+        run: |
+          echo "🌌 Updating Cosmic Metrics Dashboard..."
+          npx tsx context-engineering/PRPs/validators/update-dashboard.ts
+
+      - name: 🎯 Deploy Metrics to Admin Panel
+        run: |
+          echo "🚀 Deploying metrics to Gamifier Admin..."
+          # Aquí se integraría con el deployment del Admin Panel
+
+# 🌟 CONFIGURACIÓN DE PROTECCIÓN DE RAMAS
+# Esta configuración debe aplicarse en GitHub Settings > Branches
+# para que el Guardián del Umbral sea efectivo:
+#
+# Branch Protection Rules:
+# ✅ Require status checks to pass before merging
+# ✅ Require "🧙‍♂️ SAGE Philosophy Validation" check
+# ✅ Require "📊 Update Cosmic Metrics Dashboard" check
+# ✅ Require up-to-date branches before merging
+# ✅ Include administrators in restrictions
+#
+# 🔮 El Guardián del Umbral ahora protege la pureza del código
+# 🌌 Solo el código alineado con la Filosofía CoomÜnity puede pasar

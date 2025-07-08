@@ -1,5 +1,6 @@
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3002';
 const AUTH_ENDPOINT = `${API_BASE_URL}/auth`;
+import { AUTH_STORAGE_KEYS } from '../config/constants';
 
 // Check if a real backend is configured. If not, default to mock authentication.
 const IS_REAL_API_CONFIGURED = import.meta.env.VITE_API_BASE_URL && import.meta.env.VITE_API_BASE_URL.trim() !== '';
@@ -325,8 +326,8 @@ class AuthService {
    */
   logout(): void {
     // Usar las claves estándar de CoomÜnity
-    localStorage.removeItem('COOMUNITY_AUTH_TOKEN');
-    localStorage.removeItem('COOMUNITY_USER_DATA');
+    localStorage.removeItem(AUTH_STORAGE_KEYS.TOKEN);
+    localStorage.removeItem(AUTH_STORAGE_KEYS.USER);
 
     // También limpiar las claves anteriores por compatibilidad
     localStorage.removeItem('auth_token');
@@ -342,8 +343,8 @@ class AuthService {
    */
   saveAuthData(authResponse: AuthResponse): void {
     // Usar las claves estándar de CoomÜnity
-    localStorage.setItem('COOMUNITY_AUTH_TOKEN', authResponse.access_token || authResponse.token || authResponse.accessToken || '');
-    localStorage.setItem('COOMUNITY_USER_DATA', JSON.stringify(authResponse.user));
+    localStorage.setItem(AUTH_STORAGE_KEYS.TOKEN, authResponse.access_token || authResponse.token || authResponse.accessToken || '');
+    localStorage.setItem(AUTH_STORAGE_KEYS.USER, JSON.stringify(authResponse.user));
     console.log('[AuthService] Datos de autenticación guardados');
   }
 
@@ -351,7 +352,7 @@ class AuthService {
    * Obtiene el token guardado en localStorage
    */
   getStoredToken(): string | null {
-    return localStorage.getItem('COOMUNITY_AUTH_TOKEN');
+    return localStorage.getItem(AUTH_STORAGE_KEYS.TOKEN);
   }
 
   /**
@@ -359,7 +360,7 @@ class AuthService {
    */
   getStoredUser(): User | null {
     try {
-      const userStr = localStorage.getItem('COOMUNITY_USER_DATA');
+      const userStr = localStorage.getItem(AUTH_STORAGE_KEYS.USER);
       return userStr ? JSON.parse(userStr) : null;
     } catch (error) {
       console.error('[AuthService] Error al parsear usuario guardado:', error);
@@ -389,7 +390,7 @@ class AuthService {
       }
 
       const updatedUser = { ...currentUser, ...updates };
-      localStorage.setItem('COOMUNITY_USER_DATA', JSON.stringify(updatedUser));
+      localStorage.setItem(AUTH_STORAGE_KEYS.USER, JSON.stringify(updatedUser));
       return updatedUser;
     }
 

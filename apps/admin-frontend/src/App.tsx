@@ -86,6 +86,10 @@ function App() {
               <Route path="/ai-test" element={<AITest />} />
               <Route path="/nostr-demo" element={<NostrDemoPage />} />
               <Route path="/cosmic-kanban" element={<CosmicKanbanPage />} />
+              {/* Cosmic Brain Dashboard */}
+              <Route path="/admin/cosmic-brain" element={
+                React.createElement(require('./pages/cosmic-brain/CosmicBrainDashboard').default)
+              } />
             </Route>
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>

@@ -76,8 +76,8 @@ model VideoItem {
   thumbnailUrl String?
   activities   Activity[]
   questions    Question[]
-  subtitles    Subtitle[]
   studyRooms   StudyRoom[]
+  subtitles    Subtitle[]
   playlist     Playlist          @relation(fields: [playlistId], references: [id])
   permissions  VideoPermissions?
 
@@ -142,15 +142,15 @@ model AnswerOption {
 }
 
 model User {
-  id                         String                @id @default(uuid())
-  email                      String                @unique
+  id                         String                 @id @default(uuid())
+  email                      String                 @unique
   password                   String
   name                       String?
   avatarUrl                  String?
-  isActive                   Boolean               @default(true)
-  createdAt                  DateTime              @default(now())
-  updatedAt                  DateTime              @updatedAt
-  username                   String?               @unique
+  isActive                   Boolean                @default(true)
+  createdAt                  DateTime               @default(now())
+  updatedAt                  DateTime               @updatedAt
+  username                   String?                @unique
   firstName                  String?
   lastName                   String?
   documentType               String?
@@ -158,53 +158,48 @@ model User {
   phone                      String?
   country                    String?
   address                    String?
-  status                     String                @default("ACTIVE")
-  topUserCount               Int                   @default(0)
+  status                     String                 @default("ACTIVE")
+  topUserCount               Int                    @default(0)
   personalityId              String?
-  // Customer Journey fields have been moved to the StageProgression model
-  // to act as the single source of truth for a user's journey history.
-  // The current stage can be found by querying for the StageProgression
-  // record where `isActive` is true for a given user.
-
-  createdActivities          Activity[]            @relation("ActivityCreator")
+  createdActivities          Activity[]             @relation("ActivityCreator")
+  createdAIMissions          AIMission[]            @relation("CreatedAIMissions")
   comments                   Comment[]
+  createdExperiences         Experience[]           @relation("ExperienceCreator")
+  adminFeedbackResponses     FeedbackReport[]       @relation("AdminFeedbackResponses")
+  feedbackReports            FeedbackReport[]       @relation("UserFeedbackReports")
+  invitationsSent            GiftCard[]             @relation("InviterUser")
+  ownedGroups                Group[]                @relation("GroupOwner")
+  createdInvitationTemplates InvitationTemplate[]   @relation("InvitationTemplateCreator")
   likes                      Like[]
-  createdExperiences         Experience[]          @relation("ExperienceCreator")
-  invitationsSent            GiftCard[]            @relation("InviterUser")
-  ownedGroups                Group[]               @relation("GroupOwner")
-  createdInvitationTemplates InvitationTemplate[]  @relation("InvitationTemplateCreator")
+  marketplaceItems           MarketplaceItem[]      @relation("UserMarketplaceItems")
+  buyerMatches               MarketplaceMatch[]     @relation("MatchBuyer")
+  sellerMatches              MarketplaceMatch[]     @relation("MatchSeller")
+  matchMessages              MatchMessage[]
   merits                     Merit[]
   notifications              Notification[]
+  profile                    Profile?
   publications               Publication[]
-  createdReports             Report[]              @relation("ReportCreator")
-  assignedPermissions        RolePermission[]      @relation("PermissionAssigner")
+  createdReports             Report[]               @relation("ReportCreator")
+  reviews                    Review[]               @relation("UserReviews")
+  assignedPermissions        RolePermission[]       @relation("PermissionAssigner")
+  stageProgressions          StageProgression[]     @relation("UserStageProgression")
+  sentChatMessages           StudyRoomMessage[]
+  studyRoomParticipants      StudyRoomParticipant[]
+  hostedStudyRooms           StudyRoom[]            @relation("StudyRoomHost")
   tokens                     Token[]
-  transactionsTo             Transaction[]         @relation("TransactionTo")
-  transactionsFrom           Transaction[]         @relation("TransactionFrom")
-  createdTemplates           UIComponentTemplate[] @relation("TemplateCreator")
+  transactionsFrom           Transaction[]          @relation("TransactionFrom")
+  transactionsTo             Transaction[]          @relation("TransactionTo")
+  createdTemplates           UIComponentTemplate[]  @relation("TemplateCreator")
   userAnswers                UserAnswer[]
   userChallenges             UserChallenge[]
   userGroups                 UserGroup[]
   invitationsReceived        UserInvitation[]
-  assignedRoles              UserRole[]            @relation("RoleAssigner")
+  assignedRoles              UserRole[]             @relation("RoleAssigner")
   userRoles                  UserRole[]
-  hostedStudyRooms           StudyRoom[]           @relation("StudyRoomHost")
-  studyRoomParticipants      StudyRoomParticipant[]
-  sentChatMessages           StudyRoomMessage[]
-  personality                Personality?          @relation(fields: [personalityId], references: [id])
+  personality                Personality?           @relation(fields: [personalityId], references: [id])
   videoPermissions           VideoPermissions[]
   wallet                     Wallet?
-  createdWorlds              World[]               @relation("WorldCreator")
-  marketplaceItems           MarketplaceItem[]     @relation("UserMarketplaceItems")
-  buyerMatches               MarketplaceMatch[]    @relation("MatchBuyer")
-  sellerMatches              MarketplaceMatch[]    @relation("MatchSeller")
-  matchMessages              MatchMessage[]
-  feedbackReports            FeedbackReport[]      @relation("UserFeedbackReports")
-  adminFeedbackResponses     FeedbackReport[]      @relation("AdminFeedbackResponses")
-  profile                    Profile?
-  reviews                    Review[]              @relation("UserReviews")
-  stageProgressions          StageProgression[]    @relation("UserStageProgression")
-  createdAIMissions          AIMission[]           @relation("CreatedAIMissions")
+  createdWorlds              World[]                @relation("WorldCreator")
 
   @@index([email])
   @@index([isActive])
@@ -309,8 +304,8 @@ model World {
   updatedAt   DateTime @updatedAt
   mundoId     String?
   stages      Stage[]
-  mundo       Mundo?   @relation(fields: [mundoId], references: [id])
   creator     User     @relation("WorldCreator", fields: [creatorId], references: [id])
+  mundo       Mundo?   @relation(fields: [mundoId], references: [id])
 
   @@index([creatorId])
   @@index([status])
@@ -368,9 +363,9 @@ model Activity {
   createdAt         DateTime           @default(now())
   updatedAt         DateTime           @updatedAt
   videoItemId       Int?
-  videoItem         VideoItem?         @relation(fields: [videoItemId], references: [id])
   creator           User               @relation("ActivityCreator", fields: [creatorId], references: [id])
   experience        Experience         @relation(fields: [experienceId], references: [id], onDelete: Cascade)
+  videoItem         VideoItem?         @relation(fields: [videoItemId], references: [id])
   questions         ActivityQuestion[]
   gamifiedPlaylists GamifiedPlaylist[]
 
@@ -392,8 +387,8 @@ model GamifiedPlaylist {
   status       String    @default("ACTIVE")
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
-  playlist     Playlist? @relation(fields: [playlistId], references: [id])
   activity     Activity? @relation(fields: [activityId], references: [id])
+  playlist     Playlist? @relation(fields: [playlistId], references: [id])
 
   @@index([activityId])
   @@index([playlistId])
@@ -475,14 +470,14 @@ model Merit {
 }
 
 model Wallet {
-  id               String   @id @default(uuid())
-  userId           String   @unique
-  balance          Float    @default(0)
-  currency         String   @default("USD")
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt
-  user             User     @relation(fields: [userId], references: [id])
-  lastTransaction  DateTime?
+  id              String    @id @default(uuid())
+  userId          String    @unique
+  balance         Float     @default(0)
+  currency        String    @default("USD")
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  lastTransaction DateTime?
+  user            User      @relation(fields: [userId], references: [id])
 
   @@map("wallets")
 }
@@ -497,10 +492,10 @@ model Transaction {
   transactionDate DateTime @default(now())
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
-  fromUser        User?    @relation("TransactionFrom", fields: [fromUserId], references: [id], map: "transaction_from_user_fkey")
-  toUser          User     @relation("TransactionTo", fields: [toUserId], references: [id], map: "transaction_to_user_fkey")
   type            String?
   metadata        Json?
+  fromUser        User?    @relation("TransactionFrom", fields: [fromUserId], references: [id], map: "transaction_from_user_fkey")
+  toUser          User     @relation("TransactionTo", fields: [toUserId], references: [id], map: "transaction_to_user_fkey")
 
   @@index([fromUserId], map: "transaction_from_user_id_idx")
   @@index([toUserId], map: "transaction_to_user_id_idx")
@@ -577,7 +572,7 @@ model Like {
   publication   Publication @relation(fields: [publicationId], references: [id], onDelete: Cascade)
   user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@unique([userId, publicationId]) // Un usuario solo puede dar un like por publicación
+  @@unique([userId, publicationId])
   @@index([userId])
   @@index([publicationId])
   @@map("likes")
@@ -635,8 +630,8 @@ model UserInvitation {
   invitedUserId String?
   status        String   @default("PENDING")
   createdAt     DateTime @default(now())
-  invitedUser   User?    @relation(fields: [invitedUserId], references: [id])
   giftCard      GiftCard @relation(fields: [giftCardId], references: [id])
+  invitedUser   User?    @relation(fields: [invitedUserId], references: [id])
 
   @@index([giftCardId])
   @@index([invitedUserId])
@@ -836,35 +831,16 @@ model UserChallenge {
   @@map("user_challenges")
 }
 
-// =====================================================================
-// MARKETPLACE MODULE MODELS
-// =====================================================================
-
-enum Currency {
-  UNITS
-  TOINS
-  ONDAS
-  MERITOS
-}
-
-// Customer Journey System - Stage Progression
-enum CustomerJourneyStage {
-  BUYER
-  SEEKER
-  SOLVER
-  PROMOTER
-}
-
 model StageProgression {
-  id                    String                @id @default(uuid())
-  userId                String
-  stage                 CustomerJourneyStage
-  startedAt             DateTime              @default(now())
-  completedAt           DateTime?
-  requirements          Json                  // Tracks completion of stage requirements
-  metrics               Json?                 // Ondas, Meritos, transactions, etc.
-  isActive              Boolean               @default(true)
-  user                  User                  @relation("UserStageProgression", fields: [userId], references: [id])
+  id           String               @id @default(uuid())
+  userId       String
+  stage        CustomerJourneyStage
+  startedAt    DateTime             @default(now())
+  completedAt  DateTime?
+  requirements Json
+  metrics      Json?
+  isActive     Boolean              @default(true)
+  user         User                 @relation("UserStageProgression", fields: [userId], references: [id])
 
   @@unique([userId, stage])
   @@index([userId])
@@ -874,19 +850,285 @@ model StageProgression {
 }
 
 model StageRequirement {
-  id                    String                @id @default(uuid())
-  stage                 CustomerJourneyStage
-  type                  String                // 'transactions', 'ondas', 'meritos', 'trust_votes', 'time'
-  minValue              Int
-  description           String
-  isRequired            Boolean               @default(true)
-  order                 Int                   @default(0)
-  createdAt             DateTime              @default(now())
-  updatedAt             DateTime              @updatedAt
+  id          String               @id @default(uuid())
+  stage       CustomerJourneyStage
+  type        String
+  minValue    Int
+  description String
+  isRequired  Boolean              @default(true)
+  order       Int                  @default(0)
+  createdAt   DateTime             @default(now())
+  updatedAt   DateTime             @updatedAt
 
   @@index([stage])
   @@index([type])
   @@map("stage_requirements")
+}
+
+model MarketplaceItem {
+  id              String                @id @default(uuid())
+  name            String                @unique
+  description     String?
+  fullDescription String?
+  itemType        MarketplaceItemType   @default(SERVICE)
+  price           Float                 @default(0)
+  priceToins      Float                 @default(0)
+  currency        Currency              @default(UNITS)
+  category        String?
+  tags            String[]
+  images          String[]
+  stock           Int                   @default(0)
+  rating          Float                 @default(0)
+  reviewCount     Int                   @default(0)
+  location        String?
+  status          MarketplaceItemStatus @default(ACTIVE)
+  isActive        Boolean               @default(true)
+  isDeleted       Boolean               @default(false)
+  deletedAt       DateTime?
+  createdAt       DateTime              @default(now())
+  updatedAt       DateTime              @updatedAt
+  viewCount       Int                   @default(0)
+  favoriteCount   Int                   @default(0)
+  sellerId        String
+  metadata        String?
+  seller          User                  @relation("UserMarketplaceItems", fields: [sellerId], references: [id])
+  matches         MarketplaceMatch[]
+  reviews         Review[]
+
+  @@index([sellerId])
+  @@index([status])
+  @@index([isActive])
+  @@index([isDeleted])
+  @@index([createdAt])
+  @@index([updatedAt])
+  @@index([viewCount])
+  @@index([favoriteCount])
+  @@index([itemType])
+  @@index([price])
+  @@index([priceToins])
+  @@index([currency])
+  @@index([category])
+  @@index([location])
+  @@map("marketplace_items")
+}
+
+model StudyRoom {
+  id              String                 @id @default(uuid())
+  name            String
+  description     String?
+  videoId         Int
+  hostId          String
+  maxParticipants Int                    @default(10)
+  status          StudyRoomStatus        @default(ACTIVE)
+  currentTime     Float                  @default(0)
+  isPaused        Boolean                @default(false)
+  isActive        Boolean                @default(true)
+  createdAt       DateTime               @default(now())
+  updatedAt       DateTime               @updatedAt
+  messages        StudyRoomMessage[]
+  participants    StudyRoomParticipant[]
+  host            User                   @relation("StudyRoomHost", fields: [hostId], references: [id])
+  video           VideoItem              @relation(fields: [videoId], references: [id])
+
+  @@index([hostId])
+  @@index([videoId])
+  @@index([status])
+  @@index([isActive])
+  @@index([createdAt])
+  @@map("study_rooms")
+}
+
+model StudyRoomParticipant {
+  id          String    @id @default(uuid())
+  studyRoomId String
+  userId      String
+  isHost      Boolean   @default(false)
+  joinedAt    DateTime  @default(now())
+  leftAt      DateTime?
+  isActive    Boolean   @default(true)
+  studyRoom   StudyRoom @relation(fields: [studyRoomId], references: [id], onDelete: Cascade)
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([studyRoomId, userId])
+  @@index([studyRoomId])
+  @@index([userId])
+  @@index([isActive])
+  @@map("study_room_participants")
+}
+
+model StudyRoomMessage {
+  id          String    @id @default(uuid())
+  studyRoomId String
+  userId      String
+  message     String
+  messageType String    @default("CHAT")
+  metadata    String?
+  createdAt   DateTime  @default(now())
+  studyRoom   StudyRoom @relation(fields: [studyRoomId], references: [id], onDelete: Cascade)
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([studyRoomId])
+  @@index([userId])
+  @@index([messageType])
+  @@index([createdAt])
+  @@map("study_room_messages")
+}
+
+model FeedbackReport {
+  id               String           @id @default(uuid())
+  userId           String
+  type             FeedbackType
+  title            String
+  description      String
+  priority         FeedbackPriority @default(MEDIUM)
+  category         String
+  status           FeedbackStatus   @default(SUBMITTED)
+  elementContext   Json
+  technicalContext Json
+  codeAnalysis     Json?
+  aiSuggestions    Json?
+  adminResponse    String?
+  adminUserId      String?
+  resolvedAt       DateTime?
+  upvotes          Int              @default(0)
+  downvotes        Int              @default(0)
+  duplicateOf      String?
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+  adminUser        User?            @relation("AdminFeedbackResponses", fields: [adminUserId], references: [id])
+  user             User             @relation("UserFeedbackReports", fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([type])
+  @@index([status])
+  @@index([priority])
+  @@index([createdAt])
+  @@map("feedback_reports")
+}
+
+model Profile {
+  id                     String   @id @default(uuid())
+  userId                 String   @unique
+  avatar                 String?
+  bio                    String?
+  location               String?
+  website                String?
+  skills                 String[]
+  interests              String[]
+  isEmprendedorConfiable Boolean  @default(false)
+  socialLinks            Json?
+  createdAt              DateTime @default(now())
+  updatedAt              DateTime @updatedAt
+  user                   User     @relation(fields: [userId], references: [id])
+
+  @@map("profiles")
+}
+
+model Review {
+  id                String          @id @default(uuid())
+  marketplaceItemId String
+  userId            String
+  rating            Int
+  comment           String?
+  communication     Int?
+  quality           Int?
+  delivery          Int?
+  value             Int?
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+  marketplaceItem   MarketplaceItem @relation(fields: [marketplaceItemId], references: [id])
+  user              User            @relation("UserReviews", fields: [userId], references: [id])
+
+  @@index([marketplaceItemId])
+  @@index([userId])
+  @@map("reviews")
+}
+
+model MarketplaceMatch {
+  id                String          @id @default(uuid())
+  marketplaceItemId String
+  buyerId           String
+  sellerId          String
+  buyerConfirmed    Boolean         @default(false)
+  sellerConfirmed   Boolean         @default(false)
+  status            MatchStatus     @default(PENDING)
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+  buyer             User            @relation("MatchBuyer", fields: [buyerId], references: [id])
+  item              MarketplaceItem @relation(fields: [marketplaceItemId], references: [id])
+  seller            User            @relation("MatchSeller", fields: [sellerId], references: [id])
+  messages          MatchMessage[]
+
+  @@index([marketplaceItemId])
+  @@index([buyerId])
+  @@index([sellerId])
+  @@map("marketplace_matches")
+}
+
+model MatchMessage {
+  id        String           @id @default(uuid())
+  matchId   String
+  senderId  String
+  content   String
+  createdAt DateTime         @default(now())
+  match     MarketplaceMatch @relation(fields: [matchId], references: [id])
+  sender    User             @relation(fields: [senderId], references: [id])
+
+  @@index([matchId])
+  @@index([senderId])
+  @@map("match_messages")
+}
+
+/// Modelo principal para tracking de misiones de agentes IA
+model AIMission {
+  id                String        @id @default(uuid())
+  missionType       MissionType
+  primaryAgent      AgentType
+  involvedAgents    AgentType[]
+  title             String
+  description       String
+  prompt            String
+  context           Json?
+  status            MissionStatus @default(PENDING)
+  progress          Int           @default(0)
+  estimatedDuration Int?
+  startedAt         DateTime?
+  completedAt       DateTime?
+  results           Json?
+  outputs           Json?
+  errorMessage      String?
+  n8nWorkflowId     String?
+  n8nExecutionId    String?
+  webhookResponse   Json?
+  qualityScore      Float?
+  userFeedback      String?
+  costEstimate      Float?
+  createdBy         String
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+  creator           User          @relation("CreatedAIMissions", fields: [createdBy], references: [id])
+
+  @@index([status])
+  @@index([missionType])
+  @@index([primaryAgent])
+  @@index([createdBy])
+  @@index([createdAt])
+  @@index([completedAt])
+  @@map("ai_missions")
+}
+
+enum Currency {
+  UNITS
+  TOINS
+  ONDAS
+  MERITOS
+}
+
+enum CustomerJourneyStage {
+  BUYER
+  SEEKER
+  SOLVER
+  PROMOTER
 }
 
 enum MarketplaceItemType {
@@ -906,177 +1148,10 @@ enum MarketplaceItemStatus {
   SUSPENDED
 }
 
-model MarketplaceItem {
-  id             String                @id @default(uuid())
-  name           String                @unique
-  description    String?
-  fullDescription String?
-  itemType       MarketplaceItemType   @default(SERVICE)
-  price          Float                 @default(0)
-  priceToins     Float                 @default(0)
-  currency       Currency              @default(UNITS)
-  category       String?
-  tags           String[]
-  images         String[]
-  stock          Int                   @default(0)
-  rating         Float                 @default(0)
-  reviewCount    Int                   @default(0)
-  location       String?
-  status         MarketplaceItemStatus @default(ACTIVE)
-  isActive       Boolean               @default(true)
-  isDeleted      Boolean               @default(false)
-  deletedAt      DateTime?
-  createdAt      DateTime              @default(now())
-  updatedAt      DateTime              @updatedAt
-  viewCount      Int                   @default(0)
-  favoriteCount  Int                   @default(0)
-  sellerId       String
-  metadata       String?
-  seller         User                  @relation("UserMarketplaceItems", fields: [sellerId], references: [id])
-  reviews        Review[]
-  matches        MarketplaceMatch[]
-
-  @@index([sellerId])
-  @@index([status])
-  @@index([isActive])
-  @@index([isDeleted])
-  @@index([createdAt])
-  @@index([updatedAt])
-  @@index([viewCount])
-  @@index([favoriteCount])
-  @@index([itemType])
-  @@index([price])
-  @@index([priceToins])
-  @@index([currency])
-  @@index([category])
-  @@index([location])
-  @@map("marketplace_items")
-}
-
-// =====================================================================
-// STUDY ROOMS MODULE MODELS - ÜPlay Social Collaboration
-// =====================================================================
-
 enum StudyRoomStatus {
   ACTIVE
   PAUSED
   ENDED
-}
-
-model StudyRoom {
-  id                 String                  @id @default(uuid())
-  name               String
-  description        String?
-  videoId            Int
-  hostId             String
-  maxParticipants    Int                     @default(10)
-  status             StudyRoomStatus         @default(ACTIVE)
-  currentTime        Float                   @default(0)
-  isPaused           Boolean                 @default(false)
-  isActive           Boolean                 @default(true)
-  createdAt          DateTime                @default(now())
-  updatedAt          DateTime                @updatedAt
-
-  // Relaciones
-  video              VideoItem               @relation(fields: [videoId], references: [id])
-  host               User                    @relation("StudyRoomHost", fields: [hostId], references: [id])
-  participants       StudyRoomParticipant[]
-  messages           StudyRoomMessage[]
-
-  @@index([hostId])
-  @@index([videoId])
-  @@index([status])
-  @@index([isActive])
-  @@index([createdAt])
-  @@map("study_rooms")
-}
-
-model StudyRoomParticipant {
-  id              String    @id @default(uuid())
-  studyRoomId     String
-  userId          String
-  isHost          Boolean   @default(false)
-  joinedAt        DateTime  @default(now())
-  leftAt          DateTime?
-  isActive        Boolean   @default(true)
-
-  // Relaciones
-  studyRoom       StudyRoom @relation(fields: [studyRoomId], references: [id], onDelete: Cascade)
-  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@unique([studyRoomId, userId]) // Un usuario solo puede estar una vez en una sala
-  @@index([studyRoomId])
-  @@index([userId])
-  @@index([isActive])
-  @@map("study_room_participants")
-}
-
-model StudyRoomMessage {
-  id              String    @id @default(uuid())
-  studyRoomId     String
-  userId          String
-  message         String    @db.Text
-  messageType     String    @default("CHAT") // CHAT, SYSTEM, VIDEO_EVENT
-  metadata        String?   @db.Text
-  createdAt       DateTime  @default(now())
-
-  // Relaciones
-  studyRoom       StudyRoom @relation(fields: [studyRoomId], references: [id], onDelete: Cascade)
-  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@index([studyRoomId])
-  @@index([userId])
-  @@index([messageType])
-  @@index([createdAt])
-  @@map("study_room_messages")
-}
-
-// =====================================================================
-// FEEDBACK AGENT MODULE - Sistema de Recolección de Reportes
-// =====================================================================
-
-model FeedbackReport {
-  id              String                @id @default(uuid())
-  userId          String
-  type            FeedbackType
-  title           String
-  description     String
-  priority        FeedbackPriority      @default(MEDIUM)
-  category        String
-  status          FeedbackStatus        @default(SUBMITTED)
-
-  // Contexto del elemento UI seleccionado
-  elementContext  Json                  // Información del elemento seleccionado
-
-  // Contexto técnico de la sesión
-  technicalContext Json               // URL, userAgent, viewport, route, etc.
-
-  // Análisis automático de código (opcional)
-  codeAnalysis    Json?                // Resultados de scripts automatizados
-  aiSuggestions   Json?                // Sugerencias generadas por IA
-
-  // Respuesta del administrador
-  adminResponse   String?
-  adminUserId     String?
-  resolvedAt      DateTime?
-
-  // Métricas de utilidad
-  upvotes         Int                  @default(0)
-  downvotes       Int                  @default(0)
-  duplicateOf     String?              // ID de reporte principal si es duplicado
-
-  createdAt       DateTime             @default(now())
-  updatedAt       DateTime             @updatedAt
-
-  user            User                 @relation("UserFeedbackReports", fields: [userId], references: [id], onDelete: Cascade)
-  adminUser       User?                @relation("AdminFeedbackResponses", fields: [adminUserId], references: [id])
-
-  @@index([userId])
-  @@index([type])
-  @@index([status])
-  @@index([priority])
-  @@index([createdAt])
-  @@map("feedback_reports")
 }
 
 enum FeedbackType {
@@ -1104,51 +1179,6 @@ enum FeedbackStatus {
   DUPLICATE
 }
 
-// === NUEVOS MODELOS PARA MARKETPLACE ===
-
-model Profile {
-  id                      String   @id @default(uuid())
-  userId                  String   @unique
-  user                    User     @relation(fields: [userId], references: [id])
-  avatar                  String?
-  bio                     String?
-  location                String?
-  website                 String?
-  skills                  String[]
-  interests              String[]
-  isEmprendedorConfiable  Boolean  @default(false)
-  socialLinks             Json?
-  createdAt               DateTime @default(now())
-  updatedAt               DateTime @updatedAt
-
-  @@map("profiles")
-}
-
-model Review {
-  id              String           @id @default(uuid())
-  marketplaceItemId String
-  marketplaceItem MarketplaceItem  @relation(fields: [marketplaceItemId], references: [id])
-  userId          String
-  user            User             @relation("UserReviews", fields: [userId], references: [id])
-  rating          Int
-  comment         String?
-  communication   Int?
-  quality         Int?
-  delivery        Int?
-  value           Int?
-  createdAt       DateTime         @default(now())
-  updatedAt       DateTime         @updatedAt
-
-  @@index([marketplaceItemId])
-  @@index([userId])
-  @@map("reviews")
-}
-
-/// --------------------------------------------------
-/// Marketplace transactional match between buyer and seller
-/// Added 2025-06-26 to support /marketplace/match/* endpoints
-/// --------------------------------------------------
-
 enum MatchStatus {
   PENDING
   CONFIRMED
@@ -1156,128 +1186,28 @@ enum MatchStatus {
   COMPLETED
 }
 
-model MarketplaceMatch {
-  id                String       @id @default(uuid())
-  marketplaceItemId String
-  buyerId           String
-  sellerId          String
-  buyerConfirmed    Boolean      @default(false)
-  sellerConfirmed   Boolean      @default(false)
-  status            MatchStatus  @default(PENDING)
-  createdAt         DateTime     @default(now())
-  updatedAt         DateTime     @updatedAt
-
-  /// Relations
-  item     MarketplaceItem @relation(fields: [marketplaceItemId], references: [id])
-  buyer    User            @relation("MatchBuyer", fields: [buyerId], references: [id])
-  seller   User            @relation("MatchSeller", fields: [sellerId], references: [id])
-  messages MatchMessage[]
-
-  @@index([marketplaceItemId])
-  @@index([buyerId])
-  @@index([sellerId])
-  @@map("marketplace_matches")
-}
-
-model MatchMessage {
-  id        String           @id @default(uuid())
-  matchId   String
-  senderId  String
-  content   String
-  createdAt DateTime         @default(now())
-
-  /// Relations
-  match  MarketplaceMatch @relation(fields: [matchId], references: [id])
-  sender User             @relation(fields: [senderId], references: [id])
-
-  @@index([matchId])
-  @@index([senderId])
-  @@map("match_messages")
-}
-
-// =====================================================================
-// AI MISSION ORCHESTRATION MODULE - Sistema de Orquestación de Agentes IA
-// Filosofía CoomÜnity: Bien Común > bien particular, Cooperar > Competir
-// =====================================================================
-
 /// Enums para tipos de misión y agentes especializados
 enum MissionType {
-  RESEARCH        // Investigación web (NIRA)
-  MEDIA_CREATION  // Creación de contenido visual (ARIA)
-  PUBLICATION     // Publicación en redes sociales (HERALDO)
-  NOTIFICATION    // Comunicación interna (PAX)
-  COMPLEX         // Misiones multi-agente orquestadas (ANA)
+  RESEARCH
+  MEDIA_CREATION
+  PUBLICATION
+  NOTIFICATION
+  COMPLEX
 }
 
 enum AgentType {
-  ANA      // Conciencia Orquestadora - Director principal
-  NIRA     // Agente de Investigación - Apify, búsquedas web
-  ARIA     // Agente de Medios - Creación visual, diseño
-  HERALDO  // Agente de Publicación - Buffer, redes sociales
-  PAX      // Agente Ayudante - Slack, comunicación interna
+  ANA
+  NIRA
+  ARIA
+  HERALDO
+  PAX
 }
 
 enum MissionStatus {
-  PENDING       // Misión creada, esperando procesamiento
-  DISPATCHED    // Enviada a N8N para orquestación
-  IN_PROGRESS   // En ejecución por los agentes
-  COMPLETED     // Completada exitosamente
-  FAILED        // Falló durante la ejecución
-  CANCELLED     // Cancelada por el usuario
-}
-
-/// Modelo principal para tracking de misiones de agentes IA
-model AIMission {
-  id                String        @id @default(uuid())
-
-  // Identificación y clasificación
-  missionType       MissionType
-  primaryAgent      AgentType
-  involvedAgents    AgentType[]   // Agentes participantes en misiones complejas
-
-  // Contenido de la misión
-  title             String
-  description       String        @db.Text
-  prompt            String        @db.Text  // Prompt original del usuario
-  context           Json?         // Contexto adicional (filosofía, objetivos)
-
-  // Estado y progreso
-  status            MissionStatus @default(PENDING)
-  progress          Int           @default(0) // Porcentaje de progreso (0-100)
-
-  // Tracking temporal
-  estimatedDuration Int?          // Duración estimada en minutos
-  startedAt         DateTime?     // Cuando comenzó la ejecución
-  completedAt       DateTime?     // Cuando se completó
-
-  // Resultados y outputs
-  results           Json?         // Resultados estructurados de la misión
-  outputs           Json?         // Archivos, URLs, contenido generado
-  errorMessage      String?       // Mensaje de error si falló
-
-  // Integración con N8N
-  n8nWorkflowId     String?       // ID del workflow en N8N
-  n8nExecutionId    String?       // ID de la ejecución específica
-  webhookResponse   Json?         // Respuesta completa del webhook
-
-  // Métricas y evaluación
-  qualityScore      Float?        // Puntuación de calidad (0.0-1.0)
-  userFeedback      String?       // Feedback del usuario sobre los resultados
-  costEstimate      Float?        // Costo estimado en créditos/tokens
-
-  // Metadatos del creador
-  createdBy         String        // ID del usuario que creó la misión
-  createdAt         DateTime      @default(now())
-  updatedAt         DateTime      @updatedAt
-
-  // Relaciones
-  creator           User          @relation("CreatedAIMissions", fields: [createdBy], references: [id])
-
-  @@index([status])
-  @@index([missionType])
-  @@index([primaryAgent])
-  @@index([createdBy])
-  @@index([createdAt])
-  @@index([completedAt])
-  @@map("ai_missions")
+  PENDING
+  DISPATCHED
+  IN_PROGRESS
+  COMPLETED
+  FAILED
+  CANCELLED
 }

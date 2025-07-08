@@ -63,6 +63,8 @@ const NotFoundPage = createLazyPage('NotFoundPage');
 
 // Admin Pages
 const CosmicAuditDemo = createLazyPage('admin/CosmicAuditDemo');
+const CosmicBrainDashboard = createLazyPage('admin/CosmicBrainDashboard');
+const CosmicBrainQuickTest = createLazyPage('admin/CosmicBrainQuickTest');
 
 // Componentes de Onboarding
 const OnboardingDemo = lazy(() => import('../components/onboarding/OnboardingDemo'));
@@ -163,8 +165,10 @@ export const LazyPages = {
   // Customer Journey - Sistema de Gestión de Stages
   CustomerJourney,
 
-  // Admin Page
+  // Admin Pages
   CosmicAuditDemo,
+  CosmicBrainDashboard,
+  CosmicBrainQuickTest,
 };
 
 // --- Funciones de Precarga ---

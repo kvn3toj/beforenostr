@@ -25,7 +25,10 @@ import {
 } from '@mui/icons-material';
 
 // Importar los nuevos componentes
-import { NavigationMenu, NavigationItem } from '../components/common/Navigation/NavigationMenu';
+import {
+  NavigationMenu,
+  NavigationItem,
+} from '../components/common/Navigation/NavigationMenu';
 
 // Iconos de Material UI - Importaciones por defecto
 import {
@@ -50,7 +53,9 @@ import ThemeSelector from '../components/ThemeSelector';
 const drawerWidth = 280;
 
 // Componente del Logo minimalista
-const MinimalLogo: React.FC<{ collapsed?: boolean }> = ({ collapsed = false }) => {
+const MinimalLogo: React.FC<{ collapsed?: boolean }> = ({
+  collapsed = false,
+}) => {
   const navigate = useNavigate();
 
   return (
@@ -107,7 +112,9 @@ const MinimalLogo: React.FC<{ collapsed?: boolean }> = ({ collapsed = false }) =
 
 export const MainLayout = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [userMenuAnchor, setUserMenuAnchor] = useState<null | HTMLElement>(null);
+  const [userMenuAnchor, setUserMenuAnchor] = useState<null | HTMLElement>(
+    null
+  );
   const navigate = useNavigate();
   const location = useLocation();
   const { t } = useTranslation();
@@ -195,57 +202,67 @@ export const MainLayout = () => {
       ],
     },
     // Sección de Administración - Solo para admins
-    ...(isAdmin ? [{
-      id: 'administration',
-      label: t('nav_administration'),
-      icon: <SecurityIcon />,
-      category: 'Administración',
-      divider: true,
-      children: [
-        {
-          id: 'users',
-          label: t('nav_users'),
-          icon: <PeopleIcon />,
-          path: '/users',
-        },
-        {
-          id: 'roles',
-          label: t('nav_roles'),
-          icon: <SecurityIcon />,
-          path: '/roles',
-        },
-        {
-          id: 'permissions',
-          label: t('nav_permissions'),
-          icon: <SecurityIcon />,
-          path: '/permissions',
-        },
-        {
-          id: 'items',
-          label: t('nav_items'),
-          icon: <CategoryIcon />,
-          path: '/items',
-        },
-        {
-          id: 'analytics',
-          label: 'Analytics',
-          icon: <AnalyticsIcon />,
-          path: '/analytics',
-        },
-        {
-          id: 'audit-logs',
-          label: t('nav_audit_logs'),
-          icon: <HistoryIcon />,
-          path: '/audit-logs',
-        },
-        {
-          id: 'settings',
-          label: 'Configuración',
-          icon: <SettingsIcon />,
-          path: '/settings',
-        },
-      ],
-    }] : []),
+    ...(isAdmin
+      ? [
+          {
+            id: 'administration',
+            label: t('nav_administration'),
+            icon: <SecurityIcon />,
+            category: 'Administración',
+            divider: true,
+            children: [
+              {
+                id: 'users',
+                label: t('nav_users'),
+                icon: <PeopleIcon />,
+                path: '/users',
+              },
+              {
+                id: 'roles',
+                label: t('nav_roles'),
+                icon: <SecurityIcon />,
+                path: '/roles',
+              },
+              {
+                id: 'permissions',
+                label: t('nav_permissions'),
+                icon: <SecurityIcon />,
+                path: '/permissions',
+              },
+              {
+                id: 'items',
+                label: t('nav_items'),
+                icon: <CategoryIcon />,
+                path: '/items',
+              },
+              {
+                id: 'analytics',
+                label: 'Analytics',
+                icon: <AnalyticsIcon />,
+                path: '/analytics',
+              },
+              {
+                id: 'cosmic-brain',
+                label: '🌌 Cosmic Brain',
+                icon: <StarIcon />,
+                path: '/admin/cosmic-brain',
+              },
+              {
+                id: 'audit-logs',
+                label: t('nav_audit_logs'),
+                icon: <HistoryIcon />,
+                path: '/audit-logs',
+              },
+              {
+                id: 'settings',
+                label: 'Configuración',
+                icon: <SettingsIcon />,
+                path: '/settings',
+              },
+            ],
+          },
+        ]
+      : []),
     {
       id: 'support',
       label: 'Soporte',
@@ -316,7 +333,13 @@ export const MainLayout = () => {
   );
 
   return (
-    <Box sx={{ display: 'flex', minHeight: '100vh', background: 'var(--main-background)' }}>
+    <Box
+      sx={{
+        display: 'flex',
+        minHeight: '100vh',
+        background: 'var(--main-background)',
+      }}
+    >
       <CssBaseline />
 
       {/* Header minimalista */}
@@ -331,7 +354,9 @@ export const MainLayout = () => {
           borderBottom: '1px solid rgba(255, 255, 255, 0.12)',
         }}
       >
-        <Toolbar sx={{ justifyContent: 'space-between', minHeight: '64px !important' }}>
+        <Toolbar
+          sx={{ justifyContent: 'space-between', minHeight: '64px !important' }}
+        >
           {/* Botón de menú hamburguesa */}
           <IconButton
             color="inherit"
@@ -367,7 +392,13 @@ export const MainLayout = () => {
 
           {/* Usuario */}
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            <Typography variant="body2" sx={{ color: 'var(--secondary-text)', display: { xs: 'none', sm: 'block' } }}>
+            <Typography
+              variant="body2"
+              sx={{
+                color: 'var(--secondary-text)',
+                display: { xs: 'none', sm: 'block' },
+              }}
+            >
               {user?.email || 'Usuario'}
             </Typography>
             <IconButton
@@ -379,7 +410,9 @@ export const MainLayout = () => {
                 },
               }}
             >
-              <Avatar sx={{ width: 32, height: 32, bgcolor: 'var(--accent-color)' }}>
+              <Avatar
+                sx={{ width: 32, height: 32, bgcolor: 'var(--accent-color)' }}
+              >
                 <PersonIcon />
               </Avatar>
             </IconButton>

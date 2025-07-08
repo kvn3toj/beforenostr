@@ -17,7 +17,14 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Fade from '@mui/material/Fade';
 import Zoom from '@mui/material/Zoom';
-import { useTheme, alpha, Paper, LinearProgress, Skeleton, Button as MuiButton } from '@mui/material';
+import {
+  useTheme,
+  alpha,
+  Paper,
+  LinearProgress,
+  Skeleton,
+  Button as MuiButton,
+} from '@mui/material';
 
 // 🎯 Iconos
 import SearchIcon from '@mui/icons-material/Search';
@@ -42,7 +49,10 @@ import { useUPlayProgress } from './hooks/useUPlayProgress';
 import { getVideoThumbnail } from '../../../utils/videoUtils';
 
 // 🎯 IMPORT DEL VIDEO DURATION FIXER para corregir duraciones 0:00
-import { useVideosWithCorrectDurations, formatDuration as fixedFormatDuration } from '../../../utils/videoDurationFixer';
+import {
+  useVideosWithCorrectDurations,
+  formatDuration as fixedFormatDuration,
+} from '../../../utils/videoDurationFixer';
 
 // 🎯 Tipos
 interface VideoItem {
@@ -77,7 +87,9 @@ export const UPlayInteractiveLibrary: React.FC = () => {
   const [animate, setAnimate] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
-  const [filterAnchorEl, setFilterAnchorEl] = useState<null | HTMLElement>(null);
+  const [filterAnchorEl, setFilterAnchorEl] = useState<null | HTMLElement>(
+    null
+  );
   const [hoveredVideo, setHoveredVideo] = useState<string | null>(null);
   const navigate = useNavigate();
 
@@ -106,16 +118,21 @@ export const UPlayInteractiveLibrary: React.FC = () => {
 
   // 🎯 Categorías dinámicas
   const categories = useMemo(() => {
-    const uniqueCategories = ['all', ...new Set(processedVideos.map(v => v.category))];
+    const uniqueCategories = [
+      'all',
+      ...new Set(processedVideos.map((v) => v.category)),
+    ];
     return uniqueCategories;
   }, [processedVideos]);
 
   // 🎯 Videos filtrados
   const filteredVideos = useMemo(() => {
-    return processedVideos.filter(video => {
-      const matchesSearch = video.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                           video.description.toLowerCase().includes(searchTerm.toLowerCase());
-      const matchesCategory = selectedCategory === 'all' || video.category === selectedCategory;
+    return processedVideos.filter((video) => {
+      const matchesSearch =
+        video.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        video.description.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesCategory =
+        selectedCategory === 'all' || video.category === selectedCategory;
 
       return matchesSearch && matchesCategory;
     });
@@ -144,7 +161,7 @@ export const UPlayInteractiveLibrary: React.FC = () => {
     console.log('🎬 Video seleccionado:', videoId);
 
     // Buscar el video en los datos procesados
-    const videoData = processedVideos.find(video => video.id === videoId);
+    const videoData = processedVideos.find((video) => video.id === videoId);
 
     if (videoData) {
       console.log('🎬 Datos del video encontrados:', videoData);
@@ -153,16 +170,16 @@ export const UPlayInteractiveLibrary: React.FC = () => {
       navigate(`/uplay/video/${videoId}`, {
         state: {
           from: '/uplay',
-          videoData
-        }
+          videoData,
+        },
       });
     } else {
       console.error('❌ Video no encontrado:', videoId);
       // Navegar de todas formas, el reproductor manejará la carga
       navigate(`/uplay/video/${videoId}`, {
         state: {
-          from: '/uplay'
-        }
+          from: '/uplay',
+        },
       });
     }
   };
@@ -191,7 +208,9 @@ export const UPlayInteractiveLibrary: React.FC = () => {
               variant="outlined"
               placeholder="Buscar por título, tema o concepto..."
               value={searchTerm}
-              onChange={e => setSearchTerm(e.target.value)}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              aria-label="Campo de búsqueda de videos en la biblioteca UPlay"
+              role="searchbox"
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
@@ -207,7 +226,7 @@ export const UPlayInteractiveLibrary: React.FC = () => {
           </Grid>
           <Grid item xs={12} md={6}>
             <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
-              {categories.map(category => (
+              {categories.map((category) => (
                 <Chip
                   key={category}
                   label={category === 'all' ? 'Todos' : category}
@@ -236,8 +255,8 @@ export const UPlayInteractiveLibrary: React.FC = () => {
       video.difficulty === 'Principiante'
         ? theme.palette.success.main
         : video.difficulty === 'Intermedio'
-        ? theme.palette.warning.main
-        : theme.palette.error.main;
+          ? theme.palette.warning.main
+          : theme.palette.error.main;
 
     const hasThumbnail = !!video.thumbnailUrl;
 
@@ -257,7 +276,9 @@ export const UPlayInteractiveLibrary: React.FC = () => {
           flexDirection: 'column',
           justifyContent: 'flex-end',
           backgroundImage: hasThumbnail ? `url(${video.thumbnailUrl})` : 'none',
-          backgroundColor: hasThumbnail ? 'transparent' : theme.palette.background.paper,
+          backgroundColor: hasThumbnail
+            ? 'transparent'
+            : theme.palette.background.paper,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           '&::before': {
@@ -418,7 +439,11 @@ export const UPlayInteractiveLibrary: React.FC = () => {
     <Grid container spacing={3}>
       {Array.from(new Array(6)).map((_, index) => (
         <Grid item xs={12} sm={6} md={4} key={index}>
-          <Skeleton variant="rectangular" height={250} sx={{ borderRadius: 3 }} />
+          <Skeleton
+            variant="rectangular"
+            height={250}
+            sx={{ borderRadius: 3 }}
+          />
         </Grid>
       ))}
     </Grid>
@@ -451,10 +476,7 @@ export const UPlayInteractiveLibrary: React.FC = () => {
     <Grid item xs={12} sm={6} md={4} key={video.id}>
       <Fade in={animate} timeout={(index + 1) * 200}>
         <div>
-          <VideoCard
-            video={video}
-            onPlay={() => handleVideoClick(video.id)}
-          />
+          <VideoCard video={video} onPlay={() => handleVideoClick(video.id)} />
         </div>
       </Fade>
     </Grid>
@@ -464,7 +486,9 @@ export const UPlayInteractiveLibrary: React.FC = () => {
   if (isLoading) {
     return (
       <Box sx={{ textAlign: 'center', py: 8 }}>
-        <RevolutionaryWidget variant="cosmic" cosmicIntensity="medium">{null}</RevolutionaryWidget>
+        <RevolutionaryWidget variant="cosmic" cosmicIntensity="medium">
+          {null}
+        </RevolutionaryWidget>
         <Typography variant="h6" sx={{ mt: 2, color: 'text.secondary' }}>
           Cargando biblioteca de videos...
         </Typography>

@@ -108,8 +108,19 @@ export class StagesService {
         this.calculateOverallMetrics(),
       ]);
 
-      const conversionFunnel = this.calculateConversionFunnel(stageData);
-      const stageProgression = this.calculateStageProgression(stageData);
+      // Convert stageData to StageWithMetrics format for calculations
+      const stageWithMetrics: StageWithMetrics[] = stageData.map(
+        (stage, index) => ({
+          id: `stage-${index}`, // Generate a simple ID
+          metrics: {
+            totalUsers: stage.userCount,
+            conversionRate: 0, // Will be calculated in the methods
+          },
+        })
+      );
+
+      const conversionFunnel = this.calculateConversionFunnel(stageWithMetrics);
+      const stageProgression = this.calculateStageProgression(stageWithMetrics);
 
       return {
         stages: stageData,

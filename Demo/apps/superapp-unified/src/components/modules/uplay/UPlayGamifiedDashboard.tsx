@@ -35,7 +35,11 @@ import { alpha } from '@mui/material/styles';
 // Hooks y Componentes
 import DynamicMetricsDashboard from './DynamicMetricsDashboard';
 import { useRewardFeedback } from './components/EnhancedRewardFeedback';
-import { usePlaylists, Playlist, Video } from '../../../hooks/data/usePlaylistData';
+import {
+  usePlaylists,
+  Playlist,
+  Video,
+} from '../../../hooks/data/usePlaylistData';
 
 // TIPOS LOCALES (ADAPTADOR)
 interface VideoItem {
@@ -109,7 +113,9 @@ const VideoCard: React.FC<{ video: VideoItem; onPlay: () => void }> = ({
         flexDirection: 'column',
         justifyContent: 'flex-end',
         backgroundImage: hasThumbnail ? `url(${video.thumbnailUrl})` : 'none',
-        backgroundColor: hasThumbnail ? 'transparent' : theme.palette.background.paper,
+        backgroundColor: hasThumbnail
+          ? 'transparent'
+          : theme.palette.background.paper,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         '&::before': {
@@ -136,6 +142,15 @@ const VideoCard: React.FC<{ video: VideoItem; onPlay: () => void }> = ({
               'linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.6) 50%, rgba(0,0,0,0.1) 100%)',
           },
         },
+      }}
+      role="button"
+      tabIndex={0}
+      aria-label={`Reproducir video: ${video.title}, dificultad ${getDifficultyLabel(video.difficulty)}, recompensas: ${video.rewards.meritos} méritos y ${video.rewards.ondas} ondas`}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          onPlay();
+        }
       }}
     >
       <Box
@@ -178,6 +193,7 @@ const VideoCard: React.FC<{ video: VideoItem; onPlay: () => void }> = ({
                 fontWeight: 500,
                 border: `1px solid ${alpha(theme.palette.primary.light, 0.3)}`,
               }}
+              aria-label={`Recompensa de ${video.rewards.meritos} méritos`}
             />
           </Grid>
           <Grid item>
@@ -191,6 +207,7 @@ const VideoCard: React.FC<{ video: VideoItem; onPlay: () => void }> = ({
                 fontWeight: 500,
                 border: `1px solid ${alpha(theme.palette.secondary.light, 0.3)}`,
               }}
+              aria-label={`Recompensa de ${video.rewards.ondas} ondas`}
             />
           </Grid>
         </Grid>
@@ -234,29 +251,51 @@ export const UPlayGamifiedDashboard: React.FC = () => {
   const [isPending, startTransition] = useTransition();
   const { showReward } = useRewardFeedback();
 
-  const { data: playlistsData, isLoading: playlistsLoading, error: playlistsError } = usePlaylists();
+  const {
+    data: playlistsData,
+    isLoading: playlistsLoading,
+    error: playlistsError,
+  } = usePlaylists();
 
-  const handlePlayAction = useCallback((playlist: Playlist, video: Video) => {
-    startTransition(() => {
-      navigate(`/uplay/journey/${playlist.id}`, {
-        state: {
-          journeyData: {
-            id: playlist.id,
-            title: playlist.name,
-            inspirationalQuote: playlist.description || 'Un viaje de mil millas comienza con un solo paso.',
-            purpose: playlist.description || 'Explora esta colección de videos para expandir tu conciencia.',
-            imageUrl: playlist.imageUrl || `https://via.placeholder.com/400x225/E3F2FD/90CAF9?text=${encodeURIComponent(playlist.name)}`,
-            rewards: {
-              meritos: playlist.videoItems.reduce((acc, v) => acc + (v.rewards?.meritos || 50), 0),
-              ondas: playlist.videoItems.reduce((acc, v) => acc + (v.rewards?.ondas || 30), 0),
+  const handlePlayAction = useCallback(
+    (playlist: Playlist, video: Video) => {
+      startTransition(() => {
+        navigate(`/uplay/journey/${playlist.id}`, {
+          state: {
+            journeyData: {
+              id: playlist.id,
+              title: playlist.name,
+              inspirationalQuote:
+                playlist.description ||
+                'Un viaje de mil millas comienza con un solo paso.',
+              purpose:
+                playlist.description ||
+                'Explora esta colección de videos para expandir tu conciencia.',
+              imageUrl:
+                playlist.imageUrl ||
+                `https://via.placeholder.com/400x225/E3F2FD/90CAF9?text=${encodeURIComponent(playlist.name)}`,
+              rewards: {
+                meritos: playlist.videoItems.reduce(
+                  (acc, v) => acc + (v.rewards?.meritos || 50),
+                  0
+                ),
+                ondas: playlist.videoItems.reduce(
+                  (acc, v) => acc + (v.rewards?.ondas || 30),
+                  0
+                ),
+              },
+              videos: playlist.videoItems.map((v) => ({
+                id: v.id,
+                title: v.title,
+              })),
+              firstVideoId: video.id,
             },
-            videos: playlist.videoItems.map(v => ({ id: v.id, title: v.title })),
-            firstVideoId: video.id
-          }
-        }
+          },
+        });
       });
-    });
-  }, [navigate]);
+    },
+    [navigate]
+  );
 
   if (playlistsLoading) {
     return (
@@ -264,7 +303,11 @@ export const UPlayGamifiedDashboard: React.FC = () => {
         <Grid container spacing={2}>
           {[...Array(6)].map((_, i) => (
             <Grid item key={i} xs={12} sm={6} md={4}>
-              <Skeleton variant="rectangular" height={160} sx={{ borderRadius: 2 }}/>
+              <Skeleton
+                variant="rectangular"
+                height={160}
+                sx={{ borderRadius: 2 }}
+              />
             </Grid>
           ))}
         </Grid>
@@ -275,7 +318,14 @@ export const UPlayGamifiedDashboard: React.FC = () => {
   if (playlistsError) {
     return (
       <Container sx={{ py: 4 }}>
-        <Paper sx={{ p: 3, bgcolor: 'rgba(93, 22, 38, 0.02)', border: '1px solid rgba(93, 22, 38, 0.1)', borderRadius: 2 }}>
+        <Paper
+          sx={{
+            p: 3,
+            bgcolor: 'rgba(93, 22, 38, 0.02)',
+            border: '1px solid rgba(93, 22, 38, 0.1)',
+            borderRadius: 2,
+          }}
+        >
           <Typography color="#5D1626">Error al cargar las Sendas.</Typography>
         </Paper>
       </Container>
@@ -283,7 +333,14 @@ export const UPlayGamifiedDashboard: React.FC = () => {
   }
 
   return (
-    <Box sx={{ flexGrow: 1, bgcolor: theme.palette.background.default, minHeight: '100%' }} data-testid="uplay-dashboard">
+    <Box
+      sx={{
+        flexGrow: 1,
+        bgcolor: theme.palette.background.default,
+        minHeight: '100%',
+      }}
+      data-testid="uplay-dashboard"
+    >
       {/* Contenido principal */}
       <Container maxWidth="xl" sx={{ mt: 2 }}>
         <DynamicMetricsDashboard />
@@ -302,7 +359,7 @@ export const UPlayGamifiedDashboard: React.FC = () => {
           Explora tus Sendas de Aprendizaje
         </Typography>
         <Grid container spacing={4}>
-          {playlistsData?.map(playlist => (
+          {playlistsData?.map((playlist) => (
             <Grid item xs={12} key={playlist.id}>
               <Paper
                 elevation={0}
@@ -316,7 +373,10 @@ export const UPlayGamifiedDashboard: React.FC = () => {
                 <Box sx={{ mb: 3 }}>
                   <Typography
                     variant="h5"
-                    sx={{ fontWeight: 'bold', color: theme.palette.text.primary }}
+                    sx={{
+                      fontWeight: 'bold',
+                      color: theme.palette.text.primary,
+                    }}
                   >
                     {playlist.name}
                   </Typography>
@@ -347,7 +407,7 @@ export const UPlayGamifiedDashboard: React.FC = () => {
                   />
                 </Divider>
                 <Grid container spacing={3}>
-                  {playlist.videoItems.map(video => (
+                  {playlist.videoItems.map((video) => (
                     <Grid item xs={12} sm={6} md={4} lg={3} key={video.id}>
                       <VideoCard
                         video={adaptBackendVideoToVideoItem(
@@ -367,7 +427,7 @@ export const UPlayGamifiedDashboard: React.FC = () => {
         <Box sx={{ position: 'fixed', bottom: 24, right: 24, zIndex: 1000 }}>
           <Fab
             color="primary"
-            aria-label="play"
+            aria-label="Iniciar experiencia de reproducción rápida en UPlay"
             sx={{
               width: 48,
               height: 48,
@@ -376,7 +436,7 @@ export const UPlayGamifiedDashboard: React.FC = () => {
               '&:hover': {
                 bgcolor: theme.palette.primary.dark,
                 boxShadow: '0 2px 6px rgba(0, 0, 0, 0.1)',
-              }
+              },
             }}
           >
             <PlayArrow />
