@@ -8,6 +8,7 @@ import {
   UseGuards,
   Req,
 } from '@nestjs/common';
+import { ApiExcludeEndpoint } from '@nestjs/swagger';
 import { JwtAuthGuard } from '@/auth/guards/jwt-auth.guard';
 import { RolesGuard } from '@/rbac/guards/roles.guard';
 import { Roles } from '@/rbac/decorators/roles.decorator';
@@ -27,18 +28,20 @@ interface AuthRequest extends Request {
 export class MatchController {
   constructor(private readonly matchService: MatchService) {}
 
-  @Get(':matchId')
-  async getMatch(@Param('matchId') matchId: string, @Req() req: AuthRequest) {
-    return this.matchService.getMatch(matchId, req.user!.id);
+  @Get(':id')
+  @ApiExcludeEndpoint()
+  async getMatch(@Param('id') id: string, @Req() req: AuthRequest) {
+    return this.matchService.getMatch(id, req.user?.id);
   }
 
-  @Patch(':matchId/confirm')
+  @Patch(':id/confirm')
+  @ApiExcludeEndpoint()
   async confirmMatch(
-    @Param('matchId') matchId: string,
-    @Body() dto: ConfirmMatchDto,
-    @Req() req: AuthRequest
+    @Param('id') id: string,
+    @Body() confirmMatchDto: ConfirmMatchDto,
+    @Req() req: AuthRequest,
   ) {
-    return this.matchService.confirmMatch(matchId, req.user!.id, dto.role);
+    return this.matchService.confirmMatch(id, req.user?.id, confirmMatchDto.role);
   }
 
   @Get(':matchId/messages')
@@ -49,13 +52,14 @@ export class MatchController {
     return this.matchService.getMessages(matchId, req.user!.id);
   }
 
-  @Post(':matchId/messages')
+  @Post(':id/message')
+  @ApiExcludeEndpoint()
   async sendMessage(
-    @Param('matchId') matchId: string,
-    @Body() dto: SendMessageDto,
-    @Req() req: AuthRequest
+    @Param('id') id: string,
+    @Body() sendMessageDto: SendMessageDto,
+    @Req() req: AuthRequest,
   ) {
-    return this.matchService.sendMessage(matchId, req.user!.id, dto.content);
+    return this.matchService.sendMessage(id, req.user?.id, sendMessageDto.content);
   }
 
   @Get(':matchId/review')
@@ -63,12 +67,13 @@ export class MatchController {
     return this.matchService.getReview(matchId, req.user!.id);
   }
 
-  @Post(':matchId/review')
+  @Post(':id/review')
+  @ApiExcludeEndpoint()
   async submitReview(
-    @Param('matchId') matchId: string,
-    @Body() dto: SubmitReviewDto,
-    @Req() req: AuthRequest
+    @Param('id') id: string,
+    @Body() submitReviewDto: SubmitReviewDto,
+    @Req() req: AuthRequest,
   ) {
-    return this.matchService.submitReview(matchId, req.user!.id, dto);
+    return this.matchService.submitReview(id, req.user?.id, submitReviewDto);
   }
 }
