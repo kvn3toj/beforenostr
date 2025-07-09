@@ -1,25 +1,19 @@
-import { apiService } from './api.service';
-import type { Merit } from './merit.service';
+import { apiService } from '../../lib/api-service'; // Updated import path
+import type { MeritModel } from '../../types/domain/wallet.model'; // Updated to MeritModel
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3002';
-const TRANSACTIONS_ENDPOINT = `${API_BASE_URL}/transactions`;
+// API_BASE_URL is already handled by apiService.
+// Services should use relative paths.
+const TRANSACTIONS_BASE_PATH = '/transactions';
+
+import { TransactionModel } from '../../types/domain/wallet.model'; // Import TransactionModel
 
 // Types
-export interface MeritTransaction {
-  id: string;
-  userId: string;
-  meritId: string;
-  amount: number;
-  source: string; // e.g., 'CHALLENGE', 'ADMIN', 'PURCHASE'
-  sourceId?: string; // ID of the source entity (e.g., challengeId)
-  description?: string;
-  createdAt: string;
-  merit?: Merit;
-}
+// MeritTransaction interface is removed. TransactionModel will be used.
+// CreateTransactionDto might need to be adjusted or a new DTO created based on TransactionModel.
 
-export interface CreateTransactionDto {
-  userId: string;
-  meritId: string;
+export interface CreateTransactionDto { // This DTO might need to align with TransactionModel fields for creation
+  userId: string; // Or fromUserId / toUserId depending on context
+  meritId: string; // Or meritSlug
   amount: number;
   source: string;
   sourceId?: string;
@@ -29,10 +23,10 @@ export interface CreateTransactionDto {
 // Transaction Service Functions
 
 // Get all transactions for the current user
-export const fetchMyTransactions = async (userId: string): Promise<MeritTransaction[]> => {
+export const fetchMyTransactions = async (userId: string): Promise<TransactionModel[]> => {
   try {
-    const response = await apiService.get<MeritTransaction[]>(`${TRANSACTIONS_ENDPOINT}/user/${userId}`);
-    return response.data;
+    const response = await apiService.get<TransactionModel[]>(`${TRANSACTIONS_BASE_PATH}/user/${userId}`);
+    return response;
   } catch (error) {
     console.error('Error fetching my transactions:', error);
     throw new Error('Failed to fetch transactions');
@@ -40,10 +34,10 @@ export const fetchMyTransactions = async (userId: string): Promise<MeritTransact
 };
 
 // Get a specific transaction by ID (Owner or Admin only)
-export const fetchTransactionById = async (id: string): Promise<MeritTransaction> => {
+export const fetchTransactionById = async (id: string): Promise<TransactionModel> => {
   try {
-    const response = await apiService.get<MeritTransaction>(`${TRANSACTIONS_ENDPOINT}/${id}`);
-    return response.data;
+    const response = await apiService.get<TransactionModel>(`${TRANSACTIONS_BASE_PATH}/${id}`);
+    return response;
   } catch (error) {
     console.error(`Error fetching transaction with id ${id}:`, error);
     throw new Error(`Failed to fetch transaction with id ${id}`);
@@ -53,10 +47,10 @@ export const fetchTransactionById = async (id: string): Promise<MeritTransaction
 // Admin Functions
 
 // Get any transaction by ID (Admin only)
-export const fetchTransactionByIdAdmin = async (id: string): Promise<MeritTransaction> => {
+export const fetchTransactionByIdAdmin = async (id: string): Promise<TransactionModel> => {
   try {
-    const response = await apiService.get<MeritTransaction>(`${TRANSACTIONS_ENDPOINT}/admin/${id}`);
-    return response.data;
+    const response = await apiService.get<TransactionModel>(`${TRANSACTIONS_BASE_PATH}/admin/${id}`);
+    return response;
   } catch (error) {
     console.error(`Error fetching transaction with id ${id} (admin):`, error);
     throw new Error(`Failed to fetch transaction with id ${id}`);
@@ -64,10 +58,10 @@ export const fetchTransactionByIdAdmin = async (id: string): Promise<MeritTransa
 };
 
 // Get all transactions (Admin only)
-export const fetchAllTransactionsAdmin = async (): Promise<MeritTransaction[]> => {
+export const fetchAllTransactionsAdmin = async (): Promise<TransactionModel[]> => {
   try {
-    const response = await apiService.get<MeritTransaction[]>(`${TRANSACTIONS_ENDPOINT}/admin/all`);
-    return response.data;
+    const response = await apiService.get<TransactionModel[]>(`${TRANSACTIONS_BASE_PATH}/admin/all`);
+    return response;
   } catch (error) {
     console.error('Error fetching all transactions (admin):', error);
     throw new Error('Failed to fetch all transactions');

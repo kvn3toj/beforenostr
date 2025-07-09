@@ -43,31 +43,31 @@ const queryKeys = {
 export const useWalletData = (enabled: boolean = true) => {
   const { user } = useAuth();
 
-  const walletData = useQuery({
-    queryKey: ['wallet-integration', user?.id || 'anonymous'],
-    queryFn: async () => {
-      // 🔗 SIEMPRE intentar llamada API real al backend NestJS
-      try {
-        const response = await walletAPI.getBalance(user?.id || 'anonymous');
-        console.log('✅ [WalletIntegration] Datos del backend obtenidos exitosamente');
-        return response;
-      } catch (error) {
-        // 🔄 Fallback básico en caso de error
-        console.log('🔄 [WalletIntegration] Usando datos básicos como fallback');
-        return {
-          balance: 0,
-          currency: 'COP',
-          ucoins: 0,
-          accounts: [],
-          transactions: [],
-        };
-      }
-    },
-    enabled: enabled && !!user?.id,
-    staleTime: 1000 * 60 * 5, // 5 minutos
-  });
+  const { user } = useAuth(); // user object from useAuth already contains id, email etc.
 
-  return walletData;
+  // This hook should ideally return the UI-specific WalletData type.
+  // The API call will return BackendWalletResponse or similar.
+  // We'll use the `select` option to transform the data.
+  return useQuery<BackendWalletResponse, Error, WalletData>({
+    queryKey: queryKeys.walletData(user?.id!), // Ensure user.id is available or query is disabled
+    queryFn: async () => {
+      if (!user?.id) {
+        throw new Error('User ID is required to fetch wallet data.');
+      }
+      // Assuming walletAPI.getWallet() calls '/wallets/me' and returns BackendWalletResponse
+      // The actual endpoint used by walletAPI.getWallet() is '/wallet/me' (singular)
+      // Let's assume it returns BackendWalletResponse from 'types/wallet.ts'
+      const backendResponse = await walletAPI.getWallet(); // This should implicitly use user's token
+      return backendResponse; // This is of type BackendWalletResponse
+    },
+    enabled: enabled && !!user?.id, // Query is enabled only if userId exists and enabled prop is true
+    staleTime: 1000 * 60 * 5, // 5 minutos
+    select: (data: BackendWalletResponse): WalletData => {
+      // Use the existing mapping function if it aligns, or create a new one.
+      // mapBackendWalletToWalletData is available from '../types/wallet'
+      return mapBackendWalletToWalletData(data);
+    },
+  });
 };
 
 // 📊 Hook para historial de transacciones con fallback inteligente
@@ -82,48 +82,206 @@ export const useWalletTransactions = (
 ) => {
   const { user } = useAuth();
 
-  return useQuery({
-    queryKey: queryKeys.walletHistory(user?.id || 'anonymous', filters),
-    queryFn: async (): Promise<Transaction[]> => {
-      // 🚧 Endpoint de transacciones no implementado en el backend
-      // Devolver datos simulados directamente para evitar errores 404
-      console.warn('🚧 Transactions endpoint not yet implemented in backend. Using mock data.');
+  // This hook should return Transaction[] (UI type)
+  // fetchMyTransactions from transaction.service.ts returns TransactionModel[] (domain type)
+  return useQuery<TransactionModel[], Error, Transaction[]>({
+    queryKey: queryKeys.walletTransactions(user?.id!), // Using a simplified key for now
+    queryFn: async () => {
+      if (!user?.id) {
+        throw new Error('User ID is required to fetch transactions.');
+      }
+      // Assuming transaction.service.ts is updated to use apiService and TransactionModel
+      // We need to import fetchMyTransactions from the correct service.
+      // It was previously in src/services/transaction.service.ts
+      // This hook is in src/hooks/useWalletIntegration.ts
+      // Path: ../services/transaction.service
+      // This part assumes the backend endpoint for transactions exists and works.
+      // If not, the mock logic would be hit if EnvironmentHelpers.isMockEnabled('WALLET_TRANSACTIONS') was true
+      // and transaction.service.ts implemented it.
+      // For now, let's assume we want to call the real service.
+      // The original mock was because "endpoint not implemented". If it IS implemented, call it.
+      // If not, this will fail, and React Query's error state will be active.
+      // This is preferable to returning mocks from within a hook trying to fetch real data.
+      // The decision to mock should be at the service layer based on EnvironmentHelpers.
+
+      // Forcing a mock here if endpoint is known to be missing, for demonstration of structure
+      // In a real scenario, this would be a call to:
+      // import { fetchMyTransactions } from '../services/transaction.service';
+      // return fetchMyTransactions(user.id);
       
-      // 🎭 Generar transacciones simuladas realistas
-      return generateMockTransactions();
+      // If transaction.service.ts itself handles mocking:
+      // return fetchMyTransactions(user.id);
+
+      // Simulating that the endpoint is still not ready, but the hook structure is prepared
+      console.warn('🚧 Transactions endpoint not yet implemented in backend or service not fully integrated. Using mock data for useWalletTransactions.');
+      const mockDomainTransactions: TransactionModel[] = generateMockDomainTransactions(user.id);
+      return mockDomainTransactions;
     },
     enabled: !!user?.id,
-    staleTime: 15000, // 15 segundos
+    staleTime: 1000 * 60 * 1, // 1 minute
+    select: (data: TransactionModel[]): Transaction[] => {
+      // Map TransactionModel[] to Transaction[] (UI type)
+      return data.map(tm => ({
+        id: tm.id,
+        type: mapDomainTransactionTypeToUIType(tm.type, user?.id, tm.fromUserId, tm.toUserId),
+        amount: tm.amount,
+        // TODO: Need a robust way to get currency symbol/code from meritSlug/meritId
+        currency: tm.meritSlug.toUpperCase() as Transaction['currency'],
+        description: tm.description || 'N/A',
+        date: tm.completedAt || tm.initiatedAt,
+        status: mapDomainTransactionStatusToUIStatus(tm.status),
+        from: tm.fromUserId, // Placeholder, ideally map to user name
+        to: tm.toUserId,     // Placeholder, ideally map to user name
+        category: tm.category,
+        metadata: tm.metadata,
+        // Fields like reciprocidadScore, bienComunContribution are not in TransactionModel
+        // They would need to be added or handled differently.
+      }));
+    }
   });
 };
+
+// Helper para generar mocks de TransactionModel
+const generateMockDomainTransactions = (userId: string): TransactionModel[] => {
+  const types: TransactionModel['type'][] = ['TRANSFER', 'EARN', 'SPEND', 'REWARD', 'DEPOSIT', 'WITHDRAWAL'];
+  const statuses: TransactionModel['status'][] = ['COMPLETED', 'PENDING', 'FAILED', 'PROCESSING', 'CANCELLED'];
+  const meritSlugs = ['ondas', 'meritos', 'units'];
+
+  return Array.from({ length: 10 }, (_, i) => {
+    const type = types[Math.floor(Math.random() * types.length)];
+    const meritSlug = meritSlugs[Math.floor(Math.random() * meritSlugs.length)];
+    const amount = Math.floor(Math.random() * 1000) + 10;
+    const now = Date.now();
+    const initiatedAt = new Date(now - Math.random() * 1000 * 60 * 60 * 24 * 30).toISOString(); // Randomly in last 30 days
+
+    let fromUserId: string | undefined = undefined;
+    let toUserId: string | undefined = undefined;
+    let actualAmount = amount;
+
+    if (type === 'TRANSFER' || type === 'SPEND' || type === 'WITHDRAWAL' || type === 'EXCHANGE_OUT') {
+      fromUserId = userId;
+      toUserId = `user-mock-${Math.floor(Math.random() * 100)}`;
+      actualAmount = -amount; // Expenses are often negative
+    } else if (type === 'EARN' || type === 'REWARD' || type === 'DEPOSIT' || type === 'EXCHANGE_IN') {
+      fromUserId = `system-mock-${Math.floor(Math.random() * 10)}`;
+      toUserId = userId;
+    }
+
+    return {
+      id: `mock-domain-tx-${Date.now()}-${i + 1}`,
+      userId: userId,
+      meritId: `merit-${meritSlug}`,
+      meritSlug: meritSlug,
+      amount: actualAmount,
+      type: type,
+      status: statuses[Math.floor(Math.random() * statuses.length)],
+      description: `Mock transaction ${i + 1} for ${type} of ${meritSlug}`,
+      initiatedAt: initiatedAt,
+      completedAt: statuses.includes('COMPLETED') ? new Date(new Date(initiatedAt).getTime() + Math.random() * 1000 * 60 * 60).toISOString() : undefined,
+      updatedAt: new Date().toISOString(),
+      fromUserId,
+      toUserId,
+      sourceSystem: 'MOCK_SYSTEM'
+    };
+  });
+};
+
+// Helper para mapear tipo de transacción de dominio a UI
+const mapDomainTransactionTypeToUIType = (
+  domainType: TransactionModel['type'],
+  currentUserId?: string,
+  fromUserId?: string,
+  toUserId?: string
+): Transaction['type'] => {
+  switch (domainType) {
+    case 'TRANSFER':
+      return currentUserId === fromUserId ? 'expense' : (currentUserId === toUserId ? 'income' : 'transfer');
+    case 'SPEND':
+    case 'WITHDRAWAL':
+    case 'FEE':
+    case 'EXCHANGE_OUT':
+      return 'expense';
+    case 'DEPOSIT':
+    case 'EARN':
+    case 'REWARD':
+    case 'EXCHANGE_IN':
+    case 'REFUND':
+      return 'income';
+    default:
+      return 'transfer'; // Fallback
+  }
+};
+
+// Helper para mapear estado de transacción de dominio a UI
+const mapDomainTransactionStatusToUIStatus = (
+  domainStatus: TransactionModel['status']
+): Transaction['status'] => {
+  const mapping: Partial<Record<TransactionModel['status'], Transaction['status']>> = {
+    COMPLETED: 'completed',
+    PENDING: 'pending',
+    FAILED: 'failed',
+    PROCESSING: 'processing',
+    CANCELLED: 'failed', // Mapping CANCELLED to 'failed' for UI simplicity, or add 'cancelled' to UI type
+    REVERTED: 'failed',  // Mapping REVERTED to 'failed' for UI simplicity, or add 'reverted' to UI type
+  };
+  return mapping[domainStatus] || 'pending'; // Fallback
+};
+
 
 // 💸 Hook para crear nueva transacción
 export const useCreateTransaction = () => {
   const queryClient = useQueryClient();
   const { user } = useAuth();
 
-  return useMutation({
-    mutationFn: async (data: CreateTransactionData) => {
+  // This mutation should ideally resolve with TransactionModel (domain type)
+  return useMutation<TransactionModel, Error, CreateTransactionData>({
+    mutationFn: async (data: CreateTransactionData): Promise<TransactionModel> => {
       // 🚧 Endpoint de creación de transacciones no implementado
-      console.warn('🚧 Create transaction endpoint not yet implemented in backend');
+      console.warn('🚧 Create transaction endpoint not yet implemented in backend. Simulating create transaction.');
       
-      // 🎭 Simular creación exitosa
-      return {
-        id: `mock-${Date.now()}`,
-        ...data,
-        status: 'pending',
-        date: new Date().toISOString(),
+      // 🎭 Simular creación exitosa, devolviendo algo que se asemeje a TransactionModel
+      // CreateTransactionData: { toUserId, amount, currency (UI), description, type (UI) }
+      // TransactionModel: { ..., meritId, meritSlug, type (Domain), status, initiatedAt, ... }
+
+      // Simulate mapping UI currency to meritSlug for the "backend"
+      const meritSlug = data.currency.toLowerCase(); // Simplified mapping
+
+      const mockCreatedTransaction: TransactionModel = {
+        id: `mock-tx-${Date.now()}`,
+        userId: user?.id || 'unknown-user',
+        fromUserId: user?.id,
+        toUserId: data.toUserId,
+        meritId: `merit-${meritSlug}`,
+        meritSlug: meritSlug,
+        amount: data.type === 'transfer' || data.type === 'payment' ? -Math.abs(data.amount) : Math.abs(data.amount), // Assuming expense for transfer/payment from current user
+        type: data.type.toUpperCase() as TransactionModel['type'], // Map UI type to Domain type
+        status: 'PENDING', // Simulate pending status initially
+        description: data.description,
+        initiatedAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        sourceSystem: 'WALLET_APP_MOCK',
       };
+
+      await new Promise(resolve => setTimeout(resolve, 500)); // Simulate network delay
+      // In a real scenario, this would be:
+      // return transactionService.createTransaction(dto); // where dto is mapped from CreateTransactionData
+      return mockCreatedTransaction;
     },
-    onSuccess: () => {
+    onSuccess: (createdTransaction) => { // data here is TransactionModel
+      console.log('Mock transaction created:', createdTransaction);
       // 🔄 Invalidar caché para refrescar datos
       queryClient.invalidateQueries({
-        queryKey: queryKeys.walletData(user?.id || 'anonymous'),
+        queryKey: queryKeys.walletData(user?.id!),
       });
       queryClient.invalidateQueries({
-        queryKey: queryKeys.walletTransactions(user?.id || 'anonymous'),
+        queryKey: queryKeys.walletTransactions(user?.id!),
       });
+      // Optionally, update the cache directly with setQueryData if appropriate
     },
+    onError: (error) => {
+      console.error('Error creating mock transaction:', error.message);
+      // Handle error (e.g., show notification)
+    }
   });
 };
 
@@ -132,33 +290,49 @@ export const useExchangeCurrency = () => {
   const queryClient = useQueryClient();
   const { user } = useAuth();
 
-  return useMutation({
-    mutationFn: async (data: ExchangeData) => {
+  // TODO: Define a proper return type for exchange results, e.g., ExchangeResultModel or TransactionModel[]
+  return useMutation<any, Error, ExchangeData>({
+    mutationFn: async (data: ExchangeData): Promise<any> => {
       // 🚧 Endpoint de intercambio no implementado
-      console.warn('🚧 Currency exchange endpoint not yet implemented in backend');
+      console.warn('🚧 Currency exchange endpoint not yet implemented in backend. Simulating exchange.');
       
       // 🎭 Simular intercambio exitoso
       const exchangeRate = getExchangeRate(
         data.fromCurrency,
         data.toCurrency
       );
-      return {
-        id: `exchange-${Date.now()}`,
+      const mockExchangeResult = {
+        id: `mock-exchange-${Date.now()}`,
         originalAmount: data.amount,
         originalCurrency: data.fromCurrency,
         convertedAmount: data.amount * exchangeRate,
         convertedCurrency: data.toCurrency,
         exchangeRate,
-        status: 'completed',
-        date: new Date().toISOString(),
+        status: 'COMPLETED', // Using a status similar to TransactionModel
+        initiatedAt: new Date().toISOString(),
+        completedAt: new Date().toISOString(),
+        // This could potentially generate two TransactionModel objects (debit and credit)
+        // For now, returning a custom exchange result structure.
       };
+
+      await new Promise(resolve => setTimeout(resolve, 500));
+      // In a real scenario, this would be:
+      // return walletService.exchangeCurrency(dto);
+      return mockExchangeResult;
     },
-    onSuccess: () => {
-      // 🔄 Refrescar datos del wallet
+    onSuccess: (exchangeResult) => {
+      console.log('Mock currency exchange successful:', exchangeResult);
+      // 🔄 Refrescar datos del wallet y transacciones
       queryClient.invalidateQueries({
-        queryKey: queryKeys.walletData(user?.id || 'anonymous'),
+        queryKey: queryKeys.walletData(user?.id!),
+      });
+       queryClient.invalidateQueries({
+        queryKey: queryKeys.walletTransactions(user?.id!),
       });
     },
+    onError: (error) => {
+      console.error('Error in mock currency exchange:', error.message);
+    }
   });
 };
 

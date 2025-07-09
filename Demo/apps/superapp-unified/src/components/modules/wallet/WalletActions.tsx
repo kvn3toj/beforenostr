@@ -14,14 +14,14 @@ import {
   History,
   QrCode,
 } from '@mui/icons-material';
-import { useWalletData } from '../../../hooks/useWalletIntegration';
+import { useWalletData, useCreateTransaction, useExchangeCurrency } from '../../../hooks/useWalletIntegration'; // Added mutation hooks
 import SendMoneyModal from './SendMoneyModal';
 import ReceiveMoneyModal from './ReceiveMoneyModal';
 import ExchangeModal from './ExchangeModal';
-// NOTE: Assuming ExchangeModal and other modals will be handled separately or re-imported later.
+import type { CreateTransactionData, ExchangeData } from '../../../hooks/useWalletIntegration'; // Import DTO types
 
 interface WalletActionsProps {
-  isLoading?: boolean;
+  isLoading?: boolean; // This is for main data loading, not mutation loading
 }
 
 const ActionButton: React.FC<{
@@ -70,13 +70,18 @@ export const WalletActions: React.FC<WalletActionsProps> = ({
   isLoading = false,
 }) => {
   const { data: walletData } = useWalletData();
+  const { data: walletData } = useWalletData();
   const [sendModalOpen, setSendModalOpen] = useState(false);
   const [receiveModalOpen, setReceiveModalOpen] = useState(false);
   const [exchangeModalOpen, setExchangeModalOpen] = useState(false);
 
+  const createTransactionMutation = useCreateTransaction();
+  const exchangeCurrencyMutation = useExchangeCurrency();
+
   const handleSendMoney = () => setSendModalOpen(true);
   const handleReceiveMoney = () => setReceiveModalOpen(true);
   const handleExchangeCoins = () => setExchangeModalOpen(true);
+
   const handleViewHistory = () => {
     console.log('Action: View History');
     const historyElement = document.getElementById('transaction-history');
@@ -85,24 +90,44 @@ export const WalletActions: React.FC<WalletActionsProps> = ({
     }
   };
 
-  const handleConfirmSend = (recipient: string, amount: number) => {
-    console.log(`Action: Send ${amount} to ${recipient}`);
-    // Here you would call the API service to perform the transaction
-    setSendModalOpen(false);
+  // Updated to use mutation hook
+  const handleConfirmSend = (data: CreateTransactionData) => {
+    console.log('Action: Send', data);
+    createTransactionMutation.mutate(data, {
+      onSuccess: () => {
+        setSendModalOpen(false);
+        // Optionally show success notification via a toast or similar
+      },
+      onError: (error) => {
+        // Optionally show error notification
+        console.error("Send money error:", error);
+      }
+    });
   };
 
-  const handleConfirmExchange = (from: string, to: string, amount: number) => {
-    console.log(`Action: Exchange ${amount} ${from} to ${to}`);
-    // Here you would call the API service to perform the exchange
-    setExchangeModalOpen(false);
+  // Updated to use mutation hook
+  const handleConfirmExchange = (data: ExchangeData) => {
+    console.log('Action: Exchange', data);
+    exchangeCurrencyMutation.mutate(data, {
+      onSuccess: () => {
+        setExchangeModalOpen(false);
+        // Optionally show success notification
+      },
+      onError: (error) => {
+        // Optionally show error notification
+        console.error("Exchange error:", error);
+      }
+    });
   };
+
+  const actionsDisabled = !walletData || createTransactionMutation.isPending || exchangeCurrencyMutation.isPending;
 
   return (
     <Paper sx={{ p: 3, borderRadius: 4, background: 'transparent', boxShadow: 'none' }}>
       <Typography variant="h6" fontWeight="bold" sx={{ mb: 2 }}>
         Acciones Rápidas
       </Typography>
-      {isLoading ? (
+      {isLoading ? ( // This isLoading is for the parent data, not mutations
         <Grid container spacing={2}>
           {[...Array(4)].map((_, index) => (
             <Grid item xs={6} sm={3} key={index}>
@@ -117,7 +142,7 @@ export const WalletActions: React.FC<WalletActionsProps> = ({
               icon={<Send />}
               title="Enviar"
               onClick={handleSendMoney}
-              disabled={!walletData}
+              disabled={actionsDisabled}
             />
           </Grid>
           <Grid item xs={6} sm={3}>
@@ -125,7 +150,7 @@ export const WalletActions: React.FC<WalletActionsProps> = ({
               icon={<QrCode />}
               title="Recibir"
               onClick={handleReceiveMoney}
-              disabled={!walletData}
+              disabled={actionsDisabled}
             />
           </Grid>
           <Grid item xs={6} sm={3}>
@@ -133,7 +158,7 @@ export const WalletActions: React.FC<WalletActionsProps> = ({
               icon={<SwapHoriz />}
               title="Intercambiar"
               onClick={handleExchangeCoins}
-              disabled={!walletData}
+              disabled={actionsDisabled}
             />
           </Grid>
           <Grid item xs={6} sm={3}>
@@ -141,7 +166,7 @@ export const WalletActions: React.FC<WalletActionsProps> = ({
               icon={<History />}
               title="Historial"
               onClick={handleViewHistory}
-              disabled={!walletData}
+              disabled={actionsDisabled} // or just !walletData if history doesn't depend on mutation status
             />
           </Grid>
         </Grid>
@@ -149,20 +174,25 @@ export const WalletActions: React.FC<WalletActionsProps> = ({
       <SendMoneyModal
         open={sendModalOpen}
         onClose={() => setSendModalOpen(false)}
-        onSend={handleConfirmSend}
+        onSend={handleConfirmSend} // Passes CreateTransactionData
+        isLoading={createTransactionMutation.isPending}
+        error={createTransactionMutation.error?.message}
       />
       <ReceiveMoneyModal
         open={receiveModalOpen}
         onClose={() => setReceiveModalOpen(false)}
-        walletAddress={walletData?.address || '0x...'}
+        // Ensure walletData.defaultReceivingAddress or similar is populated by mapBackendWalletToWalletData
+        walletAddress={walletData?.accounts?.find(acc => acc.primary)?.id || walletData?.blockchainAddress || 'Dirección no disponible'}
       />
       <ExchangeModal
         open={exchangeModalOpen}
         onClose={() => setExchangeModalOpen(false)}
-        onExchange={handleConfirmExchange}
-        currencies={['COP', 'USD', 'Ünits']}
+        onExchange={handleConfirmExchange} // Passes ExchangeData
+        // Assuming walletData.accounts provides available currencies/balances for exchange
+        accounts={walletData?.accounts || []}
+        isLoading={exchangeCurrencyMutation.isPending}
+        error={exchangeCurrencyMutation.error?.message}
       />
-      {/* Modals will be re-integrated here */}
     </Paper>
   );
 };

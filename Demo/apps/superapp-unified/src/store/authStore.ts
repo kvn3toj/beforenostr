@@ -1,9 +1,10 @@
-import { create } from 'zustand'
-import { authService, User, AuthResponse, LoginCredentials, RegisterCredentials } from '../services/auth.service'
+import { create } from 'zustand';
+import { authService, AuthResponse, LoginCredentials, RegisterCredentials } from '../services/auth.service';
+import { User } from '../types/domain/user.model'; // Import the consolidated User type
 
 interface AuthState {
-  user: User | null
-  token: string | null
+  user: User | null; // Use the consolidated User type
+  token: string | null;
   isAuthenticated: boolean
   isLoading: boolean
   setUser: (user: User | null) => void

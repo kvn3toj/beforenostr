@@ -1,12 +1,14 @@
 import { useQuery } from '@tanstack/react-query';
 import { fetchMyWalletBalances } from '../../../services/wallet.service';
-import type { WalletBalance } from '../../../services/wallet.service';
+// Import UserWalletBalanceModel from the domain path
+import type { UserWalletBalanceModel } from '../../../types/domain/wallet.model';
 import { useAuth } from '../../useAuth';
 
 export const useWalletBalancesQuery = () => {
   const { user } = useAuth();
 
-  return useQuery<WalletBalance[]>({
+  // The hook now returns UserWalletBalanceModel[]
+  return useQuery<UserWalletBalanceModel[]>({
     queryKey: ['walletBalances', user?.id],
     queryFn: () => {
       if (!user?.id) {

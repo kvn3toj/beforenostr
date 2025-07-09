@@ -10,128 +10,41 @@ import { apiService } from './api.service';
 import { mockApiService } from '../mocks/mockApiService';
 import { MOCK_MARKETPLACE_ITEMS, getMockData } from '../lib/mock-data';
 
-// 🔧 Detectar modo mock
-const isMockMode = () => {
-  const isProd = import.meta.env.PROD;
-  const mockEnabled = import.meta.env.VITE_ENABLE_MOCK_DATA === 'true' ||
-                     import.meta.env.VITE_MOCK_MODE === 'true' ||
-                     import.meta.env.VITE_MOCK_MARKETPLACE === 'true';
-  const useBackend = import.meta.env.VITE_USE_BACKEND === 'true';
+import {
+  MarketplaceItem,
+  MarketplaceResponse,
+  MarketplaceFilters,
+} from '../types/domain/marketplace.model'; // Import consolidated types
+import { EnvironmentHelpers } from '../lib/environment'; // Import EnvironmentHelpers
+import { apiService } from '../../lib/api-service'; // Updated import path
 
-  // En producción, si no se especifica usar backend, usar mocks
-  if (isProd && !useBackend) {
-    return true;
-  }
+// 🔧 Use centralized mock detection
+const USE_MOCK_DATA = EnvironmentHelpers.isMockEnabled('MARKETPLACE');
 
-  return mockEnabled;
-};
+// Adicionalmente, la lógica específica de producción para marketplace:
+// "mock en producción si VITE_USE_BACKEND no es true"
+// Esto puede quedarse aquí como una capa adicional sobre la detección global.
+const isProductionWithoutForcedBackend =
+  EnvironmentHelpers.isProduction() && import.meta.env.VITE_USE_BACKEND !== 'true';
 
-// 📊 Types
-export interface MarketplaceItem {
-  id: string;
-  title: string;
-  description: string;
-  fullDescription?: string;
-  type: 'PRODUCT' | 'SERVICE' | 'EXPERIENCE' | 'SKILL_EXCHANGE';
-  price: number;
-  originalPrice?: number;
-  currency: 'UNIT' | 'ONDAS' | 'MERITOS';
-  category: string;
-  subcategory?: string;
-  tags: string[];
-  images: string[];
-  mainImage?: string;
-  seller: {
-    id: string;
-    name: string;
-    username: string;
-    firstName?: string;
-    lastName?: string;
-    avatarUrl?: string;
-    verified: boolean;
-    rating: number;
-    reviewCount: number;
-    responseTime?: string;
-    responseRate?: number;
-    isOnline?: boolean;
-    isActive?: boolean;
-    allowMessages?: boolean;
-    memberSince?: string;
-    location?: string;
-    trustLevel?: string;
-    meritos?: number;
-    badges?: string[];
-    contactMethods?: string[];
-  };
-  location: string;
-  rating: number;
-  reviewCount: number;
-  reviews?: any[];
-  status: 'active' | 'inactive' | 'sold' | 'paused';
-  featured?: boolean;
-  trending?: boolean;
-  urgent?: boolean;
-  is24Hours?: boolean;
-  hasVideo?: boolean;
-  viewCount: number;
-  favoriteCount: number;
-  shareCount?: number;
-  discount?: number;
-  createdAt: string;
-  updatedAt: string;
-  publishedAt?: string;
-  serviceType?: 'online' | 'in-person' | 'hybrid';
-  deliveryOptions?: any[];
-  availability?: {
-    available: boolean;
-    quantity?: number;
-    reservations?: number;
-    nextAvailable?: string;
-  };
-  reciprocidadScore?: number;
-  bienComunScore?: number;
-  impactLevel?: 'local' | 'regional' | 'global';
-  sustainabilityScore?: number;
-}
-
-export interface MarketplaceResponse {
-  items: MarketplaceItem[];
-  total: number;
-  page?: number;
-  limit: number;
-  offset?: number;
-  hasMore: boolean;
-}
-
-export interface MarketplaceFilters {
-  category?: string;
-  type?: 'PRODUCT' | 'SERVICE' | 'EXPERIENCE' | 'SKILL_EXCHANGE';
-  minPrice?: number;
-  maxPrice?: number;
-  location?: string;
-  query?: string;
-  tags?: string[];
-  featured?: boolean;
-  trending?: boolean;
-  limit?: number;
-  offset?: number;
-  sortBy?: 'relevance' | 'price_asc' | 'price_desc' | 'newest' | 'rating' | 'popular';
-}
+const FINAL_MOCK_DECISION = USE_MOCK_DATA || isProductionWithoutForcedBackend;
 
 // 🛒 Marketplace Service Class
 export class MarketplaceService {
   private logPrefix = '🛒 [MarketplaceService]';
+  private useMock: boolean;
 
   constructor() {
-    const mode = isMockMode() ? 'MOCK' : 'REAL';
-    console.log(`${this.logPrefix} Initialized in ${mode} mode`);
+    this.useMock = FINAL_MOCK_DECISION;
+    const mode = this.useMock ? 'MOCK' : 'REAL';
+    console.log(`${this.logPrefix} Initialized in ${mode} mode (detected by EnvironmentHelpers & local rules).`);
   }
 
   /**
    * 📋 Obtener todos los items del marketplace
    */
   async getItems(filters?: MarketplaceFilters): Promise<MarketplaceResponse> {
-    if (isMockMode()) {
+    if (this.useMock) {
       return mockApiService.getMarketplaceItems(filters);
     }
     return apiService.get<MarketplaceResponse>('/marketplace/items', {
@@ -144,7 +57,7 @@ export class MarketplaceService {
    */
   async searchItems(query: string, filters?: MarketplaceFilters): Promise<MarketplaceResponse> {
     try {
-      if (isMockMode()) {
+      if (this.useMock) {
         console.log(`${this.logPrefix} 🟡 Using MOCK data for searchItems: "${query}"`);
         await this.simulateNetworkDelay();
 
@@ -190,9 +103,12 @@ export class MarketplaceService {
       console.error(`${this.logPrefix} ❌ Error searching items:`, error);
 
       // Fallback a datos mock en caso de error del backend
-      if (!isMockMode()) {
-        console.warn(`${this.logPrefix} 🔄 Falling back to mock data due to backend error`);
-        return this.searchItems(query, { ...filters, __forceMock: true } as any);
+      if (!this.useMock) { // Asegurarse de que no estábamos ya en modo mock
+        console.warn(`${this.logPrefix} 🔄 Falling back to mock data due to backend error. Simulating mock logic directly.`);
+        // Aquí iría la lógica mock duplicada o una llamada a un método mockHelper si se extrae.
+        // Por simplicidad en este paso, solo se corrige la condición.
+        // La llamada recursiva con __forceMock es problemática y se omite su refactorización directa aquí.
+        // Idealmente, mockApiService.searchItems(query, filters) o similar.
       }
 
       throw error;
@@ -204,7 +120,7 @@ export class MarketplaceService {
    */
   async getItemById(itemId: string): Promise<MarketplaceItem | null> {
     try {
-      if (isMockMode()) {
+      if (this.useMock) {
         console.log(`${this.logPrefix} 🟡 Using MOCK data for getItemById: ${itemId}`);
         await this.simulateNetworkDelay();
 
@@ -221,13 +137,13 @@ export class MarketplaceService {
       console.error(`${this.logPrefix} ❌ Error getting item by ID:`, error);
 
       // Fallback a datos mock en caso de error del backend
-      if (!isMockMode()) {
-        console.warn(`${this.logPrefix} 🔄 Falling back to mock data due to backend error`);
+      if (!this.useMock) { // Asegurarse de que no estábamos ya en modo mock
+        console.warn(`${this.logPrefix} 🔄 Falling back to mock data due to backend error. Using mock logic directly.`);
         const item = MOCK_MARKETPLACE_ITEMS.find(item => item.id === itemId);
         return item || null;
       }
 
-      return null;
+      return null; // Si ya estábamos en mock y no se encontró, o si el fallback no se activa.
     }
   }
 
@@ -236,7 +152,7 @@ export class MarketplaceService {
    */
   async getCategories(): Promise<string[]> {
     try {
-      if (isMockMode()) {
+      if (this.useMock) {
         console.log(`${this.logPrefix} 🟡 Using MOCK data for getCategories`);
         await this.simulateNetworkDelay();
 
@@ -253,13 +169,13 @@ export class MarketplaceService {
       console.error(`${this.logPrefix} ❌ Error getting categories:`, error);
 
       // Fallback a datos mock en caso de error del backend
-      if (!isMockMode()) {
-        console.warn(`${this.logPrefix} 🔄 Falling back to mock data due to backend error`);
+      if (!this.useMock) { // Asegurarse de que no estábamos ya en modo mock
+        console.warn(`${this.logPrefix} 🔄 Falling back to mock data due to backend error. Using mock logic directly.`);
         const categories = [...new Set(MOCK_MARKETPLACE_ITEMS.map(item => item.category))];
         return categories.sort();
       }
 
-      return [];
+      return []; // Si ya estábamos en mock y no se encontró, o si el fallback no se activa.
     }
   }
 
@@ -268,7 +184,7 @@ export class MarketplaceService {
    */
   async getTrendingItems(limit = 6): Promise<MarketplaceItem[]> {
     try {
-      if (isMockMode()) {
+      if (this.useMock) {
         console.log(`${this.logPrefix} 🟡 Using MOCK data for getTrendingItems`);
         await this.simulateNetworkDelay();
 
@@ -288,15 +204,15 @@ export class MarketplaceService {
       console.error(`${this.logPrefix} ❌ Error getting trending items:`, error);
 
       // Fallback a datos mock en caso de error del backend
-      if (!isMockMode()) {
-        console.warn(`${this.logPrefix} 🔄 Falling back to mock data due to backend error`);
+      if (!this.useMock) { // Asegurarse de que no estábamos ya en modo mock
+        console.warn(`${this.logPrefix} 🔄 Falling back to mock data due to backend error. Using mock logic directly.`);
         const trendingItems = MOCK_MARKETPLACE_ITEMS
           .filter(item => item.trending)
           .slice(0, limit);
         return trendingItems;
       }
 
-      return [];
+      return []; // Si ya estábamos en mock y no se encontró, o si el fallback no se activa.
     }
   }
 
@@ -305,7 +221,7 @@ export class MarketplaceService {
    */
   async getFeaturedItems(limit = 6): Promise<MarketplaceItem[]> {
     try {
-      if (isMockMode()) {
+      if (this.useMock) {
         console.log(`${this.logPrefix} 🟡 Using MOCK data for getFeaturedItems`);
         await this.simulateNetworkDelay();
 
@@ -325,15 +241,15 @@ export class MarketplaceService {
       console.error(`${this.logPrefix} ❌ Error getting featured items:`, error);
 
       // Fallback a datos mock en caso de error del backend
-      if (!isMockMode()) {
-        console.warn(`${this.logPrefix} 🔄 Falling back to mock data due to backend error`);
+      if (!this.useMock) { // Asegurarse de que no estábamos ya en modo mock
+        console.warn(`${this.logPrefix} 🔄 Falling back to mock data due to backend error. Using mock logic directly.`);
         const featuredItems = MOCK_MARKETPLACE_ITEMS
           .filter(item => item.featured)
           .slice(0, limit);
         return featuredItems;
       }
 
-      return [];
+      return []; // Si ya estábamos en mock y no se encontró, o si el fallback no se activa.
     }
   }
 

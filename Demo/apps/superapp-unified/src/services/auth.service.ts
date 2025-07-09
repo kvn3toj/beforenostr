@@ -2,15 +2,23 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3002
 const AUTH_ENDPOINT = `${API_BASE_URL}/auth`;
 import { AUTH_STORAGE_KEYS } from '../config/constants';
 
-// Check if a real backend is configured. If not, default to mock authentication.
-const IS_REAL_API_CONFIGURED = import.meta.env.VITE_API_BASE_URL && import.meta.env.VITE_API_BASE_URL.trim() !== '';
-const IS_MOCK_AUTH_ENABLED = import.meta.env.VITE_ENABLE_MOCK_AUTH === 'true' || !IS_REAL_API_CONFIGURED;
+import { EnvironmentHelpers } from '../lib/environment'; // Import EnvironmentHelpers
+import { apiService } from '../../lib/api-service'; // Updated import path
+
+// Use the new centralized mock detection.
+// The specific logic `!IS_REAL_API_CONFIGURED` for auth mock is not directly
+// transferable to a generic function without more context or making the helper more complex.
+// For now, we rely on explicit mock flags for auth.
+// If `VITE_API_BASE_URL` is not set, services using `apiService` would fail,
+// and mocks should be enabled explicitly via `VITE_MOCK_AUTH_ENABLED` or global mock flags.
+const IS_MOCK_AUTH_ENABLED = EnvironmentHelpers.isMockEnabled('AUTH');
+
 
 // Log the effective authentication mode
 if (IS_MOCK_AUTH_ENABLED) {
-  console.log('🔶 [AuthService] Running in MOCK authentication mode. No real API calls will be made for auth.');
+  console.log('🔶 [AuthService] Running in MOCK authentication mode (detected by EnvironmentHelpers).');
 } else {
-  console.log('🌍 [AuthService] Running in REAL authentication mode.');
+  console.log('🌍 [AuthService] Running in REAL authentication mode (detected by EnvironmentHelpers).');
 }
 
 export interface LoginCredentials {
@@ -24,32 +32,19 @@ export interface RegisterCredentials {
   name?: string;
 }
 
+import { User } from '../types/domain/user.model'; // Import the consolidated User type
+
 // Interfaz flexible para la respuesta de autenticación, que puede variar.
 export interface AuthResponse {
-  access_token?: string;
-  token?: string;
-  accessToken?: string;
-  user: User;
+  access_token?: string; // This can be the main token
+  token?: string; // Alternative name for the token
+  accessToken?: string; // Another alternative name
+  user: User; // Use the consolidated User type
   data?: any; // Para estructuras anidadas como { data: { user: ... } }
 }
 
-// La única fuente de verdad para la estructura del usuario en el frontend.
-export interface User {
-  id: string;
-  email: string;
-  fullName: string | null;
-  avatarUrl: string | null;
-  roles?: string[];
-  permissions?: string[];
-  // Campos adicionales que pueden venir del backend
-  name?: string;
-  created_at?: string;
-  createdAt?: string;
-  accessToken?: string;
-  refreshToken?: string;
-}
-
 // Mock users for testing
+// Ensure MOCK_USERS align with the consolidated User interface
 const MOCK_USERS: { [key: string]: User } = {
   'admin@gamifier.com': {
     id: '00000000-0000-0000-0000-000000000001',
@@ -70,7 +65,8 @@ const MOCK_USERS: { [key: string]: User } = {
       'wallet:manage',
       'gamification:manage',
       'roles:write'
-    ]
+    ],
+    createdAt: new Date().toISOString(),
   },
   'test@coomunity.com': {
     id: '00000000-0000-0000-0000-000000000002',
@@ -82,7 +78,8 @@ const MOCK_USERS: { [key: string]: User } = {
       'content:read',
       'groups:read',
       'wallet:read'
-    ]
+    ],
+    createdAt: new Date().toISOString(),
   }
 };
 
@@ -102,66 +99,20 @@ class AuthService {
       return this.mockLogin(credentials);
     }
 
-    // 🔍 DEBUGGING: Log exact request details
-    const requestPayload = JSON.stringify(credentials);
-    const requestUrl = `${AUTH_ENDPOINT}/login`;
-
-    console.log('🔍 [AuthService] DEBUGGING REQUEST:', {
-      url: requestUrl,
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      payload: requestPayload,
-      payloadParsed: credentials
-    });
-
     try {
-      const response = await fetch(requestUrl, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: requestPayload,
-      });
-
-      // 🔍 DEBUGGING: Log exact response details
-      console.log('🔍 [AuthService] RESPONSE DETAILS:', {
-        ok: response.ok,
-        status: response.status,
-        statusText: response.statusText,
-        headers: Object.fromEntries(response.headers.entries()),
-        url: response.url
-      });
-
-      if (!response.ok) {
-        // 🔍 DEBUGGING: Capture raw response text first
-        const responseText = await response.text();
-        console.log('🔍 [AuthService] RAW ERROR RESPONSE:', responseText);
-
-        // Try to parse as JSON if possible
-        let errorData;
-        try {
-          errorData = JSON.parse(responseText);
-        } catch (parseError) {
-          console.log('🔍 [AuthService] ERROR RESPONSE NOT JSON:', parseError);
-          errorData = { message: responseText };
-        }
-
-        const errorMessage = errorData.message || `Error ${response.status}: ${response.statusText}`;
-        throw new Error(errorMessage);
-      }
-
-      // 🔍 DEBUGGING: Capture raw success response text first
-      const responseText = await response.text();
-      console.log('🔍 [AuthService] RAW SUCCESS RESPONSE:', responseText);
-
-      // Parse as JSON
-      const data: AuthResponse = JSON.parse(responseText);
+      // Use apiService for the actual API call
+      const responseData = await apiService.post<AuthResponse>(`${AUTH_ENDPOINT}/login`, credentials);
       console.log('[AuthService] Login exitoso con backend real para:', credentials.email);
-      return data;
+      return responseData;
     } catch (error: any) {
-      console.error('🔍 [AuthService] COMPLETE ERROR DETAILS:', {
+      // apiService.handleResponse ya debería haber lanzado un ApiError estandarizado.
+      // Aquí podemos re-lanzarlo o manejarlo específicamente si es necesario.
+      console.error('[AuthService] Error en login (manejado por apiService):', error);
+      // Si queremos mantener la estructura de error anterior para este servicio específico:
+      // if (error.statusCode && error.message) {
+      //   throw new Error(error.message || `Error ${error.statusCode}`);
+      // }
+      console.error('🔍 [AuthService] COMPLETE ERROR DETAILS (re-thrown):', {
         error,
         message: error?.message,
         stack: error?.stack,
@@ -205,24 +156,13 @@ class AuthService {
     }
 
     try {
-      const response = await fetch(`${AUTH_ENDPOINT}/register`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(credentials),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        const errorMessage = errorData.message || `Error ${response.status}: ${response.statusText}`;
-        throw new Error(errorMessage);
-      }
-
-      const data: AuthResponse = await response.json();
-      return data;
+      // Use apiService for the actual API call
+      const responseData = await apiService.post<AuthResponse>(`${AUTH_ENDPOINT}/register`, credentials);
+      console.log('[AuthService] Registro exitoso con backend real para:', credentials.email);
+      return responseData;
     } catch (error) {
-      console.error('[AuthService] Error en register:', error);
+      // apiService.handleResponse ya debería haber lanzado un ApiError estandarizado.
+      console.error('[AuthService] Error en register (manejado por apiService):', error);
       throw error;
     }
   }
@@ -267,22 +207,20 @@ class AuthService {
       return this.mockGetCurrentUser(token);
     }
 
-    const response = await fetch(`${API_BASE_URL}/users/me`, {
-      method: 'GET',
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json',
-      },
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      const errorMessage = errorData.message || `Error ${response.status}: ${response.statusText}`;
-      throw new Error(errorMessage);
+    try {
+      // Use apiService for the actual API call.
+      // apiService.get already includes Authorization header if token is in localStorage.
+      // If this specific call needs the token passed explicitly, apiService might need adjustment,
+      // or we pass headers explicitly here. Assuming apiService.get handles auth.
+      const user = await apiService.get<User>(`/users/me`); // Endpoint adjusted if AUTH_ENDPOINT is /auth
+      // If /users/me is the correct absolute path from API_BASE_URL, then it's fine.
+      // The original fetch was `${API_BASE_URL}/users/me`.
+      // The current apiService prepends API_BASE_URL, so `/users/me` is correct.
+      return user;
+    } catch (error) {
+      console.error('[AuthService] Error en getCurrentUser (manejado por apiService):', error);
+      throw error;
     }
-
-    const user: User = await response.json();
-    return user;
   }
 
   /**

@@ -277,6 +277,47 @@ export const EnvironmentHelpers = {
    * Get environment-specific configuration
    */
   getConfig: () => ENV,
+
+  /**
+   * Determines if mock mode should be enabled, optionally for a specific module.
+   * Mock mode can be enabled via several Vite environment variables:
+   * - VITE_ENABLE_GLOBAL_MOCK=true: Enables mock mode for all modules.
+   * - VITE_MOCK_[MODULE_KEY]_ENABLED=true: Enables mock mode for a specific module (e.g., VITE_MOCK_AUTH_ENABLED).
+   * - VITE_ENABLE_MOCK_DATA=true or VITE_MOCK_MODE=true: General flags to enable mock mode.
+   * - VITE_ENABLE_MOCK_AUTH=true (legacy for auth module if moduleKey is 'AUTH')
+   * - VITE_MOCK_MARKETPLACE=true (legacy for marketplace module if moduleKey is 'MARKETPLACE')
+   * The order of precedence is: GLOBAL_MOCK > MODULE_KEY_SPECIFIC_MOCK > GENERAL_MOCK_FLAGS > LEGACY_MODULE_FLAGS.
+   */
+  isMockEnabled: (moduleKey?: string): boolean => {
+    // 1. Global override
+    if (import.meta.env.VITE_ENABLE_GLOBAL_MOCK === 'true') {
+      return true;
+    }
+
+    // 2. Module-specific override (e.g., VITE_MOCK_AUTH_ENABLED)
+    if (moduleKey) {
+      const moduleSpecificVar = `VITE_MOCK_${moduleKey.toUpperCase()}_ENABLED`;
+      if (import.meta.env[moduleSpecificVar] === 'true') {
+        return true;
+      }
+    }
+
+    // 3. General mock flags
+    if (import.meta.env.VITE_ENABLE_MOCK_DATA === 'true' || import.meta.env.VITE_MOCK_MODE === 'true') {
+      return true;
+    }
+
+    // 4. Legacy module-specific flags (can be phased out)
+    if (moduleKey === 'AUTH' && import.meta.env.VITE_ENABLE_MOCK_AUTH === 'true') {
+      return true;
+    }
+    if (moduleKey === 'MARKETPLACE' && import.meta.env.VITE_MOCK_MARKETPLACE === 'true') {
+      return true;
+    }
+
+    // Default: no mock
+    return false;
+  },
 };
 
 // 🏗️ Builder.io specific helpers

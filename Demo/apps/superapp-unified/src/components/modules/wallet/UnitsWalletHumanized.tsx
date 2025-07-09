@@ -30,13 +30,15 @@ import {
   Handshake as HandshakeIcon,
   EmojiEvents as AchievementIcon,
 } from '@mui/icons-material';
-import { useUnitsWallet } from '../../../hooks/useLetsIntegration';
+// import { useUnitsWallet } from '../../../hooks/useLetsIntegration'; // Will be removed
 import { useAuth } from '../../../contexts/AuthContext';
+import type { WalletData } from '../../../types/wallet'; // Import UI WalletData type
 
 type UserExperience = 'newcomer' | 'beginner' | 'intermediate' | 'advanced';
 
 interface UnitsWalletHumanizedProps {
   userId: string;
+  walletData: WalletData; // Receive WalletData as a prop
   userExperience?: UserExperience;
   onStartOnboarding?: () => void;
   onExploreOpportunities?: () => void;
@@ -383,51 +385,48 @@ const AdvancedWalletView: React.FC<{
 };
 
 export const UnitsWalletHumanized: React.FC<UnitsWalletHumanizedProps> = ({
-  userId,
+  userId, // userId might still be useful for some specific actions or display not covered by walletData
+  walletData, // Use this prop
   userExperience = 'newcomer',
   onStartOnboarding,
   onExploreOpportunities,
   simplified = true,
 }) => {
-  const { user } = useAuth();
-  const {
-    data: wallet,
-    isLoading: walletLoading,
-    error: walletError,
-  } = useUnitsWallet(userId);
+  // const { user } = useAuth(); // user from useAuth might not be needed if userId prop is sufficient
+  // isLoading and error states are now handled by the parent component (WalletMain)
 
   const [message, setMessage] = useState<HumanizedMessage | null>(null);
 
   useEffect(() => {
-    if (wallet) {
-      if (wallet.balance === 0) {
+    // walletData is now directly from props
+    if (walletData) {
+      // Assuming walletData has a 'balance' field.
+      // WalletData type from types/wallet.ts: { balance: number; currency: string; ucoins: number; ... }
+      if (walletData.balance === 0) {
         setMessage(HUMANIZED_MESSAGES.wallet.zeroBalance.newcomer);
         return;
       }
-      const balanceType = wallet.balance > 0 ? 'positiveBalance' : 'negativeBalance';
+      const balanceType = walletData.balance > 0 ? 'positiveBalance' : 'negativeBalance';
       setMessage(HUMANIZED_MESSAGES.wallet[balanceType][userExperience]);
     }
-  }, [wallet, userExperience]);
+  }, [walletData, userExperience]);
 
-  if (walletLoading) {
-    return (
-      <Card variant="outlined" sx={{ p: 3, textAlign: 'center' }}>
-        <CircularProgress />
-        <Typography sx={{ mt: 2 }}>Cargando tu información de Billetera...</Typography>
-      </Card>
-    );
+  // Loading and error states are handled by WalletMain.tsx
+  // If walletData is not yet available, WalletMain shows loading/error.
+  // So, here we can assume walletData is present if the component renders.
+  // However, a defensive check is good.
+  if (!walletData) {
+     // This case should ideally be prevented by WalletMain's loading/error handling
+    return <Alert severity="info">Esperando datos de la billetera...</Alert>;
   }
 
-  if (walletError || !wallet) {
-    return <Alert severity="error">No se pudo cargar la información de la billetera.</Alert>;
-  }
-
-  const reciprocidadBalance = { given: 0, received: 0 }; // Mock data
+  // reciprocidadBalance is still mock. This needs its own data source if it's to be dynamic.
+  const reciprocidadBalance = { given: walletData.meritos || 0, received: Math.abs(walletData.meritos / 2) || 0 }; // Example using meritos for now
 
   if (simplified) {
     return (
       <SimpleWalletView
-        wallet={wallet}
+        wallet={walletData} // Pass walletData
         reciprocidadBalance={reciprocidadBalance}
         userLevel={userExperience}
         onExploreOpportunities={onExploreOpportunities}
@@ -437,7 +436,7 @@ export const UnitsWalletHumanized: React.FC<UnitsWalletHumanizedProps> = ({
 
   return (
     <AdvancedWalletView
-      wallet={wallet}
+      wallet={walletData} // Pass walletData
       reciprocidadBalance={reciprocidadBalance}
       onExploreOpportunities={onExploreOpportunities}
     />

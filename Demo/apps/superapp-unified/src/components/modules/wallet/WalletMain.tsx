@@ -3,13 +3,39 @@ import { Box, Container, Grid, Typography, useTheme } from '@mui/material';
 import { useAuth } from '../../../contexts/AuthContext';
 import { UnitsWalletHumanized } from './UnitsWalletHumanized';
 import { TransactionHistory } from './TransactionHistory';
-import { useWalletTransactions } from '../../../hooks/useWalletIntegration';
+import { useWalletTransactions, useWalletData } from '../../../hooks/useWalletIntegration'; // Added useWalletData
 import { WalletActions } from './WalletActions';
+import { CircularProgress, Alert } from '@mui/material'; // For loading/error states
 
 const WalletMain: React.FC = () => {
   const theme = useTheme();
   const { user } = useAuth();
-  const { data: transactions, isLoading: areTransactionsLoading } = useWalletTransactions();
+
+  // Fetch wallet transactions
+  const {
+    data: transactions,
+    isLoading: areTransactionsLoading,
+    error: transactionsError
+  } = useWalletTransactions();
+
+  // Fetch general wallet data (balances, etc.)
+  // Assuming user must exist for WalletMain to be rendered, or useWalletData handles null user.id via `enabled`
+  const {
+    data: walletData,
+    isLoading: isWalletDataLoading,
+    error: walletDataError
+  } = useWalletData(!!user); // Pass enabled flag based on user existence
+
+  if (isWalletDataLoading) {
+    return <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50vh' }}><CircularProgress /></Box>;
+  }
+
+  if (walletDataError) {
+    return <Alert severity="error">Error al cargar los datos de la billetera: {walletDataError.message}</Alert>;
+  }
+
+  // Note: UnitsWalletHumanized might also need loading/error state from walletData if it's critical path
+  // For now, assuming WalletMain handles the primary loading/error for walletData.
 
   return (
     <Box sx={{ py: 4, backgroundColor: theme.palette.background.paper, minHeight: '100vh' }}>
@@ -18,13 +44,15 @@ const WalletMain: React.FC = () => {
           Billetera Holística
         </Typography>
         <Grid container spacing={4}>
-          {user?.id && (
+          {user?.id && walletData && ( // Ensure walletData is available
             <Grid item xs={12}>
-              <UnitsWalletHumanized userId={user.id} />
+              {/* Pass WalletData to UnitsWalletHumanized */}
+              <UnitsWalletHumanized userId={user.id} walletData={walletData} />
             </Grid>
           )}
           <Grid item xs={12}>
-            <WalletActions isLoading={areTransactionsLoading} />
+            {/* isLoading prop for WalletActions might need to consider both transaction and walletData loading states */}
+            <WalletActions isLoading={areTransactionsLoading || isWalletDataLoading} />
           </Grid>
           <Grid item xs={12}>
             <TransactionHistory

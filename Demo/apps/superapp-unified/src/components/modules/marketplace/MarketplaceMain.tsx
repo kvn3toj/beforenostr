@@ -87,10 +87,13 @@ import {
 } from './marketplace.constants.tsx';
 import { QuickViewModal } from './components/QuickViewModal';
 import MarketplaceAtrium from './components/MarketplaceAtrium';
+// Import the domain type for service responses
+import { MarketplaceItem as ServiceMarketplaceItem } from '../../../types/domain/marketplace.model';
+// Import the UI-specific types from the local types file (or a dedicated UI types file)
 import {
-  MarketplaceItem,
-  MarketplaceSearchFilters,
-} from '../../../types/marketplace';
+  MarketplaceItem as DisplayMarketplaceItem, // This is the UI-specific item type
+  MarketplaceSearchFilters as DisplayMarketplaceSearchFilters
+} from '../../../types/marketplace'; // Assuming these are the UI-specific types at the end of this file
 import { ChatModal } from './components/ChatModal';
 import { MODULE_COLORS } from '../../../theme/colors';
 import { useGuardianColors } from '../../../components/theme/GuardianColorProvider';
@@ -132,9 +135,38 @@ const sanitizeImages = (imgs: string[] | undefined): string[] => {
   return sanitized;
 };
 
-const mapItemToUIItem = (item: any): MarketplaceItem => {
+const mapItemToUIItem = (item: ServiceMarketplaceItem): DisplayMarketplaceItem => {
   const sellerData = item.seller || {};
+  // Ensure sellerData properties align with ServiceMarketplaceItem's seller structure
+  // For example, ServiceMarketplaceItem.seller.rating vs DisplayMarketplaceItem.seller.reciprocidadScore
+  // The current DisplayMarketplaceItem.seller structure is:
+  // seller: { id, name, avatar, isEmprendedorConfiable, reciprocidadScore, meritos }
+  // The ServiceMarketplaceItem.seller structure is more detailed.
+  // We need to map fields correctly.
+
+  // Example: Mapping seller rating to isEmprendedorConfiable
   const isEmprendedorConfiable = (sellerData.rating || 0) >= 4.5 && (sellerData.reviewCount || 0) > 10;
+
+  // Mapping other fields. Note the differences:
+  // ServiceMarketplaceItem.price vs DisplayMarketplaceItem.priceUSD
+  // ServiceMarketplaceItem.currency vs DisplayMarketplaceItem.lukas (this needs clarification, assuming price is USD and lukas is separate or derived)
+  // ServiceMarketplaceItem.viewCount vs DisplayMarketplaceItem.stats.views
+  // ServiceMarketplaceItem.favoriteCount vs DisplayMarketplaceItem.stats.likes
+  // ServiceMarketplaceItem.rating vs DisplayMarketplaceItem.stats.rating
+  // ServiceMarketplaceItem.reviewCount vs DisplayMarketplaceItem.stats.reviewCount
+  // ServiceMarketplaceItem.trending vs DisplayMarketplaceItem.stats.isPopular
+  // ServiceMarketplaceItem.sustainabilityScore vs DisplayMarketplaceItem.stats.isSustainable
+  // ServiceMarketplaceItem.type (PRODUCT | SERVICE | EXPERIENCE | SKILL_EXCHANGE) vs DisplayMarketplaceItem.type (product | service)
+  // ServiceMarketplaceItem has 'tags', DisplayMarketplaceItem also has 'tags'.
+  // ServiceMarketplaceItem has 'createdAt', DisplayMarketplaceItem also has 'createdAt'.
+  // ServiceMarketplaceItem has 'location', DisplayMarketplaceItem also has 'location'.
+  // DisplayMarketplaceItem has 'isFavorited', 'stock', 'consciousnessLevel' which are not directly in ServiceMarketplaceItem top level.
+  // These might be added dynamically or from other sources.
+
+  // For now, I'll map based on the existing logic in mapItemToUIItem,
+  // but this highlights the need for careful field mapping.
+  // The original `mapItemToUIItem` was already creating the `DisplayMarketplaceItem` structure.
+  // The main change is to type the input `item` correctly.
 
   return {
     id: item.id || 'unknown-product',
@@ -187,22 +219,22 @@ const MarketplaceMain: React.FC = () => {
   } = useMarketplaceData();
 
   const [view, setView] = useState<'grid' | 'list'>('grid');
-  const [currentFilters, setCurrentFilters] = useState<Partial<MarketplaceSearchFilters>>({});
+  const [currentFilters, setCurrentFilters] = useState<Partial<DisplayMarketplaceSearchFilters>>({});
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [feedbackMessage, setFeedbackMessage] = useState<{ type: 'success' | 'error' | 'info' | 'warning'; text: string } | null>(null);
-  const [activeQuickViewItem, setActiveQuickViewItem] = useState<MarketplaceItem | null>(null);
+  const [activeQuickViewItem, setActiveQuickViewItem] = useState<DisplayMarketplaceItem | null>(null);
   const [chatModalOpen, setChatModalOpen] = useState(false);
-  const [currentItemForChat, setCurrentItemForChat] = useState<MarketplaceItem | null>(null);
+  const [currentItemForChat, setCurrentItemForChat] = useState<DisplayMarketplaceItem | null>(null);
 
   const handleViewChange = (newView: 'grid' | 'list') => {
     setView(newView);
   };
 
-  const handleFiltersChange = useCallback((filters: Partial<MarketplaceSearchFilters>) => {
+  const handleFiltersChange = useCallback((filters: Partial<DisplayMarketplaceSearchFilters>) => {
     setCurrentFilters(prev => ({ ...prev, ...filters }));
   }, []);
 
-  const handleQuickView = (item: MarketplaceItem) => {
+  const handleQuickView = (item: DisplayMarketplaceItem) => {
     setActiveQuickViewItem(item);
   };
 
@@ -230,15 +262,17 @@ const MarketplaceMain: React.FC = () => {
     queryClient.invalidateQueries({ queryKey: ['marketplace-items'] });
   };
 
-  const handleOpenChatModal = (item: MarketplaceItem) => {
+  const handleOpenChatModal = (item: DisplayMarketplaceItem) => {
     setCurrentItemForChat(item);
     setChatModalOpen(true);
   };
 
-  const filteredItems = useMemo(() => {
+  const filteredItems: DisplayMarketplaceItem[] = useMemo(() => {
     if (!marketplaceItemsResponse?.items) return [];
+    // marketplaceItemsResponse.items are ServiceMarketplaceItem[]
     const items = marketplaceItemsResponse.items.map(mapItemToUIItem);
     // Aquí se aplicaría la lógica de filtrado basada en currentFilters
+    // For now, assuming filters are applied by the backend or another layer
     return items;
   }, [marketplaceItemsResponse, currentFilters]);
 
@@ -311,58 +345,38 @@ const MarketplaceMain: React.FC = () => {
     'consumer'
   );
   const [searchQuery, setSearchQuery] = useState('');
-  const [searchResults, setSearchResults] = useState<MarketplaceItem[]>([]);
+  const [searchResults, setSearchResults] = useState<DisplayMarketplaceItem[]>([]);
   const [showAdvancedSearch, setShowAdvancedSearch] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<string>('');
-  const [displayedItems, setDisplayedItems] = useState<MarketplaceItem[]>([]);
+  const [displayedItems, setDisplayedItems] = useState<DisplayMarketplaceItem[]>([]);
 
-  const impactProducts = useMemo(() => {
+  const impactProducts: DisplayMarketplaceItem[] = useMemo(() => {
     if (!marketplaceItemsResponse?.items) {
       return [];
     }
+    // marketplaceItemsResponse.items are ServiceMarketplaceItem[]
     return marketplaceItemsResponse.items.map(mapItemToUIItem);
   }, [marketplaceItemsResponse]);
 
   useEffect(() => {
     if (marketplaceItemsResponse?.items) {
+      // marketplaceItemsResponse.items are ServiceMarketplaceItem[]
       setDisplayedItems(marketplaceItemsResponse.items.map(mapItemToUIItem));
     }
   }, [marketplaceItemsResponse]);
 
   const marketplaceStats = {
-    totalProducts: displayedItems.length,
+    totalProducts: displayedItems.length, // displayedItems is DisplayMarketplaceItem[]
     activeProviders: 8,
     totalImpact: '2.4K',
     communitiesServed: 47,
   };
 
-  const marketplaceItems = useMemo(() => {
-    if (!marketplaceItemsResponse?.items) return [];
-
-    return marketplaceItemsResponse.items.map((item: any) => ({
-      ...item,
-      id: item.id || `item-${Date.now()}-${Math.random()}`,
-      title: item.title || 'Producto sin título',
-      description: item.description || 'Descripción no disponible',
-      priceUSD: typeof item.price === 'number' ? item.price : 0,
-      currency: item.currency || 'LUKAS',
-      images: Array.isArray(item.images) && item.images.length > 0
-        ? item.images
-        : ['https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?w=400'],
-      seller: {
-        ...item.seller,
-        name: item.seller?.name || 'Vendedor anónimo',
-        verified: Boolean(item.seller?.verified),
-        rating: typeof item.seller?.rating === 'number' ? item.seller.rating : 4.0,
-        avatarUrl: item.seller?.avatarUrl || `https://i.pravatar.cc/150?img=${Math.floor(Math.random() * 10) + 1}`
-      },
-      rating: typeof item.rating === 'number' ? Math.max(0, Math.min(5, item.rating)) : 4.0,
-      reviewCount: typeof item.reviewCount === 'number' ? Math.max(0, item.reviewCount) : 0,
-      tags: Array.isArray(item.tags) ? item.tags.filter((tag: any) => typeof tag === 'string' && tag.trim()) : [],
-      featured: Boolean(item.featured),
-      trending: Boolean(item.trending)
-    }));
-  }, [marketplaceItemsResponse]);
+  // const marketplaceItems = useMemo(() => { // This local variable was not directly used for rendering.
+  //   if (!marketplaceItemsResponse?.items) return [];
+  //   // This mapping logic is now handled by mapItemToUIItem and used in filteredItems/displayedItems.
+  //   return marketplaceItemsResponse.items.map(mapItemToUIItem);
+  // }, [marketplaceItemsResponse]);
 
   if (isLoadingItems) {
     return (
@@ -406,7 +420,9 @@ const MarketplaceMain: React.FC = () => {
     );
   }
 
-  if (itemsError && !marketplaceItems.length) {
+  // Use filteredItems or displayedItems here. Since filteredItems is what's passed to ItemGrid,
+  // it's more relevant for checking if there's anything to display.
+  if (itemsError && !filteredItems.length) {
     return (
       <RevolutionaryWidget
         title="🏪 GMP - Gamified Match Place"
