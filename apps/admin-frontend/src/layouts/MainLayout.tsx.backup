@@ -40,10 +40,6 @@ import {
   Security as SecurityIcon,
   Analytics as AnalyticsIcon,
   History as HistoryIcon,
-  Psychology as PsychologyIcon,
-  Dashboard as DashboardIcon,
-  Timeline as TimelineIcon,
-  Favorite as FavoriteIcon,
 } from '../components/common/Icons';
 
 import { useTranslation } from 'react-i18next';
@@ -251,35 +247,6 @@ export const MainLayout = () => {
           label: 'Configuración',
           icon: <SettingsIcon />,
           path: '/settings',
-        },
-      ],
-    }] : []),
-    // Sección de AI & Cosmic Brain - Solo para admins
-    ...(isAdmin ? [{
-      id: 'ai-cosmic-brain',
-      label: 'AI & Cosmic Brain',
-      icon: <PsychologyIcon />,
-      category: 'Inteligencia Artificial',
-      divider: true,
-      children: [
-        {
-          id: 'cosmic-brain-dashboard',
-          label: 'Dashboard Cósmico',
-          icon: <DashboardIcon />,
-          path: '/admin/cosmic-brain/dashboard',
-          badge: 'NEW',
-        },
-        {
-          id: 'cosmic-brain-metrics',
-          label: 'Métricas & Analytics',
-          icon: <TimelineIcon />,
-          path: '/admin/cosmic-brain/metrics',
-        },
-        {
-          id: 'cosmic-brain-harmony',
-          label: 'Armonía Filosófica',
-          icon: <FavoriteIcon />,
-          path: '/admin/cosmic-brain/harmony',
         },
       ],
     }] : []),

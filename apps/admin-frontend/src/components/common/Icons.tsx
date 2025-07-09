@@ -52,6 +52,10 @@ import ScheduleIcon from '@mui/icons-material/Schedule';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import WarningIcon from '@mui/icons-material/Warning';
 
+// AI & Cosmic Brain icons
+import PsychologyIcon from '@mui/icons-material/Psychology';
+import TimelineIcon from '@mui/icons-material/Timeline';
+
 // Theme icons
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
@@ -120,6 +124,8 @@ export {
   ScheduleIcon as Schedule,
   CheckCircleIcon as CheckCircle,
   WarningIcon as Warning,
+  PsychologyIcon as Psychology,
+  TimelineIcon as Timeline,
   Brightness4Icon as Brightness4,
   Brightness7Icon as Brightness7,
   CreateNewFolderIcon as CreateNewFolder,
@@ -178,6 +184,8 @@ export {
   ScheduleIcon,
   CheckCircleIcon,
   WarningIcon,
+  PsychologyIcon,
+  TimelineIcon,
   Brightness4Icon,
   Brightness7Icon,
   CreateNewFolderIcon,
@@ -195,4 +203,4 @@ export {
   PlaylistPlayIcon,
   SchoolIcon,
   AddCircleOutlineIcon,
-}; 
+};

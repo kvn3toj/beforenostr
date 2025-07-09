@@ -22,7 +22,7 @@ import { ChallengesModule } from './challenges/challenges.module';
 import { FeedbackModule } from './feedback/feedback.module';
 import { PhilosophyModule } from './philosophy/philosophy.module'; // 🌌 Módulo de Métricas Filosóficas
 import { CommunicationsModule } from './communications/communications.module'; // 🌟 Módulo de Orquestación de Agentes IA
-// import { CosmicBrainModule } from './cosmic-brain/cosmic-brain.module'; // 🌌 AI Cosmic Brain Module - TEMPORARILY DISABLED
+import { CosmicBrainModule } from './cosmic-brain/cosmic-brain.module'; // 🌌 AI Cosmic Brain Module - dashboard y métricas cósmicas
 import { CacheModule } from '@nestjs/cache-manager';
 import { CacheService } from './cache/cache.service';
 import { MetricsModule } from './common/metrics/metrics.module';
@@ -51,7 +51,7 @@ import { DebugController } from './debug/debug.controller';
     ConsoleModule, // 🎮 Módulo de la Consola de Experiencias
     PhilosophyModule, // 🌌 Philosophy Module - métricas filosóficas (HambrE, IEA)
     CommunicationsModule, // 🌟 Communications Module - orquestación de agentes IA
-    // CosmicBrainModule, // 🌌 AI Cosmic Brain Module - dashboard y métricas cósmicas - TEMPORARILY DISABLED
+    CosmicBrainModule, // 🌌 AI Cosmic Brain Module - dashboard y métricas cósmicas
     CacheModule.register({ isGlobal: true }),
     MetricsModule,
   ],

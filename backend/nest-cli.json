@@ -4,14 +4,14 @@
   "sourceRoot": "src",
   "compilerOptions": {
     "deleteOutDir": true,
-    "tsConfigPath": "tsconfig.json",
+    "tsConfigPath": "tsconfig.backend.json",
     "assets": [
       {
         "include": "prisma/**/*",
         "outDir": "dist"
       },
       {
-        "include": "generated/prisma/**/*",
+        "include": "src/generated/prisma/**/*",
         "outDir": "dist"
       }
     ],

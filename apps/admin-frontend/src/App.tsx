@@ -32,6 +32,7 @@ import { MarketplacePage } from './pages/MarketplacePage'
 import { TransactionsPage } from './pages/TransactionsPage'
 import { ExperienceConsolePage } from './pages/ExperienceConsolePage'
 import { CosmicKanbanPage } from './pages/CosmicKanbanPage'
+import CosmicBrainRouter from './pages/cosmic-brain/CosmicBrainRouter'
 
 const queryClient = new QueryClient()
 const theme = createAppTheme('light');
@@ -86,10 +87,9 @@ function App() {
               <Route path="/ai-test" element={<AITest />} />
               <Route path="/nostr-demo" element={<NostrDemoPage />} />
               <Route path="/cosmic-kanban" element={<CosmicKanbanPage />} />
-              {/* Cosmic Brain Dashboard */}
-              <Route path="/admin/cosmic-brain" element={
-                React.createElement(require('./pages/cosmic-brain/CosmicBrainDashboard').default)
-              } />
+              
+              {/* 🌌 Cosmic Brain Portal */}
+              <Route path="/admin/cosmic-brain/*" element={<CosmicBrainRouter />} />
             </Route>
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>

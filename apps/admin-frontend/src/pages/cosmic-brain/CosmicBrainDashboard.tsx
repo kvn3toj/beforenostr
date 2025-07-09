@@ -1,347 +1,512 @@
-/**
- * 🌌 CosmicBrainDashboard Component
- * 
- * Dashboard principal del AI Cosmic Brain para el Gamifier Admin.
- * Proporciona una vista unificada de métricas, misiones, armonía y estado general.
- * 
- * Filosofía CoomÜnity:
- * - Bien Común: Dashboard centralizado para el equipo
- * - Ayni: Balance entre información y acción
- * - Neguentropía: Organización clara y estructurada
- * - Metanöia: Evolución continua del sistema
- */
-
-import React, { useState } from 'react';
-import { 
-  Box, 
-  Tabs, 
-  Tab, 
-  Alert, 
-  Skeleton,
-  Card,
-  CardContent,
+import React, { useState, useEffect } from 'react';
+import {
+  Box,
+  Container,
   Typography,
   Grid,
-  Chip,
-  LinearProgress,
-  Button,
+  Paper,
+  Card,
+  CardContent,
   IconButton,
-  Tooltip
+  Tooltip,
+  Chip,
+  Alert,
+  AlertTitle,
+  Fade,
+  useTheme,
+  alpha,
+  CircularProgress,
+  Divider
 } from '@mui/material';
-import { 
-  Refresh, 
-  TrendingUp, 
-  Warning, 
-  CheckCircle,
+import {
   Psychology,
-  Groups,
-  Assignment
+  Refresh,
+  Settings,
+  Timeline,
+  Dashboard,
+  Insights,
+  Speed,
+  Favorite,
+  TrendingUp,
+  Warning,
+  CheckCircle,
+  Error as ErrorIcon,
+  Info
 } from '@mui/icons-material';
-import { 
-  useCosmicBrainFullDashboard,
-  useCosmicBrainStatus,
-  useEvolutionTrigger,
-  useInvalidateCosmicBrainQueries
-} from '../../hooks/useCosmicBrainData';
-import MetricsTab from './MetricsTab';
-import MissionsTab from './MissionsTab';
-import HarmonyTab from './HarmonyTab';
-import CosmicDashboardHeader from '../../components/cosmic-brain/CosmicDashboardHeader';
+import { useQuery } from '@tanstack/react-query';
+import GuardianStatusCard from '../../components/cosmic-brain/GuardianStatusCard';
+import RealTimeMetricsVisualizer from '../../components/cosmic-brain/RealTimeMetricsVisualizer';
+
+// Types
+interface CosmicBrainStatus {
+  systemHealth: number;
+  activeGuardians: number;
+  totalGuardians: number;
+  lastSync: string;
+  status: 'healthy' | 'warning' | 'critical';
+  uptime: number;
+}
+
+interface Guardian {
+  id: string;
+  name: string;
+  type: 'Frontend Artist' | 'Harmonic Design' | 'Integration' | 'Narrative' | 'Analytics';
+  status: 'active' | 'idle' | 'error' | 'maintenance';
+  metrics: {
+    health: number;
+    efficiency: number;
+    harmony: number;
+    lastUpdate: string;
+    tasksCompleted: number;
+    activeConnections: number;
+  };
+  avatar?: string;
+}
+
+interface SystemMetrics {
+  performance: Array<{ timestamp: number; value: number; label: string }>;
+  harmony: Array<{ timestamp: number; value: number; label: string }>;
+  efficiency: Array<{ timestamp: number; value: number; label: string }>;
+  connections: Array<{ timestamp: number; value: number; label: string }>;
+  tasks: Array<{ timestamp: number; value: number; label: string }>;
+  health: Array<{ timestamp: number; value: number; label: string }>;
+}
+
+// Mock data - In production, this would come from the backend API
+const mockCosmicBrainStatus: CosmicBrainStatus = {
+  systemHealth: 92,
+  activeGuardians: 4,
+  totalGuardians: 5,
+  lastSync: new Date().toISOString(),
+  status: 'healthy',
+  uptime: 99.7
+};
+
+const mockGuardians: Guardian[] = [
+  {
+    id: 'aria',
+    name: 'ARIA',
+    type: 'Frontend Artist',
+    status: 'active',
+    metrics: {
+      health: 95,
+      efficiency: 88,
+      harmony: 92,
+      lastUpdate: new Date().toISOString(),
+      tasksCompleted: 47,
+      activeConnections: 12
+    }
+  },
+  {
+    id: 'eunoia',
+    name: 'EUNOIA',
+    type: 'Harmonic Design',
+    status: 'active',
+    metrics: {
+      health: 89,
+      efficiency: 94,
+      harmony: 96,
+      lastUpdate: new Date().toISOString(),
+      tasksCompleted: 32,
+      activeConnections: 8
+    }
+  },
+  {
+    id: 'cosmos',
+    name: 'COSMOS',
+    type: 'Integration',
+    status: 'idle',
+    metrics: {
+      health: 78,
+      efficiency: 82,
+      harmony: 85,
+      lastUpdate: new Date(Date.now() - 300000).toISOString(),
+      tasksCompleted: 23,
+      activeConnections: 5
+    }
+  },
+  {
+    id: 'kira',
+    name: 'KIRA',
+    type: 'Narrative',
+    status: 'active',
+    metrics: {
+      health: 91,
+      efficiency: 87,
+      harmony: 89,
+      lastUpdate: new Date().toISOString(),
+      tasksCompleted: 38,
+      activeConnections: 15
+    }
+  },
+  {
+    id: 'ana',
+    name: 'ANA',
+    type: 'Analytics',
+    status: 'maintenance',
+    metrics: {
+      health: 65,
+      efficiency: 70,
+      harmony: 72,
+      lastUpdate: new Date(Date.now() - 900000).toISOString(),
+      tasksCompleted: 18,
+      activeConnections: 3
+    }
+  }
+];
+
+const generateMockMetrics = (): SystemMetrics => {
+  const now = Date.now();
+  const points = 20;
+  
+  const generateTimeSeries = (baseValue: number, variance: number) => {
+    return Array.from({ length: points }, (_, i) => {
+      const timestamp = now - (points - i) * 60000; // 1 minute intervals
+      const value = Math.max(0, Math.min(100, 
+        baseValue + (Math.random() - 0.5) * variance + Math.sin(i * 0.3) * 10
+      ));
+      return {
+        timestamp,
+        value,
+        label: new Date(timestamp).toLocaleTimeString()
+      };
+    });
+  };
+  
+  return {
+    performance: generateTimeSeries(85, 15),
+    harmony: generateTimeSeries(90, 10),
+    efficiency: generateTimeSeries(82, 18),
+    connections: generateTimeSeries(75, 20),
+    tasks: generateTimeSeries(88, 12),
+    health: generateTimeSeries(92, 8)
+  };
+};
 
 const CosmicBrainDashboard: React.FC = () => {
-  const [activeTab, setActiveTab] = useState(0);
+  const theme = useTheme();
+  const [realTimeEnabled, setRealTimeEnabled] = useState(true);
+  const [systemMetrics, setSystemMetrics] = useState<SystemMetrics>(generateMockMetrics());
+  const [lastRefresh, setLastRefresh] = useState<Date>(new Date());
 
-  // Hooks para datos del dashboard
-  const {
-    dashboard,
-    systemHealth,
-    guardians,
-    missions,
-    isLoading,
-    isError,
-    error,
-    refetch
-  } = useCosmicBrainFullDashboard();
+  // Simulate API call to get cosmic brain status
+  const { data: cosmicBrainStatus, isLoading, error, refetch } = useQuery({
+    queryKey: ['cosmic-brain-status'],
+    queryFn: async () => {
+      // In production, this would be: await apiService.get('/cosmic-brain/status')
+      await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate API delay
+      return mockCosmicBrainStatus;
+    },
+    refetchInterval: realTimeEnabled ? 30000 : false,
+    staleTime: 30000
+  });
 
-  const {
-    status: systemStatus,
-    score: systemScore,
-    activeGuardians,
-    totalGuardians,
-    isHealthy,
-    lastCheck
-  } = useCosmicBrainStatus();
-
-  // Hooks para acciones
-  const evolutionTrigger = useEvolutionTrigger();
-  const invalidateQueries = useInvalidateCosmicBrainQueries();
-
-  // ============================================================================
-  // 🎨 Render Functions
-  // ============================================================================
-
-  const renderOverviewCards = () => {
-    if (isLoading) {
-      return (
-        <Grid container spacing={2} mb={3}>
-          {[...Array(4)].map((_, index) => (
-            <Grid item xs={12} md={3} key={index}>
-              <Card>
-                <CardContent>
-                  <Skeleton variant="text" height={40} />
-                  <Skeleton variant="rectangular" height={60} />
-                </CardContent>
-              </Card>
-            </Grid>
-          ))}
-        </Grid>
-      );
+  // Handle real-time updates
+  useEffect(() => {
+    if (realTimeEnabled) {
+      const interval = setInterval(() => {
+        setSystemMetrics(generateMockMetrics());
+        setLastRefresh(new Date());
+      }, 5000);
+      return () => clearInterval(interval);
     }
+  }, [realTimeEnabled]);
 
-    if (!dashboard) return null;
-
-    const overviewData = [
-      {
-        title: 'Usuarios Totales',
-        value: dashboard.overview.totalUsers,
-        icon: <Groups color="primary" />,
-        color: 'primary'
-      },
-      {
-        title: 'Guardianes Activos',
-        value: `${dashboard.overview.activeGuardians}/${totalGuardians}`,
-        icon: <CheckCircle color="success" />,
-        color: 'success'
-      },
-      {
-        title: 'Misiones Completadas',
-        value: dashboard.overview.completedMissions,
-        icon: <Assignment color="info" />,
-        color: 'info'
-      },
-      {
-        title: 'Salud del Sistema',
-        value: `${dashboard.overview.systemHealth}%`,
-        icon: <TrendingUp color="secondary" />,
-        color: 'secondary'
-      }
-    ];
-
-    return (
-      <Grid container spacing={2} mb={3}>
-        {overviewData.map((item, index) => (
-          <Grid item xs={12} md={3} key={index}>
-            <Card>
-              <CardContent>
-                <Box display="flex" alignItems="center" gap={2} mb={2}>
-                  {item.icon}
-                  <Typography variant="h6" fontWeight="bold">
-                    {item.title}
-                  </Typography>
-                </Box>
-                <Typography variant="h3" fontWeight="bold" color={`${item.color}.main`}>
-                  {item.value}
-                </Typography>
-              </CardContent>
-            </Card>
-          </Grid>
-        ))}
-      </Grid>
-    );
+  const handleRefresh = () => {
+    refetch();
+    setSystemMetrics(generateMockMetrics());
+    setLastRefresh(new Date());
   };
 
-  const renderSystemStatus = () => {
-    if (isLoading) {
-      return (
-        <Card sx={{ mb: 3 }}>
-          <CardContent>
-            <Skeleton variant="text" height={40} />
-            <Skeleton variant="rectangular" height={80} />
-          </CardContent>
-        </Card>
-      );
-    }
-
-    return (
-      <Card sx={{ mb: 3 }}>
-        <CardContent>
-          <Box display="flex" alignItems="center" justifyContent="space-between" mb={2}>
-            <Box display="flex" alignItems="center" gap={2}>
-              <Psychology color="primary" fontSize="large" />
-              <Box>
-                <Typography variant="h6" fontWeight="bold">
-                  Estado General del AI Cosmic Brain
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  Última actualización: {lastCheck ? new Date(lastCheck).toLocaleString() : 'N/A'}
-                </Typography>
-              </Box>
-            </Box>
-            <Box display="flex" gap={1} alignItems="center">
-              <Chip 
-                label={isHealthy ? 'Saludable' : 'Necesita Atención'}
-                color={isHealthy ? 'success' : 'warning'}
-                icon={isHealthy ? <CheckCircle /> : <Warning />}
-              />
-              <Tooltip title="Actualizar estado">
-                <IconButton onClick={() => refetch()} size="small">
-                  <Refresh />
-                </IconButton>
-              </Tooltip>
-            </Box>
-          </Box>
-
-          <Grid container spacing={2} mb={2}>
-            <Grid item xs={12} md={4}>
-              <Typography variant="body2" color="text.secondary" mb={1}>
-                Puntuación del Sistema
-              </Typography>
-              <LinearProgress 
-                variant="determinate" 
-                value={systemScore} 
-                color={systemScore >= 80 ? 'success' : systemScore >= 60 ? 'warning' : 'error'}
-                sx={{ height: 8, borderRadius: 4, mb: 1 }}
-              />
-              <Typography variant="h6" fontWeight="bold">
-                {systemScore}%
-              </Typography>
-            </Grid>
-            <Grid item xs={12} md={4}>
-              <Typography variant="body2" color="text.secondary" mb={1}>
-                Guardianes Activos
-              </Typography>
-              <LinearProgress 
-                variant="determinate" 
-                value={(activeGuardians / totalGuardians) * 100} 
-                color={activeGuardians === totalGuardians ? 'success' : 'warning'}
-                sx={{ height: 8, borderRadius: 4, mb: 1 }}
-              />
-              <Typography variant="h6" fontWeight="bold">
-                {activeGuardians}/{totalGuardians}
-              </Typography>
-            </Grid>
-            <Grid item xs={12} md={4}>
-              <Typography variant="body2" color="text.secondary" mb={1}>
-                Armonía General
-              </Typography>
-              <LinearProgress 
-                variant="determinate" 
-                value={dashboard?.overview.harmonyLevel || 0} 
-                color={(dashboard?.overview.harmonyLevel || 0) >= 80 ? 'success' : 
-                       (dashboard?.overview.harmonyLevel || 0) >= 60 ? 'warning' : 'error'}
-                sx={{ height: 8, borderRadius: 4, mb: 1 }}
-              />
-              <Typography variant="h6" fontWeight="bold">
-                {dashboard?.overview.harmonyLevel || 0}%
-              </Typography>
-            </Grid>
-          </Grid>
-
-          {/* Botón de Evolución (solo para admins) */}
-          <Box display="flex" justifyContent="center" mt={2}>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={() => evolutionTrigger.mutate()}
-              disabled={evolutionTrigger.isLoading}
-              startIcon={<TrendingUp />}
-            >
-              {evolutionTrigger.isLoading ? 'Iniciando Evolución...' : 'Trigger Evolución AI'}
-            </Button>
-          </Box>
-        </CardContent>
-      </Card>
-    );
-  };
-
-  const renderTabContent = () => {
-    switch (activeTab) {
-      case 0:
-        return <MetricsTab />;
-      case 1:
-        return <MissionsTab />;
-      case 2:
-        return <HarmonyTab />;
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'healthy':
+        return theme.palette.success.main;
+      case 'warning':
+        return theme.palette.warning.main;
+      case 'critical':
+        return theme.palette.error.main;
       default:
-        return <MetricsTab />;
+        return theme.palette.grey[500];
     }
   };
 
-  // ============================================================================
-  // 🎯 Main Render
-  // ============================================================================
+  const getStatusIcon = (status: string) => {
+    switch (status) {
+      case 'healthy':
+        return <CheckCircle />;
+      case 'warning':
+        return <Warning />;
+      case 'critical':
+        return <ErrorIcon />;
+      default:
+        return <Info />;
+    }
+  };
 
-  if (isError) {
+  if (isLoading) {
     return (
-      <Box>
-        <CosmicDashboardHeader />
-        <Alert 
-          severity="error" 
-          action={
-            <Button color="inherit" size="small" onClick={() => refetch()}>
-              Reintentar
-            </Button>
-          }
-          sx={{ mb: 3 }}
-        >
-          Error cargando el dashboard: {error?.message || 'Error desconocido'}
-        </Alert>
+      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '60vh' }}>
+        <CircularProgress size={60} />
       </Box>
     );
   }
 
+  if (error) {
+    return (
+      <Container maxWidth="lg" sx={{ py: 4 }}>
+        <Alert severity="error">
+          <AlertTitle>Error de Conexión</AlertTitle>
+          No se pudo conectar con el Cosmic Brain. Verificar la conexión con el backend.
+        </Alert>
+      </Container>
+    );
+  }
+
   return (
-    <Box>
-      <CosmicDashboardHeader />
-      
-      {/* Estado del Sistema */}
-      {renderSystemStatus()}
+    <Container maxWidth="xl" sx={{ py: 4 }}>
+      <Fade in timeout={800}>
+        <Box>
+          {/* Header */}
+          <Box sx={{ mb: 4 }}>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                <Psychology 
+                  sx={{ 
+                    fontSize: 40, 
+                    color: theme.palette.primary.main,
+                    animation: 'pulse 2s infinite'
+                  }} 
+                />
+                <Box>
+                  <Typography variant="h4" component="h1" sx={{ fontWeight: 700, mb: 0.5 }}>
+                    Portal Visual del Cosmic Brain
+                  </Typography>
+                  <Typography variant="subtitle1" color="text.secondary">
+                    Sistema de Orquestación de Guardianes AI - CoomÜnity
+                  </Typography>
+                </Box>
+              </Box>
+              
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                <Chip
+                  icon={getStatusIcon(cosmicBrainStatus?.status || 'healthy')}
+                  label={`Sistema ${cosmicBrainStatus?.status === 'healthy' ? 'Saludable' : 
+                    cosmicBrainStatus?.status === 'warning' ? 'Advertencia' : 'Crítico'}`}
+                  sx={{
+                    backgroundColor: alpha(getStatusColor(cosmicBrainStatus?.status || 'healthy'), 0.1),
+                    color: getStatusColor(cosmicBrainStatus?.status || 'healthy'),
+                    border: `1px solid ${alpha(getStatusColor(cosmicBrainStatus?.status || 'healthy'), 0.3)}`,
+                    fontWeight: 600
+                  }}
+                />
+                <Tooltip title="Actualizar Dashboard">
+                  <IconButton onClick={handleRefresh} sx={{ ml: 1 }}>
+                    <Refresh />
+                  </IconButton>
+                </Tooltip>
+                <Tooltip title="Configuración">
+                  <IconButton>
+                    <Settings />
+                  </IconButton>
+                </Tooltip>
+              </Box>
+            </Box>
+            
+            <Typography variant="body2" color="text.secondary">
+              Última actualización: {lastRefresh.toLocaleTimeString()} • 
+              Tiempo de actividad: {cosmicBrainStatus?.uptime}%
+            </Typography>
+          </Box>
 
-      {/* Cards de Resumen */}
-      {renderOverviewCards()}
+          {/* System Overview Cards */}
+          <Grid container spacing={3} sx={{ mb: 4 }}>
+            <Grid item xs={12} sm={6} md={3}>
+              <Card sx={{ height: '100%' }}>
+                <CardContent>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                    <Box sx={{ 
+                      p: 1, 
+                      borderRadius: 2, 
+                      backgroundColor: alpha(theme.palette.success.main, 0.1) 
+                    }}>
+                      <Speed sx={{ color: theme.palette.success.main }} />
+                    </Box>
+                    <Box>
+                      <Typography variant="h4" sx={{ fontWeight: 600, color: theme.palette.success.main }}>
+                        {cosmicBrainStatus?.systemHealth}%
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        Salud del Sistema
+                      </Typography>
+                    </Box>
+                  </Box>
+                </CardContent>
+              </Card>
+            </Grid>
+            
+            <Grid item xs={12} sm={6} md={3}>
+              <Card sx={{ height: '100%' }}>
+                <CardContent>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                    <Box sx={{ 
+                      p: 1, 
+                      borderRadius: 2, 
+                      backgroundColor: alpha(theme.palette.primary.main, 0.1) 
+                    }}>
+                      <Psychology sx={{ color: theme.palette.primary.main }} />
+                    </Box>
+                    <Box>
+                      <Typography variant="h4" sx={{ fontWeight: 600, color: theme.palette.primary.main }}>
+                        {cosmicBrainStatus?.activeGuardians}/{cosmicBrainStatus?.totalGuardians}
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        Guardianes Activos
+                      </Typography>
+                    </Box>
+                  </Box>
+                </CardContent>
+              </Card>
+            </Grid>
+            
+            <Grid item xs={12} sm={6} md={3}>
+              <Card sx={{ height: '100%' }}>
+                <CardContent>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                    <Box sx={{ 
+                      p: 1, 
+                      borderRadius: 2, 
+                      backgroundColor: alpha(theme.palette.secondary.main, 0.1) 
+                    }}>
+                      <Favorite sx={{ color: theme.palette.secondary.main }} />
+                    </Box>
+                    <Box>
+                      <Typography variant="h4" sx={{ fontWeight: 600, color: theme.palette.secondary.main }}>
+                        {Math.round(systemMetrics.harmony[systemMetrics.harmony.length - 1]?.value || 0)}%
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        Armonía Global
+                      </Typography>
+                    </Box>
+                  </Box>
+                </CardContent>
+              </Card>
+            </Grid>
+            
+            <Grid item xs={12} sm={6} md={3}>
+              <Card sx={{ height: '100%' }}>
+                <CardContent>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                    <Box sx={{ 
+                      p: 1, 
+                      borderRadius: 2, 
+                      backgroundColor: alpha(theme.palette.warning.main, 0.1) 
+                    }}>
+                      <TrendingUp sx={{ color: theme.palette.warning.main }} />
+                    </Box>
+                    <Box>
+                      <Typography variant="h4" sx={{ fontWeight: 600, color: theme.palette.warning.main }}>
+                        {Math.round(systemMetrics.efficiency[systemMetrics.efficiency.length - 1]?.value || 0)}%
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        Eficiencia
+                      </Typography>
+                    </Box>
+                  </Box>
+                </CardContent>
+              </Card>
+            </Grid>
+          </Grid>
 
-      {/* Navegación por Tabs */}
-      <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 3 }}>
-        <Tabs 
-          value={activeTab} 
-          onChange={(_, newValue) => setActiveTab(newValue)}
-          variant="fullWidth"
-        >
-          <Tab 
-            label="Métricas" 
-            icon={<Psychology />}
-            iconPosition="start"
-          />
-          <Tab 
-            label="Misiones" 
-            icon={<Assignment />}
-            iconPosition="start"
-          />
-          <Tab 
-            label="Armonía" 
-            icon={<Groups />}
-            iconPosition="start"
-          />
-        </Tabs>
-      </Box>
+          {/* Real-time Metrics Visualizer */}
+          <Grid container spacing={3} sx={{ mb: 4 }}>
+            <Grid item xs={12}>
+              <RealTimeMetricsVisualizer
+                metrics={systemMetrics}
+                isRealTime={realTimeEnabled}
+                onToggleRealTime={setRealTimeEnabled}
+                onRefresh={handleRefresh}
+              />
+            </Grid>
+          </Grid>
 
-      {/* Contenido del Tab Activo */}
-      {renderTabContent()}
+          {/* Guardians Status Section */}
+          <Box sx={{ mb: 3 }}>
+            <Typography variant="h5" component="h2" sx={{ mb: 2, fontWeight: 600 }}>
+              Estado de los Guardianes
+            </Typography>
+            <Divider sx={{ mb: 3 }} />
+          </Box>
 
-      {/* Notificación de Evolución */}
-      {evolutionTrigger.isSuccess && (
-        <Alert severity="success" sx={{ mt: 3 }}>
-          ✨ Proceso de evolución iniciado exitosamente. 
-          ID: {evolutionTrigger.data?.evolutionId}
-        </Alert>
-      )}
+          {/* Guardian Cards */}
+          <Grid container spacing={3}>
+            {mockGuardians.map((guardian) => (
+              <Grid item xs={12} sm={6} lg={4} key={guardian.id}>
+                <GuardianStatusCard
+                  guardianId={guardian.id}
+                  name={guardian.name}
+                  type={guardian.type}
+                  status={guardian.status}
+                  metrics={guardian.metrics}
+                  onRefresh={() => handleRefresh()}
+                  onConfigure={() => console.log(`Configure ${guardian.name}`)}
+                  realTimeUpdates={realTimeEnabled}
+                />
+              </Grid>
+            ))}
+          </Grid>
 
-      {evolutionTrigger.isError && (
-        <Alert severity="error" sx={{ mt: 3 }}>
-          ❌ Error al iniciar evolución: {evolutionTrigger.error?.message}
-        </Alert>
-      )}
-    </Box>
+          {/* Philosophy Integration */}
+          <Box sx={{ mt: 4, p: 3, backgroundColor: alpha(theme.palette.primary.main, 0.05), borderRadius: 2 }}>
+            <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
+              🌌 Filosofía CoomÜnity en Acción
+            </Typography>
+            <Grid container spacing={2}>
+              <Grid item xs={12} md={3}>
+                <Box sx={{ textAlign: 'center' }}>
+                  <Typography variant="body2" color="primary" sx={{ fontWeight: 600 }}>
+                    Bien Común
+                  </Typography>
+                  <Typography variant="caption" color="text.secondary">
+                    Dashboard accesible para todo el equipo
+                  </Typography>
+                </Box>
+              </Grid>
+              <Grid item xs={12} md={3}>
+                <Box sx={{ textAlign: 'center' }}>
+                  <Typography variant="body2" color="secondary" sx={{ fontWeight: 600 }}>
+                    Ayni (Reciprocidad)
+                  </Typography>
+                  <Typography variant="caption" color="text.secondary">
+                    Balance entre información y acción
+                  </Typography>
+                </Box>
+              </Grid>
+              <Grid item xs={12} md={3}>
+                <Box sx={{ textAlign: 'center' }}>
+                  <Typography variant="body2" color="success.main" sx={{ fontWeight: 600 }}>
+                    Neguentropía
+                  </Typography>
+                  <Typography variant="caption" color="text.secondary">
+                    Orden visual claro y estructurado
+                  </Typography>
+                </Box>
+              </Grid>
+              <Grid item xs={12} md={3}>
+                <Box sx={{ textAlign: 'center' }}>
+                  <Typography variant="body2" color="warning.main" sx={{ fontWeight: 600 }}>
+                    Metanöia
+                  </Typography>
+                  <Typography variant="caption" color="text.secondary">
+                    Evolución continua del sistema
+                  </Typography>
+                </Box>
+              </Grid>
+            </Grid>
+          </Box>
+        </Box>
+      </Fade>
+    </Container>
   );
 };
 

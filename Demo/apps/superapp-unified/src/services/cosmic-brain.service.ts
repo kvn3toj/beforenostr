@@ -1,7 +1,7 @@
 import { apiService } from './api.service';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3002';
-const COSMIC_BRAIN_ENDPOINT = `${API_BASE_URL}/admin/cosmic-brain`;
+const COSMIC_BRAIN_ENDPOINT = `${API_BASE_URL}/cosmic-brain`;
 
 // 🌌 COSMIC BRAIN API TYPES
 export interface GuardianStatus {
