@@ -12,24 +12,10 @@ import { JwtAuthGuard } from '@/auth/guards/jwt-auth.guard';
 import { RolesGuard } from '@/rbac/guards/roles.guard';
 import { Roles } from '@/rbac/decorators/roles.decorator';
 import { MatchService } from './match.service';
+import { ConfirmMatchDto } from './dto/confirm-match.dto';
+import { SendMessageDto } from './dto/send-message.dto';
+import { SubmitReviewDto } from './dto/submit-review.dto';
 import { Request } from 'express';
-
-class ConfirmMatchDto {
-  role: 'buyer' | 'seller';
-}
-
-class SendMessageDto {
-  content: string;
-}
-
-class SubmitReviewDto {
-  rating: number;
-  comment?: string;
-  communication?: number;
-  quality?: number;
-  delivery?: number;
-  value?: number;
-}
 
 interface AuthRequest extends Request {
   user?: { id: string };
