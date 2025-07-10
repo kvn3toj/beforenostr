@@ -132,3 +132,4 @@ ehthumbs.db
 .settings/
 .vscode/settings.json.bak
 .vercel
+.claude.local.md
