@@ -3,7 +3,7 @@ import * as dotenv from 'dotenv';
 dotenv.config();
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
-import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+// import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
@@ -51,7 +51,8 @@ async function bootstrap() {
     })
   );
 
-  // Swagger documentation setup
+  // Swagger documentation setup - TEMPORARILY DISABLED TO FIX CIRCULAR DEPENDENCY
+  /*
   const config = new DocumentBuilder()
     .setTitle('Gamifier API')
     .setDescription('API for the Gamifier educational platform')
@@ -61,6 +62,7 @@ async function bootstrap() {
 
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
+  */
 
   // Start server on port 3002 to match user's configuration and avoid conflicts
   const port = process.env.PORT || 3002;
@@ -69,7 +71,7 @@ async function bootstrap() {
   console.log(`🚀 Gamifier API is running on: http://localhost:${port}`);
   console.log(`🌐 Network access: http://192.168.1.37:${port}`);
   console.log(
-    `📚 Swagger documentation available at: http://localhost:${port}/api`
+    `📚 Swagger documentation TEMPORARILY DISABLED - fixing circular dependency`
   );
 }
 

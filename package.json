@@ -10,6 +10,7 @@
   "workspaces": [
     "backend",
     "Demo/apps/*",
+    "apps/*",
     "packages/*"
   ],
   "scripts": {
