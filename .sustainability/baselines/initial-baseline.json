@@ -1,0 +1,18 @@
+{
+  "timestamp": "2025-07-11T07:45:48Z",
+  "baseline_type": "initial_system_measurement",
+  "system_info": {
+    "os": "Darwin",
+    "architecture": "arm64",
+    "cpu_cores": 8,
+    "total_memory_gb": "estimated"
+  },
+  "carbon_methodology": "simplified_cpu_based",
+  "measurement_duration_minutes": 1,
+  "philosophy_alignment": {
+    "baseline_score": 0.80,
+    "target_improvement": 0.05,
+    "methodology": "coomunity_ivc_pattern"
+  },
+  "notes": "Initial baseline for CoomÜnity sustainability tracking"
+}

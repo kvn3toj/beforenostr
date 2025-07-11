@@ -1,0 +1,14 @@
+{
+  "guardian": "KIRA",
+  "role": "word_weaver",
+  "specialization": "context_documentation",
+  "context_type": "guardian_specialized",
+  "knowledge_domains": [],
+  "active_patterns": [],
+  "philosophy_alignment": {
+    "primary_value": "",
+    "secondary_values": [],
+    "alignment_score": 0.0
+  },
+  "last_activated": null
+}

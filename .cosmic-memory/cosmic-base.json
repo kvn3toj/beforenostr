@@ -1,0 +1,12 @@
+{
+  "timestamp": "2025-07-11T07:43:58Z",
+  "source": "CLAUDE.md",
+  "type": "cosmic_base_context",
+  "philosophy": {
+    "core_values": ["transparencia", "bien_comun", "reciprocidad", "ayni"],
+    "methodology": "Intent + Values + Constraints",
+    "architecture": "monorepo_fractal"
+  },
+  "immutable": true,
+  "cosmic_coherence": 1.0
+}

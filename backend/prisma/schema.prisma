@@ -1211,3 +1211,93 @@ enum MissionStatus {
   FAILED
   CANCELLED
 }
+
+// ═══════════════════════════════════════════════════════════════
+// 🌌 UNITS ECONOMY SYSTEM - CoomÜnity Economía Sagrada
+// ═══════════════════════════════════════════════════════════════
+
+model UnitsTransaction {
+  id               String   @id @default(uuid())
+  senderId         String?  // null para transacciones del sistema
+  recipientId      String
+  amount           Int      // Cantidad final de Ünits (con bonificaciones)
+  originalAmount   Int?     // Cantidad original (antes de bonificaciones)
+  type             String   // UnitsTransactionType
+  status           String   @default("confirmed") // UnitsTransactionStatus
+  description      String?
+  metadata         Json?    // Información adicional, bonificaciones, etc.
+  reciprocityScore Float?   // Score de reciprocidad al momento de la transacción
+  ayniPercentage   Float?   // Porcentaje de bonificación de Ayni aplicado
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relaciones
+  sender    User? @relation("UnitsTransactionSender", fields: [senderId], references: [id])
+  recipient User  @relation("UnitsTransactionRecipient", fields: [recipientId], references: [id])
+
+  @@index([senderId])
+  @@index([recipientId])
+  @@index([type])
+  @@index([status])
+  @@index([createdAt])
+  @@map("units_transactions")
+}
+
+model ReciprocityEvent {
+  id           String   @id @default(uuid())
+  eventType    String   // ReciprocityEventType: give, receive, share, help, etc.
+  actorId      String   // Usuario que ejecuta la acción
+  recipientId  String?  // Usuario receptor (opcional)
+  magnitude    Int      // Intensidad de la acción (1-10)
+  pointsAwarded Float   // Puntos de reciprocidad otorgados
+  context      String?  // Contexto: challenge, template, ayni_exchange, etc.
+  resourceId   String?  // ID del recurso relacionado
+  description  String?
+  metadata     Json?
+  
+  createdAt DateTime @default(now())
+
+  // Relaciones
+  actor     User  @relation("ReciprocityEventActor", fields: [actorId], references: [id])
+  recipient User? @relation("ReciprocityEventRecipient", fields: [recipientId], references: [id])
+
+  @@index([actorId])
+  @@index([recipientId])
+  @@index([eventType])
+  @@index([context])
+  @@index([createdAt])
+  @@map("reciprocity_events")
+}
+
+model RevenueSharing {
+  id               String    @id @default(uuid())
+  totalAmount      Int       // Monto total a distribuir
+  sourceId         String    // ID del template, challenge, etc.
+  sourceType       String    // template, challenge, etc.
+  status           String    @default("pending") // pending, processing, completed, failed
+  description      String?
+  metadata         Json?     // Participantes originales, configuración, etc.
+  
+  // Resultados de la distribución
+  totalDistributed Int?      // Total realmente distribuido
+  remainder        Int?      // Sobrante por redondeos
+  calculations     Json?     // Cálculos detallados por participante
+  transactionIds   String[]  // IDs de las transacciones generadas
+  
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  completedAt DateTime?
+
+  @@index([sourceId])
+  @@index([sourceType])
+  @@index([status])
+  @@index([createdAt])
+  @@map("revenue_sharing")
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 🔄 EXTENSIONES A MODELOS EXISTENTES
+// ═══════════════════════════════════════════════════════════════
+
+// Extender modelo User con relaciones de Units Economy (agregar al modelo User existente)

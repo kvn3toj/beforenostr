@@ -1,0 +1,14 @@
+{
+  "guardian": "MIRA",
+  "role": "tool_curator",
+  "specialization": "context7_optimization",
+  "context_type": "guardian_specialized",
+  "knowledge_domains": [],
+  "active_patterns": [],
+  "philosophy_alignment": {
+    "primary_value": "",
+    "secondary_values": [],
+    "alignment_score": 0.0
+  },
+  "last_activated": null
+}
