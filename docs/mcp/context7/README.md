@@ -162,7 +162,7 @@ actions:
 
 ## **🐛 Troubleshooting**
 
-### **Error Común 1: API Rate Limit Exceeded**
+### **Error Común 1: API Rate Limit Exceded**
 
 **Síntoma:** Error 429 "Too Many Requests"
 **Causa:** Demasiadas consultas en período corto
